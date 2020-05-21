@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>themes/QMenu.qss</file>
+    </qresource>
+</RCC>
