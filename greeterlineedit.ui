@@ -36,7 +36,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
-    <number>3</number>
+    <number>1</number>
    </property>
    <property name="leftMargin">
     <number>8</number>
@@ -96,31 +96,30 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignVCenter">
     <widget class="QToolButton" name="button">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>20</width>
+       <width>38</width>
        <height>20</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>36</width>
-       <height>36</height>
+       <width>38</width>
+       <height>38</height>
       </size>
      </property>
      <property name="styleSheet">
       <string notr="true">QToolButton{
 	border:0px;
 	background-color:transparent;
-	background-position:center;
 	background-repeat:false;
 }</string>
      </property>

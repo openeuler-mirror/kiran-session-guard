@@ -147,7 +147,7 @@ void GreeterLineEdit::startMovieAndEmitSignal()
 {
     ui->edit->setEnabled(false);
     if( m_animationTimerId == 0 ){
-        m_animationTimerId = startTimer(80);
+        m_animationTimerId = startTimer(50);
     }
     emit textConfirmed(ui->edit->text());
 }

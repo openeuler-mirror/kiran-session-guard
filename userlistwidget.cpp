@@ -17,11 +17,10 @@ UserListWidget::UserListWidget(QWidget *parent)
     ui->setupUi(this);
     ui->listWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui->listWidget->verticalScrollBar()->setVisible(false);
     setAttribute(Qt::WA_Hover,true);
-    installEventFilter(this);
     connect(ui->listWidget,SIGNAL(itemSelectionChanged()),
             this,SLOT(slotUserItemActivated()));
+    ui->listWidget->setVisible(false);
 }
 
 UserListWidget::~UserListWidget()
@@ -41,27 +40,6 @@ void UserListWidget::loadUserList()
                                                           this,SLOT(slotRowsRemoved(const QModelIndex&,int,int)));
     qInfo() << "connect UserModel RowInserted: " << connect(&m_usersModel,SIGNAL(rowsInserted(const QModelIndex&,int,int)),
                                                           this,SLOT(slotRowsInserted(const QModelIndex&,int,int)));
-}
-
-void UserListWidget::justForTest(int count)
-{
-    QListWidgetItem* listItem = nullptr;
-    UserListItem* userItem = nullptr;
-    for( int i=0;i<count;i++ ){
-        QString testUserName = QString("TestUser%1").arg(i);
-        UserInfo userInfo;
-
-        userInfo.name = testUserName;
-
-        listItem = new QListWidgetItem;
-        listItem->setSizeHint(QSize(0,60));
-
-        userItem = new UserListItem;
-        userItem->setUserInfo(userInfo);
-
-        ui->listWidget->addItem(listItem);
-        ui->listWidget->setItemWidget(listItem,userItem);
-    }
 }
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
@@ -131,6 +109,10 @@ void UserListWidget::appendItem(const UserInfo &userInfo)
 
     ui->listWidget->addItem(newItem);
     ui->listWidget->setItemWidget(newItem,customItem);
+
+    if( (!ui->listWidget->isVisible()) && (ui->listWidget->count()>=2) ){
+        ui->listWidget->setVisible(true);
+    }
 }
 
 void UserListWidget::insertItem(int row, const UserInfo &userInfo)
@@ -146,6 +128,10 @@ void UserListWidget::insertItem(int row, const UserInfo &userInfo)
 
     ui->listWidget->insertItem(row,newItem);
     ui->listWidget->setItemWidget(newItem,customItem);
+
+    if( (!ui->listWidget->isVisible()) && (ui->listWidget->count()>=2) ){
+        ui->listWidget->setVisible(true);
+    }
 }
 
 void UserListWidget::slotUserItemActivated()
@@ -181,6 +167,9 @@ void UserListWidget::slotRowsRemoved(const QModelIndex &parent, int first, int l
             emit sigRequestResetUI();
         }
     }
+    if( (ui->listWidget->isVisible()) && (ui->listWidget->count()<2) ){
+        ui->listWidget->setVisible(false);
+    }
     updateGeometry();
 }
 
@@ -198,23 +187,6 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
 
     qInfo() << "row inserted: " << "cout[" << ui->listWidget->count() << "]";
     updateGeometry();
-}
-
-bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
-{
-    if(obj==this){
-        switch (event->type()) {
-        case QEvent::HoverEnter:
-            ui->listWidget->verticalScrollBar()->setVisible(true);
-            break;
-        case QEvent::HoverLeave:
-            ui->listWidget->verticalScrollBar()->setVisible(false);
-            break;
-        default:
-            break;
-        }
-    }
-    return QWidget::eventFilter(obj,event);
 }
 
 QSize UserListWidget::sizeHint() const

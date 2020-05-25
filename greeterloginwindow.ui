@@ -110,7 +110,7 @@
        <property name="maximumSize">
         <size>
          <width>228</width>
-         <height>185</height>
+         <height>310</height>
         </size>
        </property>
        <property name="baseSize">

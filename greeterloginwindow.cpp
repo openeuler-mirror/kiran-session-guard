@@ -206,10 +206,6 @@ void GreeterLoginWindow::initUI()
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
-#ifdef TEST
-    ui->userlist->justForTest(10);
-#endif
-
     //连接到Lightdm
     if( !m_greeter.connectSync() ){
         qWarning("connect to lightdm greeter failed.");

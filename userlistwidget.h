@@ -18,7 +18,6 @@ public:
     explicit UserListWidget(QWidget *parent = nullptr);
     ~UserListWidget();
     void loadUserList();
-    void justForTest(int count);
     bool getCurrentSelected(UserInfo& userInfo);
     void setRow0();
 private:
@@ -34,7 +33,6 @@ Q_SIGNALS:
     ///请求登录窗口重置窗口
     void sigRequestResetUI();
 protected:
-    virtual bool eventFilter(QObject *obj, QEvent *event) override;
     virtual QSize sizeHint() const override;
 private:
     Ui::UserListWidget *ui;
