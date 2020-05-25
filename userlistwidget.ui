@@ -39,7 +39,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QListWidget" name="listWidget">
+    <widget class="ListWidgetWrapper" name="listWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -144,6 +144,13 @@ QListView::item:focus{
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ListWidgetWrapper</class>
+   <extends>QListWidget</extends>
+   <header location="global">listwidgetwrapper.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

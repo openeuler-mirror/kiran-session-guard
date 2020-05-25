@@ -21,6 +21,7 @@ void UserAvatarWidget::setImage(const QString &path)
         qWarning() << "UserAvatar: file path[" << path << "] can't read";
     }
     if( m_pixmap.load(path) ){
+        qInfo() << "UserAvatar: load file " << path << "successed";
         int radius = this->width()<this->height()?this->width()/2:this->height();
         m_scaledPixmap = m_pixmap.scaled(2*radius,2*radius,
                                          Qt::KeepAspectRatio,Qt::SmoothTransformation);
@@ -35,7 +36,6 @@ void UserAvatarWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
-    qInfo() << this->size();
     if(!isVisible()){
         return;
     }
@@ -52,7 +52,7 @@ void UserAvatarWidget::paintEvent(QPaintEvent *event)
 
 void UserAvatarWidget::resizeEvent(QResizeEvent *event)
 {
-    if( (!m_scaledPixmap.isNull()) && (m_scaledPixmap.size()!=this->size()) ){
+    if( (!m_pixmap.isNull()) && (!m_scaledPixmap.isNull()) && (m_scaledPixmap.size()!=this->size()) ){
         m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     QWidget::resizeEvent(event);
@@ -68,6 +68,9 @@ QPixmap UserAvatarWidget::scalePixmapAdjustSize(const QPixmap &pixmap)
 
 void UserAvatarWidget::setDefaultImage()
 {
-    Q_ASSERT(m_pixmap.load(DEFAULT_USER_AVATAR));
+    if(!m_pixmap.load(DEFAULT_USER_AVATAR)){
+        qWarning() <<  "UserAvatar: " << "load default avatar failed.";
+        return;
+    }
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
 }

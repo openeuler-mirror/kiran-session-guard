@@ -5,15 +5,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #编译目标名
 TARGET = lightdm-kiran-greeter
 
-#生成文件目录
-DESTDIR = ./build
-
 #生成Makefile模板
 TEMPLATE = app
 
 #宏定义
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += TEST
+#DEFINES += TEST
 
 #配置项
 CONFIG += c++11
@@ -35,7 +32,8 @@ SOURCES += \
     useravatarwidget.cpp \
     userlistitem.cpp \
     userlistwidget.cpp \
-    greetermenuitem.cpp
+    greetermenuitem.cpp \
+    listwidgetwrapper.cpp
 
 #头文件
 HEADERS += \
@@ -51,7 +49,8 @@ HEADERS += \
     userlistwidget.h \
     useravatarwidget.h \
     userinfo.h \
-    greetermenuitem.h
+    greetermenuitem.h \
+    listwidgetwrapper.h
 
 #界面文件
 FORMS += \
@@ -76,7 +75,8 @@ OTHER_FILES += \
     README.md \
     translations/lightdm-kiran-greeter.zh_CN.ts \
     config/lightdm-kiran-greeter.conf \
-    config/99-lightdm-kiran-greeter.conf
+    config/99-lightdm-kiran-greeter.conf \
+    config/lightdm-kiran-greeter.desktop
 
 #翻译文件目录
 TRANSLATIONS = \
@@ -84,13 +84,16 @@ TRANSLATIONS = \
 
 #安装选项
 target_translation.files = ./translations/lightdm-kiran-greeter.zh_CN.qm
-target_translation.path = /usr/share/lightdm-kiran-greeter/translations/
+target_translation.path = $$DESTDIR/usr/share/lightdm-kiran-greeter/translations/
 
 target_config.files = ./config/lightdm-kiran-greeter.conf
-target_config.path = /etc/lightdm/
+target_config.path = $$DESTDIR/etc/lightdm/
 
 target_sysconfig.files = ./config/99-lightdm-kiran-greeter.conf
-target_sysconfig.path =  /usr/share/lightdm/lightdm.conf.d/
+target_sysconfig.path =  $$DESTDIR/usr/share/lightdm/lightdm.conf.d/
 
-target.path = /usr/sbin/
-INSTALLS += target target_translation target_config target_sysconfig
+xgreeter_config.files = ./config/lightdm-kiran-greeter.desktop
+xgreeter_config.path = $$DESTDIR/usr/share/xgreeters/
+
+target.path = $$DESTDIR/usr/sbin/
+INSTALLS = target target_translation target_config target_sysconfig xgreeter_config

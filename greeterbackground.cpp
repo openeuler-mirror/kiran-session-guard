@@ -86,10 +86,6 @@ GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
         qWarning() << "background load pixmap <" << GreeterSetting::instance()->getBackgroundPath() << "> failed.";
         m_background.load(DEFAULT_BACKGROUND);
     }
-    if(!m_background.isNull()){
-        m_scaledBackground = m_background.scaled(this->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation);
-        m_scaledBackground = QPixmap::fromImage(blurredImage(m_scaledBackground.toImage(),m_scaledBackground.rect(),8,false));
-    }
     setScreen(screen);
 }
 
@@ -109,7 +105,6 @@ void GreeterBackground::setScreen(QScreen *screen)
         connect(screen,SIGNAL(geometryChanged(const QRect&)),
                    this,SLOT(slotScreenGeometryChanged(const QRect&)));
     }
-
     m_screen = screen;
     if( m_screen ){
         slotScreenGeometryChanged(m_screen->geometry());

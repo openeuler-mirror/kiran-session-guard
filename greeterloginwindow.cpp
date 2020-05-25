@@ -20,6 +20,7 @@
 #include <QWidgetAction>
 #include <QDateTime>
 #include <QTimer>
+#include <QButtonGroup>
 
 #define DEFAULT_MENU_QSS ":/themes/QMenu.qss"
 
@@ -100,6 +101,7 @@ void GreeterLoginWindow::initUI()
     connect(ui->btn_power,&QToolButton::clicked,this,[this]{
         if(m_powerMenu->isVisible()){
             m_powerMenu->hide();
+            return;
         }
         //重新设置选项
         m_powerMenu->clear();
@@ -182,6 +184,11 @@ void GreeterLoginWindow::initUI()
         QPoint btnRightTopPos;
         QSize  menuSize;
 
+        if(m_sessionMenu->isVisible()){
+            m_sessionMenu->hide();
+            return;
+        }
+
         btnRightTopPos = ui->btn_session->mapTo(this,QPoint(ui->btn_session->width(),0));
         menuSize = m_sessionMenu->sizeHint();
 
@@ -207,11 +214,20 @@ void GreeterLoginWindow::initUI()
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
+    ///用户列表请求重置用户选择登录界面
+    connect(ui->userlist,&UserListWidget::sigRequestResetUI,this,[this]{
+        Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
+        resetUIForUserListLogin();
+    });
     startUpdateTimeTimer();
 }
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
+#ifdef TEST
+    ui->userlist->justForTest(10);
+#endif
+
     //连接到Lightdm
     if( !m_greeter.connectSync() ){
         qWarning("connect to lightdm greeter failed.");
@@ -225,10 +241,6 @@ void GreeterLoginWindow::initLightdmGreeter()
             this,SLOT(slotShowprompt(QString,QLightDM::Greeter::PromptType)));
     connect(&m_greeter,SIGNAL(authenticationComplete()),
             this,SLOT(slotAuthenticationComplete()));
-    connect(&m_greeter,SIGNAL(idle()),
-            this,SLOT(slotIdle()));
-    connect(&m_greeter,SIGNAL(reset()),
-            this,SLOT(slotReset()));
 
     ui->userlist->loadUserList();
 }
@@ -322,6 +334,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
     //显示用户列表
     ui->userlist->setVisible(true);
+    ui->userlist->setEnabled(true);
 
     m_loginMode = LOGIN_BY_USER_LIST;
 }
@@ -354,6 +367,7 @@ void GreeterLoginWindow::resetUIForManualLogin()
     ui->label_tips->clear();
 
     //用户列表隐藏
+    ui->userlist->setEnabled(false);
     ui->userlist->setVisible(false);
 
     m_loginMode = LOGIN_BY_INPUT_USER;
