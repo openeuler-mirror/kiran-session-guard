@@ -837,7 +837,7 @@
 	border:0px;
 	border-image:url(:/images/session_normal.png);
 }
-QToolButton:hover{
+QToolButton:pressed{
 	border-image:url(:/images/session_hover.png);
 }</string>
           </property>
@@ -871,7 +871,7 @@ QToolButton:hover{
 	border:0px;
 	border-image:url(:/images/keyboard_normal.png);
 }
-QToolButton:hover{
+QToolButton:pressed{
 	border-image:url(:/images/keyboard_hover.png);
 }</string>
           </property>
@@ -905,7 +905,7 @@ QToolButton:hover{
 	border:0px;
 	border-image:url(:/images/shutdown_normal.png);
 }
-QToolButton:hover{
+QToolButton:pressed{
 	border-image:url(:/images/shutdown_hover.png);
 }</string>
           </property>
