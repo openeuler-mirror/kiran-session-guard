@@ -64,6 +64,18 @@ void UserListWidget::justForTest(int count)
     }
 }
 
+bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
+{
+    QList<QListWidgetItem*> selectedItem = ui->listWidget->selectedItems();
+    if(selectedItem.size() == 0){
+        return false;
+    }
+    UserListItem* item = dynamic_cast<UserListItem*>(ui->listWidget->itemWidget(selectedItem.at(0)));
+    UserInfo info = item->getUserInfo();
+    userInfo = info;
+    return true;
+}
+
 void UserListWidget::setRow0()
 {
     if( ui->listWidget->count() > 0 ){

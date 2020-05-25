@@ -22,6 +22,7 @@
                           "     font-size:7px;"\
                           "     color:white;"\
                           "}"
+
 GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GreeterLineEdit),
@@ -91,28 +92,30 @@ void GreeterLineEdit::setInputMode(GreeterLineEdit::InputMode inputMode)
 
 void GreeterLineEdit::slotEditReturnPressed()
 {
-    if( ui->edit->text().isEmpty() ){
+    if( (ui->edit->echoMode()!=QLineEdit::Password) && (ui->edit->text().isEmpty()) ){
         return;
     }
+
     startMovieAndEmitSignal();
 }
 
 void GreeterLineEdit::slotButtonPressed()
 {
-    if( ui->edit->text().isEmpty() ){
+    if( (ui->edit->echoMode()!=QLineEdit::Password) && (ui->edit->text().isEmpty()) ){
         return;
     }
+
     startMovieAndEmitSignal();
 }
 
 void GreeterLineEdit::slotEditTextChanged(const QString &text)
 {
+    ///密码框圆形字符缩小
     if(ui->edit->echoMode()==QLineEdit::Password && text.isEmpty()){
         ui->edit->setStyleSheet(NORMAL_EDIT_STYLE);
     }else if(ui->edit->echoMode()==QLineEdit::Password && !text.isEmpty() ){
         ui->edit->setStyleSheet(PASSWD_EDIT_STYLE);
     }
-    ui->button->setEnabled(!text.isEmpty());
 }
 
 void GreeterLineEdit::timerEvent(QTimerEvent *e)

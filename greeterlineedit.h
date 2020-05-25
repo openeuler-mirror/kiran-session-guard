@@ -48,7 +48,7 @@ private slots:
     void slotButtonPressed();
     void slotEditTextChanged(const QString& text);
 protected:
-    void timerEvent(QTimerEvent*e);
+    void timerEvent(QTimerEvent*e) override;
     void paintEvent(QPaintEvent *e) override;
 private:
     Ui::GreeterLineEdit *ui;

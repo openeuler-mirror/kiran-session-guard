@@ -19,6 +19,7 @@ public:
     ~UserListWidget();
     void loadUserList();
     void justForTest(int count);
+    bool getCurrentSelected(UserInfo& userInfo);
     void setRow0();
 private:
     bool getUserInfoFromModel(int row,UserInfo& userInfo);

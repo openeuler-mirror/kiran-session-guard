@@ -305,14 +305,18 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     //tips清空
     ui->label_tips->clear();
 
-    //设置默认登录第一个
-    ui->userlist->setRow0();
-
     //显示用户列表
     ui->userlist->setVisible(true);
     ui->userlist->setEnabled(true);
 
     m_loginMode = LOGIN_BY_USER_LIST;
+
+    UserInfo userinfo;
+    if( ui->userlist->getCurrentSelected(userinfo) ){
+        slotUserActivated(userinfo);
+    }else{
+        ui->userlist->setRow0();
+    }
 }
 
 void GreeterLoginWindow::resetUIForManualLogin()
