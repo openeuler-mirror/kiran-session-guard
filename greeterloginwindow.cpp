@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QButtonGroup>
+#include <QSet>
 
 #define DEFAULT_MENU_QSS ":/themes/QMenu.qss"
 
@@ -38,7 +39,6 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
   , m_loginMode(LOGIN_BY_USER_LIST)
   , m_buttonType(BUTTON_SWITCH_TO_MANUAL_LOGIN)
 {
-    setWindowFlags(windowFlags()|Qt::FramelessWindowHint);
     qRegisterMetaType<UserInfo>("UserInfo");
     ui->setupUi(this);
     ///启动CapsLock监控
@@ -46,6 +46,7 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
     if(!m_snoop.start(capsLockStatusChanged,this,error)){
         qWarning() << "capslock snoop start failed: " << error.c_str();
     }
+    initMenu();
     initUI();
     initLightdmGreeter();
     initSettings();
@@ -65,6 +66,10 @@ void GreeterLoginWindow::setEditPromptFocus()
 
 void GreeterLoginWindow::initUI()
 {
+    ///FIXME:因弹出窗口不是作为新的窗口，而是作为一个控件，需要我们去做隐藏
+    ///开始监听整个应用程序事件，在窗口点击事件中判断隐藏菜单
+    qApp->installEventFilter(this);
+
     ///设置字体阴影
     QGraphicsDropShadowEffect* labelTextShadowEffect = new QGraphicsDropShadowEffect(this);
     labelTextShadowEffect->setColor(QColor(0,0,0,255*0.1));
@@ -78,22 +83,26 @@ void GreeterLoginWindow::initUI()
     labelTipsShadowEffect->setOffset(0, 0);
     ui->label_tips->setGraphicsEffect(labelTipsShadowEffect);
 
-    ///菜单样式
-    QFile menuStyleFile(DEFAULT_MENU_QSS);
-    QString menuQss;
-    if(menuStyleFile.open(QIODevice::ReadOnly)){
-        menuQss = menuStyleFile.readAll();
-    }else{
-        qWarning("open %s failed",DEFAULT_MENU_QSS);
-    }
+    connect(m_sessionMenu,&QMenu::triggered,[this](){
+        m_sessionMenu->hide();
+    });
 
-    ///电源菜单初始化
-    m_powerMenu = new QMenu(this);//透明化需要设置父控件
-    m_powerMenu->setStyleSheet(menuQss);
-    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);//透明必需
-    m_powerMenu->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint);//透明必需
-    m_powerMenu->setContentsMargins(0,0,0,0);
-    m_powerMenu->setFixedWidth(92);
+    ///会话选择按钮点击
+    connect(ui->btn_session,&QToolButton::clicked,this,[=]{
+        QPoint menuLeftTop;
+        QPoint btnRightTopPos;
+        QSize  menuSize;
+
+        btnRightTopPos = ui->btn_session->mapTo(this,QPoint(ui->btn_session->width(),0));
+        menuSize = m_sessionMenu->sizeHint();
+
+        menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
+        menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
+
+        m_sessionMenu->popup(menuLeftTop);
+    });
+
+    ///电源按钮点击
     connect(ui->btn_power,&QToolButton::clicked,this,[this]{
         //重新设置选项
         m_powerMenu->clear();
@@ -118,66 +127,14 @@ void GreeterLoginWindow::initUI()
             });
         }
         //计算菜单显示坐标
-        QPoint btnRightTopPos = ui->btn_power->mapToGlobal(QPoint(ui->btn_power->width(),0));
+        QPoint btnRightTopPos = ui->btn_power->mapTo(this,QPoint(ui->btn_power->width(),0));
         QSize menuSize = m_powerMenu->sizeHint();
 
         QPoint menuLeftTop;
         menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
 
-        qDebug() << "power menu popup: size[" << menuSize << "] leftop["<<menuLeftTop<<"]";
         m_powerMenu->popup(menuLeftTop);
-    });
-
-    ///session菜单初始化
-    m_sessionMenu = new QMenu(this);
-    m_sessionMenu->setMinimumWidth(92);
-    m_sessionMenu->setMaximumWidth(184);
-    m_sessionMenu->setStyleSheet(menuQss);
-    m_sessionMenu->setAttribute(Qt::WA_TranslucentBackground);
-    m_sessionMenu->setWindowFlags(Qt::Popup|Qt::FramelessWindowHint);
-    m_sessionMenu->setContentsMargins(0,0,0,0);
-    QButtonGroup* buttonGroup = new QButtonGroup(m_sessionMenu);
-    buttonGroup->setExclusive(true);
-
-    QLightDM::SessionsModel sessionModel;
-    for(int i=0;i<sessionModel.rowCount(QModelIndex());i++){
-        QVariant key,id;
-        QWidgetAction* widgetAction = nullptr;
-        GreeterMenuItem* itemWidget = nullptr;
-        key = sessionModel.data(sessionModel.index(i,0),QLightDM::SessionsModel::KeyRole);
-        id  = sessionModel.data(sessionModel.index(i,0),QLightDM::SessionsModel::IdRole);
-        widgetAction = new QWidgetAction(m_sessionMenu);
-        itemWidget = new GreeterMenuItem(key.toString(),true);
-        itemWidget->setFixedHeight(28);
-        itemWidget->setMinimumWidth(90);
-        itemWidget->setMaximumWidth(120);
-        itemWidget->setExclusiveGroup(buttonGroup);
-        connect(itemWidget,static_cast<void(GreeterMenuItem::*)(QString)>(&GreeterMenuItem::sigChecked),this,[this](QString action){
-            qInfo() << "select session:" << action;
-            m_session = action;
-        });
-        itemWidget->setObjectName("GreeterMenuItem");
-        if( m_session.isEmpty() ){//设置默认值
-            itemWidget->setChecked(true);
-        }
-        widgetAction->setDefaultWidget(itemWidget);
-        m_sessionMenu->addAction(widgetAction);
-    }
-
-    connect(ui->btn_session,&QToolButton::clicked,this,[=]{
-        QPoint menuLeftTop;
-        QPoint btnRightTopPos;
-        QSize  menuSize;
-
-        btnRightTopPos = ui->btn_session->mapToGlobal(QPoint(ui->btn_session->width(),0));
-        menuSize = m_sessionMenu->sizeHint();
-
-        menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
-        menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
-
-        qInfo() << "session menu popup: size[" << menuSize << "] leftop["<<menuLeftTop<<"]";
-        m_sessionMenu->popup(menuLeftTop);
     });
 
     ///用户列表点击
@@ -204,8 +161,75 @@ void GreeterLoginWindow::initUI()
     startUpdateTimeTimer();
 }
 
+void GreeterLoginWindow::initMenu()
+{
+    ///菜单样式
+    QFile menuStyleFile(DEFAULT_MENU_QSS);
+    QString menuQss;
+    if(menuStyleFile.open(QIODevice::ReadOnly)){
+        menuQss = menuStyleFile.readAll();
+    }else{
+        qWarning("open %s failed",DEFAULT_MENU_QSS);
+    }
+    ///电源菜单初始化
+    m_powerMenu = new QMenu(this);//透明化需要设置父控件
+    m_powerMenu->setStyleSheet(menuQss);
+    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);//透明必需
+    ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
+    ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
+    m_powerMenu->setWindowFlags(Qt::FramelessWindowHint|Qt::Widget);//透明必需
+    m_powerMenu->setContentsMargins(0,0,0,0);
+    m_powerMenu->setFixedWidth(92);
+    m_powerMenu->hide();
+
+    ///session菜单初始化
+    m_sessionMenu = new QMenu(this);
+    m_sessionMenu->setMinimumWidth(92);
+    m_sessionMenu->setMaximumWidth(184);
+    m_sessionMenu->setStyleSheet(menuQss);
+    m_sessionMenu->setAttribute(Qt::WA_TranslucentBackground);
+    ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
+    ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
+    m_sessionMenu->setWindowFlags(Qt::FramelessWindowHint|Qt::Widget);
+    m_sessionMenu->setContentsMargins(0,0,0,0);
+    m_sessionMenu->hide();
+
+    QButtonGroup* buttonGroup = new QButtonGroup(m_sessionMenu);
+    buttonGroup->setExclusive(true);
+    QLightDM::SessionsModel sessionModel;
+    for(int i=0;i<sessionModel.rowCount(QModelIndex());i++){
+        QVariant key,id;
+        QWidgetAction* widgetAction = nullptr;
+        GreeterMenuItem* itemWidget = nullptr;
+        key = sessionModel.data(sessionModel.index(i,0),QLightDM::SessionsModel::KeyRole);
+        id  = sessionModel.data(sessionModel.index(i,0),QLightDM::SessionsModel::IdRole);
+        widgetAction = new QWidgetAction(m_sessionMenu);
+        itemWidget = new GreeterMenuItem(key.toString(),true);
+        itemWidget->setFixedHeight(28);
+        itemWidget->setMinimumWidth(90);
+        itemWidget->setMaximumWidth(120);
+        itemWidget->setExclusiveGroup(buttonGroup);
+        connect(itemWidget,static_cast<void(GreeterMenuItem::*)(QString)>(&GreeterMenuItem::sigChecked),this,[this](QString action){
+            qInfo() << "select session:" << action;
+            m_session = action;
+            m_sessionMenu->hide();
+        });
+        itemWidget->setObjectName("GreeterMenuItem");
+        if( m_session.isEmpty() ){//设置默认值
+            itemWidget->setChecked(true);
+        }
+        widgetAction->setDefaultWidget(itemWidget);
+        m_sessionMenu->addAction(widgetAction);
+    }
+
+}
+
+
 void GreeterLoginWindow::initLightdmGreeter()
 {
+#ifdef TEST
+    ui->userlist->JustForTest(10);
+#endif
     //连接到Lightdm
     if( !m_greeter.connectSync() ){
         qWarning("connect to lightdm greeter failed.");
@@ -251,10 +275,44 @@ void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
     }
 }
 
+/**
+ * @brief 事件监听，该事件过滤器是对QApplication使用，获取应用程序中所有的鼠标点击事件
+ *        当点击的不是菜单区域直接收起菜单
+ * @param obj   事件对象
+ * @param  event 事件
+ * @return 是否过滤
+ */
+bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    bool needFilter =  false;
+    QMouseEvent* mouseEvent = nullptr;
+
+    if(event->type()!=QEvent::MouseButtonPress){
+        return false;
+    }
+
+    mouseEvent = dynamic_cast<QMouseEvent*>(event);
+
+    QPoint mousePressGlobal = mouseEvent->pos();
+    QRect m_sessionMenuGemometry = m_sessionMenu->geometry();
+    QRect m_powerMenuGeometry = m_powerMenu->geometry();
+
+    if( (!m_sessionMenuGemometry.contains(mousePressGlobal)) && m_sessionMenu->isVisible() ){
+        m_sessionMenu->hide();
+        needFilter = true;
+    }
+    if( (!m_powerMenuGeometry.contains(mousePressGlobal)) && m_powerMenu->isVisible() ){
+        m_powerMenu->hide();
+        needFilter = true;
+    }
+
+    return needFilter;
+}
+
 void GreeterLoginWindow::setTips(QLightDM::Greeter::MessageType type, const QString &text)
 {
     QString colorText = QString("<font color=%1>%2</font>")
-                        .arg(type==QLightDM::Greeter::MessageType::MessageTypeInfo?"white":"red")
+                        .arg("white")
                         .arg(text);
     ui->label_tips->setText(colorText);
 }
@@ -284,7 +342,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     }
     //NotList按钮
     m_buttonType = BUTTON_SWITCH_TO_MANUAL_LOGIN;
-    ui->button->setText(tr("Not List"));
+    ui->button->setText(tr("Not Listed?"));
     ui->button->setVisible(m_noListButotnVisiable);
     ui->button->setEnabled(true);
 

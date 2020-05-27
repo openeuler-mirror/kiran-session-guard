@@ -31,6 +31,7 @@ GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
     ui->setupUi(this);
     setDefaultIcon();
     initConnection();
+    ui->edit->installEventFilter(this);
 }
 
 GreeterLineEdit::~GreeterLineEdit()
@@ -62,11 +63,26 @@ void GreeterLineEdit::setDefaultIcon()
     ui->button->setIcon(QIcon(NORMAL_ICON));
 }
 
+void GreeterLineEdit::setNormalLetterSpacing()
+{
+    QFont font = ui->edit->font();
+    font.setLetterSpacing(QFont::PercentageSpacing,0);
+    ui->edit->setFont(font);
+}
+
+void GreeterLineEdit::setPasswdLetterSpacing()
+{
+    QFont font = ui->edit->font();
+    font.setLetterSpacing(QFont::AbsoluteSpacing,4);
+    ui->edit->setFont(font);
+}
+
 void GreeterLineEdit::setEchoMode(QLineEdit::EchoMode echoMode)
 {
     ui->edit->setEchoMode(echoMode);
     if(echoMode==QLineEdit::Normal){
         ui->edit->setStyleSheet(NORMAL_EDIT_STYLE);
+        setNormalLetterSpacing();
     }
 }
 
@@ -90,6 +106,16 @@ void GreeterLineEdit::setInputMode(GreeterLineEdit::InputMode inputMode)
     m_inputMode = inputMode;
 }
 
+void GreeterLineEdit::setEditFocus(bool editFocus)
+{
+    if (m_editFocus == editFocus)
+        return;
+
+    m_editFocus = editFocus;
+    style()->polish(this);
+    emit editFocusChanged(m_editFocus);
+}
+
 void GreeterLineEdit::slotEditReturnPressed()
 {
     if( (ui->edit->echoMode()!=QLineEdit::Password) && (ui->edit->text().isEmpty()) ){
@@ -110,11 +136,13 @@ void GreeterLineEdit::slotButtonPressed()
 
 void GreeterLineEdit::slotEditTextChanged(const QString &text)
 {
-    ///密码框圆形字符缩小
+    ///密码框输入密码不为空的情况下调整字体和字间距
     if(ui->edit->echoMode()==QLineEdit::Password && text.isEmpty()){
         ui->edit->setStyleSheet(NORMAL_EDIT_STYLE);
+        setNormalLetterSpacing();
     }else if(ui->edit->echoMode()==QLineEdit::Password && !text.isEmpty() ){
         ui->edit->setStyleSheet(PASSWD_EDIT_STYLE);
+        setPasswdLetterSpacing();
     }
 }
 
@@ -143,6 +171,19 @@ void GreeterLineEdit::paintEvent(QPaintEvent *e)
     QWidget::paintEvent(e);
 }
 
+///输入框聚焦改变，设置窗口的属性，便于QSS设置不同边框
+bool GreeterLineEdit::eventFilter(QObject *obj, QEvent *event)
+{
+    if(obj==ui->edit){
+        if(event->type()==QEvent::FocusIn){
+            setEditFocus(true);
+        }else if(event->type()==QEvent::FocusOut){
+            setEditFocus(false);
+        }
+    }
+    return false;
+}
+
 void GreeterLineEdit::startMovieAndEmitSignal()
 {
     ui->edit->setEnabled(false);
@@ -168,4 +209,9 @@ void GreeterLineEdit::reset()
 GreeterLineEdit::InputMode GreeterLineEdit::inputMode() const
 {
     return m_inputMode;
+}
+
+bool GreeterLineEdit::editFocus() const
+{
+    return m_editFocus;
 }

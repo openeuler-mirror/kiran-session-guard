@@ -115,6 +115,17 @@ void UserListWidget::appendItem(const UserInfo &userInfo)
     }
 }
 
+void UserListWidget::JustForTest(int count)
+{
+    QListWidgetItem* listItem = nullptr;
+    UserListItem* userItem = nullptr;
+    for( int i=0;i<count;i++ ){
+        QString testUserName = QString("TestUser%1").arg(i);
+        UserInfo userInfo;
+        userInfo.name = testUserName;
+        appendItem(userInfo);
+    }
+}
 void UserListWidget::insertItem(int row, const UserInfo &userInfo)
 {
     QListWidgetItem* newItem = nullptr;

@@ -20,6 +20,7 @@ public:
     void loadUserList();
     bool getCurrentSelected(UserInfo& userInfo);
     void setRow0();
+    void JustForTest(int count);
 private:
     bool getUserInfoFromModel(int row,UserInfo& userInfo);
     void appendItem(const UserInfo& userInfo);

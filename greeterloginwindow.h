@@ -43,6 +43,8 @@ private:
     void initSettings();
     //初始UI
     void initUI();
+    //初始化菜单
+    void initMenu();
     //设置TIPS
     void setTips(QLightDM::Greeter::MessageType type,const QString& text);
     //认证用户名
@@ -66,6 +68,7 @@ private slots:
 protected:
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void mousePressEvent(QMouseEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 private:
     Ui::GreeterLoginWindow *ui;
     QLightDM::Greeter m_greeter;

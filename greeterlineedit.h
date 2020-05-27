@@ -14,6 +14,8 @@ class GreeterLineEdit : public QWidget
     Q_OBJECT
     Q_ENUMS(InputMode)
     Q_PROPERTY(InputMode inputMode READ inputMode WRITE setInputMode)
+    ///提供给QSS状态值，通过该状态值设置聚焦边框
+    Q_PROPERTY(bool editFocus READ editFocus WRITE setEditFocus NOTIFY editFocusChanged)
 public:
     enum InputMode{
         INPUT_PROMPT,
@@ -29,6 +31,7 @@ Q_SIGNALS:
      * @param 确认的文本内容
      */
     void textConfirmed(const QString& data);
+    void editFocusChanged(bool editFocus);
 public:
     void startMovieAndEmitSignal();
     void reset();
@@ -37,12 +40,16 @@ public:
     void setFocus();
     QString getText();
     InputMode inputMode() const;
+    bool editFocus() const;
 public slots:
     void setInputMode(InputMode inputMode);
+    void setEditFocus(bool editFocus);
 private:
     void initUI();
     void initConnection();
     void setDefaultIcon();
+    void setNormalLetterSpacing();
+    void setPasswdLetterSpacing();
 private slots:
     void slotEditReturnPressed();
     void slotButtonPressed();
@@ -50,10 +57,12 @@ private slots:
 protected:
     void timerEvent(QTimerEvent*e) override;
     void paintEvent(QPaintEvent *e) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 private:
     Ui::GreeterLineEdit *ui;
     int m_animationTimerId;
     InputMode m_inputMode;
+    bool m_editFocus;
 };
 
 #endif // GREETERLINEEDIT_H

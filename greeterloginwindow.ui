@@ -466,9 +466,13 @@
               </property>
               <property name="styleSheet">
                <string notr="true">GreeterLineEdit#promptEdit{
-	border:1px solid rgba(255,255,255,0.02);
+	border:1px solid rgba(255,255,255,0.1);
 	border-radius:8px;
 	background-color:rgba(0,0,0,0.2);
+}
+GreeterLineEdit#promptEdit[editFocus=true]{
+	border:1px solid rgba(46,179,255,0.4);
+	border-radius:8px;
 }</string>
               </property>
              </widget>
@@ -553,7 +557,11 @@
               <font>
                <family>Noto Sans CJK SC</family>
                <pointsize>-1</pointsize>
+               <underline>true</underline>
               </font>
+             </property>
+             <property name="cursor">
+              <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="styleSheet">
               <string notr="true">#button{
@@ -561,6 +569,7 @@
 	color:rgb(255,254,254);
 	font-family:&quot;Noto Sans CJK SC&quot;;
 	font-size:14px;
+	text-decoration:underline;
 }</string>
              </property>
              <property name="text">
@@ -832,6 +841,9 @@
             <height>0</height>
            </size>
           </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
 	border:0px;
@@ -866,6 +878,9 @@ QToolButton:pressed{
             <height>40</height>
            </size>
           </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
 	border:0px;
@@ -899,6 +914,9 @@ QToolButton:pressed{
             <width>48</width>
             <height>40</height>
            </size>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
