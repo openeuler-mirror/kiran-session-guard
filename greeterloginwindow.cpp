@@ -88,7 +88,7 @@ void GreeterLoginWindow::initUI()
     });
 
     ///会话选择按钮点击
-    connect(ui->btn_session,&QToolButton::clicked,this,[=]{
+    connect(ui->btn_session,&QToolButton::pressed,this,[=]{
         QPoint menuLeftTop;
         QPoint btnRightTopPos;
         QSize  menuSize;
@@ -99,11 +99,15 @@ void GreeterLoginWindow::initUI()
         menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
 
+        qInfo() << "btn_session clicked,popup menu " << menuLeftTop;
         m_sessionMenu->popup(menuLeftTop);
     });
 
+    connect(m_powerMenu,&QMenu::triggered,[this](){
+        m_powerMenu->hide();
+    });
     ///电源按钮点击
-    connect(ui->btn_power,&QToolButton::clicked,this,[this]{
+    connect(ui->btn_power,&QToolButton::pressed,this,[this]{
         //重新设置选项
         m_powerMenu->clear();
         if( m_powerIface.canHibernate()){
@@ -134,6 +138,7 @@ void GreeterLoginWindow::initUI()
         menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
 
+        qInfo() << "btn_power clicked,popup menu " << menuLeftTop;
         m_powerMenu->popup(menuLeftTop);
     });
 
@@ -142,9 +147,9 @@ void GreeterLoginWindow::initUI()
     ///连接输入框回车和按钮点击信号
     connect(ui->promptEdit,SIGNAL(textConfirmed(const QString&)),this,SLOT(slotTextConfirmed(const QString&)));
     ///切换模式按钮和返回按钮
-    connect(ui->button,SIGNAL(clicked()),
+    connect(ui->button,SIGNAL(pressed()),
             this,SLOT(slotButtonClicked()));
-    connect(ui->btn_keyboard,&QToolButton::clicked,this,[this]{
+    connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
         GreeterKeyboard& keyboard = GreeterKeyboard::instance();
         if( keyboard.isVisible() ){
             keyboard.hide();
@@ -293,19 +298,25 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
 
     mouseEvent = dynamic_cast<QMouseEvent*>(event);
 
-    QPoint mousePressGlobal = mouseEvent->pos();
+    QPoint mousePressGlobal = mouseEvent->globalPos();
     QRect m_sessionMenuGemometry = m_sessionMenu->geometry();
     QRect m_powerMenuGeometry = m_powerMenu->geometry();
 
     if( (!m_sessionMenuGemometry.contains(mousePressGlobal)) && m_sessionMenu->isVisible() ){
         m_sessionMenu->hide();
         needFilter = true;
+        qInfo() << " session menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
     }
     if( (!m_powerMenuGeometry.contains(mousePressGlobal)) && m_powerMenu->isVisible() ){
         m_powerMenu->hide();
         needFilter = true;
+        qInfo() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
     }
-
+    if(needFilter){
+        qInfo() << "session: " << m_sessionMenuGemometry;
+        qInfo() << "menu:    " << m_powerMenuGeometry;
+        qInfo() << "pos:     " << mousePressGlobal;
+    }
     return needFilter;
 }
 

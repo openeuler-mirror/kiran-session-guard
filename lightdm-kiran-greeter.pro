@@ -33,7 +33,8 @@ SOURCES += \
     userlistitem.cpp \
     userlistwidget.cpp \
     greetermenuitem.cpp \
-    listwidgetwrapper.cpp
+    listwidgetwrapper.cpp \
+    scalinghelper.cpp
 
 #头文件
 HEADERS += \
@@ -50,7 +51,8 @@ HEADERS += \
     useravatarwidget.h \
     userinfo.h \
     greetermenuitem.h \
-    listwidgetwrapper.h
+    listwidgetwrapper.h \
+    scalinghelper.h
 
 #界面文件
 FORMS += \
@@ -63,7 +65,8 @@ FORMS += \
 LIBS += \
     -llightdm-qt5-3 \
     -lX11 \
-    -lXtst
+    -lXtst \
+    -lXrandr
 
 #资源文件
 RESOURCES += \

@@ -6,16 +6,36 @@
 #include "greeterkeyboard.h"
 #include <QDebug>
 #include <QTranslator>
+#include "scalinghelper.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter.log");
     qInstallMessageHandler(Log::messageHandler);
+
+    ///读取Greeter配置
+    GreeterSetting::instance()->dumpGreeterSetting();
+
+    ///设置缩放比
+    switch (GreeterSetting::instance()->getEnableScaling()) {
+    case GreeterSetting::SCALING_AUTO:
+        ScalingHelper::auto_calculate_screen_scaling();
+        break;
+    case GreeterSetting::SCALING_ENABLE:
+        ScalingHelper::set_scale_factor(GreeterSetting::instance()->getScaleFactor());
+        break;
+    case GreeterSetting::SCALING_DISABLE:
+        break;
+    default:
+        qWarning() << "enable-scaling: unsupported options";
+        break;
+    }
+
+    QApplication a(argc, argv);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     ///翻译
     QTranslator tsor;
@@ -26,9 +46,6 @@ int main(int argc, char *argv[])
                                                       TRANSLATION_FILE_DIR/*dir*/,
                                                       ".qm"/*suffix*/);
     qApp->installTranslator(&tsor);
-
-    ///读取Greeter配置
-    GreeterSetting::instance()->dumpGreeterSetting();
 
     ///初始键盘配置
     GreeterKeyboard::instance().init();
