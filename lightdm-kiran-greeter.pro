@@ -34,7 +34,8 @@ SOURCES += \
     userlistwidget.cpp \
     greetermenuitem.cpp \
     listwidgetwrapper.cpp \
-    scalinghelper.cpp
+    scalinghelper.cpp \
+    cursorhelper.cpp
 
 #头文件
 HEADERS += \
@@ -52,7 +53,8 @@ HEADERS += \
     userinfo.h \
     greetermenuitem.h \
     listwidgetwrapper.h \
-    scalinghelper.h
+    scalinghelper.h \
+    cursorhelper.h
 
 #界面文件
 FORMS += \
@@ -66,7 +68,9 @@ LIBS += \
     -llightdm-qt5-3 \
     -lX11 \
     -lXtst \
-    -lXrandr
+    -lXrandr \
+    -lXcursor \
+    -lXfixes
 
 #资源文件
 RESOURCES += \

@@ -21,7 +21,6 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QButtonGroup>
-#include <QSet>
 
 #define DEFAULT_MENU_QSS ":/themes/QMenu.qss"
 

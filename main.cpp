@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QTranslator>
 #include "scalinghelper.h"
+#include "cursorhelper.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 
@@ -36,6 +37,10 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    if(!CursorHelper::setRootWindowCursor()){
+        qWarning() << "setRootWindowCursor failed";
+    }
 
     ///翻译
     QTranslator tsor;
