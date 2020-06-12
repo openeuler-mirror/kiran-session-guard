@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Lightdm Kiran Greeter
+Comment=Lightdm Kiran Greeter
+Exec=lightdm-kiran-greeter
+Type=Application
+X-Ubuntu-Gettext-Domain=lightdm-kiran-greeter
+Name[zh_CN]=lightdm-kiran-greeter
