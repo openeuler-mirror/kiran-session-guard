@@ -117,8 +117,6 @@ void UserListWidget::appendItem(const UserInfo &userInfo)
 
 void UserListWidget::JustForTest(int count)
 {
-    QListWidgetItem* listItem = nullptr;
-    UserListItem* userItem = nullptr;
     for( int i=0;i<count;i++ ){
         QString testUserName = QString("TestUser%1").arg(i);
         UserInfo userInfo;
@@ -126,6 +124,23 @@ void UserListWidget::JustForTest(int count)
         appendItem(userInfo);
     }
 }
+
+QString UserListWidget::getIconByAccount(const QString &account)
+{
+    QString iconPath = "";
+
+    for( int i=0;i<m_usersModel.rowCount(QModelIndex());i++){
+        UserInfo userInfo;
+        getUserInfoFromModel(i,userInfo);
+        if(userInfo.name == account){
+            iconPath = userInfo.imagePath;
+            break;
+        }
+    }
+
+    return iconPath;
+}
+
 void UserListWidget::insertItem(int row, const UserInfo &userInfo)
 {
     QListWidgetItem* newItem = nullptr;
@@ -188,7 +203,7 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
 {
     for(int i=first;i<=last;i++){
         UserInfo userInfo;
-        Q_ASSERT(getUserInfoFromModel(first,userInfo));
+        getUserInfoFromModel(first,userInfo);
         insertItem(i,userInfo);
     }
 

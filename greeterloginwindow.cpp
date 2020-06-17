@@ -512,7 +512,8 @@ void GreeterLoginWindow::slotAuthenticationComplete()
                 setTips(QLightDM::Greeter::MessageType::MessageTypeError,
                         tr("Incorrect password, please try again"));
             }
-            startAuthUser(m_greeter.authenticationUser());
+            startAuthUser(m_greeter.authenticationUser(),
+                          ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
         }else{
             if( !m_havePAMError ){
                 setTips(QLightDM::Greeter::MessageType::MessageTypeError,
@@ -529,7 +530,8 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
         qInfo() << "respond: " << ui->promptEdit->getText();
         m_greeter.respond(ui->promptEdit->getText());
     }else{
-        startAuthUser(ui->promptEdit->getText());
+        startAuthUser(ui->promptEdit->getText(),
+                      ui->userlist->getIconByAccount(ui->promptEdit->getText()));
     }
 }
 

@@ -21,6 +21,7 @@ public:
     bool getCurrentSelected(UserInfo& userInfo);
     void setRow0();
     void JustForTest(int count);
+    QString getIconByAccount(const QString& account);
 private:
     bool getUserInfoFromModel(int row,UserInfo& userInfo);
     void appendItem(const UserInfo& userInfo);
