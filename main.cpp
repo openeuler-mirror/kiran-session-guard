@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     Log::instance()->init("/tmp/kiran-screensaver-dialog.log");
     qInstallMessageHandler(Log::messageHandler);
 
-    QApplication a(argc, argv);
-    qInfo() << "arguments: " <<  a.arguments();
+    QApplication app(argc, argv);
+    qInfo() << "arguments: " <<  app.arguments();
 
     ///翻译
     QTranslator tsor;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     QCommandLineOption verboseOption("verbose","debug mode output log");
     parser.addOptions({logoutEnableOption,logoutCommandOption,statusMsgOption,enableSwitchOption,verboseOption});
     parser.addHelpOption();
-    parser.process(a);
+    parser.process(app);
 
     ///初始化虚拟键盘
     if(!GreeterKeyboard::instance().init()){
@@ -60,5 +60,5 @@ int main(int argc, char *argv[])
         Log::instance()->setAppend2File(true);
     }
     w.show();
-    return a.exec();
+    return app.exec();
 }

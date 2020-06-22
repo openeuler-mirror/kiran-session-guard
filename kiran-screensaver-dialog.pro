@@ -13,6 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #配置项 g++
 CONFIG += c++11
+CONFIG +=link_pkgconfig
 
 #包含头文件目录 -I
 INCLUDEPATH += \
@@ -55,12 +56,10 @@ FORMS += \
     screensaverdialog.ui \
     greeterlineedit.ui
 
+PKGCONFIG += gio-2.0
 #链接库
 LIBS += \
     -lX11 \
-    -lglib-2.0 \
-    -lgio-2.0 \
-    -lgobject-2.0 \
     -lpam
 
 #资源文件
