@@ -82,6 +82,11 @@ void GreeterLoginWindow::initUI()
     labelTipsShadowEffect->setOffset(0, 0);
     ui->label_tips->setGraphicsEffect(labelTipsShadowEffect);
 
+    ///按钮ToopTip
+    ui->btn_session->setToolTip(tr("session menu"));
+    ui->btn_keyboard->setToolTip(tr("virtual keyboard"));
+    ui->btn_power->setToolTip(tr("power menu"));
+
     connect(m_sessionMenu,&QMenu::triggered,[this](){
         m_sessionMenu->hide();
     });

@@ -22,12 +22,12 @@ void UserAvatarWidget::setImage(const QString &path)
     }
     if( m_pixmap.load(path) ){
         qInfo() << "UserAvatar: load file " << path << "successed";
-        int radius = this->width()<this->height()?this->width()/2:this->height();
-        m_scaledPixmap = m_pixmap.scaled(2*radius,2*radius,
-                                         Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
+        m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }else{
         qWarning() << "UserAvatar: file path[" << path << "] load failed.";
-        setDefaultImage();
+        if( path!=DEFAULT_USER_AVATAR ){
+            setDefaultImage();
+        }
     }
     update();
 }
@@ -68,12 +68,5 @@ QPixmap UserAvatarWidget::scalePixmapAdjustSize(const QPixmap &pixmap)
 
 void UserAvatarWidget::setDefaultImage()
 {
-    if(!m_pixmap.load(DEFAULT_USER_AVATAR)){
-        qWarning() <<  "UserAvatar: " << "load default avatar failed.";
-        return;
-    }else{
-        qInfo() << "set default image " << DEFAULT_USER_AVATAR << " success";
-    }
-    m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
-    update();
+    setImage(DEFAULT_USER_AVATAR);
 }

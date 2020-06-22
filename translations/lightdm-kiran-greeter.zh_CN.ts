@@ -17,58 +17,81 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.ui" line="358"/>
+        <location filename="../greeterloginwindow.ui" line="351"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="101"/>
+        <location filename="../greeterloginwindow.ui" line="594"/>
+        <source>Not List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../greeterloginwindow.cpp" line="86"/>
+        <source>session menu</source>
+        <translatorcomment>会话菜单</translatorcomment>
+        <translation>会话菜单</translation>
+    </message>
+    <message>
+        <location filename="../greeterloginwindow.cpp" line="87"/>
+        <source>virtual keyboard</source>
+        <translatorcomment>虚拟键盘</translatorcomment>
+        <translation>虚拟键盘</translation>
+    </message>
+    <message>
+        <location filename="../greeterloginwindow.cpp" line="88"/>
+        <source>power menu</source>
+        <translatorcomment>电源菜单</translatorcomment>
+        <translation>电源菜单</translation>
+    </message>
+    <message>
+        <location filename="../greeterloginwindow.cpp" line="118"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="106"/>
+        <location filename="../greeterloginwindow.cpp" line="123"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="111"/>
+        <location filename="../greeterloginwindow.cpp" line="128"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="116"/>
+        <location filename="../greeterloginwindow.cpp" line="133"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="287"/>
+        <location filename="../greeterloginwindow.cpp" line="360"/>
         <source>Not Listed?</source>
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="326"/>
-        <location filename="../greeterloginwindow.cpp" line="420"/>
+        <location filename="../greeterloginwindow.cpp" line="399"/>
+        <location filename="../greeterloginwindow.cpp" line="493"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="338"/>
+        <location filename="../greeterloginwindow.cpp" line="411"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="439"/>
+        <location filename="../greeterloginwindow.cpp" line="512"/>
         <source>Start session failed</source>
         <translation>开启会话失败</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="445"/>
+        <location filename="../greeterloginwindow.cpp" line="518"/>
         <source>Incorrect password, please try again</source>
         <translation>密码错误，请再次尝试</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="451"/>
+        <location filename="../greeterloginwindow.cpp" line="525"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
