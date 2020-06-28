@@ -6,7 +6,8 @@
 #include "greetersetting.h"
 #include "imagehelper.h"
 
-#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
+//#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
+#define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 
 GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
     : QWidget(parent)
@@ -78,6 +79,8 @@ void GreeterBackground::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     if(!m_scaledBackground.isNull()){
         painter.drawPixmap(this->rect(),m_scaledBackground,m_scaledBackground.rect());
+    }else{
+        painter.fillRect(this->rect(),QColor(0,0,0));
     }
     QWidget::paintEvent(event);
 }

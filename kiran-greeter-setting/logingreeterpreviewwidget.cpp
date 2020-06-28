@@ -4,7 +4,8 @@
 #include <QDebug>
 #include "imagehelper.h"
 
-#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
+//#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
+#define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_SIZE QSize(330,186)
 
 LoginGreeterPreviewWidget::LoginGreeterPreviewWidget(QWidget *parent) : QWidget(parent)
