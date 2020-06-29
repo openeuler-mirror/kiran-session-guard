@@ -9,6 +9,7 @@ private:
     GSettingsHelper();
 public:
     static QString getBackgrountPath();
+    static int getMateScalingFactor();
 };
 
 #endif // GSETTINGSHELPER_H

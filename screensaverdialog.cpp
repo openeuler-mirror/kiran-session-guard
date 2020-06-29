@@ -20,11 +20,12 @@
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
 ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
-    LockPlug(parent),
+    QWidget(parent),
     ui(new Ui::ScreenSaverDialog),
     m_authProxy(this)
 {
     ui->setupUi(this);
+    printWindowID();
     InitUI();
 }
 
@@ -43,7 +44,7 @@ void ScreenSaverDialog::InitUI()
 {
 
     connect(ui->btn_cancel,&QToolButton::pressed,this,[=]{
-        LockPlug::responseCancelAndQuit();
+        responseCancelAndQuit();
     });
 
     connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,this,[=]{
@@ -228,6 +229,35 @@ void ScreenSaverDialog::onDisplayTextInfo(const char *msg)
     //暂时不需要
 }
 
+void ScreenSaverDialog::printWindowID()
+{
+    std::cout << "WINDOW ID=" << winId() << std::endl;
+    qInfo() << "WINDOW ID=" << winId();
+}
+
+void ScreenSaverDialog::responseOkAndQuit()
+{
+    static const char* response = "RESPONSE=OK";
+    std::cout << response << std::endl;
+    qInfo() << response;
+    this->close();
+}
+
+void ScreenSaverDialog::responseCancelAndQuit()
+{
+    static const char* response = "RESPONSE=CANCEL";
+    std::cout << response << std::endl;
+    qInfo() << response;
+    this->close();
+}
+
+void ScreenSaverDialog::responseNoticeAuthFailed()
+{
+    static const char* response = "NOTICE=AUTH FAILED";
+    std::cout << response << std::endl;
+    qInfo() << response;
+}
+
 void ScreenSaverDialog::slotAuthenticateComplete(bool isSuccess)
 {
     if(!isSuccess){
@@ -267,11 +297,5 @@ void ScreenSaverDialog::paintEvent(QPaintEvent *event)
     if(!m_scaledBackground.isNull()){
         painter.drawPixmap(this->rect(),m_scaledBackground,m_scaledBackground.rect());
     }
-    LockPlug::paintEvent(event);
+    QWidget::paintEvent(event);
 }
-
-void ScreenSaverDialog::showEvent(QShowEvent *event)
-{
-    LockPlug::showEvent(event);
-}
-

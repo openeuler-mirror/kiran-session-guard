@@ -5,22 +5,38 @@
 #include <QDebug>
 #include "log.h"
 #include "greeterkeyboard.h"
+#include "gsettingshelper.h"
+#include "scalinghelper.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 
-#include "dbusapihelper.h"
 int main(int argc, char *argv[])
 {
-    ///初始化日志模块
+    ///初始化日志模块,需提供verbose启动参数日志才会写入文件
     Log::instance()->init("/tmp/kiran-screensaver-dialog.log");
     qInstallMessageHandler(Log::messageHandler);
+
+    ///scaling
+    int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
+    switch (windowScalingFactor) {
+    case 0:
+        ScalingHelper::auto_calculate_screen_scaling();
+        break;
+    case 1:
+        break;
+    case 2:
+        ScalingHelper::set_scale_factor(2);
+        break;
+    default:
+        qWarning() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
+        break;
+    }
 
     QApplication app(argc, argv);
     qInfo() << "arguments: " <<  app.arguments();
 
-    ///翻译
+    ///翻译 filename+prefix+language name+suffix
     QTranslator tsor;
-    //filename+prefix+language name+suffix
     qInfo() << "load translation file: " << tsor.load(QLocale(),
                                                       "kiran-screensaver-dialog"/*filename*/,
                                                       "."/*prefix*/,
@@ -45,13 +61,13 @@ int main(int argc, char *argv[])
     }
     ScreenSaverDialog w;
     if( parser.isSet(logoutEnableOption) ){
-        //TODO
+        //
     }
     if( parser.isSet(logoutCommandOption) ){
-        //TODO
+        //
     }
     if(parser.isSet(statusMsgOption)){
-        //TODO
+        //
     }
     if(parser.isSet(enableSwitchOption)){
         w.setSwitchUserEnabled(true);

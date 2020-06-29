@@ -27,7 +27,6 @@ SOURCES += \
     main.cpp \
     log.cpp \
     xlibhelper.cpp \
-    lockplug.cpp \
     screensaverdialog.cpp \
     useravatarwidget.cpp \
     greeterlineedit.cpp \
@@ -35,13 +34,13 @@ SOURCES += \
     greeterkeyboard.cpp \
     dbusapihelper.cpp \
     pamauthproxy.cpp \
-    tool.cpp
+    tool.cpp \
+    scalinghelper.cpp
 
 #头文件
 HEADERS += \
     log.h \
     xlibhelper.h \
-    lockplug.h \
     screensaverdialog.h \
     useravatarwidget.h \
     greeterlineedit.h \
@@ -49,7 +48,8 @@ HEADERS += \
     greeterkeyboard.h \
     dbusapihelper.h \
     pamauthproxy.h \
-    tool.h
+    tool.h \
+    scalinghelper.h
 
 #界面文件
 FORMS += \
@@ -60,7 +60,8 @@ PKGCONFIG += gio-2.0
 #链接库
 LIBS += \
     -lX11 \
-    -lpam
+    -lpam \
+    -lXrandr
 
 #资源文件
 RESOURCES += \

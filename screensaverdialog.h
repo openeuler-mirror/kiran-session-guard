@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QAbstractNativeEventFilter>
 #include <QPropertyAnimation>
-
-#include "lockplug.h"
 #include "pamauthproxy.h"
 
 namespace Ui {
@@ -13,7 +11,7 @@ class ScreenSaverDialog;
 }
 
 class QMenu;
-class ScreenSaverDialog : public LockPlug,PamAuthCallback
+class ScreenSaverDialog : public QWidget,PamAuthCallback
 {
     Q_OBJECT
 public:
@@ -31,12 +29,17 @@ private:
     Q_INVOKABLE void requestResponse(const QString& msg,bool visiable);
     virtual void onDisplayError(const char* msg) Q_DECL_OVERRIDE;
     virtual void onDisplayTextInfo(const char* msg) Q_DECL_OVERRIDE;
+private:
+    ///通过标准输出回复ScreenSaver接口
+    void printWindowID();
+    void responseOkAndQuit();
+    void responseCancelAndQuit();
+    void responseNoticeAuthFailed();
 private slots:
     void slotAuthenticateComplete(bool isSuccess);
 protected:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-    virtual void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
 private:
     Ui::ScreenSaverDialog *ui;
     PamAuthProxy m_authProxy;

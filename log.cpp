@@ -87,9 +87,6 @@ void Log::write(QtMsgType type, const QMessageLogContext &context, const QString
             }
         }
     }
-#if 1
-    std::cout << logContent.toStdString() << std::endl;
-#endif
     m_mutex.unlock();
 }
 
