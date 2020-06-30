@@ -16,20 +16,25 @@
         <translation>外观设置</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="235"/>
+        <location filename="../greetersetting.ui" line="241"/>
         <source>Select Image</source>
         <translatorcomment>选择图片</translatorcomment>
         <translation>选择图片</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="267"/>
+        <location filename="../greetersetting.ui" line="273"/>
         <source>Browse</source>
         <translation>浏览</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="285"/>
+        <location filename="../greetersetting.ui" line="291"/>
         <source>Scale Mode</source>
         <translation>是否开启缩放</translation>
+    </message>
+    <message>
+        <location filename="../greetersetting.ui" line="812"/>
+        <source>auto login delay(seconds)</source>
+        <translation>自动登录延时(秒)</translation>
     </message>
     <message>
         <location filename="../greetersetting.cpp" line="51"/>
@@ -47,34 +52,33 @@
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="378"/>
+        <location filename="../greetersetting.ui" line="420"/>
         <source>Scale Factor</source>
         <translation>缩放比例</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="505"/>
+        <location filename="../greetersetting.ui" line="550"/>
         <source>User Login</source>
         <translation>用户登录设置</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="555"/>
+        <location filename="../greetersetting.ui" line="606"/>
         <source>enable manual login</source>
         <translation>允许手动登录</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="648"/>
+        <location filename="../greetersetting.ui" line="699"/>
         <source>hide user list</source>
         <translation>隐藏用户列表</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="712"/>
+        <location filename="../greetersetting.ui" line="763"/>
         <source>auto login account</source>
         <translation>自动登录用户名</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="760"/>
         <source>auto login delay(ms)</source>
-        <translation>自动登录延时(毫秒)</translation>
+        <translation type="vanished">自动登录延时(毫秒)</translation>
     </message>
     <message>
         <location filename="../greetersetting.cpp" line="26"/>

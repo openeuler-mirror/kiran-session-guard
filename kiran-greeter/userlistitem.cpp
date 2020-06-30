@@ -19,6 +19,9 @@ void UserListItem::setUserInfo(const UserInfo &userInfo)
     m_userInfo = userInfo;
     ui->avatar->setImage(userInfo.imagePath);
     ui->label_username->setText(userInfo.name);
+    if( userInfo.loggedIn ){
+        ui->label_logined->setPixmap(QPixmap(":/images/checked.png"));
+    }
 }
 
 UserInfo UserListItem::getUserInfo()

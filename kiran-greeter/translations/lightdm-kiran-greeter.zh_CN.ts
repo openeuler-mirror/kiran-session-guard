@@ -70,28 +70,28 @@
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="399"/>
-        <location filename="../greeterloginwindow.cpp" line="493"/>
+        <location filename="../greeterloginwindow.cpp" line="400"/>
+        <location filename="../greeterloginwindow.cpp" line="494"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="411"/>
+        <location filename="../greeterloginwindow.cpp" line="412"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="512"/>
+        <location filename="../greeterloginwindow.cpp" line="513"/>
         <source>Start session failed</source>
         <translation>开启会话失败</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="518"/>
+        <location filename="../greeterloginwindow.cpp" line="519"/>
         <source>Incorrect password, please try again</source>
         <translation>密码错误，请再次尝试</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="525"/>
+        <location filename="../greeterloginwindow.cpp" line="526"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>

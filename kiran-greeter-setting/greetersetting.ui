@@ -154,7 +154,7 @@ QListView::item:focus{
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="appearence">
          <property name="styleSheet">
@@ -809,7 +809,7 @@ QCheckBox::indicator {
 };</string>
             </property>
             <property name="text">
-             <string>auto login delay(ms)</string>
+             <string>auto login delay(seconds)</string>
             </property>
            </widget>
           </item>
