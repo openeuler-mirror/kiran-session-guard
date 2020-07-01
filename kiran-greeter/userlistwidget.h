@@ -22,10 +22,13 @@ public:
     void setRow0();
     void JustForTest(int count);
     QString getIconByAccount(const QString& account);
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 private:
+    void initUI();
     bool getUserInfoFromModel(int row,UserInfo& userInfo);
     void appendItem(const UserInfo& userInfo);
     void insertItem(int row,const UserInfo& userInfo);
+    void setCurrentRow(int idx);
 private slots:
     void slotUserItemActivated();
     void slotRowsRemoved(const QModelIndex&parent,int first,int last);

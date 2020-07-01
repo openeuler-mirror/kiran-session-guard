@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QButtonGroup>
+#include <libintl.h>
 
 #define DEFAULT_MENU_QSS ":/themes/QMenu.qss"
 
@@ -40,6 +41,7 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
 {
     qRegisterMetaType<UserInfo>("UserInfo");
     ui->setupUi(this);
+
     ///启动CapsLock监控
     std::string error;
     if(!m_snoop.start(capsLockStatusChanged,this,error)){
@@ -58,9 +60,13 @@ GreeterLoginWindow::~GreeterLoginWindow()
     delete ui;
 }
 
-void GreeterLoginWindow::setEditPromptFocus()
+void GreeterLoginWindow::setEditPromptFocus(int ms)
 {
-    ui->promptEdit->setFocus();
+    if(!ms){
+        ui->promptEdit->setFocus();
+    }else{
+        QTimer::singleShot(ms,ui->promptEdit,SLOT(setFocus()));
+    }
 }
 
 void GreeterLoginWindow::initUI()
@@ -97,6 +103,11 @@ void GreeterLoginWindow::initUI()
         QPoint btnRightTopPos;
         QSize  menuSize;
 
+        if( m_sessionMenu->isVisible() ){
+            m_sessionMenu->hide();
+            return;
+        }
+
         btnRightTopPos = ui->btn_session->mapTo(this,QPoint(ui->btn_session->width(),0));
         menuSize = m_sessionMenu->sizeHint();
 
@@ -112,6 +123,11 @@ void GreeterLoginWindow::initUI()
     });
     ///电源按钮点击
     connect(ui->btn_power,&QToolButton::pressed,this,[this]{
+        if( m_powerMenu->isVisible() ){
+            m_powerMenu->hide();
+            return;
+        }
+
         //重新设置选项
         m_powerMenu->clear();
         if( m_powerIface.canHibernate()){
@@ -230,7 +246,6 @@ void GreeterLoginWindow::initMenu()
         widgetAction->setDefaultWidget(itemWidget);
         m_sessionMenu->addAction(widgetAction);
     }
-
 }
 
 
@@ -244,7 +259,6 @@ void GreeterLoginWindow::initLightdmGreeter()
         qWarning("connect to lightdm greeter failed.");
         return;
     }
-
     //连接Lightdm信号槽
     connect(&m_greeter,SIGNAL(showMessage(QString,QLightDM::Greeter::MessageType)),
             this,SLOT(slotShowMessage(QString,QLightDM::Greeter::MessageType)));
@@ -346,6 +360,8 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
     ui->promptEdit->reset();
+    ///FIXME:鼠标点击认证用户列表时，需要延时设置输入焦点到输入框，不然又会被置回UserItem
+    setEditPromptFocus(100);
     m_greeter.authenticate(username);
 }
 
@@ -477,7 +493,8 @@ void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::Messag
     if( type == QLightDM::Greeter::MessageType::MessageTypeError ){
         m_havePAMError = true;
     }
-    setTips(type,text);
+    std::string stdText = text.toStdString();
+    setTips(type,gettext(stdText.c_str()));
 }
 
 void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptType type)
@@ -496,10 +513,12 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
     }
     m_havePrompted = true;
     ui->promptEdit->reset();
-    ui->promptEdit->setPlaceHolderText(text);
+    std::string stdText = text.toStdString();
+    ui->promptEdit->setPlaceHolderText(gettext(stdText.c_str()));
     ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
     ui->promptEdit->setEchoMode(type==QLightDM::Greeter::PromptType::PromptTypeSecret?QLineEdit::Password:QLineEdit::Normal);
-    setEditPromptFocus();
+    ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
+    setEditPromptFocus(100);
 }
 
 void GreeterLoginWindow::slotAuthenticationComplete()
@@ -543,7 +562,6 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 void GreeterLoginWindow::slotUserActivated(const UserInfo &userInfo)
 {
     startAuthUser(userInfo.name,userInfo.imagePath);
-    ui->promptEdit->setFocus();
 }
 
 void GreeterLoginWindow::slotButtonClicked()

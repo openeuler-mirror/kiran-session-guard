@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -478,6 +481,9 @@
                 <height>36</height>
                </size>
               </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="styleSheet">
                <string notr="true">GreeterLineEdit#promptEdit{
 	border:1px solid rgba(255,255,255,0.1);
@@ -588,6 +594,14 @@ GreeterLineEdit#promptEdit[editFocus=true]{
 	font-family:&quot;Noto Sans CJK SC&quot;;
 	font-size:14px;
 	text-decoration:underline;
+}
+
+#button:hover,#button:focus{
+	color:#2eb3ff;
+}
+
+#button:pressed{
+	color:1b82bd;
 }</string>
               </property>
               <property name="text">
@@ -843,14 +857,20 @@ GreeterLineEdit#promptEdit[editFocus=true]{
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
+          <property name="tabletTracking">
+           <bool>true</bool>
+          </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
-	border:0px;
 	border-image:url(:/images/session_normal.png);
 }
 QToolButton:pressed{
-	border-image:url(:/images/session_hover.png);
-}</string>
+	border-image:url(:/images/session_pressed.png);
+}
+QToolButton:hover:!pressed,QToolButton:focus:!pressed{
+	border-image:url(:/images/session_select.png);
+}
+</string>
           </property>
           <property name="text">
            <string/>
@@ -880,14 +900,20 @@ QToolButton:pressed{
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
+          <property name="tabletTracking">
+           <bool>true</bool>
+          </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
-	border:0px;
 	border-image:url(:/images/keyboard_normal.png);
 }
 QToolButton:pressed{
-	border-image:url(:/images/keyboard_hover.png);
-}</string>
+	border-image:url(:/images/keyboard_pressed.png);
+}
+QToolButton:hover:!pressed,QToolButton:focus:!pressed{
+	border-image:url(:/images/keyboard_select.png);
+}
+</string>
           </property>
           <property name="text">
            <string/>
@@ -917,14 +943,20 @@ QToolButton:pressed{
           <property name="cursor">
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
+          <property name="tabletTracking">
+           <bool>true</bool>
+          </property>
           <property name="styleSheet">
            <string notr="true">QToolButton{
-	border:0px;
 	border-image:url(:/images/shutdown_normal.png);
 }
 QToolButton:pressed{
-	border-image:url(:/images/shutdown_hover.png);
-}</string>
+	border-image:url(:/images/shutdown_pressed.png);
+}
+QToolButton:hover:!pressed,QToolButton:focus:!pressed{
+	border-image:url(:/images/shutdown_select.png);
+}
+</string>
           </property>
           <property name="text">
            <string/>

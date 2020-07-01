@@ -9,10 +9,17 @@
 #include "scalinghelper.h"
 #include "cursorhelper.h"
 
+#include <locale.h>
+#include <libintl.h>
+
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 
 int main(int argc, char *argv[])
 {
+    setlocale(LC_ALL, "");
+    bindtextdomain("Linux-PAM", "/usr/share/locale");
+    textdomain("Linux-PAM");
+
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter.log");
     qInstallMessageHandler(Log::messageHandler);
@@ -51,7 +58,6 @@ int main(int argc, char *argv[])
                                                       TRANSLATION_FILE_DIR/*dir*/,
                                                       ".qm"/*suffix*/);
     qApp->installTranslator(&tsor);
-
     ///初始键盘配置
     GreeterKeyboard::instance().init();
 

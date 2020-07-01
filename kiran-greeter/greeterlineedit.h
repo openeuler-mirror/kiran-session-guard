@@ -37,7 +37,7 @@ public:
     void reset();
     void setEchoMode(QLineEdit::EchoMode echoMode);
     void setPlaceHolderText(const QString& text);
-    void setFocus();
+    Q_INVOKABLE void setFocus();
     QString getText();
     InputMode inputMode() const;
     bool editFocus() const;

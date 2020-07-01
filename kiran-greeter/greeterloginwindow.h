@@ -35,7 +35,7 @@ class GreeterLoginWindow : public QWidget
 public:
     explicit GreeterLoginWindow(QWidget *parent = nullptr);
     virtual ~GreeterLoginWindow() override;
-    void setEditPromptFocus();
+    void setEditPromptFocus(int ms=0);
 private:
     //初始化LightdmGreeter，并连接信号槽
     void initLightdmGreeter();

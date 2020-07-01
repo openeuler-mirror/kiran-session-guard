@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -51,11 +54,23 @@
        <family>Noto Sans CJK SC Light</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">  QListView {
       show-decoration-selected: 0; /* make the selection span the entire width of the view */
 	 background-color:transparent;
   }
+
+UserListItem:focus:!hover{
+	 		border:1px solid;
+			border-color:rgba(255,255,255,0.3);
+}
+UserListItem:hover{
+	border:1px solid;
+				border-color:rgba(255,255,255,0.2);
+}
 
 QListView::item{
 	background-color:transparent;
@@ -77,16 +92,6 @@ QListView::item{
  QListView::item:selected:active {
 
  }
-
- QListView::item:!selected:hover {
-	 		border:1px solid;
-	border-color:rgba(255,255,255,0.1);
- }
-
-QListView::item:focus{
-
-}
-
 
 #listWidget QScrollBar:vertical {
        border: 0px solid grey;
