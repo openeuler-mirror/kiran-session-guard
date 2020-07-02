@@ -32,22 +32,31 @@
         <translation>是否开启缩放</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="812"/>
-        <source>auto login delay(seconds)</source>
-        <translation>自动登录延时(秒)</translation>
+        <location filename="../greetersetting.ui" line="763"/>
+        <source>auto login account(take effect after restart)</source>
+        <translation>自动登录用户名(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="51"/>
+        <location filename="../greetersetting.ui" line="812"/>
+        <source>auto login delay(seconds)(take effect after restart)</source>
+        <translation>自动登录延时(秒)(重启后生效)</translation>
+    </message>
+    <message>
+        <source>auto login delay(seconds)</source>
+        <translation type="vanished">自动登录延时(秒)</translation>
+    </message>
+    <message>
+        <location filename="../greetersetting.cpp" line="57"/>
         <source>auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="52"/>
+        <location filename="../greetersetting.cpp" line="58"/>
         <source>manual</source>
         <translation>手动</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="53"/>
+        <location filename="../greetersetting.cpp" line="59"/>
         <source>disable</source>
         <translation>禁用</translation>
     </message>
@@ -72,36 +81,35 @@
         <translation>隐藏用户列表</translation>
     </message>
     <message>
-        <location filename="../greetersetting.ui" line="763"/>
         <source>auto login account</source>
-        <translation>自动登录用户名</translation>
+        <translation type="vanished">自动登录用户名</translation>
     </message>
     <message>
         <source>auto login delay(ms)</source>
         <translation type="vanished">自动登录延时(毫秒)</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="26"/>
+        <location filename="../greetersetting.cpp" line="25"/>
         <source>greeter settings</source>
         <translation>登录设置</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="38"/>
+        <location filename="../greetersetting.cpp" line="43"/>
         <source>appearance</source>
         <translation>外观</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="44"/>
+        <location filename="../greetersetting.cpp" line="49"/>
         <source>user login</source>
         <translation>用户登录</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="74"/>
+        <location filename="../greetersetting.cpp" line="82"/>
         <source>select greeter background</source>
         <translation>选择登录背景</translation>
     </message>
     <message>
-        <location filename="../greetersetting.cpp" line="76"/>
+        <location filename="../greetersetting.cpp" line="84"/>
         <source>image files(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)</source>
         <translation></translation>
     </message>

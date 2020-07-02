@@ -59,7 +59,7 @@
      <property name="styleSheet">
       <string notr="true">QLabel#text{
 	font-family:NotoSansCJKSC;
-	font-size:14px;
+	font-size:12px;
 	color:white;
 }</string>
      </property>
