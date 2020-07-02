@@ -41,12 +41,12 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
             int rowCount = ui->listWidget->count();
             if(keyEvent->key() == Qt::Key_Up){
                 if((rowIdx!=0)&&(rowCount>1)){
-                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx-1))->setFocus(Qt::OtherFocusReason);
+                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx-1))->setFocus(Qt::TabFocusReason);
                 }
                 return true;
             }else if(keyEvent->key() == Qt::Key_Down){
                 if((rowIdx<(rowCount-1))){
-                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx+1))->setFocus(Qt::OtherFocusReason);
+                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx+1))->setFocus(Qt::TabFocusReason);
                 }
                 return true;
             }
