@@ -59,7 +59,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QListWidget" name="tabList">
+       <widget class="DisableDeselectListWidget" name="tabList">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -875,6 +875,11 @@ QCheckBox::indicator {
    <extends>QWidget</extends>
    <header location="global">logingreeterpreviewwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DisableDeselectListWidget</class>
+   <extends>QListWidget</extends>
+   <header location="global">disabledeselectlistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

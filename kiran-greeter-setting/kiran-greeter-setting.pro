@@ -25,6 +25,7 @@ PKGCONFIG += glib-2.0
 SOURCES += \
     ../public/log.cpp \
     ../public/imagehelper.cpp \
+    ../public/disabledeselectlistwidget.cpp\
     main.cpp \
     greetersetting.cpp \
     tabitem.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
 HEADERS += \
     ../public/log.h \
     ../public/imagehelper.h \
+    ../public/disabledeselectlistwidget.h\
     greetersetting.h \
     tabitem.h \
     logingreeterpreviewwidget.h \
@@ -55,17 +57,18 @@ RESOURCES += \
 
 #翻译文件目录
 TRANSLATIONS = \
-    translations/lightdm-kiran-greeter-setting.zh_CN.ts
+    translations/kiran-greeter-settings.zh_CN.ts
 
 #仅加载到QtCreator中
 OTHER_FILES+= \
-    translations/lightdm-kiran-greeter-setting.zh_CN.ts \
+    translations/kiran-greeter-settings.zh_CN.ts \
+    translations/kiran-greeter-settings.zh_CN.qm \
     config/kiran-greeter-settings.desktop \
     config/com.kiran.kiran-greeter-settings.policy
 
 #安装选项
 ##翻译文件
-target_translation.files = ./translations/kiran-greeter-setting.zh_CN.qm
+target_translation.files = ./translations/kiran-greeter-settings.zh_CN.qm
 target_translation.path = $$DESTDIR/usr/share/lightdm-kiran-greeter/translations/
 ##polkit提权策略
 target_polkit.files = ./config/com.kiran.kiran-greeter-settings.policy

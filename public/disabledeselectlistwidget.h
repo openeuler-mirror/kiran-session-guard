@@ -3,10 +3,10 @@
 
 #include <QListWidget>
 
-class ListWidgetWrapper : public QListWidget
+class DisableDeselectListWidget : public QListWidget
 {
 public:
-    ListWidgetWrapper(QWidget* parent=nullptr);
+    DisableDeselectListWidget(QWidget* parent=nullptr);
 protected:
     virtual QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
                                                                  const QEvent *event = Q_NULLPTR) const override;

@@ -22,15 +22,20 @@ GreeterSetting::~GreeterSetting()
 
 void GreeterSetting::initUI()
 {
-    //标题
     setWindowTitle(tr("greeter settings"));
-    //大小
+
     setFixedSize(760,520);
-    //左侧Tab页切换按钮
-    connect(ui->tabList,static_cast<void (QListWidget::*) (int currentRow)>(&QListWidget::currentRowChanged),
-            this,[this](int currentRow){
-        ui->stackedWidget->setCurrentIndex(currentRow);
+
+    ///初始化左侧选择页列表
+    connect(ui->tabList,&QListWidget::itemSelectionChanged,[this](){
+        QList<QListWidgetItem*> selecteds = ui->tabList->selectedItems();
+        if(selecteds.size()!=1){
+            qFatal("tabList: selecteds size != 1");
+        }
+        ui->stackedWidget->setCurrentIndex(ui->tabList->row(selecteds.at(0)));
     });
+    ui->tabList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tabList->setSelectionMode(QAbstractItemView::SingleSelection);
     QListWidgetItem* item;
     TabItem* tabItem;
     item = new QListWidgetItem(ui->tabList);
@@ -45,7 +50,8 @@ void GreeterSetting::initUI()
     ui->tabList->addItem(item);
     ui->tabList->setItemWidget(item,tabItem);
     ui->tabList->setCurrentRow(0);
-    //下拉栏样式
+
+    ///初始化下拉栏样式
     ui->combo_mode->setView(new QListView);
     ui->combo_mode->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->combo_mode->addItem(tr("auto"),"auto");
@@ -57,6 +63,7 @@ void GreeterSetting::initUI()
     ui->combo_scaleFactor->addItem("100%","1");
     ui->combo_scaleFactor->addItem("200%","2");
 
+    ///自动登录延时设置输入限制
     QValidator* validator = new QIntValidator(0,INT_MAX,this);
     ui->edit_autologinDelay->setValidator(validator);
 
@@ -68,6 +75,7 @@ void GreeterSetting::initUI()
             this,[this](QString background){
         ui->preview->updatePreviewBackground(background);
     });
+    //选择图片触发
     connect(ui->btn_browse,&QToolButton::clicked,
             this,[this]{
         QFileDialog selectImageDialog;
@@ -78,7 +86,6 @@ void GreeterSetting::initUI()
             LightdmPrefs::instance()->setGreeterBackground(fileName);
         }
     });
-
     //缩放模式
     str = LightdmPrefs::instance()->scaleMode();
     int idx = ui->combo_mode->findData(str);

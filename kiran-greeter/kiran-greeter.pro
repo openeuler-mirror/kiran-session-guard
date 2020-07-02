@@ -24,6 +24,7 @@ INCLUDEPATH += ../public/
 SOURCES += \
     ../public/log.cpp \
     ../public/imagehelper.cpp\
+    ../public/disabledeselectlistwidget.cpp\
     capslocksnoop.cpp \
     greeterbackground.cpp \
     greeterkeyboard.cpp \
@@ -36,7 +37,6 @@ SOURCES += \
     userlistitem.cpp \
     userlistwidget.cpp \
     greetermenuitem.cpp \
-    listwidgetwrapper.cpp \
     scalinghelper.cpp \
     cursorhelper.cpp \
     loginbutton.cpp
@@ -46,6 +46,7 @@ HEADERS += \
     ../public/log.h \
     ../public/imagehelper.h \
     ../public/greeter-setting-define.h \
+    ../public/disabledeselectlistwidget.h\
     capslocksnoop.h \
     greeterbackground.h \
     greeterkeyboard.h \
@@ -58,7 +59,6 @@ HEADERS += \
     useravatarwidget.h \
     userinfo.h \
     greetermenuitem.h \
-    listwidgetwrapper.h \
     scalinghelper.h \
     cursorhelper.h \
     loginbutton.h

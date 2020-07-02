@@ -42,7 +42,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="ListWidgetWrapper" name="listWidget">
+    <widget class="DisableDeselectListWidget" name="listWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -151,9 +151,9 @@ QListView::item{
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ListWidgetWrapper</class>
+   <class>DisableDeselectListWidget</class>
    <extends>QListWidget</extends>
-   <header location="global">listwidgetwrapper.h</header>
+   <header location="global">disabledeselectlistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

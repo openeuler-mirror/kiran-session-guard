@@ -1,15 +1,15 @@
-#include "listwidgetwrapper.h"
+#include "disabledeselectlistwidget.h"
 #include <QDebug>
 #include <QEvent>
 #include <QMouseEvent>
 
-ListWidgetWrapper::ListWidgetWrapper(QWidget *parent)
+DisableDeselectListWidget::DisableDeselectListWidget(QWidget *parent)
     :QListWidget (parent)
 {
 
 }
 
-QItemSelectionModel::SelectionFlags ListWidgetWrapper::selectionCommand(const QModelIndex &index, const QEvent *event) const
+QItemSelectionModel::SelectionFlags DisableDeselectListWidget::selectionCommand(const QModelIndex &index, const QEvent *event) const
 {
     if( (event!=nullptr) && (event->type()==QEvent::MouseButtonPress) ){
         const QMouseEvent* mouseEvent = (QMouseEvent*) event;
