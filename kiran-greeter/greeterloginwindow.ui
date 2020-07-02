@@ -410,7 +410,7 @@
              <height>60</height>
             </size>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0,0">
             <property name="spacing">
              <number>10</number>
             </property>
@@ -493,6 +493,52 @@
 GreeterLineEdit#promptEdit[editFocus=true]{
 	border:1px solid rgba(46,179,255,0.4);
 	border-radius:8px;
+}</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LoginButton" name="btn_autologin" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>36</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">LoginButton{
+	border:1px solid rgba(255,255,255,0.1);
+	border-radius:8px;
+	background-color:rgba(0,0,0,0.2);
+	padding-left:10px;
+	padding-right:10px;
+	qproperty-icon: url(&quot;/home/lxh/AutoLoginButton/images/arrow.png&quot;) ;
+}
+
+LoginButton &gt; QLabel#label_text{
+	color:white;
+	qproperty-text:&quot;login&quot;;
+	font-size:14px;
+}
+
+LoginButton:focus,LoginButton:hover{
+	background-color:rgba(255,255,255,0.2);
+}
+
+LoginButton[pressed=&quot;true&quot;]{
+	background-color:rgba(255,255,255,0.1);
 }</string>
               </property>
              </widget>
@@ -987,6 +1033,12 @@ QToolButton:hover:!pressed,QToolButton:focus:!pressed{
    <class>GreeterLineEdit</class>
    <extends>QWidget</extends>
    <header location="global">greeterlineedit.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LoginButton</class>
+   <extends>QWidget</extends>
+   <header location="global">loginbutton.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

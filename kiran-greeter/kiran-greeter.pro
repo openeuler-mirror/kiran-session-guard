@@ -11,7 +11,7 @@ TEMPLATE = app
 
 #宏定义
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += TEST
+#DEFINES += TEST
 
 #配置项
 CONFIG += c++11
@@ -38,7 +38,8 @@ SOURCES += \
     greetermenuitem.cpp \
     listwidgetwrapper.cpp \
     scalinghelper.cpp \
-    cursorhelper.cpp
+    cursorhelper.cpp \
+    loginbutton.cpp
 
 #头文件
 HEADERS += \
@@ -59,14 +60,16 @@ HEADERS += \
     greetermenuitem.h \
     listwidgetwrapper.h \
     scalinghelper.h \
-    cursorhelper.h
+    cursorhelper.h \
+    loginbutton.h
 
 #界面文件
 FORMS += \
     greeterlineedit.ui \
     greeterloginwindow.ui \
     userlistwidget.ui \
-    userlistitem.ui
+    userlistitem.ui \
+    loginbutton.ui
 
 #依赖库
 LIBS += \

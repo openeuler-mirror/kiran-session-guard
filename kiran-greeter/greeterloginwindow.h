@@ -57,6 +57,8 @@ private:
     Q_INVOKABLE void updateTimeLabel();
     QString getCurrentDateTime();
     static void capsLockStatusChanged(bool on,void* user_data);
+    void switchToPromptEdit();
+    void switchToAutoLogin();
 public slots:
     void slotUserActivated(const UserInfo&userInfo);
 private slots:

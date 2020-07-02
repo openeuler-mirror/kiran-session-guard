@@ -50,7 +50,7 @@
    <property name="bottomMargin">
     <number>1</number>
    </property>
-   <item>
+   <item alignment="Qt::AlignVCenter">
     <widget class="QLineEdit" name="edit">
      <property name="styleSheet">
       <string notr="true">QLineEdit{

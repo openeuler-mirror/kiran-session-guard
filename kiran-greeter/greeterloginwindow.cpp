@@ -164,6 +164,13 @@ void GreeterLoginWindow::initUI()
 
     ///用户列表点击
     connect(ui->userlist,SIGNAL(userActivated(const UserInfo&)),this,SLOT(slotUserActivated(const UserInfo&)));
+    ///自动登录按钮点击
+    connect(ui->btn_autologin,&LoginButton::sigClicked,[this](){
+        m_greeter.authenticateAutologin();
+    });
+    connect(&m_greeter,&QLightDM::Greeter::autologinTimerExpired,[this](){
+        m_greeter.authenticateAutologin();
+    });
     ///连接输入框回车和按钮点击信号
     connect(ui->promptEdit,SIGNAL(textConfirmed(const QString&)),this,SLOT(slotTextConfirmed(const QString&)));
     ///切换模式按钮和返回按钮
@@ -359,6 +366,12 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
     }
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
+    if(username==m_greeter.autologinUserHint()){
+        switchToAutoLogin();
+        return;
+    }else{
+        switchToPromptEdit();
+    }
     ui->promptEdit->reset();
     ///FIXME:鼠标点击认证用户列表时，需要延时设置输入焦点到输入框，不然又会被置回UserItem
     setEditPromptFocus(100);
@@ -385,6 +398,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
     //输入框复位
     ui->promptEdit->reset();
+    switchToPromptEdit();
     setEditPromptFocus();
 
     //tips清空
@@ -426,6 +440,7 @@ void GreeterLoginWindow::resetUIForManualLogin()
     ui->promptEdit->reset();
     ui->promptEdit->setPlaceHolderText(tr("Entry your name"));
     ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_USERNAME);
+    switchToPromptEdit();
     setEditPromptFocus();
 
     //tips清空
@@ -485,6 +500,18 @@ void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)
     }else{
         This->ui->label_capsLock->setPixmap(pixmap);
     }
+}
+
+void GreeterLoginWindow::switchToPromptEdit()
+{
+    ui->promptEdit->setVisible(true);
+    ui->btn_autologin->setVisible(false);
+}
+
+void GreeterLoginWindow::switchToAutoLogin()
+{
+    ui->promptEdit->setVisible(false);
+    ui->btn_autologin->setVisible(true);
 }
 
 void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::MessageType type)
