@@ -20,11 +20,12 @@
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
 ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
-    LockPlug(parent),
+    QWidget(parent),
     ui(new Ui::ScreenSaverDialog),
     m_authProxy(this)
 {
     ui->setupUi(this);
+    printWindowID();
     InitUI();
 }
 
@@ -43,7 +44,7 @@ void ScreenSaverDialog::InitUI()
 {
 
     connect(ui->btn_cancel,&QToolButton::pressed,this,[=]{
-        LockPlug::responseCancelAndQuit();
+        responseCancelAndQuit();
     });
 
     connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,this,[=]{
@@ -188,16 +189,16 @@ QString ScreenSaverDialog::getCurrentDateTime()
     QString dateString;
     if( locale.language()==QLocale::Chinese ){
         ///5月21日 星期四 09:52
-        static const char* dayOfWeekArray[] = {"星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
-        QString  dayOfWeekString = dayOfWeekArray[dateTime.date().dayOfWeek()];
+        static const char* dayOfWeekArray[] = {"星期一","星期二","星期三","星期四","星期五","星期六","星期日"};
+        QString  dayOfWeekString = dayOfWeekArray[dateTime.date().dayOfWeek()-1];
         dateString = QString("%1 %2 %3").arg(dateTime.toString("MM月dd日"))
                                         .arg(dayOfWeekString)
                                         .arg(dateTime.toString("HH:mm"));
     }else{
         ///Thu May 21 09:52
-        static const char* dayOfWeekArray[] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+        static const char* dayOfWeekArray[] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
         static const char* monthOfYearArray[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"};
-        dateString = QString("%1 %2 %3").arg(dayOfWeekArray[dateTime.date().dayOfWeek()])
+        dateString = QString("%1 %2 %3").arg(dayOfWeekArray[dateTime.date().dayOfWeek()-1])
                                         .arg(monthOfYearArray[dateTime.date().month()-1])
                                         .arg(dateTime.toString("HH:mm"));
     }
@@ -226,6 +227,35 @@ void ScreenSaverDialog::onDisplayError(const char *msg)
 void ScreenSaverDialog::onDisplayTextInfo(const char *msg)
 {
     //暂时不需要
+}
+
+void ScreenSaverDialog::printWindowID()
+{
+    std::cout << "WINDOW ID=" << winId() << std::endl;
+    qInfo() << "WINDOW ID=" << winId();
+}
+
+void ScreenSaverDialog::responseOkAndQuit()
+{
+    static const char* response = "RESPONSE=OK";
+    std::cout << response << std::endl;
+    qInfo() << response;
+    this->close();
+}
+
+void ScreenSaverDialog::responseCancelAndQuit()
+{
+    static const char* response = "RESPONSE=CANCEL";
+    std::cout << response << std::endl;
+    qInfo() << response;
+    this->close();
+}
+
+void ScreenSaverDialog::responseNoticeAuthFailed()
+{
+    static const char* response = "NOTICE=AUTH FAILED";
+    std::cout << response << std::endl;
+    qInfo() << response;
 }
 
 void ScreenSaverDialog::slotAuthenticateComplete(bool isSuccess)
@@ -267,11 +297,5 @@ void ScreenSaverDialog::paintEvent(QPaintEvent *event)
     if(!m_scaledBackground.isNull()){
         painter.drawPixmap(this->rect(),m_scaledBackground,m_scaledBackground.rect());
     }
-    LockPlug::paintEvent(event);
+    QWidget::paintEvent(event);
 }
-
-void ScreenSaverDialog::showEvent(QShowEvent *event)
-{
-    LockPlug::showEvent(event);
-}
-
