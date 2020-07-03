@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/appearance_setting.png</file>
+        <file>images/user_login_setting.png</file>
+        <file>images/down-arrow.png</file>
+        <file>images/off.png</file>
+        <file>images/on.png</file>
+        <file>images/default_background.jpg</file>
+    </qresource>
+</RCC>

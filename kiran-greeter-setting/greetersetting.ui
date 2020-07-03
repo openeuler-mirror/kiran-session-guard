@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GreeterSetting</class>
+ <widget class="QWidget" name="GreeterSetting">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>760</width>
+    <height>550</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GreeterSetting</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#GreeterSetting{
+	background-color:#202020;
+}</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="tab" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>286</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#tab{
+	border-top:1px solid rgba(255,255,255,25);
+	border-right:1px solid rgba(255,255,255,25);
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>1</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="DisableDeselectListWidget" name="tabList">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>274</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>278</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget#tabList{
+	background-color:transparent;
+}
+
+  QListView {
+      show-decoration-selected: 0; /* make the selection span the entire width of the view */
+	 background-color:transparent;
+  }
+
+QListView::item{
+	background-color:transparent;
+	border-radius:10px;
+	margin-top:2px;
+	margin-bottom:2px;
+}
+
+  QListView::item:alternate {
+  }
+
+  QListView::item:selected {
+      background-color: #43a3f2
+  }
+
+ QListView::item:selected:!active {
+
+ }
+
+ QListView::item:selected:active {
+
+ }
+
+ QListView::item:!selected:hover {
+	background-color:rgba(255,255,255,25);
+ }
+
+QListView::item:focus{
+
+}
+
+</string>
+        </property>
+        <property name="currentRow">
+         <number>-1</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="stack" native="true">
+     <property name="styleSheet">
+      <string notr="true">QWidget#stack{
+		border-top:1px solid rgba(255,255,255,25);
+}</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>1</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="appearence">
+         <property name="styleSheet">
+          <string notr="true">QWidget#appearence{
+	background-color:transparent;
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>12</number>
+          </property>
+          <property name="topMargin">
+           <number>15</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item alignment="Qt::AlignLeft">
+           <widget class="QLabel" name="label_appearence">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLabel#label_appearence{
+	font-family:NotoSansCJKsc-Light;
+	font-size:28px;
+	color:white;
+	margin-bottom:18px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Appearance Setting</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="LoginGreeterPreviewWidget" name="preview" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>330</width>
+              <height>186</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QWidget{
+	border:1px solid rgba(255,255,255,0.2);
+	border-radius:8px;
+}</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_selectPix">
+            <property name="font">
+             <font>
+              <family>NotoSansCJKSC</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLabel#label_selectPix{
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+	margin-top:20px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Select Image</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btn_browse">
+            <property name="minimumSize">
+             <size>
+              <width>70</width>
+              <height>38</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>70</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QToolButton{
+	width:70px;
+	height:30px;
+	background-color:#43a3f2;
+	border:0px;
+	border-radius:6px;
+	font-family:NotoSansCJKSC;
+	font-size:10px;
+	color:white;
+	margin-top:10px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Browse</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_selectMode">
+            <property name="styleSheet">
+             <string notr="true">QLabel{
+	width:84px;
+	height:14px;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+	margin-top:15px;
+	margin-bottom:8px;
+}</string>
+            </property>
+            <property name="text">
+             <string>Scale Mode</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="combo_mode">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QComboBox{
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius:6px;
+	background-color:transparent;
+	color:white;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+}
+
+QComboBox:on { 
+	background:#43a3f2;;
+}
+
+QComboBox:editable {
+      background-color: red;
+}
+
+  QComboBox::down-arrow {
+      image: url(:/images/down-arrow.png);
+  }
+
+  QComboBox::drop-down {
+      subcontrol-origin: padding;
+      subcontrol-position: top right;
+      width: 15px;
+		margin-right:14px;
+		border:none;
+  }
+
+QComboBox QAbstractItemView {
+        border: 1px solid rgb(100, 100, 100);
+		background: #202020;
+	    outline: none;
+}
+
+QComboBox QAbstractItemView::item {
+        height: 35px;
+        color: white;
+		 margin:1px;
+}
+
+QComboBox QAbstractItemView::item:selected {
+		background:rgba(255,255,255,25);
+       color: white;
+		border-radius:4px;
+}
+
+QComboBox QAbstractItemView {
+      border-radius: 6px ;
+  }
+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="verticalWidget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>82</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>82</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_scaleFactor">
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	width:84px;
+	height:14px;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+	margin-top:10px;
+	margin-bottom:5px;
+}</string>
+               </property>
+               <property name="text">
+                <string>Scale Factor</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="combo_scaleFactor">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>280</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>280</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QComboBox{
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius:6px;
+	background-color:transparent;
+	color:white;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+}
+
+QComboBox:on { 
+	background:#43a3f2;;
+}
+
+QComboBox:editable {
+      background-color: red;
+}
+
+  QComboBox::down-arrow {
+      image: url(:/images/down-arrow.png);
+  }
+
+  QComboBox::drop-down {
+      subcontrol-origin: padding;
+      subcontrol-position: top right;
+      width: 15px;
+		margin-right:14px;
+		border:none;
+  }
+
+QComboBox QAbstractItemView {
+        border: 1px solid rgb(100, 100, 100);
+		background: #202020;
+	    outline: none;
+}
+
+QComboBox QAbstractItemView::item {
+        height: 35px;
+        color: white;
+		 margin:1px;
+}
+
+QComboBox QAbstractItemView::item:selected {
+		background:rgba(255,255,255,25);
+       color: white;
+		border-radius:4px;
+}
+
+QComboBox QAbstractItemView {
+      border-radius: 6px ;
+  }
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="userlogin">
+         <property name="styleSheet">
+          <string notr="true">QWidget#userlogin{
+	background-color:transparent;
+}</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>12</number>
+          </property>
+          <property name="topMargin">
+           <number>15</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>20</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_userlogin">
+            <property name="styleSheet">
+             <string notr="true">QLabel#label_userlogin{
+	font-family:NotoSansCJKsc-Light;
+	font-size:28px;
+	color:white;
+	margin-bottom:18px;
+}</string>
+            </property>
+            <property name="text">
+             <string>User Login</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>280</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_maualLogin">
+               <property name="font">
+                <font>
+                 <family>NotoSansCJKSC</family>
+                 <pointsize>-1</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel#label_maualLogin{
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>enable manual login</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="check_enableManual">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>55</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>35</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QCheckBox::indicator {
+    width: 55px;
+    height: 35px;
+	border:none;
+	background-color:transparent;
+}
+
+QCheckBox::indicator:unchecked {
+	 image: url(:/images/off.png);
+}
+QCheckBox::indicator {
+    image: url(:/images/on.png);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>280</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>10</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_hideUserList">
+               <property name="styleSheet">
+                <string notr="true">QLabel#label_hideUserList{
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>hide user list</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="check_hideUserList">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>55</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>55</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QCheckBox::indicator {
+    width: 55px;
+    height: 35px;
+	border:none;
+	background-color:transparent;
+}
+QCheckBox::indicator:unchecked {
+	 image: url(:/images/off.png);
+}
+QCheckBox::indicator {
+    image: url(:/images/on.png);
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_autoLoginUserName">
+            <property name="font">
+             <font>
+              <family>NotoSansCJKSC</family>
+              <pointsize>-1</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLabel#label_autoLoginUserName{
+		font-family:NotoSansCJKSC;
+	   font-size:12px;
+		color:white;
+		margin-top:20px;
+		margin-bottom:10px;
+}</string>
+            </property>
+            <property name="text">
+             <string>auto login account(take effect after restart)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="edit_autologinName">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit#edit_autologinName{
+	background-color:transparent;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 6px;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+	padding-left:5px;
+}</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_autoLoginDelay">
+            <property name="styleSheet">
+             <string notr="true">QLabel#label_autoLoginDelay{
+	font-family:NotoSansCJKSC;
+	   font-size:12px;
+		color:white;
+		margin-top:20px;
+	margin-bottom:10px;
+};</string>
+            </property>
+            <property name="text">
+             <string>auto login delay(seconds)(take effect after restart)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="edit_autologinDelay">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>280</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QLineEdit#edit_autologinDelay{
+	background-color:transparent;
+	border: 1px solid rgba(255,255,255,0.2);
+	border-radius: 6px;
+	font-family:NotoSansCJKSC;
+	font-size:12px;
+	color:white;
+	padding-left:5px;
+}</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>LoginGreeterPreviewWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">logingreeterpreviewwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DisableDeselectListWidget</class>
+   <extends>QListWidget</extends>
+   <header location="global">disabledeselectlistwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
