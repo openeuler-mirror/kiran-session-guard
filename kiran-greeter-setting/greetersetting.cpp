@@ -7,12 +7,24 @@
 #include <QFileDialog>
 #include <QValidator>
 
+#define KEY_FONT_NAME "fontName"
+
 GreeterSetting::GreeterSetting(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::GreeterSetting)
+    ui(new Ui::GreeterSetting),
+    m_mateInterfaceSettings("org.mate.interface")
 {
     ui->setupUi(this);
     initUI();
+    connect(&m_mateInterfaceSettings,static_cast<void (QGSettings::*)(const QString&)>(&QGSettings::changed),
+            [this](const QString& key){
+        qInfo() << "changed:" << key;
+        if(key!=KEY_FONT_NAME){
+            return;
+        }
+        updateFont();
+    });
+    updateFont();
 }
 
 GreeterSetting::~GreeterSetting()
@@ -23,8 +35,7 @@ GreeterSetting::~GreeterSetting()
 void GreeterSetting::initUI()
 {
     setWindowTitle(tr("greeter settings"));
-
-    setFixedSize(760,520);
+    resize(760,520);
 
     ///初始化左侧选择页列表
     connect(ui->tabList,&QListWidget::itemSelectionChanged,[this](){
@@ -39,13 +50,11 @@ void GreeterSetting::initUI()
     QListWidgetItem* item;
     TabItem* tabItem;
     item = new QListWidgetItem(ui->tabList);
-    item->setSizeHint(QSize(274,60));
     tabItem = new TabItem(":/images/appearance_setting.png",tr("appearance"),ui->tabList);
     ui->tabList->addItem(item);
     ui->tabList->setItemWidget(item,tabItem);
 
     item = new QListWidgetItem(ui->tabList);
-    item->setSizeHint(QSize(274,60));
     tabItem = new TabItem(":/images/user_login_setting.png",tr("user login"),ui->tabList);
     ui->tabList->addItem(item);
     ui->tabList->setItemWidget(item,tabItem);
@@ -145,4 +154,23 @@ void GreeterSetting::initUI()
             this,[this](const QString& text){
         LightdmPrefs::instance()->setAutoLoginDelay(text);
     });
+}
+
+void GreeterSetting::updateFont()
+{
+    QVariant fontNameVar = m_mateInterfaceSettings.get(KEY_FONT_NAME);
+    QString fontNameString = fontNameVar.toString();
+    QStringList splitRes = fontNameString.split(" ",QString::SkipEmptyParts);
+    QString fontPxSize = splitRes.takeLast();
+    QString fontFamily = splitRes.join(" ");
+
+    QFont font = qApp->font();
+    font.setFamily(fontFamily);
+    font.setPointSize(fontPxSize.toInt());
+    qInfo() << fontFamily << fontPxSize;
+    qApp->setFont(font,"QWidget");
+
+    font.setPixelSize(fontPxSize.toInt()*2);
+    ui->label_appearence->setFont(font);
+    ui->label_userlogin->setFont(font);
 }
