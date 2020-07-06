@@ -62,6 +62,7 @@ void ScreenSaverDialog::InitUI()
     });
 
     connect(ui->btn_switchuser,&QToolButton::pressed,this,[=]{
+        QTimer::singleShot(2000,this,SLOT(responseCancelAndQuit()));
         if( !DBusApi::DisplayManager::switchToGreeter() ){
             qWarning() << "call SwitchToGreeter failed.";
         }

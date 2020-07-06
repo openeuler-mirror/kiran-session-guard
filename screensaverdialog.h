@@ -33,7 +33,7 @@ private:
     ///通过标准输出回复ScreenSaver接口
     void printWindowID();
     void responseOkAndQuit();
-    void responseCancelAndQuit();
+    Q_INVOKABLE void responseCancelAndQuit();
     void responseNoticeAuthFailed();
 private slots:
     void slotAuthenticateComplete(bool isSuccess);
