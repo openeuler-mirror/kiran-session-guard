@@ -7,7 +7,6 @@
         <file>images/default_background.jpg</file>
         <file>images/info_normal.png</file>
         <file>images/info_selected.png</file>
-        <file>images/keyboard_hover.png</file>
         <file>images/keyboard_normal.png</file>
         <file>images/loading_0.png</file>
         <file>images/loading_1.png</file>
@@ -32,10 +31,15 @@
         <file>images/session_normal.png</file>
         <file>images/shutdown_hover.png</file>
         <file>images/shutdown_normal.png</file>
-        <file>images/switch users_n.png</file>
-        <file>images/switch users_pre.png</file>
         <file>images/user_48.png</file>
         <file>images/user_180.png</file>
         <file>images/unlock.png</file>
+        <file>images/keyboard_pressed.png</file>
+        <file>images/keyboard_select.png</file>
+        <file>images/shutdown_pressed.png</file>
+        <file>images/shutdown_select.png</file>
+        <file>images/switch_users_normal.png</file>
+        <file>images/switch_users_pressed.png</file>
+        <file>images/switch_users_select.png</file>
     </qresource>
 </RCC>
