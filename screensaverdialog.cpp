@@ -62,6 +62,7 @@ void ScreenSaverDialog::InitUI()
     });
 
     connect(ui->btn_switchuser,&QToolButton::pressed,this,[=]{
+        QTimer::singleShot(2000,this,SLOT(responseCancelAndQuit()));
         if( !DBusApi::DisplayManager::switchToGreeter() ){
             qWarning() << "call SwitchToGreeter failed.";
         }
@@ -139,9 +140,12 @@ void ScreenSaverDialog::InitUI()
     });
 
     connect(ui->btn_power,&QToolButton::pressed,this,[=]{
+        if(m_powerMenu->isVisible()){
+            m_powerMenu->hide();
+            return;
+        }
         QPoint btnRightTopPos = ui->btn_power->mapTo(this,QPoint(ui->btn_power->width(),0));
         QSize menuSize = m_powerMenu->sizeHint();
-
         QPoint menuLeftTop;
         menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
