@@ -93,6 +93,8 @@ QListView::item{
 	border-radius:10px;
 	margin-top:2px;
 	margin-bottom:2px;
+	width:274;
+	height:60;
 }
 
   QListView::item:alternate {
@@ -186,10 +188,15 @@ QListView::item:focus{
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="font">
+             <font>
+              <family>NotoSansCJKsc-Light</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">QLabel#label_appearence{
-	font-family:NotoSansCJKsc-Light;
-	font-size:28px;
 	color:white;
 	margin-bottom:18px;
 }</string>
@@ -226,13 +233,10 @@ QListView::item:focus{
             <property name="font">
              <font>
               <family>NotoSansCJKSC</family>
-              <pointsize>-1</pointsize>
              </font>
             </property>
             <property name="styleSheet">
              <string notr="true">QLabel#label_selectPix{
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 	margin-top:20px;
 }</string>
@@ -263,8 +267,6 @@ QListView::item:focus{
 	background-color:#43a3f2;
 	border:0px;
 	border-radius:6px;
-	font-family:NotoSansCJKSC;
-	font-size:10px;
 	color:white;
 	margin-top:10px;
 }</string>
@@ -280,8 +282,6 @@ QListView::item:focus{
              <string notr="true">QLabel{
 	width:84px;
 	height:14px;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 	margin-top:15px;
 	margin-bottom:8px;
@@ -318,8 +318,6 @@ QListView::item:focus{
 	border-radius:6px;
 	background-color:transparent;
 	color:white;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 }
 
 QComboBox:on { 
@@ -409,8 +407,6 @@ QComboBox QAbstractItemView {
                 <string notr="true">QLabel{
 	width:84px;
 	height:14px;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 	margin-top:10px;
 	margin-bottom:5px;
@@ -447,8 +443,6 @@ QComboBox QAbstractItemView {
 	border-radius:6px;
 	background-color:transparent;
 	color:white;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 }
 
 QComboBox:on { 
@@ -540,8 +534,6 @@ QComboBox QAbstractItemView {
            <widget class="QLabel" name="label_userlogin">
             <property name="styleSheet">
              <string notr="true">QLabel#label_userlogin{
-	font-family:NotoSansCJKsc-Light;
-	font-size:28px;
 	color:white;
 	margin-bottom:18px;
 }</string>
@@ -592,13 +584,10 @@ QComboBox QAbstractItemView {
                <property name="font">
                 <font>
                  <family>NotoSansCJKSC</family>
-                 <pointsize>-1</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
                 <string notr="true">QLabel#label_maualLogin{
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 }</string>
                </property>
@@ -617,20 +606,20 @@ QComboBox QAbstractItemView {
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>55</width>
-                 <height>30</height>
+                 <width>42</width>
+                 <height>24</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
-                 <height>30</height>
+                 <width>42</width>
+                 <height>24</height>
                 </size>
                </property>
                <property name="styleSheet">
                 <string notr="true">QCheckBox::indicator {
-    width: 55px;
-    height: 35px;
+    width: 42px;
+    height: 24px;
 	border:none;
 	background-color:transparent;
 }
@@ -690,8 +679,6 @@ QCheckBox::indicator {
               <widget class="QLabel" name="label_hideUserList">
                <property name="styleSheet">
                 <string notr="true">QLabel#label_hideUserList{
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 }</string>
                </property>
@@ -710,20 +697,20 @@ QCheckBox::indicator {
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>55</width>
-                 <height>30</height>
+                 <width>42</width>
+                 <height>24</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>55</width>
-                 <height>30</height>
+                 <width>42</width>
+                 <height>24</height>
                 </size>
                </property>
                <property name="styleSheet">
                 <string notr="true">QCheckBox::indicator {
-    width: 55px;
-    height: 35px;
+    width: 42px;
+    height: 24px;
 	border:none;
 	background-color:transparent;
 }
@@ -747,13 +734,10 @@ QCheckBox::indicator {
             <property name="font">
              <font>
               <family>NotoSansCJKSC</family>
-              <pointsize>-1</pointsize>
              </font>
             </property>
             <property name="styleSheet">
              <string notr="true">QLabel#label_autoLoginUserName{
-		font-family:NotoSansCJKSC;
-	   font-size:12px;
 		color:white;
 		margin-top:20px;
 		margin-bottom:10px;
@@ -789,8 +773,6 @@ QCheckBox::indicator {
 	background-color:transparent;
 	border: 1px solid rgba(255,255,255,0.2);
 	border-radius: 6px;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 	padding-left:5px;
 }</string>
@@ -801,8 +783,6 @@ QCheckBox::indicator {
            <widget class="QLabel" name="label_autoLoginDelay">
             <property name="styleSheet">
              <string notr="true">QLabel#label_autoLoginDelay{
-	font-family:NotoSansCJKSC;
-	   font-size:12px;
 		color:white;
 		margin-top:20px;
 	margin-bottom:10px;
@@ -838,8 +818,6 @@ QCheckBox::indicator {
 	background-color:transparent;
 	border: 1px solid rgba(255,255,255,0.2);
 	border-radius: 6px;
-	font-family:NotoSansCJKSC;
-	font-size:12px;
 	color:white;
 	padding-left:5px;
 }</string>
