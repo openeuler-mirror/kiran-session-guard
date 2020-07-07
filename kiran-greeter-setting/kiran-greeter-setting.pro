@@ -20,6 +20,7 @@ CONFIG +=link_pkgconfig
 INCLUDEPATH += ../public/
 
 PKGCONFIG += glib-2.0
+PKGCONFIG += gsettings-qt
 
 #源文件
 SOURCES += \
