@@ -58,7 +58,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_username">
+    <widget class="ShadowLabel" name="label_username">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -77,6 +77,13 @@
 	font-size:14px;
 	color:white;
 	background-color:transparent;
+}
+
+ShadowLabel{
+	qproperty-shadowEnable:true;
+	qproperty-shadowColor:rgba(0,0,0,0.1);
+	qproperty-shadowOffsetX:2;
+	qproperty-shadowOffsetY:2;
 }</string>
      </property>
      <property name="text">
@@ -130,6 +137,11 @@
    <extends>QWidget</extends>
    <header location="global">useravatarwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ShadowLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">shadowlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
