@@ -75,19 +75,6 @@ void GreeterLoginWindow::initUI()
     ///开始监听整个应用程序事件，在窗口点击事件中判断隐藏菜单
     qApp->installEventFilter(this);
 
-    ///设置字体阴影
-    QGraphicsDropShadowEffect* labelTextShadowEffect = new QGraphicsDropShadowEffect(this);
-    labelTextShadowEffect->setColor(QColor(0,0,0,255*0.1));
-    labelTextShadowEffect->setBlurRadius(0);
-    labelTextShadowEffect->setOffset(2, 2);
-    ui->label_userName->setGraphicsEffect(labelTextShadowEffect);
-
-    QGraphicsDropShadowEffect* labelTipsShadowEffect = new QGraphicsDropShadowEffect(this);
-    labelTipsShadowEffect->setColor(QColor(255,255,255,255*0.1));
-    labelTipsShadowEffect->setBlurRadius(0);
-    labelTipsShadowEffect->setOffset(0, 0);
-    ui->label_tips->setGraphicsEffect(labelTipsShadowEffect);
-
     ///按钮ToopTip
     ui->btn_session->setToolTip(tr("session menu"));
     ui->btn_keyboard->setToolTip(tr("virtual keyboard"));

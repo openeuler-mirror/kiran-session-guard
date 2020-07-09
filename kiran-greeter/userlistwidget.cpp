@@ -101,8 +101,6 @@ void UserListWidget::initUI()
             this,[this](QWidget*oldWidget,QWidget*newWidget){
         bool oldFocusInList = oldWidget==nullptr?false:oldWidget->objectName()==USERITEM_OBJ_NAME;
         bool newFocusInList = newWidget==nullptr?false:newWidget->objectName()==USERITEM_OBJ_NAME;
-        qInfo() << "focus changed:" << (oldWidget?oldWidget->objectName():"null")
-                << " -> "  << (newWidget?newWidget->objectName():"null");
         if( !oldFocusInList && !newFocusInList ){
             return;
         }   else if(newFocusInList){///UserItem->UserItem,滚动到焦点行

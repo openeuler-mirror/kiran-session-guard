@@ -9,4 +9,4 @@ Exec=/bin/sh -c "pkexec /usr/sbin/kiran-greeter-settings --xdg-desktop=$XDG_CURR
 Icon=preferences-system-login.png
 Terminal=false
 Type=Application
-Categories=Lightdm;Greeter;Core;
+Categories=Lightdm;Greeter;Core;Settings;System;X-Common-Features;X-Common-Features;
