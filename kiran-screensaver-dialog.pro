@@ -35,7 +35,8 @@ SOURCES += \
     dbusapihelper.cpp \
     pamauthproxy.cpp \
     tool.cpp \
-    scalinghelper.cpp
+    scalinghelper.cpp \
+    shadowlabel.cpp
 
 #头文件
 HEADERS += \
@@ -49,7 +50,8 @@ HEADERS += \
     dbusapihelper.h \
     pamauthproxy.h \
     tool.h \
-    scalinghelper.h
+    scalinghelper.h \
+    shadowlabel.h
 
 #界面文件
 FORMS += \
