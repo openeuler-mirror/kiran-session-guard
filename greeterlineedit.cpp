@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
+#include <QKeyEvent>
 
 #define NORMAL_ICON             ":/images/unlock.png"
 #define LOADING_ICON_FORMAT     ":/images/loading_%1.png"
@@ -193,6 +194,11 @@ bool GreeterLineEdit::eventFilter(QObject *obj, QEvent *event)
             setEditFocus(true);
         }else if(event->type()==QEvent::FocusOut){
             setEditFocus(false);
+        }else if(event->type()==QEvent::KeyPress){
+            QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
+            if(keyEvent->key()==Qt::Key_Escape&&ui->edit->echoMode()==QLineEdit::Password){
+                ui->edit->clear();
+            }
         }
     }
     return false;
