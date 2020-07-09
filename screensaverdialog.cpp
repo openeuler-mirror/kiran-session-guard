@@ -75,17 +75,10 @@ void ScreenSaverDialog::InitUI()
     });
 
     ///设置阴影
-    QGraphicsDropShadowEffect* labelTextShadowEffect = new QGraphicsDropShadowEffect(this);
-    labelTextShadowEffect->setColor(QColor(0,0,0,255*0.1));
-    labelTextShadowEffect->setBlurRadius(0);
-    labelTextShadowEffect->setOffset(2, 2);
-
     QGraphicsDropShadowEffect* labelTextShadowEffect2 = new QGraphicsDropShadowEffect(this);
     labelTextShadowEffect2->setColor(QColor(0,0,0,255*0.1));
     labelTextShadowEffect2->setBlurRadius(0);
     labelTextShadowEffect2->setOffset(2, 2);
-
-    ui->label_userName->setGraphicsEffect(labelTextShadowEffect);
     ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
 
     ///背景图

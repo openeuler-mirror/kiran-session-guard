@@ -290,7 +290,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="label_userName">
+             <widget class="ShadowLabel" name="label_userName">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -314,6 +314,13 @@
 	font-family:&quot;Noto Sans CJK SC Light&quot;;
 	font-size: 36px;
 	color: white;
+}
+
+ShadowLabel{
+	qproperty-shadowEnable:true;
+	qproperty-shadowColor:rgba(0,0,0,0.1);
+	qproperty-shadowOffsetX:2;
+	qproperty-shadowOffsetY:2;
 }</string>
               </property>
               <property name="text">
@@ -680,7 +687,7 @@ GreeterLineEdit#promptEdit[hasError=true]{
        </spacer>
       </item>
       <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-       <widget class="QLabel" name="label_dataAndTime">
+       <widget class="ShadowLabel" name="label_dataAndTime">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -699,6 +706,12 @@ GreeterLineEdit#promptEdit[hasError=true]{
 	font-size:20px;
 	color:white;
 	border:0px;
+}
+ShadowLabel{
+	qproperty-shadowEnable:true;
+	qproperty-shadowColor:rgba(0,0,0,0.1);
+	qproperty-shadowOffsetX:2;
+	qproperty-shadowOffsetY:2;
 }</string>
         </property>
         <property name="text">
@@ -932,6 +945,11 @@ QToolButton:focus:!pressed,QToolButton:hover:!pressed{
    <extends>QWidget</extends>
    <header location="global">greeterlineedit.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ShadowLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">shadowlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
