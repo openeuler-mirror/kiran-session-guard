@@ -1,0 +1,169 @@
+/*******************Widget***********************/
+/*设置界面主窗口*/
+QWidget#GreeterSetting{
+    background-color:#202020;
+}
+/*预览控件边框*/
+QWidget#preview{
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px;
+}
+QWidget#tab{
+    border-top:1px solid rgba(255,255,255,25);
+    border-right:1px solid rgba(255,255,255,25);
+}
+QWidget#stack{
+    border-top:1px solid rgba(255,255,255,25);
+}
+/*******************ListView***********************/
+/*右侧选择设置项目列表*/
+QListView#tabList{
+    show-decoration-selected: 0;
+    background-color:transparent;
+}
+QListView#tabList::item{
+    background-color:transparent;
+    border-radius:10px;
+    margin-top:2px;
+    margin-bottom:2px;
+    width:274;
+    height:60;
+}
+QListView#tabList::item:alternate{
+}
+QListView#tabList::item:selected{
+    background-color: #43a3f2
+}
+QListView#tabList::item:selected:!active{
+}
+QListView#tabList::item:selected:active{
+}
+QListView#tabList::item:!selected:hover{
+    background-color:rgba(255,255,255,25);
+}
+QListView#tabList::item:focus{
+}
+/*******************Label***********************/
+QLabel#label_appearence,
+QLabel#label_selectPix,
+QLabel#label_selectMode,
+QLabel#label_scaleFactor,
+QLabel#label_appearence,
+QLabel#label_maualLogin,
+QLabel#label_hideUserList,
+QLabel#label_userlogin,
+QLabel#label_autoLoginUserName,
+QLabel#label_autoLoginDelay,
+TabItem > QLabel#text{
+    color:white;
+}
+QLabel#label_appearence{
+    margin-bottom:18px;
+}
+QLabel#label_userlogin{
+    margin-bottom:18px;
+}
+QLabel#label_selectPix{
+    margin-top:20px;
+}
+QLabel#label_selectMode{
+    width:84px;
+    height:14px;
+    margin-top:15px;
+    margin-bottom:8px;
+}
+QLabel#label_scaleFactor{
+    width:84px;
+    height:14px;
+    margin-top:10px;
+    margin-bottom:5px;
+}
+QLabel#label_autoLoginUserName{
+    margin-top:20px;
+    margin-bottom:10px;
+}
+QLabel#label_autoLoginDelay{
+    margin-top:20px;
+    margin-bottom:10px;
+}
+/********************Button**********************/
+QToolButton#btn_browse{
+    width:70px;
+    height:30px;
+    background-color:#43a3f2;
+    border:0px;
+    border-radius:6px;
+    color:white;
+    margin-top:10px;
+}
+/**********************ComboBox***********************/
+QComboBox#combo_mode,
+QComboBox#combo_scaleFactor{
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius:6px;
+    background-color:transparent;
+    color:white;
+}
+QComboBox#combo_mode:on,
+QComboBox#combo_scaleFactor:on{
+    background:#43a3f2;
+}
+QComboBox#combo_mode:editable,
+QComboBox#combo_scaleFactor:editable{
+}
+QComboBox#combo_mode::down-arrow,
+QComboBox#combo_scaleFactor::down-arrow{
+    image: url(:/images/down-arrow.png);
+}
+QComboBox#combo_mode::drop-down,
+QComboBox#combo_scaleFactor::drop-down{
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    margin-right:14px;
+    border:none;
+}
+QComboBox#combo_mode  QAbstractItemView,
+QComboBox#combo_scaleFactor QAbstractItemView{
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 6px;
+    background: #202020;
+    outline: none;
+}
+QComboBox#combo_mode  QAbstractItemView::item,
+QComboBox#combo_scaleFactor  QAbstractItemView::item{
+    height: 35px;
+    color: white;
+    margin:1px;
+}
+QComboBox#combo_mode  QAbstractItemView::item:selected,
+QComboBox#combo_scaleFactor QAbstractItemView::item:selected{
+    background:rgba(255,255,255,25);
+    color: white;
+    border-radius:4px;
+}
+/*********************CheckBox********************/
+QCheckBox#check_enableManual::indicator,
+QCheckBox#check_hideUserList::indicator{
+    width: 42px;
+    height: 24px;
+    border:none;
+    background-color:transparent;
+}
+QCheckBox#check_enableManual::indicator:unchecked,
+QCheckBox#check_hideUserList::indicator:unchecked{
+    image: url(:/images/off.png);
+}
+QCheckBox#check_enableManual::indicator,
+QCheckBox#check_hideUserList::indicator{
+    image: url(:/images/on.png);
+}
+/********************LineEdit**********************/
+QLineEdit#edit_autologinName,
+QLineEdit#edit_autologinDelay{
+    background-color:transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color:white;
+    padding-left:5px;
+}

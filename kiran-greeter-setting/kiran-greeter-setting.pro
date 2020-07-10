@@ -11,6 +11,7 @@ TEMPLATE = app
 
 #宏定义
 DEFINES += QT_DEPRECATED_WARNINGS
+#DEFINES += TEST
 
 #配置项
 CONFIG += c++11
@@ -54,7 +55,8 @@ FORMS += \
 
 #资源文件
 RESOURCES += \
-    image.qrc
+    image.qrc \
+    themes.qrc
 
 #翻译文件目录
 TRANSLATIONS = \

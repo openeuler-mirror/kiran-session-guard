@@ -1,0 +1,252 @@
+/********************QLabel**********************/
+/*正在登录用户名Label*/
+QLabel#label_userName{
+    font-family:"Noto Sans CJK SC Light";
+    font-size: 36px;
+    color: white;
+}
+/*显示错误信息Label*/
+QLabel#label_tips{
+    font-size:14px;
+    font-family:"Noto Sans CJK SC Light";
+    background-color:transparent;
+}
+/*底部中央显示时间日期Label*/
+QLabel#label_dataAndTime{
+    font-family:"Noto Sans CJK SC Light";
+    font-size:20px;
+    color:white;
+    border:0px;
+}
+ShadowLabel{
+    qproperty-shadowEnable:true;
+    qproperty-shadowColor:rgba(0,0,0,0.1);
+    qproperty-shadowOffsetX:2;
+    qproperty-shadowOffsetY:2;
+}
+/*******************Button******************/
+/*屏幕中央Notlist和return按钮*/
+QToolButton#btn_notListAndCancel{
+    border:0px;
+    color:rgb(255,254,254);
+    font-family:"Noto Sans CJK SC";
+    font-size:14px;
+    text-decoration:underline;
+}
+QToolButton#btn_notListAndCancel:hover,
+QToolButton#btn_notListAndCancel:focus{
+    color:#2eb3ff;
+}
+QToolButton#btn_notListAndCancel:pressed{
+    color:#1b82bd;
+}
+/*右下Session按钮*/
+QToolButton#btn_session{
+    border-image:url(:/images/session_normal.png);
+}
+QToolButton#btn_session:pressed{
+    border-image:url(:/images/session_pressed.png);
+}
+QToolButton#btn_session:hover:!pressed,
+QToolButton#btn_session:focus:!pressed{
+    border-image:url(:/images/session_select.png);
+}
+/*右下虚拟键盘按钮*/
+QToolButton#btn_keyboard{
+    border-image:url(:/images/keyboard_normal.png);
+}
+QToolButton#btn_keyboard:pressed{
+    border-image:url(:/images/keyboard_pressed.png);
+}
+QToolButton#btn_keyboard:hover:!pressed,
+QToolButton#btn_keyboard:focus:!pressed{
+    border-image:url(:/images/keyboard_select.png);
+}
+/*右下电源按钮*/
+QToolButton#btn_power{
+    border-image:url(:/images/shutdown_normal.png);
+}
+QToolButton#btn_power:pressed{
+    border-image:url(:/images/shutdown_pressed.png);
+}
+QToolButton#btn_power:hover:!pressed,
+QToolButton#btn_power:focus:!pressed{
+    border-image:url(:/images/shutdown_select.png);
+}
+/*屏幕中央自动登录按钮*/
+LoginButton{
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+    background-color:rgba(0,0,0,0.2);
+    padding-left:10px;
+    padding-right:10px;
+    qproperty-icon: url("/home/lxh/AutoLoginButton/images/arrow.png") ;
+}
+LoginButton > QLabel#label_text{
+    color:white;
+    qproperty-text:"login";
+    font-size:14px;
+}
+LoginButton:focus,LoginButton:hover{
+    background-color:rgba(255,255,255,0.2);
+}
+LoginButton[pressed="true"]{
+    background-color:rgba(255,255,255,0.1);
+}
+/*******************LineEdit******************/
+/*输入框自定义控件*/
+GreeterLineEdit#promptEdit{
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+    background-color:rgba(0,0,0,0.2);
+}
+GreeterLineEdit#promptEdit[editFocus=true]{
+    border:1px solid rgba(46,179,255,0.4);
+    border-radius:8px;
+}
+GreeterLineEdit[showPasswordModeStyle=false] > QLineEdit#edit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:14px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+GreeterLineEdit[showPasswordModeStyle=true] > QLineEdit#edit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:7px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+GreeterLineEdit > QToolButton#button{
+    border:0px;
+    background-color:transparent;
+    background-repeat:false;
+}
+GreeterLineEdit > QWidget#separator{
+    border:0px;
+    background-color:rgba(255,255,255,0.3);
+}
+/*******************Menu******************/
+QMenu {
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color: rgba(0,0,0,0.3);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+}
+QMenu::item {
+    font-family:"Noto Sans CJK SC Light";
+    padding-left:16px;
+    height:28px;
+    color:white;
+    font-size:12px;
+}
+QMenu::item:selected {
+    border-right:2px solid #2EB3FF;
+    background: rgba(255, 255, 255, 0.1);
+}
+QMenu::separator {
+    height: 0px;
+    background: lightblue;
+}
+GreeterMenuItem#GreeterMenuItem{
+    height:28px;
+}
+GreeterMenuItem#GreeterMenuItem:hover{
+    border-right:2px solid #2EB3FF;
+    background: rgba(255, 255, 255, 0.1);
+}
+GreeterMenuItem#GreeterMenuItem > QLabel{
+    font-family:"Noto Sans CJK SC Light";
+    padding-left:16px;
+    color:white;
+    font-size:12px;
+    border: 0px;
+    margin:0px;
+}
+GreeterMenuItem#GreeterMenuItem > QCheckBox{
+    margin-left:2px;
+    margin-right:0px;
+    border:0px;
+    width:14px;
+    height:14px;
+}
+GreeterMenuItem#GreeterMenuItem > QCheckBox::indicator{
+    width: 14px;
+    height: 14px;
+}
+GreeterMenuItem#GreeterMenuItem > QCheckBox::indicator:unchecked{
+    image: url();
+}
+GreeterMenuItem#GreeterMenuItem > QCheckBox::indicator:checked{
+    image: url(:/images/checked.png);
+}
+/*******************ListView******************/
+/*用户列表*/
+QListView#userList{
+    /* make the selection span the entire width of the view */
+    show-decoration-selected: 0;
+    background-color:transparent;
+}
+QListView#userList::item{
+    background-color:transparent;
+    height:60px;
+}
+QListView#userList::item:alternate {
+}
+QListView#userList::item:selected {
+    border:0px;
+    border-right:2px solid rgb(46,179,255);
+    background-color: rgba(255,255,255,0.1);
+}
+QListView#userList::item:selected:!active {
+}
+QListView#userList::item:selected:active {
+}
+#userList QScrollBar:vertical {
+    border: 0px solid grey;
+    background: transparent;
+    width:9px;
+    margin-top:1px;
+    margin-left:4px;
+    /*margin: 1px 0px 4px 0px;*/
+}
+#userList QScrollBar::handle:vertical {
+    background: rgba(255,255,255,0.2);
+    min-height: 20px;
+}
+#userList QScrollBar::add-line:vertical {
+    border: 0px solid grey;
+    height: 0px;
+}
+#userList QScrollBar::sub-line:vertical {
+    border: 0px;
+    height: 0px;
+}
+#userList QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: 0px;
+    width: 0px;
+    height: 0px;
+}
+#userList QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+UserListItem:focus:!hover{
+    border:1px solid;
+    border-color:rgba(255,255,255,0.3);
+}
+UserListItem:hover{
+    border:1px solid;
+    border-color:rgba(255,255,255,0.2);
+}
+UserListItem > QLabel#label_username{
+    font-family:"Noto Sans CJK SC Light";
+    font-size:14px;
+    color:white;
+    background-color:transparent;
+}

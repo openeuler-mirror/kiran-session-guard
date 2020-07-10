@@ -1,21 +1,24 @@
 #include <QApplication>
+#include <QDebug>
+#include <QTranslator>
+#include <locale.h>
+#include <libintl.h>
+#include <QFile>
+
 #include "greeterloginwindow.h"
 #include "log.h"
 #include "greetersetting.h"
 #include "greeterscreenmanager.h"
 #include "greeterkeyboard.h"
-#include <QDebug>
-#include <QTranslator>
 #include "scalinghelper.h"
 #include "cursorhelper.h"
 
-#include <locale.h>
-#include <libintl.h>
-
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
+#define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
 int main(int argc, char *argv[])
 {
+    ///lightdm认证的翻译
     setlocale(LC_ALL, "");
     bindtextdomain("Linux-PAM", "/usr/share/locale");
     textdomain("Linux-PAM");
@@ -58,6 +61,15 @@ int main(int argc, char *argv[])
                                                       TRANSLATION_FILE_DIR/*dir*/,
                                                       ".qm"/*suffix*/);
     qApp->installTranslator(&tsor);
+
+    ///加载样式表
+    QFile file(DEFAULT_STYLE_FILE);
+    if(file.open(QIODevice::ReadOnly)){
+        qApp->setStyleSheet(file.readAll());
+    }else{
+        qWarning() << "load style sheet failed";
+    }
+
     ///初始键盘配置
     GreeterKeyboard::instance().init();
 

@@ -9,21 +9,6 @@
 #define LOADING_ICON_FORMAT     ":/images/loading_%1.png"
 #define LOADING_ICON_INDEX_MAX  17
 
-#define NORMAL_EDIT_STYLE "QLineEdit{"\
-                          "     border:opx;"\
-                          "     background-color:transparent;"\
-                          "     font-family:\"Noto Sans CJK SC\";"\
-                          "     font-size:14px;"\
-                          "     color:white;"\
-                          "}"
-#define PASSWD_EDIT_STYLE "QLineEdit{"\
-                          "     border:opx;"\
-                          "     background-color:transparent;"\
-                          "     font-family:\"Noto Sans CJK SC\";"\
-                          "     font-size:7px;"\
-                          "     color:white;"\
-                          "}"
-
 GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GreeterLineEdit),
@@ -82,7 +67,7 @@ void GreeterLineEdit::setEchoMode(QLineEdit::EchoMode echoMode)
 {
     ui->edit->setEchoMode(echoMode);
     if(echoMode==QLineEdit::Normal){
-        ui->edit->setStyleSheet(NORMAL_EDIT_STYLE);
+        setShowPasswordModeStyle(false);
         setNormalLetterSpacing();
     }
 }
@@ -118,6 +103,16 @@ void GreeterLineEdit::setEditFocus(bool editFocus)
     emit editFocusChanged(m_editFocus);
 }
 
+void GreeterLineEdit::setShowPasswordModeStyle(bool showPasswordModeStyle)
+{
+    if(m_showPasswordModeStyle==showPasswordModeStyle){
+        return;
+    }
+    m_showPasswordModeStyle = showPasswordModeStyle;
+    style()->polish(this);
+    style()->polish(ui->edit);
+}
+
 void GreeterLineEdit::slotEditReturnPressed()
 {
     if( (ui->edit->echoMode()!=QLineEdit::Password) && (ui->edit->text().isEmpty()) ){
@@ -140,10 +135,10 @@ void GreeterLineEdit::slotEditTextChanged(const QString &text)
 {
     ///密码框输入密码不为空的情况下调整字体和字间距
     if(ui->edit->echoMode()==QLineEdit::Password && text.isEmpty()){
-        ui->edit->setStyleSheet(NORMAL_EDIT_STYLE);
+        setShowPasswordModeStyle(false);
         setNormalLetterSpacing();
     }else if(ui->edit->echoMode()==QLineEdit::Password && !text.isEmpty() ){
-        ui->edit->setStyleSheet(PASSWD_EDIT_STYLE);
+        setShowPasswordModeStyle(true);
         setPasswdLetterSpacing();
     }
 }
@@ -221,4 +216,9 @@ GreeterLineEdit::InputMode GreeterLineEdit::inputMode() const
 bool GreeterLineEdit::editFocus() const
 {
     return m_editFocus;
+}
+
+bool GreeterLineEdit::showPasswordModeStyle() const
+{
+    return m_showPasswordModeStyle;
 }

@@ -10,11 +10,6 @@
 #include <QSpacerItem>
 #include <QFontMetrics>
 
-#define CHECKBOX_STYLE "QCheckBox {spacing:0px;border:0px;width:14px;height:14px;}"\
-                       "QCheckBox::indicator{width: 14px;height: 14px;}"\
-                       "QCheckBox::indicator:unchecked{image: url();}"\
-                       "QCheckBox::indicator:checked{image: url(:/images/checked.png);}"
-
 GreeterMenuItem::GreeterMenuItem(const QString &text, bool checkable, QWidget *parent)
     :QWidget (parent)
     ,m_checkable(checkable)
@@ -58,7 +53,6 @@ void GreeterMenuItem::initUI()
     if( m_checkable ){
         m_checkbox = new QCheckBox("");
         m_checkbox->setFixedSize(QSize(22,14));
-        m_checkbox->setStyleSheet(CHECKBOX_STYLE);
         m_checkbox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
         ///鼠标事件由父窗口处理，不可直接取消勾选
         m_checkbox->setAttribute(Qt::WA_TransparentForMouseEvents,true);
