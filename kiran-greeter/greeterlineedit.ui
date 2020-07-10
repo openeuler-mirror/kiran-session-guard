@@ -53,12 +53,7 @@
    <item alignment="Qt::AlignVCenter">
     <widget class="QLineEdit" name="edit">
      <property name="styleSheet">
-      <string notr="true">QLineEdit{
-	border:opx;
-	background-color:transparent;
-	color:white;
-}
-</string>
+      <string notr="true"/>
      </property>
      <property name="maxLength">
       <number>32767</number>
@@ -89,10 +84,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget#separator{
-	border:0px;
-	background-color:rgba(255,255,255,0.3);
-}</string>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -120,11 +112,7 @@
       <enum>Qt::NoFocus</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">QToolButton{
-	border:0px;
-	background-color:transparent;
-	background-repeat:false;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>

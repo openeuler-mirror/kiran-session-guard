@@ -14,9 +14,7 @@
    <string>GreeterSetting</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget#GreeterSetting{
-	background-color:#202020;
-}</string>
+   <string notr="true"/>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
@@ -37,10 +35,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget#tab{
-	border-top:1px solid rgba(255,255,255,25);
-	border-right:1px solid rgba(255,255,255,25);
-}</string>
+      <string notr="true"/>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="spacing">
@@ -79,48 +74,7 @@
          </size>
         </property>
         <property name="styleSheet">
-         <string notr="true">QWidget#tabList{
-	background-color:transparent;
-}
-
-  QListView {
-      show-decoration-selected: 0; /* make the selection span the entire width of the view */
-	 background-color:transparent;
-  }
-
-QListView::item{
-	background-color:transparent;
-	border-radius:10px;
-	margin-top:2px;
-	margin-bottom:2px;
-	width:274;
-	height:60;
-}
-
-  QListView::item:alternate {
-  }
-
-  QListView::item:selected {
-      background-color: #43a3f2
-  }
-
- QListView::item:selected:!active {
-
- }
-
- QListView::item:selected:active {
-
- }
-
- QListView::item:!selected:hover {
-	background-color:rgba(255,255,255,25);
- }
-
-QListView::item:focus{
-
-}
-
-</string>
+         <string notr="true"/>
         </property>
         <property name="currentRow">
          <number>-1</number>
@@ -133,9 +87,7 @@ QListView::item:focus{
    <item>
     <widget class="QWidget" name="stack" native="true">
      <property name="styleSheet">
-      <string notr="true">QWidget#stack{
-		border-top:1px solid rgba(255,255,255,25);
-}</string>
+      <string notr="true"/>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
@@ -156,13 +108,11 @@ QListView::item:focus{
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="appearence">
          <property name="styleSheet">
-          <string notr="true">QWidget#appearence{
-	background-color:transparent;
-}</string>
+          <string notr="true"/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <property name="spacing">
@@ -196,10 +146,7 @@ QListView::item:focus{
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLabel#label_appearence{
-	color:white;
-	margin-bottom:18px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Appearance Setting</string>
@@ -221,10 +168,7 @@ QListView::item:focus{
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QWidget{
-	border:1px solid rgba(255,255,255,0.2);
-	border-radius:8px;
-}</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>
@@ -236,10 +180,7 @@ QListView::item:focus{
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLabel#label_selectPix{
-	color:white;
-	margin-top:20px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Select Image</string>
@@ -261,15 +202,7 @@ QListView::item:focus{
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QToolButton{
-	width:70px;
-	height:30px;
-	background-color:#43a3f2;
-	border:0px;
-	border-radius:6px;
-	color:white;
-	margin-top:10px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Browse</string>
@@ -279,13 +212,7 @@ QListView::item:focus{
           <item>
            <widget class="QLabel" name="label_selectMode">
             <property name="styleSheet">
-             <string notr="true">QLabel{
-	width:84px;
-	height:14px;
-	color:white;
-	margin-top:15px;
-	margin-bottom:8px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Scale Mode</string>
@@ -313,55 +240,7 @@ QListView::item:focus{
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QComboBox{
-	border: 1px solid rgba(255,255,255,0.2);
-	border-radius:6px;
-	background-color:transparent;
-	color:white;
-}
-
-QComboBox:on { 
-	background:#43a3f2;;
-}
-
-QComboBox:editable {
-      background-color: red;
-}
-
-  QComboBox::down-arrow {
-      image: url(:/images/down-arrow.png);
-  }
-
-  QComboBox::drop-down {
-      subcontrol-origin: padding;
-      subcontrol-position: top right;
-      width: 15px;
-		margin-right:14px;
-		border:none;
-  }
-
-QComboBox QAbstractItemView {
-        border: 1px solid rgb(100, 100, 100);
-		background: #202020;
-	    outline: none;
-}
-
-QComboBox QAbstractItemView::item {
-        height: 35px;
-        color: white;
-		 margin:1px;
-}
-
-QComboBox QAbstractItemView::item:selected {
-		background:rgba(255,255,255,25);
-       color: white;
-		border-radius:4px;
-}
-
-QComboBox QAbstractItemView {
-      border-radius: 6px ;
-  }
-</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>
@@ -404,13 +283,7 @@ QComboBox QAbstractItemView {
              <item>
               <widget class="QLabel" name="label_scaleFactor">
                <property name="styleSheet">
-                <string notr="true">QLabel{
-	width:84px;
-	height:14px;
-	color:white;
-	margin-top:10px;
-	margin-bottom:5px;
-}</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>Scale Factor</string>
@@ -438,55 +311,7 @@ QComboBox QAbstractItemView {
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">QComboBox{
-	border: 1px solid rgba(255,255,255,0.2);
-	border-radius:6px;
-	background-color:transparent;
-	color:white;
-}
-
-QComboBox:on { 
-	background:#43a3f2;;
-}
-
-QComboBox:editable {
-      background-color: red;
-}
-
-  QComboBox::down-arrow {
-      image: url(:/images/down-arrow.png);
-  }
-
-  QComboBox::drop-down {
-      subcontrol-origin: padding;
-      subcontrol-position: top right;
-      width: 15px;
-		margin-right:14px;
-		border:none;
-  }
-
-QComboBox QAbstractItemView {
-        border: 1px solid rgb(100, 100, 100);
-		background: #202020;
-	    outline: none;
-}
-
-QComboBox QAbstractItemView::item {
-        height: 35px;
-        color: white;
-		 margin:1px;
-}
-
-QComboBox QAbstractItemView::item:selected {
-		background:rgba(255,255,255,25);
-       color: white;
-		border-radius:4px;
-}
-
-QComboBox QAbstractItemView {
-      border-radius: 6px ;
-  }
-</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -510,9 +335,7 @@ QComboBox QAbstractItemView {
         </widget>
         <widget class="QWidget" name="userlogin">
          <property name="styleSheet">
-          <string notr="true">QWidget#userlogin{
-	background-color:transparent;
-}</string>
+          <string notr="true"/>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="spacing">
@@ -533,10 +356,7 @@ QComboBox QAbstractItemView {
           <item>
            <widget class="QLabel" name="label_userlogin">
             <property name="styleSheet">
-             <string notr="true">QLabel#label_userlogin{
-	color:white;
-	margin-bottom:18px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>User Login</string>
@@ -587,9 +407,7 @@ QComboBox QAbstractItemView {
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">QLabel#label_maualLogin{
-	color:white;
-}</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>enable manual login</string>
@@ -617,19 +435,7 @@ QComboBox QAbstractItemView {
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">QCheckBox::indicator {
-    width: 42px;
-    height: 24px;
-	border:none;
-	background-color:transparent;
-}
-
-QCheckBox::indicator:unchecked {
-	 image: url(:/images/off.png);
-}
-QCheckBox::indicator {
-    image: url(:/images/on.png);
-}</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string/>
@@ -678,9 +484,7 @@ QCheckBox::indicator {
              <item>
               <widget class="QLabel" name="label_hideUserList">
                <property name="styleSheet">
-                <string notr="true">QLabel#label_hideUserList{
-	color:white;
-}</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string>hide user list</string>
@@ -708,18 +512,7 @@ QCheckBox::indicator {
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">QCheckBox::indicator {
-    width: 42px;
-    height: 24px;
-	border:none;
-	background-color:transparent;
-}
-QCheckBox::indicator:unchecked {
-	 image: url(:/images/off.png);
-}
-QCheckBox::indicator {
-    image: url(:/images/on.png);
-}</string>
+                <string notr="true"/>
                </property>
                <property name="text">
                 <string/>
@@ -737,11 +530,7 @@ QCheckBox::indicator {
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLabel#label_autoLoginUserName{
-		color:white;
-		margin-top:20px;
-		margin-bottom:10px;
-}</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>auto login account(take effect after restart)</string>
@@ -769,24 +558,14 @@ QCheckBox::indicator {
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit#edit_autologinName{
-	background-color:transparent;
-	border: 1px solid rgba(255,255,255,0.2);
-	border-radius: 6px;
-	color:white;
-	padding-left:5px;
-}</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_autoLoginDelay">
             <property name="styleSheet">
-             <string notr="true">QLabel#label_autoLoginDelay{
-		color:white;
-		margin-top:20px;
-	margin-bottom:10px;
-};</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>auto login delay(seconds)(take effect after restart)</string>
@@ -814,13 +593,7 @@ QCheckBox::indicator {
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QLineEdit#edit_autologinDelay{
-	background-color:transparent;
-	border: 1px solid rgba(255,255,255,0.2);
-	border-radius: 6px;
-	color:white;
-	padding-left:5px;
-}</string>
+             <string notr="true"/>
             </property>
            </widget>
           </item>

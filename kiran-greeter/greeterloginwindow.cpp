@@ -23,8 +23,6 @@
 #include <QButtonGroup>
 #include <libintl.h>
 
-#define DEFAULT_MENU_QSS ":/themes/QMenu.qss"
-
 Q_DECLARE_METATYPE(UserInfo);
 GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
     QWidget(parent)
@@ -161,7 +159,7 @@ void GreeterLoginWindow::initUI()
     ///连接输入框回车和按钮点击信号
     connect(ui->promptEdit,SIGNAL(textConfirmed(const QString&)),this,SLOT(slotTextConfirmed(const QString&)));
     ///切换模式按钮和返回按钮
-    connect(ui->button,SIGNAL(pressed()),
+    connect(ui->btn_notListAndCancel,SIGNAL(pressed()),
             this,SLOT(slotButtonClicked()));
     connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
         GreeterKeyboard& keyboard = GreeterKeyboard::instance();
@@ -182,17 +180,8 @@ void GreeterLoginWindow::initUI()
 
 void GreeterLoginWindow::initMenu()
 {
-    ///菜单样式
-    QFile menuStyleFile(DEFAULT_MENU_QSS);
-    QString menuQss;
-    if(menuStyleFile.open(QIODevice::ReadOnly)){
-        menuQss = menuStyleFile.readAll();
-    }else{
-        qWarning("open %s failed",DEFAULT_MENU_QSS);
-    }
     ///电源菜单初始化
     m_powerMenu = new QMenu(this);//透明化需要设置父控件
-    m_powerMenu->setStyleSheet(menuQss);
     m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);//透明必需
     ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
@@ -205,7 +194,6 @@ void GreeterLoginWindow::initMenu()
     m_sessionMenu = new QMenu(this);
     m_sessionMenu->setMinimumWidth(92);
     m_sessionMenu->setMaximumWidth(184);
-    m_sessionMenu->setStyleSheet(menuQss);
     m_sessionMenu->setAttribute(Qt::WA_TranslucentBackground);
     ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
@@ -373,9 +361,9 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     }
     //NotList按钮
     m_buttonType = BUTTON_SWITCH_TO_MANUAL_LOGIN;
-    ui->button->setText(tr("Not Listed?"));
-    ui->button->setVisible(m_noListButotnVisiable);
-    ui->button->setEnabled(true);
+    ui->btn_notListAndCancel->setText(tr("Not Listed?"));
+    ui->btn_notListAndCancel->setVisible(m_noListButotnVisiable);
+    ui->btn_notListAndCancel->setEnabled(true);
 
     //头像设置成默认
     ui->loginAvatar->setDefaultImage();
@@ -413,9 +401,9 @@ void GreeterLoginWindow::resetUIForManualLogin()
     }
     //返回使用用户列表登录模式
     m_buttonType = BUTTON_RETURN;
-    ui->button->setText(tr("Return"));
-    ui->button->setVisible(m_showUserList);
-    ui->button->setEnabled(true);
+    ui->btn_notListAndCancel->setText(tr("Return"));
+    ui->btn_notListAndCancel->setVisible(m_showUserList);
+    ui->btn_notListAndCancel->setEnabled(true);
 
     //头像设置成默认
     ui->loginAvatar->setDefaultImage();
@@ -483,6 +471,8 @@ void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)
     QPixmap pixmap;
     if(on){
         pixmap.load(":/images/caps_lock.png");
+        pixmap = pixmap.scaledToWidth(This->ui->label_capsLock->width());
+        pixmap = pixmap.scaledToHeight(This->ui->label_capsLock->height());
         This->ui->label_capsLock->setPixmap(pixmap);
     }else{
         This->ui->label_capsLock->setPixmap(pixmap);
@@ -521,9 +511,9 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
         }
         //显示返回按钮
         m_buttonType = BUTTON_RETURN;
-        ui->button->setText(tr("Return"));
-        ui->button->setVisible(true);
-        ui->button->setEnabled(true);
+        ui->btn_notListAndCancel->setText(tr("Return"));
+        ui->btn_notListAndCancel->setVisible(true);
+        ui->btn_notListAndCancel->setEnabled(true);
     }
     m_havePrompted = true;
     ui->promptEdit->reset();

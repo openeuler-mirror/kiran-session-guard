@@ -57,9 +57,7 @@
    <item>
     <widget class="QLabel" name="text">
      <property name="styleSheet">
-      <string notr="true">QLabel#text{
-	color:white;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
