@@ -1,14 +1,17 @@
 #include "screensaverdialog.h"
-#include <QApplication>
-#include <QCommandLineParser>
-#include <QTranslator>
-#include <QDebug>
 #include "log.h"
 #include "greeterkeyboard.h"
 #include "gsettingshelper.h"
 #include "scalinghelper.h"
 
+#include <QApplication>
+#include <QCommandLineParser>
+#include <QTranslator>
+#include <QDebug>
+#include <QFile>
+
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
+#define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 
 int main(int argc, char *argv[])
 {
@@ -59,6 +62,15 @@ int main(int argc, char *argv[])
     if(!GreeterKeyboard::instance().init()){
         qWarning() << "init keyboard failed";
     }
+
+    ///加载样式文件
+    QFile file(DEFAULT_STYLE_PATH);
+    if( file.open(QIODevice::ReadOnly) ){
+        qApp->setStyleSheet(file.readAll());
+    }else{
+        qWarning() << "load style sheet failed";
+    }
+
     ScreenSaverDialog w;
     if( parser.isSet(logoutEnableOption) ){
         //

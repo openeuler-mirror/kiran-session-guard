@@ -96,17 +96,7 @@ void ScreenSaverDialog::InitUI()
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
-    QString menuStyle;
-    QFile menuStyleFile(":/styles/menu_style.qss");
-    if( menuStyleFile.open(QIODevice::ReadOnly) ){
-        menuStyle = menuStyleFile.readAll();
-        menuStyleFile.close();
-    }else{
-        qWarning("can't open menu style file");
-    }
-
     m_powerMenu = new QMenu(this);
-    m_powerMenu->setStyleSheet(menuStyle);
     m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);///透明必需
     ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
