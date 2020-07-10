@@ -23,12 +23,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget#GreeterWindow{
-	#background-color:#202020;
-	background-color:white;
-}
-
-</string>
+   <string notr="true"/>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,1">
    <property name="spacing">
@@ -342,22 +337,10 @@
               <property name="font">
                <font>
                 <family>Noto Sans CJK SC Light</family>
-                <pointsize>-1</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QLabel{
-	font-family:&quot;Noto Sans CJK SC Light&quot;;
-	font-size: 36px;
-	color: white;
-}
-
-ShadowLabel{
-	qproperty-shadowEnable:true;
-	qproperty-shadowColor:rgba(0,0,0,0.1);
-	qproperty-shadowOffsetX:2;
-	qproperty-shadowOffsetY:2;
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string>Name</string>
@@ -494,15 +477,7 @@ ShadowLabel{
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="styleSheet">
-               <string notr="true">GreeterLineEdit#promptEdit{
-	border:1px solid rgba(255,255,255,0.1);
-	border-radius:8px;
-	background-color:rgba(0,0,0,0.2);
-}
-GreeterLineEdit#promptEdit[editFocus=true]{
-	border:1px solid rgba(46,179,255,0.4);
-	border-radius:8px;
-}</string>
+               <string notr="true"/>
               </property>
              </widget>
             </item>
@@ -527,28 +502,7 @@ GreeterLineEdit#promptEdit[editFocus=true]{
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">LoginButton{
-	border:1px solid rgba(255,255,255,0.1);
-	border-radius:8px;
-	background-color:rgba(0,0,0,0.2);
-	padding-left:10px;
-	padding-right:10px;
-	qproperty-icon: url(&quot;/home/lxh/AutoLoginButton/images/arrow.png&quot;) ;
-}
-
-LoginButton &gt; QLabel#label_text{
-	color:white;
-	qproperty-text:&quot;login&quot;;
-	font-size:14px;
-}
-
-LoginButton:focus,LoginButton:hover{
-	background-color:rgba(255,255,255,0.2);
-}
-
-LoginButton[pressed=&quot;true&quot;]{
-	background-color:rgba(255,255,255,0.1);
-}</string>
+               <string notr="true"/>
               </property>
              </widget>
             </item>
@@ -562,14 +516,14 @@ LoginButton[pressed=&quot;true&quot;]{
               </property>
               <property name="minimumSize">
                <size>
-                <width>36</width>
-                <height>36</height>
+                <width>30</width>
+                <height>30</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>36</width>
-                <height>36</height>
+                <width>30</width>
+                <height>30</height>
                </size>
               </property>
               <property name="styleSheet">
@@ -622,7 +576,7 @@ LoginButton[pressed=&quot;true&quot;]{
              </spacer>
             </item>
             <item>
-             <widget class="QToolButton" name="button">
+             <widget class="QToolButton" name="btn_notListAndCancel">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -635,7 +589,6 @@ LoginButton[pressed=&quot;true&quot;]{
               <property name="font">
                <font>
                 <family>Noto Sans CJK SC</family>
-                <pointsize>-1</pointsize>
                 <underline>true</underline>
                </font>
               </property>
@@ -643,21 +596,7 @@ LoginButton[pressed=&quot;true&quot;]{
                <cursorShape>PointingHandCursor</cursorShape>
               </property>
               <property name="styleSheet">
-               <string notr="true">#button{
-	border:0px;
-	color:rgb(255,254,254);
-	font-family:&quot;Noto Sans CJK SC&quot;;
-	font-size:14px;
-	text-decoration:underline;
-}
-
-#button:hover,#button:focus{
-	color:#2eb3ff;
-}
-
-#button:pressed{
-	color:1b82bd;
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string>Not List</string>
@@ -737,22 +676,10 @@ LoginButton[pressed=&quot;true&quot;]{
               <property name="font">
                <font>
                 <family>Noto Sans CJK SC Light</family>
-                <pointsize>-1</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QLabel#label_tips{
-	font-size:14px;
-	font-family:&quot;Noto Sans CJK SC Light&quot;;
-	background-color:transparent;
-}
-
-ShadowLabel{
-	qproperty-shadowEnable:true;
-	qproperty-shadowColor:rgba(0,0,0,0.1);
-	qproperty-shadowOffsetX:2;
-	qproperty-shadowOffsetY:2;
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string/>
@@ -795,23 +722,10 @@ ShadowLabel{
         <property name="font">
          <font>
           <family>Noto Sans CJK SC Light</family>
-          <pointsize>-1</pointsize>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLabel{
-	font-family:&quot;Noto Sans CJK SC Light&quot;;
-	font-size:20px;
-	color:white;
-	border:0px;
-}
-
-ShadowLabel{
-	qproperty-shadowEnable:true;
-	qproperty-shadowColor:rgba(0,0,0,0.1);
-	qproperty-shadowOffsetX:2;
-	qproperty-shadowOffsetY:2;
-}</string>
+         <string notr="true"/>
         </property>
         <property name="text">
          <string/>
@@ -930,16 +844,7 @@ ShadowLabel{
            <bool>true</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border-image:url(:/images/session_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/session_pressed.png);
-}
-QToolButton:hover:!pressed,QToolButton:focus:!pressed{
-	border-image:url(:/images/session_select.png);
-}
-</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>
@@ -973,16 +878,7 @@ QToolButton:hover:!pressed,QToolButton:focus:!pressed{
            <bool>true</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border-image:url(:/images/keyboard_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/keyboard_pressed.png);
-}
-QToolButton:hover:!pressed,QToolButton:focus:!pressed{
-	border-image:url(:/images/keyboard_select.png);
-}
-</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>
@@ -1016,16 +912,7 @@ QToolButton:hover:!pressed,QToolButton:focus:!pressed{
            <bool>true</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border-image:url(:/images/shutdown_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/shutdown_pressed.png);
-}
-QToolButton:hover:!pressed,QToolButton:focus:!pressed{
-	border-image:url(:/images/shutdown_select.png);
-}
-</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>

@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>themes/QMenu.qss</file>
+        <file>themes/lightdm-kiran-greeter-normal.qss</file>
     </qresource>
 </RCC>

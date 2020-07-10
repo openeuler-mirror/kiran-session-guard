@@ -26,7 +26,7 @@ UserListWidget::~UserListWidget()
 bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
 {
     ///因QListWidget的上下键直接修改当前行，通过屏蔽上下键盘事件修改成切换焦点
-    if(obj==ui->listWidget){
+    if(obj==ui->userList){
         switch (event->type()) {
         case QEvent::KeyPress:
         {
@@ -37,16 +37,16 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
             }
             UserListItem* userItem = dynamic_cast<UserListItem*>(qApp->focusWidget());
             const QListWidgetItem* listItem = userItem->getListItem();
-            int rowIdx = ui->listWidget->row(listItem);
-            int rowCount = ui->listWidget->count();
+            int rowIdx = ui->userList->row(listItem);
+            int rowCount = ui->userList->count();
             if(keyEvent->key() == Qt::Key_Up){
                 if((rowIdx!=0)&&(rowCount>1)){
-                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx-1))->setFocus(Qt::TabFocusReason);
+                    ui->userList->itemWidget(ui->userList->item(rowIdx-1))->setFocus(Qt::TabFocusReason);
                 }
                 return true;
             }else if(keyEvent->key() == Qt::Key_Down){
                 if((rowIdx<(rowCount-1))){
-                    ui->listWidget->itemWidget(ui->listWidget->item(rowIdx+1))->setFocus(Qt::TabFocusReason);
+                    ui->userList->itemWidget(ui->userList->item(rowIdx+1))->setFocus(Qt::TabFocusReason);
                 }
                 return true;
             }
@@ -66,7 +66,7 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
             if(keyEvent->key()==Qt::Key_Enter||keyEvent->key()==Qt::Key_Return){
                 UserListItem* item = dynamic_cast<UserListItem*>(qApp->focusWidget());
                 const QListWidgetItem* listItem = item->getListItem();
-                int rowIdx = ui->listWidget->row(listItem);
+                int rowIdx = ui->userList->row(listItem);
                 setCurrentRow(rowIdx);
                 return true;
             }else if(keyEvent->key()==Qt::Key_Space){
@@ -85,14 +85,14 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
 void UserListWidget::initUI()
 {
     setAttribute(Qt::WA_Hover,true);
-    ui->listWidget->setFocusPolicy(Qt::ClickFocus);
-    ui->listWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->listWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->listWidget,SIGNAL(itemSelectionChanged()),
+    ui->userList->setFocusPolicy(Qt::ClickFocus);
+    ui->userList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->userList->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(ui->userList,SIGNAL(itemSelectionChanged()),
             this,SLOT(slotUserItemActivated()));
 
-    ui->listWidget->setVisible(false);
-    ui->listWidget->installEventFilter(this);
+    ui->userList->setVisible(false);
+    ui->userList->installEventFilter(this);
 
     /// 连接QApplication的焦点切换信号
     /// 处理ListWidget内部焦点切换或焦点切换出ListWidge，滑动条特殊处理
@@ -106,9 +106,9 @@ void UserListWidget::initUI()
         }   else if(newFocusInList){///UserItem->UserItem,滚动到焦点行
             UserListItem* userItem = dynamic_cast<UserListItem*>(newWidget);
             const QListWidgetItem* listItem = userItem->getListItem();
-            ui->listWidget->scrollToItem(listItem);
+            ui->userList->scrollToItem(listItem);
         }else if(oldFocusInList){///UserItem->外部，滚动到当前行
-            ui->listWidget->scrollToItem(ui->listWidget->currentItem());
+            ui->userList->scrollToItem(ui->userList->currentItem());
         }
     });
 }
@@ -128,11 +128,11 @@ void UserListWidget::loadUserList()
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
 {
-    QList<QListWidgetItem*> selectedItem = ui->listWidget->selectedItems();
+    QList<QListWidgetItem*> selectedItem = ui->userList->selectedItems();
     if(selectedItem.size() == 0){
         return false;
     }
-    UserListItem* item = dynamic_cast<UserListItem*>(ui->listWidget->itemWidget(selectedItem.at(0)));
+    UserListItem* item = dynamic_cast<UserListItem*>(ui->userList->itemWidget(selectedItem.at(0)));
     UserInfo info = item->getUserInfo();
     userInfo = info;
     return true;
@@ -184,17 +184,16 @@ void UserListWidget::appendItem(const UserInfo &userInfo)
     UserListItem*  customItem = nullptr;
 
     newItem = new QListWidgetItem;
-    newItem->setSizeHint(QSize(0,60));
 
     customItem = new UserListItem;
     customItem->setUserInfo(userInfo);
     customItem->setListItem(newItem);
     customItem->installEventFilter(this);
 
-    ui->listWidget->addItem(newItem);
-    ui->listWidget->setItemWidget(newItem,customItem);
-    if( (!ui->listWidget->isVisible()) && (ui->listWidget->count()>=2) ){
-        ui->listWidget->setVisible(true);
+    ui->userList->addItem(newItem);
+    ui->userList->setItemWidget(newItem,customItem);
+    if( (!ui->userList->isVisible()) && (ui->userList->count()>=2) ){
+        ui->userList->setVisible(true);
     }
 }
 
@@ -204,17 +203,16 @@ void UserListWidget::insertItem(int row, const UserInfo &userInfo)
     UserListItem*  customItem = nullptr;
 
     newItem = new QListWidgetItem;
-    newItem->setSizeHint(QSize(0,60));
 
     customItem = new UserListItem;
     customItem->setUserInfo(userInfo);
     customItem->setListItem(newItem);
     customItem->installEventFilter(this);
 
-    ui->listWidget->insertItem(row,newItem);
-    ui->listWidget->setItemWidget(newItem,customItem);
-    if( (!ui->listWidget->isVisible()) && (ui->listWidget->count()>=2) ){
-        ui->listWidget->setVisible(true);
+    ui->userList->insertItem(row,newItem);
+    ui->userList->setItemWidget(newItem,customItem);
+    if( (!ui->userList->isVisible()) && (ui->userList->count()>=2) ){
+        ui->userList->setVisible(true);
     }
 }
 
@@ -246,26 +244,26 @@ QString UserListWidget::getIconByAccount(const QString &account)
 
 void UserListWidget::setCurrentRow(int idx)
 {
-    if( ui->listWidget->count() > idx ){
-        ui->listWidget->setCurrentRow(idx,QItemSelectionModel::ClearAndSelect);
+    if( ui->userList->count() > idx ){
+        ui->userList->setCurrentRow(idx,QItemSelectionModel::ClearAndSelect);
     }
 }
 
 void UserListWidget::slotUserItemActivated()
 {
-    QList<QListWidgetItem*> selectedItems = ui->listWidget->selectedItems();
+    QList<QListWidgetItem*> selectedItems = ui->userList->selectedItems();
     if(selectedItems.size() == 0){
         qWarning() << "selected items: 0";
         return;
     }
     QListWidgetItem* activatedItem = selectedItems.at(0);
-    UserListItem* userItem = dynamic_cast<UserListItem*>(ui->listWidget->itemWidget(activatedItem));
+    UserListItem* userItem = dynamic_cast<UserListItem*>(ui->userList->itemWidget(activatedItem));
 
     userItem->setFocusPolicy(Qt::TabFocus);
-    for(int i=0;i<ui->listWidget->count();i++){
-        QListWidgetItem* item = ui->listWidget->item(i);
+    for(int i=0;i<ui->userList->count();i++){
+        QListWidgetItem* item = ui->userList->item(i);
         if(item!=activatedItem){
-            UserListItem* uItem = dynamic_cast<UserListItem*>(ui->listWidget->itemWidget(item));
+            UserListItem* uItem = dynamic_cast<UserListItem*>(ui->userList->itemWidget(item));
             uItem->setFocusPolicy(Qt::NoFocus);
         }
     }
@@ -279,23 +277,23 @@ void UserListWidget::slotRowsRemoved(const QModelIndex &parent, int first, int l
     bool reSelect = false;
 
     for(int i=last;(i>=first);i--){
-        QListWidgetItem* item = ui->listWidget->item(i);
-        QList<QListWidgetItem*> selectedItems = ui->listWidget->selectedItems();
+        QListWidgetItem* item = ui->userList->item(i);
+        QList<QListWidgetItem*> selectedItems = ui->userList->selectedItems();
         if(isEnabled()&&(selectedItems.size()>0)&&(selectedItems.at(0)==item)){
             reSelect = true;
         }
-        QListWidgetItem* removedItem = ui->listWidget->takeItem(i);
+        QListWidgetItem* removedItem = ui->userList->takeItem(i);
         delete removedItem;
     }
     if(reSelect){
-        if(ui->listWidget->count()>0){
+        if(ui->userList->count()>0){
             setRow0();
         }else{
             emit sigRequestResetUI();
         }
     }
-    if( (ui->listWidget->isVisible()) && (ui->listWidget->count()<2) ){
-        ui->listWidget->setVisible(false);
+    if( (ui->userList->isVisible()) && (ui->userList->count()<2) ){
+        ui->userList->setVisible(false);
     }
     updateGeometry();
 }
@@ -308,17 +306,17 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
         insertItem(i,userInfo);
     }
 
-    if( (isEnabled()) && (ui->listWidget->selectedItems().size()==0) && (ui->listWidget->count()>0) ){
+    if( (isEnabled()) && (ui->userList->selectedItems().size()==0) && (ui->userList->count()>0) ){
         setRow0();
     }
 
-    qInfo() << "row inserted: " << "cout[" << ui->listWidget->count() << "]";
+    qInfo() << "row inserted: " << "cout[" << ui->userList->count() << "]";
     updateGeometry();
 }
 
 QSize UserListWidget::sizeHint() const
 {
-    QSize size(0,(ui->listWidget->count()*62)+2);
-    qInfo() << "count: " << ui->listWidget->count() << "size: " << size;
+    QSize size(0,(ui->userList->count()*62)+2);
+    qInfo() << "count: " << ui->userList->count() << "size: " << size;
     return size;
 }

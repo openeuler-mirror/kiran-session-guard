@@ -68,23 +68,10 @@
      <property name="font">
       <font>
        <family>Noto Sans CJK SC Light</family>
-       <pointsize>-1</pointsize>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-		font-family:&quot;Noto Sans CJK SC Light&quot;;
-	font-size:14px;
-	color:white;
-	background-color:transparent;
-}
-
-ShadowLabel{
-	qproperty-shadowEnable:true;
-	qproperty-shadowColor:rgba(0,0,0,0.1);
-	qproperty-shadowOffsetX:2;
-	qproperty-shadowOffsetY:2;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string>Tom Hardy</string>
