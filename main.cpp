@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
         break;
     }
 
+    QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
     QApplication app(argc, argv);
     qInfo() << "arguments: " <<  app.arguments();
 
