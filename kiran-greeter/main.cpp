@@ -1,8 +1,6 @@
 #include <QApplication>
 #include <QDebug>
 #include <QTranslator>
-#include <locale.h>
-#include <libintl.h>
 #include <QFile>
 
 #include "greeterloginwindow.h"
@@ -18,11 +16,6 @@
 
 int main(int argc, char *argv[])
 {
-    ///lightdm认证的翻译
-    setlocale(LC_ALL, "");
-    bindtextdomain("Linux-PAM", "/usr/share/locale");
-    textdomain("Linux-PAM");
-
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter.log");
     qInstallMessageHandler(Log::messageHandler);
