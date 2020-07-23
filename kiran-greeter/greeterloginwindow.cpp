@@ -498,7 +498,7 @@ void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::Messag
         m_havePAMError = true;
     }
     std::string stdText = text.toStdString();
-    setTips(type,gettext(stdText.c_str()));
+    setTips(type,stdText.c_str());
 }
 
 void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptType type)
@@ -518,7 +518,7 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
     m_havePrompted = true;
     ui->promptEdit->reset();
     std::string stdText = text.toStdString();
-    ui->promptEdit->setPlaceHolderText(gettext(stdText.c_str()));
+    ui->promptEdit->setPlaceHolderText(stdText.c_str());
     ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
     ui->promptEdit->setEchoMode(type==QLightDM::Greeter::PromptType::PromptTypeSecret?QLineEdit::Password:QLineEdit::Normal);
     ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
