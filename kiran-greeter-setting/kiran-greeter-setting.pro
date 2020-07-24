@@ -34,7 +34,8 @@ SOURCES += \
     logingreeterpreviewwidget.cpp \
     lightdmprefs.cpp \
     single/singleapplication.cpp \
-    single/singleapplication_p.cpp
+    single/singleapplication_p.cpp \
+    scalinghelper.cpp
 
 #头文件
 HEADERS += \
@@ -46,7 +47,8 @@ HEADERS += \
     logingreeterpreviewwidget.h \
     lightdmprefs.h \
     single/singleapplication.h \
-    single/singleapplication_p.h
+    single/singleapplication_p.h \
+    scalinghelper.h
 
 #界面文件
 FORMS += \
@@ -67,8 +69,10 @@ OTHER_FILES+= \
     translations/kiran-greeter-settings.zh_CN.ts \
     translations/kiran-greeter-settings.zh_CN.qm \
     config/kiran-greeter-settings.desktop \
-    config/com.kiran.kiran-greeter-settings.policy
+    config/com.kiran.kiran-greeter-settings.policy \
+    config/kiran-greeter-settings
 
+LIBS += -lX11 -lXrandr
 #安装选项
 ##翻译文件
 target_translation.files = ./translations/kiran-greeter-settings.zh_CN.qm
@@ -79,7 +83,11 @@ target_polkit.path = $$DESTDIR/usr/share/polkit-1/actions/
 ##桌面快捷方式
 target_desktop.files = ./config/kiran-greeter-settings.desktop
 target_desktop.path = $$DESTDIR/usr/share/applications/
+##shell
+target_shell.files = ./config/kiran-greeter-settings
+target_shell.path = $$DESTDIR/usr/bin/kiran-greeter-settings
 ##可执行文件
 target.path = $$DESTDIR/usr/sbin/
 
-INSTALLS = target_translation target_polkit target_desktop target
+INSTALLS = target_translation target_polkit target_desktop target_shell target
+

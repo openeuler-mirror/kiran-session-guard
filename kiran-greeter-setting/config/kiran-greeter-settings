@@ -1,0 +1,11 @@
+#!/bin/bash
+
+window_scaling_factor=1
+
+gsettings_output=`/usr/bin/gsettings get org.mate.interface window-scaling-factor`
+if [ $? == "0" ]
+then
+    window_scaling_factor=$gsettings_output
+fi
+
+/usr/bin/pkexec /usr/sbin/kiran-greeter-settings --xdg-desktop=$XDG_CURRENT_DESKTOP --window-scaling-factor=$window_scaling_factor
