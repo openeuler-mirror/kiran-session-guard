@@ -262,7 +262,7 @@ void GreeterLoginWindow::initSettings()
         m_showUserList = !GreeterSetting::instance()->getUserListHiding();
     }
 
-    if(m_showUserList){
+    if(m_showUserList && ui->userlist->userCount()>0){
         resetUIForUserListLogin();
     }else{
         resetUIForManualLogin();
@@ -404,7 +404,7 @@ void GreeterLoginWindow::resetUIForManualLogin()
     //返回使用用户列表登录模式
     m_buttonType = BUTTON_RETURN;
     ui->btn_notListAndCancel->setText(tr("Return"));
-    ui->btn_notListAndCancel->setVisible(m_showUserList);
+    ui->btn_notListAndCancel->setVisible(m_showUserList&&ui->userlist->userCount()>0);
     ui->btn_notListAndCancel->setEnabled(true);
 
     //头像设置成默认
