@@ -40,7 +40,8 @@ SOURCES += \
     scalinghelper.cpp \
     cursorhelper.cpp \
     loginbutton.cpp \
-    shadowlabel.cpp
+    shadowlabel.cpp \
+    greeterpromptmsgmanager.cpp
 
 #头文件
 HEADERS += \
@@ -63,7 +64,8 @@ HEADERS += \
     scalinghelper.h \
     cursorhelper.h \
     loginbutton.h \
-    shadowlabel.h
+    shadowlabel.h \
+    greeterpromptmsgmanager.h
 
 #界面文件
 FORMS += \
