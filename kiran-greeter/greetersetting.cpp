@@ -68,6 +68,13 @@ void GreeterSetting::load()
     }else if(m_scaleFactor>2){
         m_scaleFactor = 2;
     }
+
+    QVariant messageInterval = setting.value(KEY_MESSAGE_INTERVAL,DEFAULT_MESSAGE_INTERVAL);
+    bool isOK;
+    m_messageDisplayInterval = messageInterval.toInt(&isOK);
+    if(!isOK){
+        m_messageDisplayInterval = DEFAULT_MESSAGE_INTERVAL;
+    }
 }
 
 QString GreeterSetting::getBackgroundPath()
@@ -95,6 +102,11 @@ double GreeterSetting::getScaleFactor()
     return m_scaleFactor;
 }
 
+int GreeterSetting::messageDisplayInterval()
+{
+    return m_messageDisplayInterval;
+}
+
 void GreeterSetting::dumpGreeterSetting()
 {
     qInfo() << "load greeter setting result:";
@@ -103,6 +115,7 @@ void GreeterSetting::dumpGreeterSetting()
     qInfo() << "    EnableManualLogin:  " << m_enableManualLogin;
     qInfo() << "    EnableScaling:      " << m_enableScaling;
     qInfo() << "    ScaleFactor:        " << m_scaleFactor;
+    qInfo() << "    MessageInterval:    " << m_messageDisplayInterval;
 }
 
 GreeterSetting::GreeterSetting()
@@ -111,6 +124,7 @@ GreeterSetting::GreeterSetting()
     ,m_enableManualLogin(DEFAULT_ENABLE_MANUAL_LOGIN)
     ,m_enableScaling(SCALING_AUTO)
     ,m_scaleFactor(DEFAULT_SCALE_FACTOR)
+    ,m_messageDisplayInterval(DEFAULT_MESSAGE_INTERVAL)
 {
     load();
 }

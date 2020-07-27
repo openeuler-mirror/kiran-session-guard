@@ -28,12 +28,11 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
     QWidget(parent)
   , ui(new Ui::GreeterLoginWindow)
   , m_greeter(this)
+  , m_promptMsgHandler(&m_greeter)
   , m_powerMenu(nullptr)
   , m_sessionMenu(nullptr)
   , m_noListButotnVisiable(true)
   , m_showUserList(false)
-  , m_havePAMError(false)
-  , m_havePrompted(false)
   , m_loginMode(LOGIN_BY_USER_LIST)
   , m_buttonType(BUTTON_SWITCH_TO_MANUAL_LOGIN)
 {
@@ -241,13 +240,14 @@ void GreeterLoginWindow::initLightdmGreeter()
         qWarning("connect to lightdm greeter failed.");
         return;
     }
-    //连接Lightdm信号槽
-    connect(&m_greeter,SIGNAL(showMessage(QString,QLightDM::Greeter::MessageType)),
+    m_promptMsgHandler.start();
+    ///通过连接到处理Prompt,Message的队列提供的信号
+    connect(&m_promptMsgHandler,SIGNAL(showMessage(QString,QLightDM::Greeter::MessageType)),
             this,SLOT(slotShowMessage(QString,QLightDM::Greeter::MessageType)));
-    connect(&m_greeter,SIGNAL(showPrompt(QString,QLightDM::Greeter::PromptType)),
+    connect(&m_promptMsgHandler,SIGNAL(showPrompt(QString,QLightDM::Greeter::PromptType)),
             this,SLOT(slotShowprompt(QString,QLightDM::Greeter::PromptType)));
-    connect(&m_greeter,SIGNAL(authenticationComplete()),
-            this,SLOT(slotAuthenticationComplete()));
+    connect(&m_promptMsgHandler,SIGNAL(authenticationComplete(bool,bool)),
+            this,SLOT(slotAuthenticationComplete(bool,bool)));
 
     ui->userlist->loadUserList();
 }
@@ -262,7 +262,9 @@ void GreeterLoginWindow::initSettings()
         m_showUserList = !GreeterSetting::instance()->getUserListHiding();
     }
 
-    if(m_showUserList){
+    m_promptMsgHandler.setMessageInterval(GreeterSetting::instance()->messageDisplayInterval());
+
+    if(m_showUserList && ui->userlist->userCount()>0){
         resetUIForUserListLogin();
     }else{
         resetUIForManualLogin();
@@ -334,11 +336,10 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
     qInfo() << "    name[" << username << "]";
     qInfo() << "    icon["<< userIcon << "]";
 
-    m_havePAMError = false;
-    m_havePrompted = false;
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
+    m_promptMsgHandler.reset();
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
     if(username==m_greeter.autologinUserHint()){
@@ -359,6 +360,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
+    m_promptMsgHandler.reset();
     //NotList按钮
     m_buttonType = BUTTON_SWITCH_TO_MANUAL_LOGIN;
     ui->btn_notListAndCancel->setText(tr("Not Listed?"));
@@ -399,10 +401,11 @@ void GreeterLoginWindow::resetUIForManualLogin()
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
+    m_promptMsgHandler.reset();
     //返回使用用户列表登录模式
     m_buttonType = BUTTON_RETURN;
     ui->btn_notListAndCancel->setText(tr("Return"));
-    ui->btn_notListAndCancel->setVisible(m_showUserList);
+    ui->btn_notListAndCancel->setVisible(m_showUserList&&ui->userlist->userCount()>0);
     ui->btn_notListAndCancel->setEnabled(true);
 
     //头像设置成默认
@@ -494,9 +497,6 @@ void GreeterLoginWindow::switchToAutoLogin()
 void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::MessageType type)
 {
     qInfo() << "lightdm show message: type[" << type << "] text[" << text << "]";
-    if( type == QLightDM::Greeter::MessageType::MessageTypeError ){
-        m_havePAMError = true;
-    }
     std::string stdText = text.toStdString();
     setTips(type,stdText.c_str());
 }
@@ -515,7 +515,6 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
         ui->btn_notListAndCancel->setVisible(true);
         ui->btn_notListAndCancel->setEnabled(true);
     }
-    m_havePrompted = true;
     ui->promptEdit->reset();
     std::string stdText = text.toStdString();
     ui->promptEdit->setPlaceHolderText(stdText.c_str());
@@ -525,28 +524,17 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
     setEditPromptFocus(100);
 }
 
-void GreeterLoginWindow::slotAuthenticationComplete()
+void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthentication)
 {
     qInfo() << "lightdm authentication complete";
-    if( m_greeter.isAuthenticated() ){
-        if( !m_greeter.startSessionSync(m_session) ){
+    if(success){
+        if(!m_greeter.startSessionSync(m_session)){
             qInfo("start session %s failed",m_session.toStdString().c_str());
-            setTips(QLightDM::Greeter::MessageType::MessageTypeError,
-                    tr("Start session failed"));
         }
     }else{
-        if( m_havePrompted ){
-            if( !m_havePAMError ){
-                setTips(QLightDM::Greeter::MessageType::MessageTypeError,
-                        tr("Incorrect password, please try again"));
-            }
+        if(reAuthentication){
             startAuthUser(m_greeter.authenticationUser(),
                           ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
-        }else{
-            if( !m_havePAMError ){
-                setTips(QLightDM::Greeter::MessageType::MessageTypeError,
-                        tr("Failed to authenticate"));
-            }
         }
     }
 }
@@ -565,6 +553,7 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 
 void GreeterLoginWindow::slotUserActivated(const UserInfo &userInfo)
 {
+    ui->label_tips->clear();
     startAuthUser(userInfo.name,userInfo.imagePath);
 }
 

@@ -5,7 +5,7 @@ Name=Greeter Settings
 Name[zh_CN]=登陆设置
 Comment=kiran greeter settings
 Comment=Kiran登录界面设置
-Exec=/bin/sh -c "pkexec /usr/sbin/kiran-greeter-settings --xdg-desktop=$XDG_CURRENT_DESKTOP"
+Exec=/usr/bin/kiran-greeter-settings
 Icon=preferences-system-login.png
 Terminal=false
 Type=Application
