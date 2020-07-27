@@ -24,5 +24,8 @@
 #define  KEY_SCALE_FACTOR                       "scale-factor"
 #define  DEFAULT_SCALE_FACTOR                   0.0
 
+///Greeter消息显示间隔
+#define  KEY_MESSAGE_INTERVAL                   "message-interval"
+#define  DEFAULT_MESSAGE_INTERVAL               3
 #endif
 
