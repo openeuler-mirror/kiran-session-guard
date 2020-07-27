@@ -82,6 +82,11 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
+int UserListWidget::userCount()
+{
+    return ui->userList->count();
+}
+
 void UserListWidget::initUI()
 {
     setAttribute(Qt::WA_Hover,true);

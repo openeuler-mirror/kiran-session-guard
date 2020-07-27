@@ -11,6 +11,7 @@
 #include <QStateMachine>
 #include "userinfo.h"
 #include "capslocksnoop.h"
+#include "greeterpromptmsgmanager.h"
 
 namespace Ui {
 class GreeterLoginWindow;
@@ -35,6 +36,7 @@ class GreeterLoginWindow : public QWidget
 public:
     explicit GreeterLoginWindow(QWidget *parent = nullptr);
     virtual ~GreeterLoginWindow() override;
+
     void setEditPromptFocus(int ms=0);
 private:
     //初始化LightdmGreeter，并连接信号槽
@@ -64,7 +66,7 @@ public slots:
 private slots:
     void slotShowMessage(QString text, QLightDM::Greeter::MessageType type);
     void slotShowprompt(QString text, QLightDM::Greeter::PromptType type);
-    void slotAuthenticationComplete();
+    void slotAuthenticationComplete(bool sucess,bool reAuthentication);
     void slotTextConfirmed(const QString& text);
     void slotButtonClicked();
 protected:
@@ -74,17 +76,19 @@ protected:
 private:
     Ui::GreeterLoginWindow *ui;
     QLightDM::Greeter m_greeter;
+    GreeterPromptMsgManager m_promptMsgHandler;
     QLightDM::PowerInterface m_powerIface;
     QMenu* m_powerMenu;
     QMenu* m_sessionMenu;
+    //配置项 允许手动登录
     bool m_noListButotnVisiable;
+    //配置项 显示用户列表
     bool m_showUserList;
-    //标志是否存在PAM认证失败错误描述
-    bool m_havePAMError;
-    //标志该次登录是否存在和prompt
-    bool m_havePrompted;
+    //标志当前登录的模式,当前是手动输入用户名或选择用户进行登录
     bool m_loginMode;
+    //标志按钮当前的作用
     bool m_buttonType;
+    //选中的session的名称
     QString m_session;
     CapsLockSnoop m_snoop;
 };

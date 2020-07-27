@@ -23,6 +23,7 @@ public:
     void JustForTest(int count);
     QString getIconByAccount(const QString& account);
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+    int userCount();
 private:
     void initUI();
     bool getUserInfoFromModel(int row,UserInfo& userInfo);

@@ -23,6 +23,7 @@ public:
     bool getEnableManualLogin();
     EnableScalingEnum getEnableScaling();
     double getScaleFactor();
+    int messageDisplayInterval();
     void dumpGreeterSetting();
 private:
     GreeterSetting();
@@ -32,6 +33,7 @@ private:
     bool m_enableManualLogin;
     EnableScalingEnum m_enableScaling;
     double m_scaleFactor;
+    int m_messageDisplayInterval = 3;
 };
 
 #endif // GREETERSETTING_H
