@@ -262,6 +262,8 @@ void GreeterLoginWindow::initSettings()
         m_showUserList = !GreeterSetting::instance()->getUserListHiding();
     }
 
+    m_promptMsgHandler.setMessageInterval(GreeterSetting::instance()->messageDisplayInterval());
+
     if(m_showUserList && ui->userlist->userCount()>0){
         resetUIForUserListLogin();
     }else{
