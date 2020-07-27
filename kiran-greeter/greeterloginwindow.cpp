@@ -340,7 +340,6 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
         m_greeter.cancelAuthentication();
     }
     m_promptMsgHandler.reset();
-    ui->label_tips->clear();
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
     if(username==m_greeter.autologinUserHint()){
@@ -554,6 +553,7 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 
 void GreeterLoginWindow::slotUserActivated(const UserInfo &userInfo)
 {
+    ui->label_tips->clear();
     startAuthUser(userInfo.name,userInfo.imagePath);
 }
 
