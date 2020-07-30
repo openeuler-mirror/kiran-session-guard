@@ -75,17 +75,10 @@ void ScreenSaverDialog::InitUI()
     });
 
     ///设置阴影
-    QGraphicsDropShadowEffect* labelTextShadowEffect = new QGraphicsDropShadowEffect(this);
-    labelTextShadowEffect->setColor(QColor(0,0,0,255*0.1));
-    labelTextShadowEffect->setBlurRadius(0);
-    labelTextShadowEffect->setOffset(2, 2);
-
     QGraphicsDropShadowEffect* labelTextShadowEffect2 = new QGraphicsDropShadowEffect(this);
     labelTextShadowEffect2->setColor(QColor(0,0,0,255*0.1));
     labelTextShadowEffect2->setBlurRadius(0);
     labelTextShadowEffect2->setOffset(2, 2);
-
-    ui->label_userName->setGraphicsEffect(labelTextShadowEffect);
     ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
 
     ///背景图
@@ -95,25 +88,12 @@ void ScreenSaverDialog::InitUI()
         m_background.load(DEFAULT_BACKGROUND);
     }
 
-    m_scaledBackground = m_background.scaled(this->size(),Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
-    m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(m_scaledBackground.toImage(),m_scaledBackground.rect(),8,false));
-
     ///用户
     m_userName = getUser();
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
-    QString menuStyle;
-    QFile menuStyleFile(":/styles/menu_style.qss");
-    if( menuStyleFile.open(QIODevice::ReadOnly) ){
-        menuStyle = menuStyleFile.readAll();
-        menuStyleFile.close();
-    }else{
-        qWarning("can't open menu style file");
-    }
-
     m_powerMenu = new QMenu(this);
-    m_powerMenu->setStyleSheet(menuStyle);
     m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);///透明必需
     ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
@@ -298,8 +278,44 @@ bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
 void ScreenSaverDialog::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
     if(!m_scaledBackground.isNull()){
-        painter.drawPixmap(this->rect(),m_scaledBackground,m_scaledBackground.rect());
+        QSize pixbufSize = m_scaledBackground.size();
+        QSize windowSize = size();
+        QRect drawTargetRect( (pixbufSize.width()-windowSize.width())/-2,
+                              (pixbufSize.height()-windowSize.height())/-2,
+                              pixbufSize.width(),
+                              pixbufSize.height());
+        painter.drawPixmap(drawTargetRect,m_scaledBackground,m_scaledBackground.rect());
     }
     QWidget::paintEvent(event);
+}
+
+void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
+{
+    static bool isFirstResize = true;
+    if(isFirstResize){
+        isFirstResize = false;
+        return;
+    }
+    if(!m_background.isNull()){
+        qInfo() << "start" << QDateTime::currentDateTime();
+        QRect rect(0,0,event->size().width(),event->size().height());
+        QPixmap dest(event->size());
+
+        QSize minSize = rect.size();
+        QSize pixbufSize = m_background.size();
+        double factor;
+        QSize newPixbufSize;
+        factor = qMax(minSize.width()/(double)pixbufSize.width(),
+                     minSize.height()/(double)pixbufSize.height());
+
+        newPixbufSize.setWidth(floor(pixbufSize.width() * factor + 0.5));
+        newPixbufSize.setHeight(floor(pixbufSize.height() * factor + 0.5));
+
+        QPixmap scaledPixmap = m_background.scaled(newPixbufSize,Qt::KeepAspectRatio,Qt::FastTransformation);
+        m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(scaledPixmap.toImage(),scaledPixmap.rect(),8,false));;
+        qInfo() << "end" << QDateTime::currentDateTime();
+    }
+    QWidget::resizeEvent(event);
 }

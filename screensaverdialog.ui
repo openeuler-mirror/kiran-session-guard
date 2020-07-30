@@ -290,7 +290,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="label_userName">
+             <widget class="ShadowLabel" name="label_userName">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -306,15 +306,10 @@
               <property name="font">
                <font>
                 <family>Noto Sans CJK SC Light</family>
-                <pointsize>-1</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QLabel{
-	font-family:&quot;Noto Sans CJK SC Light&quot;;
-	font-size: 36px;
-	color: white;
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string>Name</string>
@@ -448,19 +443,7 @@
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">GreeterLineEdit#promptEdit{
-	border:1px solid rgba(255,255,255,0.1);
-	border-radius:8px;
-	background-color:rgba(0,0,0,0.2);
-}
-GreeterLineEdit#promptEdit[editFocus=true]{
-	border:1px solid rgba(46,179,255,0.4);
-	border-radius:8px;
-}
-GreeterLineEdit#promptEdit[hasError=true]{
-	border:1px solid rgba(255, 46, 46,0.4);
-	border-radius:8px;
-}</string>
+               <string notr="true"/>
               </property>
              </widget>
             </item>
@@ -545,21 +528,7 @@ GreeterLineEdit#promptEdit[hasError=true]{
                <enum>Qt::TabFocus</enum>
               </property>
               <property name="styleSheet">
-               <string notr="true">#btn_cancel{
-	border:0px;
-	color:rgb(255,254,254);
-	font-family:&quot;Noto Sans CJK SC&quot;;
-	font-size:14px;
-	text-decoration:underline;
-}
-
-#btn_cancel:hover,#btn_cancel:focus{
-	color:#2eb3ff;
-}
-
-#btn_cancel:pressed{
-	color:1b82bd;
-}</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string>cancel</string>
@@ -639,15 +608,10 @@ GreeterLineEdit#promptEdit[hasError=true]{
               <property name="font">
                <font>
                 <family>Noto Sans CJK SC Light</family>
-                <pointsize>-1</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">QLabel#label_tips{
-	font-size:14px;
-	font-family:&quot;Noto Sans CJK SC Light&quot;;
-	background-color:transparent;
-}s</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string/>
@@ -680,7 +644,7 @@ GreeterLineEdit#promptEdit[hasError=true]{
        </spacer>
       </item>
       <item alignment="Qt::AlignHCenter|Qt::AlignBottom">
-       <widget class="QLabel" name="label_dataAndTime">
+       <widget class="ShadowLabel" name="label_dataAndTime">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -699,6 +663,12 @@ GreeterLineEdit#promptEdit[hasError=true]{
 	font-size:20px;
 	color:white;
 	border:0px;
+}
+ShadowLabel{
+	qproperty-shadowEnable:true;
+	qproperty-shadowColor:rgba(0,0,0,0.1);
+	qproperty-shadowOffsetX:2;
+	qproperty-shadowOffsetY:2;
 }</string>
         </property>
         <property name="text">
@@ -815,16 +785,7 @@ GreeterLineEdit#promptEdit[hasError=true]{
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border:0px;
-	border-image:url(:/images/switch_users_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/switch_users_pressed.png);
-}
-QToolButton:focus:!pressed,QToolButton:hover:!pressed{
-	border-image:url(:/images/switch_users_select.png);
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>
@@ -855,16 +816,7 @@ QToolButton:focus:!pressed,QToolButton:hover:!pressed{
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border:0px;
-	border-image:url(:/images/keyboard_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/keyboard_pressed.png);
-}
-QToolButton:focus:!pressed,QToolButton:hover:!pressed{
-	border-image:url(:/images/keyboard_select.png);
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>
@@ -895,17 +847,7 @@ QToolButton:focus:!pressed,QToolButton:hover:!pressed{
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true">QToolButton{
-	border:0px;
-	border-image:url(:/images/shutdown_normal.png);
-}
-QToolButton:pressed{
-	border-image:url(:/images/shutdown_hover.png);
-}
-
-QToolButton:focus:!pressed,QToolButton:hover:!pressed{
-	border-image:url(:/images/shutdown_select.png);
-}</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string/>
@@ -932,6 +874,11 @@ QToolButton:focus:!pressed,QToolButton:hover:!pressed{
    <extends>QWidget</extends>
    <header location="global">greeterlineedit.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ShadowLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">shadowlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
