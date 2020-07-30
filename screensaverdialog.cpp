@@ -88,9 +88,6 @@ void ScreenSaverDialog::InitUI()
         m_background.load(DEFAULT_BACKGROUND);
     }
 
-    m_scaledBackground = m_background.scaled(this->size(),Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
-    m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(m_scaledBackground.toImage(),m_scaledBackground.rect(),8,false));
-
     ///用户
     m_userName = getUser();
     ui->label_userName->setText(m_userName);
@@ -281,8 +278,44 @@ bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
 void ScreenSaverDialog::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
     if(!m_scaledBackground.isNull()){
-        painter.drawPixmap(this->rect(),m_scaledBackground,m_scaledBackground.rect());
+        QSize pixbufSize = m_scaledBackground.size();
+        QSize windowSize = size();
+        QRect drawTargetRect( (pixbufSize.width()-windowSize.width())/-2,
+                              (pixbufSize.height()-windowSize.height())/-2,
+                              pixbufSize.width(),
+                              pixbufSize.height());
+        painter.drawPixmap(drawTargetRect,m_scaledBackground,m_scaledBackground.rect());
     }
     QWidget::paintEvent(event);
+}
+
+void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
+{
+    static bool isFirstResize = true;
+    if(isFirstResize){
+        isFirstResize = false;
+        return;
+    }
+    if(!m_background.isNull()){
+        qInfo() << "start" << QDateTime::currentDateTime();
+        QRect rect(0,0,event->size().width(),event->size().height());
+        QPixmap dest(event->size());
+
+        QSize minSize = rect.size();
+        QSize pixbufSize = m_background.size();
+        double factor;
+        QSize newPixbufSize;
+        factor = qMax(minSize.width()/(double)pixbufSize.width(),
+                     minSize.height()/(double)pixbufSize.height());
+
+        newPixbufSize.setWidth(floor(pixbufSize.width() * factor + 0.5));
+        newPixbufSize.setHeight(floor(pixbufSize.height() * factor + 0.5));
+
+        QPixmap scaledPixmap = m_background.scaled(newPixbufSize,Qt::KeepAspectRatio,Qt::FastTransformation);
+        m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(scaledPixmap.toImage(),scaledPixmap.rect(),8,false));;
+        qInfo() << "end" << QDateTime::currentDateTime();
+    }
+    QWidget::resizeEvent(event);
 }
