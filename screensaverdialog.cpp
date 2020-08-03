@@ -293,11 +293,6 @@ void ScreenSaverDialog::paintEvent(QPaintEvent *event)
 
 void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
 {
-    static bool isFirstResize = true;
-    if(isFirstResize){
-        isFirstResize = false;
-        return;
-    }
     if(!m_background.isNull()){
         qInfo() << "start" << QDateTime::currentDateTime();
         QRect rect(0,0,event->size().width(),event->size().height());
