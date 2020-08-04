@@ -85,7 +85,7 @@ target_desktop.files = ./config/kiran-greeter-settings.desktop
 target_desktop.path = $$DESTDIR/usr/share/applications/
 ##shell
 target_shell.files = ./config/kiran-greeter-settings
-target_shell.path = $$DESTDIR/usr/bin/kiran-greeter-settings
+target_shell.path = $$DESTDIR/usr/bin/
 ##可执行文件
 target.path = $$DESTDIR/usr/sbin/
 
