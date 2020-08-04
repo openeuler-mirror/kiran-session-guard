@@ -2,7 +2,7 @@
 #define SCALINGHELPER_H
 
 namespace  ScalingHelper {
-    void auto_calculate_screen_scaling();
+    void auto_calculate_screen_scaling(bool &needScaleCursor);
     void set_scale_factor(double factor);
 }
 

@@ -15,7 +15,7 @@ void ScalingHelper::set_scale_factor(double factor)
     qputenv("QT_SCALE_FACTOR",QString::number(factor).toUtf8());
 }
 
-void ScalingHelper::auto_calculate_screen_scaling()
+void ScalingHelper::auto_calculate_screen_scaling(bool &needScaleCursor)
 {
     Display* display = nullptr;
     XRRScreenResources* resources = nullptr;
@@ -75,6 +75,9 @@ void ScalingHelper::auto_calculate_screen_scaling()
     if(scaleFactors.size()){
         scaleFactors.sort();
         scale_factor = *scaleFactors.begin();
+    }
+    if(scale_factor>=1.5){
+        needScaleCursor = true;
     }
     qInfo() << "QT_SCALE_FACTOR:" << scale_factor;
     if( !qputenv("QT_SCALE_FACTOR",QString::number(scale_factor).toUtf8()) ){
