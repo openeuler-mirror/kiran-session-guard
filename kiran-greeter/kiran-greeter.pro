@@ -1,5 +1,5 @@
 #依赖的Qt模块
-QT += core gui
+QT += core gui x11extras
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 message("kiran-greeter: "$$DESTDIR)
 
