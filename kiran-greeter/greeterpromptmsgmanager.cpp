@@ -68,7 +68,7 @@ void GreeterPromptMsgManager::addAuthenticationCompleteToQueue()
         authFailedMsg.type = LIGHTDM_MSG;
         if(m_havePrompted){
             if(!m_havePAMError){
-                authFailedMsg.text = "Incorrect password, please try again";
+                authFailedMsg.text = tr("Incorrect password, please try again");
             }
             reAuthentication = true;
         }else{
