@@ -24,19 +24,17 @@ int main(int argc, char *argv[])
     GreeterSetting::instance()->dumpGreeterSetting();
 
     ///设置缩放比
-    bool needScaleCursor = false;
+    double scaled_factor = 0.0;
     switch (GreeterSetting::instance()->getEnableScaling()) {
     case GreeterSetting::SCALING_AUTO:
     {
-        ScalingHelper::auto_calculate_screen_scaling(needScaleCursor);
+        ScalingHelper::auto_calculate_screen_scaling(scaled_factor);
         break;
     }
     case GreeterSetting::SCALING_ENABLE:
     {
         double scaleFcator = GreeterSetting::instance()->getScaleFactor();
-        if(  scaleFcator >= 1.5 ){
-            needScaleCursor = true;
-        }
+        scaled_factor = scaleFcator;
         ScalingHelper::set_scale_factor(scaleFcator);
         break;
     }
@@ -49,11 +47,11 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    if(needScaleCursor){
-        CursorHelper::setScaledDefaultCursorSize();
+    if( !CursorHelper::setDefaultCursorSize(scaled_factor) ){
+        qWarning() << "setDefaultCursorSize" << scaled_factor << "failed";
     }
-    if(!CursorHelper::setRootWindowCursor(needScaleCursor)){
-        qWarning() << "setRootWindowCursor failed";
+    if(!CursorHelper::setRootWindowWatchCursor()){
+        qWarning() << "setRootWindowWatchCursor failed";
     }
 
     ///翻译
