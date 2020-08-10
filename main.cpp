@@ -9,15 +9,35 @@
 #include <QTranslator>
 #include <QDebug>
 #include <QFile>
+#include <signal.h>
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
+
+void termSignalHandler(int unused){
+    qInfo() << "termSignalHandler";
+    GreeterKeyboard::instance().resetParentAndTermProcess();
+}
+
+void setup_unix_signal_handlers(){
+    struct sigaction term;
+    term.sa_handler = termSignalHandler;
+    sigemptyset(&term.sa_mask);
+    term.sa_flags = 0;
+    term.sa_flags |= SA_RESETHAND;
+    int iRet = sigaction(SIGTERM,&term,0);
+    if(iRet!=0){
+        qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
+    }
+}
 
 int main(int argc, char *argv[])
 {
     ///初始化日志模块,需提供verbose启动参数日志才会写入文件
     Log::instance()->init("/tmp/kiran-screensaver-dialog.log");
     qInstallMessageHandler(Log::messageHandler);
+
+    setup_unix_signal_handlers();
 
     ///scaling
     int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
