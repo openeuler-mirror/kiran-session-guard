@@ -68,6 +68,7 @@ private:
     bool m_authComplete;
     char** m_conversationReply;
     bool m_conversationRelplyRet;
+    bool m_cancelAuthFlag;
 };
 
 #endif // PAMWRAPPER_H

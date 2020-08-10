@@ -15,7 +15,6 @@
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 
 void termSignalHandler(int unused){
-    qInfo() << "termSignalHandler";
     GreeterKeyboard::instance().resetParentAndTermProcess();
 }
 
@@ -36,6 +35,9 @@ int main(int argc, char *argv[])
     ///初始化日志模块,需提供verbose启动参数日志才会写入文件
     Log::instance()->init("/tmp/kiran-screensaver-dialog.log");
     qInstallMessageHandler(Log::messageHandler);
+#ifdef TEST
+    Log::instance()->setAppend2File(true);
+#endif
 
     setup_unix_signal_handlers();
 

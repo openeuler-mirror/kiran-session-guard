@@ -20,8 +20,6 @@ public slots:
     void slot_finished(int exitCode,QProcess::ExitStatus exitStatus);
 private:
     explicit GreeterKeyboard(QObject *parent = nullptr);
-protected:
-    bool eventFilter(QObject *obj, QEvent *event) override;
 signals:
 private slots:
     void slotReadyReadStandardOutput();
