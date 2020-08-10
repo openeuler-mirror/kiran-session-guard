@@ -4,6 +4,7 @@
 #include <QWindow>
 #include <QWidget>
 #include <QApplication>
+#include <QDateTime>
 
 #define ONBOARD_LAYOUT "Phone"
 #define ONBOARD_THEME  "Blackboard"
@@ -22,20 +23,26 @@ bool GreeterKeyboard::init(QWidget*parent)
     if(m_keyboardWidget!=nullptr){
         return false;
     }
-    qDebug() << "greeter keyboard init";
     m_process = new QProcess(this);
     connect(m_process,SIGNAL(finished(int,QProcess::ExitStatus)),
             this,SLOT(slot_finished(int,QProcess::ExitStatus)));
     connect(m_process,&QProcess::readyReadStandardOutput,this,[this,parent]{
-        QString stdoutput = m_process->readAllStandardOutput();
+        QString stdoutput;
+        qulonglong xid = 0;
+        QWindow* foreignWindow=nullptr;
+
+        stdoutput = m_process->readAllStandardOutput();
         stdoutput = stdoutput.trimmed();
         if(stdoutput.isEmpty()){
             qWarning() << "onboard output is empty,can't get onbaord xid.";
             return;
         }
-        qulonglong xid = stdoutput.toULongLong();
-        QWindow* window = QWindow::fromWinId(xid);
-        m_keyboardWidget = QWidget::createWindowContainer(window,nullptr,Qt::ForeignWindow);
+
+        xid = stdoutput.toULongLong();
+
+        foreignWindow = QWindow::fromWinId(xid);
+
+        m_keyboardWidget = QWidget::createWindowContainer(foreignWindow,nullptr,Qt::ForeignWindow);
         m_keyboardWidget->setParent(parent);
         m_keyboardWidget->setFocusPolicy(Qt::NoFocus);
         m_keyboardWidget->raise();
@@ -59,6 +66,13 @@ void GreeterKeyboard::showAdjustSize(QWidget *parent)
         qWarning() << "GreeterKeyboard::showAdjustSize must call after init";
         return;
     }
+
+    if(parent==nullptr){
+        qWarning() << "GreeterKeyboard::showAdjustSize parent can't be nullptr";
+    }
+
+    qDebug() << "GreeterKeyboard::showAdjustSize" << parent->objectName();
+
     m_keyboardWidget->hide();
     QRect parentRect = parent->geometry();
     m_keyboardWidget->setParent(parent);
@@ -88,34 +102,28 @@ QWidget *GreeterKeyboard::getKeyboard()
 ///FIXME: 不复位parent，当parent析构时，onboard会crash
 void GreeterKeyboard::resetParentAndTermProcess()
 {
-    qInfo() << "resetParentAndTermProcess";
+    qInfo() << "resetParentAndTermProcess 1:" << QDateTime::currentDateTime();
     if(m_keyboardWidget!=nullptr){
         m_keyboardWidget->setParent(nullptr);
         m_keyboardWidget->deleteLater();
-        m_process->terminate();
-        m_process->waitForFinished(1000);
+        if(m_process->state()!=QProcess::NotRunning){
+            m_process->terminate();
+            m_process->waitForFinished(1000);
+        }
     }
+    qInfo() << "resetParentAndTermProcess 2:" << QDateTime::currentDateTime();
 }
 
 void GreeterKeyboard::slot_finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    qInfo() << "onboard: " << "exitCode" << exitCode << "exitStaus" << exitStatus;
+    qInfo() << "onboard process finished : " << "exitCode" << exitCode << "exitStaus" << exitStatus;
 }
 
 GreeterKeyboard::GreeterKeyboard(QObject *parent)
     : QObject(parent)
     , m_keyboardWidget(nullptr)
 {
-    qApp->installEventFilter(this);
-}
 
-bool GreeterKeyboard::eventFilter(QObject *obj, QEvent *event)
-{
-    if(m_keyboardWidget!=nullptr&&m_keyboardWidget->parentWidget()!=nullptr&&
-            obj==qApp&&event->type()==QEvent::Quit){
-        GreeterKeyboard::resetParentAndTermProcess();
-    }
-    return false;
 }
 
 void GreeterKeyboard::slotReadyReadStandardOutput()
