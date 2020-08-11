@@ -119,6 +119,7 @@ private:
     QSemaphore m_semaphore;
     /// 维护的消息队列
     QQueue<LightdmPromptMsg> m_msgQueue;
+    QMutex m_msgQueueMutex;
     QLightDM::Greeter*  m_greeter = nullptr;
     /// 标志该次认证是否有Prompted消息(做为认证失败,提供错误信息和判断是否重新开始认证的辅助条件)
     bool m_havePrompted = false;
