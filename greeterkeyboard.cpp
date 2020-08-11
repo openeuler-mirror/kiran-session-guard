@@ -102,16 +102,14 @@ QWidget *GreeterKeyboard::getKeyboard()
 ///FIXME: 不复位parent，当parent析构时，onboard会crash
 void GreeterKeyboard::resetParentAndTermProcess()
 {
-    qInfo() << "resetParentAndTermProcess 1:" << QDateTime::currentDateTime();
     if(m_keyboardWidget!=nullptr){
         m_keyboardWidget->setParent(nullptr);
         m_keyboardWidget->deleteLater();
         if(m_process->state()!=QProcess::NotRunning){
             m_process->terminate();
-            m_process->waitForFinished(1000);
+            m_process->waitForFinished();
         }
     }
-    qInfo() << "resetParentAndTermProcess 2:" << QDateTime::currentDateTime();
 }
 
 void GreeterKeyboard::slot_finished(int exitCode, QProcess::ExitStatus exitStatus)

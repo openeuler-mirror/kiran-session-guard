@@ -5,6 +5,11 @@
 #define PAM_SERVICE_NAME "mate-screensaver"
 #define MAX_TRIES 5
 
+void no_fail_delay(int status, unsigned int delay, void *appdata_ptr)
+{
+
+}
+
 PamAuthProxy::PamAuthProxy(PamAuthCallback *callback, QObject *parent)
     : QThread(parent),
       m_pamStatus(-1),
@@ -16,6 +21,11 @@ PamAuthProxy::PamAuthProxy(PamAuthCallback *callback, QObject *parent)
       m_cancelAuthFlag(false)
 {
     connect(this,&QThread::finished,this,&PamAuthProxy::slotThreadFinished);
+}
+
+PamAuthProxy::~PamAuthProxy()
+{
+    cancelAuthenticate();
 }
 
 /**
@@ -60,6 +70,8 @@ bool PamAuthProxy::startAuthenticate(const char *userName)
           PAM_SERVICE_NAME,userName,
           m_pamStatus,pam_strerror(m_pamHandler,m_pamStatus));
 
+    pam_set_item(m_pamHandler,PAM_FAIL_DELAY,(void*)no_fail_delay);
+
     display = qgetenv("DISPLAY");
     if(display.isEmpty()){
         display = ":0.0";
@@ -89,8 +101,6 @@ out:
  */
 void PamAuthProxy::cancelAuthenticate()
 {
-    qInfo() << "cancelAuthenticate 1:" << QDateTime::currentDateTime();
-
     if(m_pamHandler==nullptr||!isRunning()){
         return ;
     }
@@ -102,12 +112,12 @@ void PamAuthProxy::cancelAuthenticate()
     //唤醒可能的阻塞
     m_waitCondition.wakeAll();
 
-    wait(500);
+    wait();
 
     //状态复位
     closePamHandler();
 
-    qInfo() << "cancelAuthenticate 2:" << QDateTime::currentDateTime();
+    qInfo() << "end cancelAuthenticate";
 }
 
 /**
@@ -138,6 +148,7 @@ void PamAuthProxy::response(bool ret, const QString &resp)
  */
 void PamAuthProxy::slotThreadFinished()
 {
+    qInfo() << "authenticate thread finished";
     emit authenticateComplete(m_authComplete);
     closePamHandler();
 }
@@ -174,8 +185,9 @@ int PamAuthProxy::conversation(int num_msg, const pam_message **msg, pam_respons
         bool visiable = false;
         bool replyRet = true;
         if(This->m_cancelAuthFlag){
-            ret = PAM_CONV_ERR;
-            break;
+            qInfo("cancel authenticate flag is set,skip msg [%s]",
+                  msg[replies]->msg?msg[replies]->msg:"null");
+            goto next_msg;
         }
         qInfo() << "conversation: " << msg[replies]->msg;
         switch (msg [replies]->msg_style) {
@@ -201,7 +213,8 @@ int PamAuthProxy::conversation(int num_msg, const pam_message **msg, pam_respons
         default:
             break;
         }
-
+next_msg:
+        qInfo() << "replyRet" << replyRet;
         if( replyRet && !This->isInterruptionRequested() ){
             reply [replies].resp_retcode = PAM_SUCCESS;
         }else{
@@ -242,7 +255,7 @@ void PamAuthProxy::waitForResponse(bool& replyRet,char *&convReply)
  */
 void PamAuthProxy::start(QThread::Priority priority)
 {
-    QThread::start(QThread::HighPriority);
+    QThread::start();
 }
 
 /**
@@ -269,12 +282,11 @@ void PamAuthProxy::run()
 {
     int status = -1;
     int tries = 0;
-
+    qInfo() << "AuthProxy Thread Run";
     do{
+        qInfo() << "start pam_authenticate";
         status = pam_authenticate(m_pamHandler,PAM_SILENT);
-        if(status!=PAM_SUCCESS){
-            qInfo() << "pam_authenticate status: " << status;
-        }
+        qInfo() << "end pam_authenticate";
         if( status==PAM_AUTH_ERR ){
             qInfo() << "pam_authenticate error,PAM_AUTH_ERR";
             emit authenticateError();
@@ -297,7 +309,7 @@ void PamAuthProxy::run()
         qWarning("pam_setcred failed,%s",pam_strerror(m_pamHandler,status));
         goto done;
     }
-
+    qInfo() << "AuthProxy Thread Finished";
     m_authComplete = true;
 done:
     m_pamStatus = status;

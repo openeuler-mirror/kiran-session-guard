@@ -10,19 +10,23 @@ class GreeterKeyboard : public QObject
 public:
     static GreeterKeyboard& instance();
     ~GreeterKeyboard() = default;
+
     bool init(QWidget *parent=nullptr);
+    void hide();
     bool isVisible();
     void showAdjustSize(QWidget*parent=nullptr);
-    void hide();
     QWidget* getKeyboard();
     void resetParentAndTermProcess();
+
 public slots:
     void slot_finished(int exitCode,QProcess::ExitStatus exitStatus);
+
 private:
     explicit GreeterKeyboard(QObject *parent = nullptr);
-signals:
+
 private slots:
     void slotReadyReadStandardOutput();
+
 private:
     QWidget* m_keyboardWidget;
     QProcess* m_process;
