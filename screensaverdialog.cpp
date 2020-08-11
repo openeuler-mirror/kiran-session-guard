@@ -31,7 +31,6 @@ ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
-    m_authProxy.cancelAuthenticate();
     delete ui;
 }
 
@@ -295,7 +294,6 @@ void ScreenSaverDialog::paintEvent(QPaintEvent *event)
 void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
 {
     if(!m_background.isNull()){
-        qInfo() << "start" << QDateTime::currentDateTime();
         QRect rect(0,0,event->size().width(),event->size().height());
         QPixmap dest(event->size());
 
@@ -311,7 +309,6 @@ void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
 
         QPixmap scaledPixmap = m_background.scaled(newPixbufSize,Qt::KeepAspectRatio,Qt::FastTransformation);
         m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(scaledPixmap.toImage(),scaledPixmap.rect(),8,false));;
-        qInfo() << "end" << QDateTime::currentDateTime();
     }
     QWidget::resizeEvent(event);
 }

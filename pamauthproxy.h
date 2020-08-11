@@ -41,6 +41,7 @@ class PamAuthProxy : public QThread
     Q_OBJECT
 public:
     explicit PamAuthProxy(PamAuthCallback* callback,QObject *parent = nullptr);
+    virtual ~PamAuthProxy();
     bool isInAuthenticate();
     bool startAuthenticate(const char*userName);
     void cancelAuthenticate();

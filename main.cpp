@@ -14,8 +14,10 @@
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 
+
 void termSignalHandler(int unused){
     GreeterKeyboard::instance().resetParentAndTermProcess();
+    qApp->quit();
 }
 
 void setup_unix_signal_handlers(){
@@ -24,7 +26,7 @@ void setup_unix_signal_handlers(){
     sigemptyset(&term.sa_mask);
     term.sa_flags = 0;
     term.sa_flags |= SA_RESETHAND;
-    int iRet = sigaction(SIGTERM,&term,0);
+    int iRet = sigaction(SIGTERM,&term,nullptr);
     if(iRet!=0){
         qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
     }
