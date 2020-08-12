@@ -16,6 +16,7 @@ public:
     ~GreeterSetting();
 private:
     void initUI();
+    bool initUserComboBox();
     void updateFont();
 private:
     Ui::GreeterSetting *ui;

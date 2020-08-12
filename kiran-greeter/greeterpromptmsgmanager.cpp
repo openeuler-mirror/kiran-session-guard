@@ -90,7 +90,11 @@ void GreeterPromptMsgManager::addAuthenticationCompleteToQueue()
 void GreeterPromptMsgManager::reset()
 {
     m_semaphore.acquire(m_semaphore.available());
+
+    m_msgQueueMutex.lock();
     m_msgQueue.clear();
+    m_msgQueueMutex.unlock();
+
     m_sleepCancelCondition.wakeAll();
     m_messageShowTime = 0;
     m_havePAMError = false;
@@ -101,13 +105,20 @@ void GreeterPromptMsgManager::addMsgItemToQueue(const GreeterPromptMsgManager::L
 {
     qInfo() <<"queue append: " << msg.type << msg.text;
     m_semaphore.release();
+
+    m_msgQueueMutex.lock();
     m_msgQueue.enqueue(msg);
+    m_msgQueueMutex.unlock();
 }
 
 bool GreeterPromptMsgManager::getMsgItemFromQueue(GreeterPromptMsgManager::LightdmPromptMsg &msg,
                                                          int ms)
 {
     if( m_semaphore.tryAcquire(1,ms) ){
+        QMutexLocker mutexLock(&m_msgQueueMutex);
+        if(m_msgQueue.isEmpty()){
+            return false;
+        }
         msg = m_msgQueue.dequeue();
         qInfo() << "queue getItem: " << msg.type << msg.text;
         return true;

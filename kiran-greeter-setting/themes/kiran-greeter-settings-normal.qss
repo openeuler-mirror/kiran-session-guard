@@ -98,50 +98,65 @@ QToolButton#btn_browse{
 }
 /**********************ComboBox***********************/
 QComboBox#combo_mode,
-QComboBox#combo_scaleFactor{
+QComboBox#combo_scaleFactor,
+QComboBox#combo_autoLoginUser{
     border: 1px solid rgba(255,255,255,0.2);
     border-radius:6px;
     background-color:transparent;
     color:white;
+    /*FIXME:若弹出列表Style为1，边框背景没有圆角
+    */
+    combobox-popup: 0;
 }
 QComboBox#combo_mode:on,
-QComboBox#combo_scaleFactor:on{
+QComboBox#combo_scaleFactor:on,
+QComboBox#combo_autoLoginUser:on{
     background:#43a3f2;
 }
 QComboBox#combo_mode:editable,
-QComboBox#combo_scaleFactor:editable{
+QComboBox#combo_scaleFactor:editable,
+QComboBox#combo_autoLoginUser:editable{
 }
 QComboBox#combo_mode::down-arrow,
-QComboBox#combo_scaleFactor::down-arrow{
+QComboBox#combo_scaleFactor::down-arrow,
+QComboBox#combo_autoLoginUser::down-arrow{
     image: url(:/images/down-arrow.png);
 }
 QComboBox#combo_mode::drop-down,
-QComboBox#combo_scaleFactor::drop-down{
+QComboBox#combo_scaleFactor::drop-down,
+QComboBox#combo_autoLoginUser::drop-down{
     subcontrol-origin: padding;
     subcontrol-position: top right;
     width: 15px;
     margin-right:14px;
     border:none;
 }
+
 QComboBox#combo_mode  QAbstractItemView,
-QComboBox#combo_scaleFactor QAbstractItemView{
-    border: 1px solid rgb(100, 100, 100);
+QComboBox#combo_scaleFactor QAbstractItemView,
+QComboBox#combo_autoLoginUser QAbstractItemView{
+    border: 1px solid rgb(33,166,255);
     border-radius: 6px;
+    margin-top:3px;
     background: #202020;
-    outline: none;
 }
 QComboBox#combo_mode  QAbstractItemView::item,
-QComboBox#combo_scaleFactor  QAbstractItemView::item{
-    height: 35px;
+QComboBox#combo_scaleFactor  QAbstractItemView::item,
+QComboBox#combo_autoLoginUser QAbstractItemView::item{
+    height: 40px;
     color: white;
-    margin:1px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
 }
 QComboBox#combo_mode  QAbstractItemView::item:selected,
-QComboBox#combo_scaleFactor QAbstractItemView::item:selected{
-    background:rgba(255,255,255,25);
+QComboBox#combo_scaleFactor QAbstractItemView::item:selected,
+QComboBox#combo_autoLoginUser QAbstractItemView::item:selected{
+    background:rgb(33,166,255);
     color: white;
-    border-radius:4px;
 }
+QComboBox#combo_autoLoginUser UserComboBoxItem QLabel{
+    color:white;
+}
+
 /*********************CheckBox********************/
 QCheckBox#check_enableManual::indicator,
 QCheckBox#check_hideUserList::indicator{

@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QTranslator>
 #include <QFile>
+#include <signal.h>
 
 #include "greeterloginwindow.h"
 #include "log.h"
@@ -14,29 +15,46 @@
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
+void termSignalHandler(int unused){
+    qInfo() << "termSignalHandler";
+    GreeterKeyboard::instance().resetParentAndTermProcess();
+}
+
+void setup_unix_signal_handlers(){
+    struct sigaction term;
+    term.sa_handler = termSignalHandler;
+    sigemptyset(&term.sa_mask);
+    term.sa_flags = 0;
+    term.sa_flags |= SA_RESETHAND;
+    int iRet = sigaction(SIGTERM,&term,0);
+    if(iRet!=0){
+        qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter.log");
     qInstallMessageHandler(Log::messageHandler);
 
+    setup_unix_signal_handlers();
+
     ///读取Greeter配置
     GreeterSetting::instance()->dumpGreeterSetting();
 
     ///设置缩放比
-    bool needScaleCursor = false;
+    double scaled_factor = 0.0;
     switch (GreeterSetting::instance()->getEnableScaling()) {
     case GreeterSetting::SCALING_AUTO:
     {
-        ScalingHelper::auto_calculate_screen_scaling(needScaleCursor);
+        ScalingHelper::auto_calculate_screen_scaling(scaled_factor);
         break;
     }
     case GreeterSetting::SCALING_ENABLE:
     {
         double scaleFcator = GreeterSetting::instance()->getScaleFactor();
-        if(  scaleFcator >= 1.5 ){
-            needScaleCursor = true;
-        }
+        scaled_factor = scaleFcator;
         ScalingHelper::set_scale_factor(scaleFcator);
         break;
     }
@@ -49,11 +67,11 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    if(needScaleCursor){
-        CursorHelper::setScaledDefaultCursorSize();
+    if( !CursorHelper::setDefaultCursorSize(scaled_factor) ){
+        qWarning() << "setDefaultCursorSize" << scaled_factor << "failed";
     }
-    if(!CursorHelper::setRootWindowCursor(needScaleCursor)){
-        qWarning() << "setRootWindowCursor failed";
+    if(!CursorHelper::setRootWindowWatchCursor()){
+        qWarning() << "setRootWindowWatchCursor failed";
     }
 
     ///翻译
