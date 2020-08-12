@@ -25,6 +25,7 @@ SOURCES += \
     ../public/log.cpp \
     ../public/imagehelper.cpp\
     ../public/disabledeselectlistwidget.cpp\
+    ../public/useravatarwidget.cpp \
     capslocksnoop.cpp \
     greeterbackground.cpp \
     greeterkeyboard.cpp \
@@ -33,7 +34,6 @@ SOURCES += \
     greeterscreenmanager.cpp \
     greetersetting.cpp \
     main.cpp \
-    useravatarwidget.cpp \
     userlistitem.cpp \
     userlistwidget.cpp \
     greetermenuitem.cpp \
@@ -49,6 +49,7 @@ HEADERS += \
     ../public/imagehelper.h \
     ../public/greeter-setting-define.h \
     ../public/disabledeselectlistwidget.h\
+    ../public/useravatarwidget.h \
     capslocksnoop.h \
     greeterbackground.h \
     greeterkeyboard.h \
@@ -58,7 +59,6 @@ HEADERS += \
     greetersetting.h \
     userlistitem.h \
     userlistwidget.h \
-    useravatarwidget.h \
     userinfo.h \
     greetermenuitem.h \
     scalinghelper.h \

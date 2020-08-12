@@ -2,12 +2,15 @@
 #include "ui_greetersetting.h"
 #include "tabitem.h"
 #include "lightdmprefs.h"
+#include "dbusapi.h"
 
 #include <QDebug>
 #include <QFileDialog>
 #include <QValidator>
 
 #define KEY_FONT_NAME "fontName"
+
+using namespace DBusApi;
 
 GreeterSetting::GreeterSetting(QWidget *parent) :
     QWidget(parent),
@@ -16,8 +19,7 @@ GreeterSetting::GreeterSetting(QWidget *parent) :
 {
     ui->setupUi(this);
     initUI();
-    connect(&m_mateInterfaceSettings,static_cast<void (QGSettings::*)(const QString&)>(&QGSettings::changed),
-            [this](const QString& key){
+    connect(&m_mateInterfaceSettings,QOverload<const QString&>::of(&QGSettings::changed),[this](const QString& key){
         qInfo() << "changed:" << key;
         if(key!=KEY_FONT_NAME){
             return;
@@ -62,16 +64,15 @@ void GreeterSetting::initUI()
 
     ///初始化下拉栏样式
     ui->combo_mode->setView(new QListView);
-    ui->combo_mode->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->combo_mode->addItem(tr("auto"),"auto");
     ui->combo_mode->addItem(tr("manual"),"manual");
     ui->combo_mode->addItem(tr("disable"),"disable");
+    ui->combo_mode->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
 
     ui->combo_scaleFactor->setView(new QListView);
-    ui->combo_scaleFactor->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ui->combo_scaleFactor->addItem("100%","1");
     ui->combo_scaleFactor->addItem("200%","2");
-
+    ui->combo_scaleFactor->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
     ///自动登录延时设置输入限制
     QValidator* validator = new QIntValidator(0,INT_MAX,this);
     ui->edit_autologinDelay->setValidator(validator);
@@ -80,13 +81,12 @@ void GreeterSetting::initUI()
     QString str;
     //背景图片
     ui->preview->updatePreviewBackground(LightdmPrefs::instance()->greeterBackground());
-    connect(LightdmPrefs::instance(),static_cast<void (LightdmPrefs::*) (QString)>(&LightdmPrefs::greeterBackgroundChanged),
-            this,[this](QString background){
+    connect(LightdmPrefs::instance(),QOverload<QString>::of(&LightdmPrefs::greeterBackgroundChanged),
+            [this](QString background){
         ui->preview->updatePreviewBackground(background);
     });
     //选择图片触发
-    connect(ui->btn_browse,&QToolButton::clicked,
-            this,[this]{
+    connect(ui->btn_browse,&QToolButton::clicked,[this]{
         QFileDialog selectImageDialog;
         QString fileName = QFileDialog::getOpenFileName(this,tr("select greeter background"),
                                                         "/usr/share/backgrounds/",
@@ -105,8 +105,7 @@ void GreeterSetting::initUI()
         ui->combo_scaleFactor->setVisible(false);
     }
     ui->combo_mode->setCurrentIndex(idx);
-    connect(ui->combo_mode,static_cast<void (QComboBox::*) (int idx)>(&QComboBox::currentIndexChanged),
-            [this](int idx){
+    connect(ui->combo_mode,QOverload<int>::of(&QComboBox::currentIndexChanged),[this](int idx){
         bool showScaleFactor = false;
         QVariant userData = ui->combo_mode->itemData(idx);
         if(userData.toString()=="manual"){
@@ -123,15 +122,14 @@ void GreeterSetting::initUI()
     if(idx==-1)
         qFatal("can't find scale factor combo box option,%s",str.toStdString().c_str()) ;
     ui->combo_scaleFactor->setCurrentIndex(idx);
-    connect(ui->combo_scaleFactor,static_cast<void (QComboBox::*)(int idx)>(&QComboBox::currentIndexChanged),
-            this,[this](int idx){
+    connect(ui->combo_scaleFactor,QOverload<int>::of(&QComboBox::currentIndexChanged),[this](int idx){
         QVariant userData = ui->combo_scaleFactor->itemData(idx);
         LightdmPrefs::instance()->setScaleFactor(userData.toString());
     });
 
     //允许手动登录
     ui->check_enableManual->setChecked(LightdmPrefs::instance()->enableManualLogin());
-    connect(ui->check_enableManual,&QCheckBox::stateChanged,this,[this]{
+    connect(ui->check_enableManual,&QCheckBox::stateChanged,[this]{
         LightdmPrefs::instance()->setEnableManualLogin(ui->check_enableManual->isChecked());
     });
 
@@ -142,10 +140,13 @@ void GreeterSetting::initUI()
     });
 
     //自动登录用户名
-    ui->edit_autologinName->setText(LightdmPrefs::instance()->autoLoginUser());
-    connect(ui->edit_autologinName,static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textChanged),
-            this,[this](const QString& text){
-        LightdmPrefs::instance()->setAutoLoginUser(text);
+    ui->combo_autoLoginUser->setView(new QListView);
+    ui->combo_autoLoginUser->view()->window()->setAttribute(Qt::WA_TranslucentBackground);
+    initUserComboBox();
+    connect(ui->combo_autoLoginUser,
+            QOverload<const QString&>::of(&QComboBox::currentTextChanged),
+            [this](const QString& user){
+        LightdmPrefs::instance()->setAutoLoginUser(user);
     });
 
     //自动登录延时
@@ -154,6 +155,62 @@ void GreeterSetting::initUI()
             this,[this](const QString& text){
         LightdmPrefs::instance()->setAutoLoginDelay(text);
     });
+}
+
+bool GreeterSetting::initUserComboBox()
+{
+    struct UserInfo{
+        QString name;
+        QString iconFile;
+        void clean(){
+            name.clear();
+            iconFile.clear();
+        }
+    };
+    QVector<UserInfo> userInfoVector;
+    QDBusObjectPathVector objVector;
+
+    ///通过AccountService加载用户信息
+    if( !DBusApi::AccountsService::listCachedUsers(objVector) ){
+        qWarning() << "init user list failed,error: listCachedUsers failed";
+        return false;
+    }
+    UserInfo userInfo;
+    for(auto iter=objVector.begin();
+        iter!=objVector.end();
+        iter++){
+        if(!AccountsService::getUserObjectUserNameProperty(*iter,userInfo.name)||
+                !AccountsService::getUserObjectIconFileProperty(*iter,userInfo.iconFile)){
+            qWarning() << "get " << iter->path() << "UserName,IconFile failed";
+            continue;
+        }
+        userInfoVector.push_back(userInfo);
+    }
+    userInfo.clean();
+    userInfo.name = "root";
+    if(!AccountsService::getRootIconFileProperty(userInfo.iconFile)){
+        qWarning() << "init user list failed,error: getRootIconFileProperty failed";
+        return false;
+    }
+    userInfoVector.push_back(userInfo);
+
+    ///加入ComboBox
+    ///TODO:show user iconFile
+    for(auto iter=userInfoVector.begin();
+        iter!=userInfoVector.end();
+        iter++){
+        ui->combo_autoLoginUser->addItem(iter->name);
+    }
+    ui->combo_autoLoginUser->addItem("");
+
+    ///设置默认选中
+    int idx = ui->combo_autoLoginUser->findText(LightdmPrefs::instance()->autoLoginUser());
+    if(idx==-1){
+        ui->combo_autoLoginUser->setCurrentText("");
+    }else{
+        ui->combo_autoLoginUser->setCurrentIndex(idx);
+    }
+    return true;
 }
 
 void GreeterSetting::updateFont()
