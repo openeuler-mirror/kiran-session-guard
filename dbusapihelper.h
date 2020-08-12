@@ -15,7 +15,6 @@ namespace DBusApi
     namespace AccountService {
         QString findUserObjectByName(const QString& user);
         QString getUserObjectIconFileProperty(const QString& userObjPath);
-
         QString getUserIconFilePath(const QString& user);
     }
 };
