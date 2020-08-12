@@ -18,6 +18,14 @@ GreeterKeyboard &GreeterKeyboard::instance()
     return keyboard;
 }
 
+GreeterKeyboard::~GreeterKeyboard()
+{
+    if(m_process->state()!=QProcess::NotRunning){
+        m_process->terminate();
+        m_process->waitForFinished();
+    }
+}
+
 bool GreeterKeyboard::init(QWidget*parent)
 {
     if(m_keyboardWidget!=nullptr){
@@ -41,8 +49,8 @@ bool GreeterKeyboard::init(QWidget*parent)
         xid = stdoutput.toULongLong();
 
         foreignWindow = QWindow::fromWinId(xid);
-
-        m_keyboardWidget = QWidget::createWindowContainer(foreignWindow,nullptr,Qt::ForeignWindow);
+        foreignWindow->setFlag(Qt::ForeignWindow);
+        m_keyboardWidget = QWidget::createWindowContainer(foreignWindow,nullptr);
         m_keyboardWidget->setParent(parent);
         m_keyboardWidget->setFocusPolicy(Qt::NoFocus);
         m_keyboardWidget->raise();
@@ -99,16 +107,11 @@ QWidget *GreeterKeyboard::getKeyboard()
     return m_keyboardWidget;
 }
 
-///FIXME: 不复位parent，当parent析构时，onboard会crash
-void GreeterKeyboard::resetParentAndTermProcess()
+void GreeterKeyboard::keyboardProcessExit()
 {
-    if(m_keyboardWidget!=nullptr){
-        m_keyboardWidget->setParent(nullptr);
-        m_keyboardWidget->deleteLater();
-        if(m_process->state()!=QProcess::NotRunning){
-            m_process->terminate();
-            m_process->waitForFinished();
-        }
+    if(m_process->state()!=QProcess::NotRunning){
+        m_process->terminate();
+        m_process->waitForFinished();
     }
 }
 
