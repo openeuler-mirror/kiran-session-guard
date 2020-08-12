@@ -16,7 +16,7 @@
 
 
 void termSignalHandler(int unused){
-    GreeterKeyboard::instance().resetParentAndTermProcess();
+    GreeterKeyboard::instance().keyboardProcessExit();
     qApp->quit();
 }
 
