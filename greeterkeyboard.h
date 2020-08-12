@@ -9,14 +9,14 @@ class GreeterKeyboard : public QObject
     Q_OBJECT
 public:
     static GreeterKeyboard& instance();
-    ~GreeterKeyboard() = default;
+    ~GreeterKeyboard();
 
     bool init(QWidget *parent=nullptr);
     void hide();
     bool isVisible();
     void showAdjustSize(QWidget*parent=nullptr);
     QWidget* getKeyboard();
-    void resetParentAndTermProcess();
+    void keyboardProcessExit();
 
 public slots:
     void slot_finished(int exitCode,QProcess::ExitStatus exitStatus);
