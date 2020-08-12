@@ -538,7 +538,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="edit_autologinName">
+           <widget class="QComboBox" name="combo_autoLoginUser">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -556,9 +556,6 @@
               <width>280</width>
               <height>40</height>
              </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
             </property>
            </widget>
           </item>

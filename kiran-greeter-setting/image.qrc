@@ -6,5 +6,6 @@
         <file>images/off.png</file>
         <file>images/on.png</file>
         <file>images/default_background.jpg</file>
+        <file>images/user_180.png</file>
     </qresource>
 </RCC>

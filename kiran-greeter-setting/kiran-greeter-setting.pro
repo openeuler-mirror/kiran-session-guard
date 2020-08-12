@@ -1,5 +1,5 @@
 #依赖的Qt模块
-QT += core gui network
+QT += core gui network dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 message("greeter-settings:"$${DESTDIR})
@@ -28,6 +28,8 @@ SOURCES += \
     ../public/log.cpp \
     ../public/imagehelper.cpp \
     ../public/disabledeselectlistwidget.cpp\
+    ../public/useravatarwidget.cpp \
+    dbusapi.cpp \
     main.cpp \
     greetersetting.cpp \
     tabitem.cpp \
@@ -42,6 +44,8 @@ HEADERS += \
     ../public/log.h \
     ../public/imagehelper.h \
     ../public/disabledeselectlistwidget.h\
+    ../public/useravatarwidget.h \
+    dbusapi.h \
     greetersetting.h \
     tabitem.h \
     logingreeterpreviewwidget.h \

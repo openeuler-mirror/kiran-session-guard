@@ -15,6 +15,7 @@
 #define ENV_XDG_CURRENT_DESKTOP "XDG_CURRENT_DESKTOP"
 #define DEFAULT_STYLE_FILE   ":/themes/kiran-greeter-settings-normal.qss"
 
+#include "dbusapi.h"
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
