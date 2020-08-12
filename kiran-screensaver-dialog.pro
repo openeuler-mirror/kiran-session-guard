@@ -10,6 +10,7 @@ TEMPLATE = app
 
 #宏定义
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += TEST
 
 #配置项 g++
 CONFIG += c++11
