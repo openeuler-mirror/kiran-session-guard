@@ -11,6 +11,7 @@
 #include "greeterkeyboard.h"
 #include "scalinghelper.h"
 #include "cursorhelper.h"
+#include "synclockstatus.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
@@ -73,6 +74,9 @@ int main(int argc, char *argv[])
     if(!CursorHelper::setRootWindowWatchCursor()){
         qWarning() << "setRootWindowWatchCursor failed";
     }
+
+    //capslock numlock
+    initLockStatus();
 
     ///翻译
     QTranslator tsor;

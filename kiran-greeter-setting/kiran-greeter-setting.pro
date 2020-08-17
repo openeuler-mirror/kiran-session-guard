@@ -26,7 +26,6 @@ PKGCONFIG += gsettings-qt
 #源文件
 SOURCES += \
     ../public/log.cpp \
-    ../public/imagehelper.cpp \
     ../public/disabledeselectlistwidget.cpp\
     ../public/useravatarwidget.cpp \
     dbusapi.cpp \
@@ -42,7 +41,6 @@ SOURCES += \
 #头文件
 HEADERS += \
     ../public/log.h \
-    ../public/imagehelper.h \
     ../public/disabledeselectlistwidget.h\
     ../public/useravatarwidget.h \
     dbusapi.h \

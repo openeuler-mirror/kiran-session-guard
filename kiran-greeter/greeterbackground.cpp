@@ -9,6 +9,10 @@
 //#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 #define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 
+QT_BEGIN_NAMESPACE
+Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+QT_END_NAMESPACE
+
 GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
     : QWidget(parent)
     , m_screen(nullptr)
@@ -64,7 +68,9 @@ void GreeterBackground::resizeEvent(QResizeEvent *event)
     qInfo() << "background resize: " << objectName() << ":" << this->size();
     if(!m_background.isNull()){
         m_scaledBackground = m_background.scaled(this->size(),Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
-        m_scaledBackground = QPixmap::fromImage(ImageHelper::blurredImage(m_scaledBackground.toImage(),m_scaledBackground.rect(),8,false));
+        QImage tmp = m_scaledBackground.toImage();
+        qt_blurImage(tmp,10,true);
+        m_scaledBackground = QPixmap::fromImage(tmp);
     }
     //NOTE:子窗体因未加入布局，需要手动Resize
     GreeterLoginWindow* greeterWindow = findChild<GreeterLoginWindow*>("GreeterLoginWindow");
