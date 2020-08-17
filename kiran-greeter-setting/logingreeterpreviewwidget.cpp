@@ -8,6 +8,10 @@
 #define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_SIZE QSize(330,186)
 
+QT_BEGIN_NAMESPACE
+Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+QT_END_NAMESPACE
+
 LoginGreeterPreviewWidget::LoginGreeterPreviewWidget(QWidget *parent) : QWidget(parent)
 {
     setDefaultPreviewBackground();
@@ -44,7 +48,9 @@ QPixmap LoginGreeterPreviewWidget::generatePreviewBackground(const QString &path
         return QPixmap();
     }
     pixmap = pixmap.scaled(DEFAULT_SIZE,Qt::KeepAspectRatioByExpanding,Qt::SmoothTransformation);
-    pixmap = QPixmap::fromImage(ImageHelper::blurredImage(pixmap.toImage(),pixmap.rect(),6,false));
+    QImage tmp = pixmap.toImage();
+    qt_blurImage(tmp,10,true);
+    pixmap = QPixmap::fromImage(tmp);
     return pixmap;
 }
 
@@ -99,15 +105,10 @@ void LoginGreeterPreviewWidget::paintEvent(QPaintEvent *event)
                 user5.width(),user5.height());
     QRect user3(user5.x(),user4.y()-USER_LIST_ITEM_SPACING-USER_LIST_ITEM_SIZE.height(),
                 user5.width(),user5.height());
-    //QRect user2(user5.x(),user3.y()-USER_LIST_ITEM_SPACING-USER_LIST_ITEM_SIZE.height(),
-    //            user5.width(),user5.height());
-    //QRect user1(user5.x(),user2.y()-USER_LIST_ITEM_SPACING-USER_LIST_ITEM_SIZE.height(),
-    //            user5.width(),user5.height());
+
     painterPath.addRoundedRect(user5,2,2);
     painterPath.addRoundedRect(user4,2,2);
     painterPath.addRoundedRect(user3,2,2);
-    //painterPath.addRoundedRect(user2,2,2);
-    //painterPath.addRoundedRect(user1,2,2);
 
     ///绘制按钮
     QRect button3( DEFAULT_SIZE.width()-BUTTON_RIGHT_SPACING-BUTTON_SIZE.width(),DEFAULT_SIZE.height()-BUTTON_SIZE.height()-BUTTON_SPACING,

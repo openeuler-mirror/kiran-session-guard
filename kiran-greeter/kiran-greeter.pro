@@ -23,7 +23,6 @@ INCLUDEPATH += ../public/
 #源文件
 SOURCES += \
     ../public/log.cpp \
-    ../public/imagehelper.cpp\
     ../public/disabledeselectlistwidget.cpp\
     ../public/useravatarwidget.cpp \
     capslocksnoop.cpp \
@@ -34,6 +33,7 @@ SOURCES += \
     greeterscreenmanager.cpp \
     greetersetting.cpp \
     main.cpp \
+    synclockstatus.cpp \
     userlistitem.cpp \
     userlistwidget.cpp \
     greetermenuitem.cpp \
@@ -46,7 +46,6 @@ SOURCES += \
 #头文件
 HEADERS += \
     ../public/log.h \
-    ../public/imagehelper.h \
     ../public/greeter-setting-define.h \
     ../public/disabledeselectlistwidget.h\
     ../public/useravatarwidget.h \
@@ -57,6 +56,7 @@ HEADERS += \
     greeterloginwindow.h \
     greeterscreenmanager.h \
     greetersetting.h \
+    synclockstatus.h \
     userlistitem.h \
     userlistwidget.h \
     userinfo.h \
