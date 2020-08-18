@@ -37,6 +37,14 @@ GreeterKeyboard::~GreeterKeyboard()
     }
 }
 
+GreeterKeyboard::~GreeterKeyboard()
+{
+    if(m_process->state()!=QProcess::NotRunning){
+        m_process->terminate();
+        m_process->waitForFinished();
+    }
+}
+
 bool GreeterKeyboard::init(QWidget*parent)
 {
     if(m_keyboardWidget!=nullptr){
