@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QApplication>
 #include <QDateTime>
+#include <QMutex>
+#include <QScopedPointer>
 
 #define ONBOARD_LAYOUT "Phone"
 #define ONBOARD_THEME  "Blackboard"
@@ -12,10 +14,19 @@
 #define ONBOARD_FIXED_WIDTH 800
 #define ONBOARD_FIXED_HEIGHT 300
 
-GreeterKeyboard &GreeterKeyboard::instance()
+GreeterKeyboard *GreeterKeyboard::instance()
 {
-    static GreeterKeyboard keyboard;
-    return keyboard;
+    static QMutex mutex;
+    static QScopedPointer<GreeterKeyboard> pInst;
+
+    if(Q_UNLIKELY(!pInst)){
+        QMutexLocker locker(&mutex);
+        if(pInst.isNull()){
+            pInst.reset(new GreeterKeyboard);
+        }
+    }
+
+    return pInst.data();
 }
 
 GreeterKeyboard::~GreeterKeyboard()
@@ -111,7 +122,7 @@ void GreeterKeyboard::keyboardProcessExit()
 {
     if(m_process->state()!=QProcess::NotRunning){
         m_process->terminate();
-        m_process->waitForFinished();
+        m_process->waitForFinished(300);
     }
 }
 
