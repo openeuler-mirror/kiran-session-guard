@@ -5,7 +5,6 @@
 #include <QAbstractNativeEventFilter>
 #include <QPropertyAnimation>
 #include "pamauthproxy.h"
-
 namespace Ui {
 class ScreenSaverDialog;
 }

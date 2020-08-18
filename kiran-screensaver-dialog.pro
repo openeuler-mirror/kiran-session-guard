@@ -35,7 +35,6 @@ SOURCES += \
     greeterkeyboard.cpp \
     dbusapihelper.cpp \
     pamauthproxy.cpp \
-    tool.cpp \
     scalinghelper.cpp \
     shadowlabel.cpp
 
@@ -50,7 +49,6 @@ HEADERS += \
     greeterkeyboard.h \
     dbusapihelper.h \
     pamauthproxy.h \
-    tool.h \
     scalinghelper.h \
     shadowlabel.h
 

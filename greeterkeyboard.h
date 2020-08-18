@@ -8,7 +8,7 @@ class GreeterKeyboard : public QObject
 {
     Q_OBJECT
 public:
-    static GreeterKeyboard& instance();
+    static GreeterKeyboard* instance();
     ~GreeterKeyboard();
 
     bool init(QWidget *parent=nullptr);
