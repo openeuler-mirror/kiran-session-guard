@@ -33,15 +33,7 @@ GreeterKeyboard::~GreeterKeyboard()
 {
     if(m_process->state()!=QProcess::NotRunning){
         m_process->terminate();
-        m_process->waitForFinished();
-    }
-}
-
-GreeterKeyboard::~GreeterKeyboard()
-{
-    if(m_process->state()!=QProcess::NotRunning){
-        m_process->terminate();
-        m_process->waitForFinished();
+        m_process->waitForFinished(300);
     }
 }
 
