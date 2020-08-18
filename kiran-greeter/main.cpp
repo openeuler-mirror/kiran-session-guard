@@ -18,7 +18,7 @@
 
 void termSignalHandler(int unused){
     qInfo() << "termSignalHandler";
-    GreeterKeyboard::instance().resetParentAndTermProcess();
+    GreeterKeyboard::instance()->resetParentAndTermProcess();
 }
 
 void setup_unix_signal_handlers(){
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     }
 
     ///初始键盘配置
-    GreeterKeyboard::instance().init();
+    GreeterKeyboard::instance()->init();
 
     ///初始化屏幕管理,在屏幕管理中创建背景窗口和登录窗口，负责处理屏幕增加删除的情况
     GreeterScreenManager::instance()->init();

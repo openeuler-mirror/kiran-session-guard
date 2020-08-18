@@ -35,14 +35,15 @@ GreeterBackground::~GreeterBackground()
 void GreeterBackground::setScreen(QScreen *screen)
 {
     if(m_screen!=nullptr){
-        disconnect(m_screen,SIGNAL(geometryChanged(const QRect&)),
-                   this,SLOT(slotScreenGeometryChanged(const QRect&)));
+        disconnect(screen,&QScreen::geometryChanged,
+                this,&GreeterBackground::slotScreenGeometryChanged);
     }
 
     if(screen!=nullptr){
-        connect(screen,SIGNAL(geometryChanged(const QRect&)),
-                   this,SLOT(slotScreenGeometryChanged(const QRect&)));
+        connect(screen,&QScreen::geometryChanged,
+                this,&GreeterBackground::slotScreenGeometryChanged);
     }
+
     m_screen = screen;
     if( m_screen ){
         slotScreenGeometryChanged(m_screen->geometry());

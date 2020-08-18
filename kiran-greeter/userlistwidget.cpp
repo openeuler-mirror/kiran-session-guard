@@ -93,8 +93,8 @@ void UserListWidget::initUI()
     ui->userList->setFocusPolicy(Qt::ClickFocus);
     ui->userList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->userList->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->userList,SIGNAL(itemSelectionChanged()),
-            this,SLOT(slotUserItemActivated()));
+    connect(ui->userList,&DisableDeselectListWidget::itemSelectionChanged,
+            this,&UserListWidget::slotUserItemActivated);
 
     ui->userList->setVisible(false);
     ui->userList->installEventFilter(this);
@@ -102,8 +102,7 @@ void UserListWidget::initUI()
     /// 连接QApplication的焦点切换信号
     /// 处理ListWidget内部焦点切换或焦点切换出ListWidge，滑动条特殊处理
     /// 处理当焦点从外部到UserItem时，应默认到当前行
-    connect(qApp,static_cast<void (QApplication::*)(QWidget*,QWidget*)>(&QApplication::focusChanged),
-            this,[this](QWidget*oldWidget,QWidget*newWidget){
+    connect(qApp,&QApplication::focusChanged,[this](QWidget*oldWidget,QWidget*newWidget){
         bool oldFocusInList = oldWidget==nullptr?false:oldWidget->objectName()==USERITEM_OBJ_NAME;
         bool newFocusInList = newWidget==nullptr?false:newWidget->objectName()==USERITEM_OBJ_NAME;
         if( !oldFocusInList && !newFocusInList ){
@@ -125,10 +124,10 @@ void UserListWidget::loadUserList()
         getUserInfoFromModel(i,userInfo);
         appendItem(userInfo);
     }
-    qInfo() << "connect UserModel RowRemoved:  " << connect(&m_usersModel,SIGNAL(rowsRemoved(const QModelIndex&,int,int)),
-                                                            this,SLOT(slotRowsRemoved(const QModelIndex&,int,int)));
-    qInfo() << "connect UserModel RowInserted: " << connect(&m_usersModel,SIGNAL(rowsInserted(const QModelIndex&,int,int)),
-                                                            this,SLOT(slotRowsInserted(const QModelIndex&,int,int)));
+    qInfo() << "connect UserModel RowRemoved:  " << connect(&m_usersModel,&QLightDM::UsersModel::rowsRemoved,
+                                                            this,&UserListWidget::slotRowsRemoved);
+    qInfo() << "connect UserModel RowInserted: " << connect(&m_usersModel,&QLightDM::UsersModel::rowsInserted,
+                                                            this,&UserListWidget::slotRowsInserted);
 }
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)

@@ -5,6 +5,8 @@
 #include <QMap>
 #include <QTextStream>
 #include <iostream>
+#include <QMutex>
+#include <QScopedPointer>
 
 Log::~Log()
 {
@@ -13,8 +15,17 @@ Log::~Log()
 
 Log *Log::instance()
 {
-    static Log instance;
-    return &instance;
+    static QMutex mutex;
+    static QScopedPointer<Log> pInst;
+
+    if(Q_UNLIKELY(!pInst)){
+        QMutexLocker locker(&mutex);
+        if(pInst.isNull()){
+            pInst.reset(new Log);
+        }
+    }
+
+    return pInst.data();
 }
 
 bool Log::init(QString filePath)
@@ -48,7 +59,7 @@ void Log::setLogLevel(QtMsgType type)
 
 void Log::write(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    m_mutex.lock();
+    QMutexLocker locker(&m_mutex);
     static QMap<QtMsgType,QString> msgDescMap = {
         {QtDebugMsg,   "[DEBUG]"},
         {QtWarningMsg, "[WARNING]"},
@@ -84,7 +95,6 @@ void Log::write(QtMsgType type, const QMessageLogContext &context, const QString
         std::string sLogContent = logContent.toStdString();
         std::cout << sLogContent << std::endl;
     }
-    m_mutex.unlock();
 }
 
 bool Log::isInited()
