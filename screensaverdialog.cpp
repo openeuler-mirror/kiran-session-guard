@@ -15,9 +15,12 @@
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
 #include "dbusapihelper.h"
-#include "tool.h"
 
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
+
+QT_BEGIN_NAMESPACE
+Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+QT_END_NAMESPACE
 
 ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
     QWidget(parent),
@@ -51,11 +54,11 @@ void ScreenSaverDialog::InitUI()
     });
 
     connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
-        GreeterKeyboard& keyboard = GreeterKeyboard::instance();
-        if( keyboard.isVisible() ){
-            keyboard.hide();
+        GreeterKeyboard* keyboard = GreeterKeyboard::instance();
+        if( keyboard->isVisible() ){
+            keyboard->hide();
         } else {
-            keyboard.showAdjustSize(this);
+            keyboard->showAdjustSize(this);
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
@@ -308,7 +311,9 @@ void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
         newPixbufSize.setHeight(floor(pixbufSize.height() * factor + 0.5));
 
         QPixmap scaledPixmap = m_background.scaled(newPixbufSize,Qt::KeepAspectRatio,Qt::FastTransformation);
-        m_scaledBackground = QPixmap::fromImage(Tool::blurredImage(scaledPixmap.toImage(),scaledPixmap.rect(),8,false));;
+        QImage tmp = scaledPixmap.toImage();
+        qt_blurImage(tmp,10,true);
+        m_scaledBackground = QPixmap::fromImage(tmp);
     }
     QWidget::resizeEvent(event);
 }

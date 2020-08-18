@@ -5,6 +5,8 @@
 #include <QMap>
 #include <QTextStream>
 #include <iostream>
+#include <QMutex>
+#include <QScopedPointer>
 
 Log::~Log()
 {
@@ -13,8 +15,17 @@ Log::~Log()
 
 Log *Log::instance()
 {
-    static Log instance;
-    return &instance;
+    static QMutex mutex;
+    static QScopedPointer<Log> pInst;
+
+    if(Q_UNLIKELY(!pInst)){
+        QMutexLocker locker(&mutex);
+        if(pInst.isNull()){
+            pInst.reset(new Log);
+        }
+    }
+
+    return pInst.data();
 }
 
 bool Log::init(QString filePath)

@@ -16,7 +16,7 @@
 
 
 void termSignalHandler(int unused){
-    GreeterKeyboard::instance().keyboardProcessExit();
+    GreeterKeyboard::instance()->keyboardProcessExit();
     qApp->quit();
 }
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     ///初始化虚拟键盘
-    if(!GreeterKeyboard::instance().init()){
+    if(!GreeterKeyboard::instance()->init()){
         qWarning() << "init keyboard failed";
     }
 
