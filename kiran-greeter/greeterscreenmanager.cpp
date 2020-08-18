@@ -94,8 +94,8 @@ void GreeterScreenManager::newScreenBackgroundWidget(QScreen *screen)
     GreeterBackground* background = new GreeterBackground(screen);
     background->setObjectName(QString("LoginBackground_%1").arg(m_BackgroundWidgetMap.size()));
     m_BackgroundWidgetMap.insert(screen,background);
-    connect(background,SIGNAL(mouseEnter(GreeterBackground*)),
-            this,SLOT(mouseEnterInWindow(GreeterBackground*)));
+    connect(background,&GreeterBackground::mouseEnter,
+            this,&GreeterScreenManager::mouseEnterInWindow);
     background->show();
 }
 
@@ -113,8 +113,8 @@ GreeterScreenManager::GreeterScreenManager(QObject* parent)
     :QObject(parent)
     , m_greeterWindow(nullptr)
 {
-    connect(qApp,SIGNAL(screenAdded(QScreen*)),
-            this,SLOT(slotScreenAdded(QScreen*)));
-    connect(qApp,SIGNAL(screenRemoved(QScreen*)),
-            this,SLOT(slotScreenRemoved(QScreen*)));
+    connect(qApp,&QApplication::screenAdded,
+            this,&GreeterScreenManager::slotScreenAdded);
+    connect(qApp,&QApplication::screenRemoved,
+            this,&GreeterScreenManager::slotScreenRemoved);
 }
