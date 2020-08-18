@@ -54,11 +54,11 @@ void ScreenSaverDialog::InitUI()
     });
 
     connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
-        GreeterKeyboard& keyboard = GreeterKeyboard::instance();
-        if( keyboard.isVisible() ){
-            keyboard.hide();
+        GreeterKeyboard* keyboard = GreeterKeyboard::instance();
+        if( keyboard->isVisible() ){
+            keyboard->hide();
         } else {
-            keyboard.showAdjustSize(this);
+            keyboard->showAdjustSize(this);
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
