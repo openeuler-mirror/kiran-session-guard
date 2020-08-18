@@ -19,7 +19,7 @@ GreeterSetting::GreeterSetting(QWidget *parent) :
 {
     ui->setupUi(this);
     initUI();
-    connect(&m_mateInterfaceSettings,QOverload<const QString&>::of(&QGSettings::changed),[this](const QString& key){
+    connect(&m_mateInterfaceSettings,&QGSettings::changed,[this](const QString& key){
         qInfo() << "changed:" << key;
         if(key!=KEY_FONT_NAME){
             return;
@@ -81,7 +81,7 @@ void GreeterSetting::initUI()
     QString str;
     //背景图片
     ui->preview->updatePreviewBackground(LightdmPrefs::instance()->greeterBackground());
-    connect(LightdmPrefs::instance(),QOverload<QString>::of(&LightdmPrefs::greeterBackgroundChanged),
+    connect(LightdmPrefs::instance(),&LightdmPrefs::greeterBackgroundChanged,
             [this](QString background){
         ui->preview->updatePreviewBackground(background);
     });

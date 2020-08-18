@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QWindow>
 #include <QWidget>
+#include <QMutex>
 #include <QApplication>
 
 #define ONBOARD_LAYOUT "Phone"
@@ -11,10 +12,19 @@
 #define ONBOARD_FIXED_WIDTH 800
 #define ONBOARD_FIXED_HEIGHT 300
 
-GreeterKeyboard &GreeterKeyboard::instance()
+GreeterKeyboard *GreeterKeyboard::instance()
 {
-    static GreeterKeyboard keyboard;
-    return keyboard;
+    static QMutex mutex;
+    static QScopedPointer<GreeterKeyboard> pInst;
+
+    if(Q_UNLIKELY(!pInst)){
+        QMutexLocker locker(&mutex);
+        if(pInst.isNull()){
+            pInst.reset(new GreeterKeyboard);
+        }
+    }
+
+    return pInst.data();
 }
 
 void GreeterKeyboard::init(QWidget*parent)
@@ -24,8 +34,8 @@ void GreeterKeyboard::init(QWidget*parent)
     }
     qDebug() << "greeter keyboard init";
     m_process = new QProcess(this);
-    connect(m_process,SIGNAL(finished(int,QProcess::ExitStatus)),
-            this,SLOT(slot_finished(int,QProcess::ExitStatus)));
+    connect(m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),
+            this,&GreeterKeyboard::slot_finished);
     connect(m_process,&QProcess::readyReadStandardOutput,this,[this,parent]{
         QString stdoutput = m_process->readAllStandardOutput();
         stdoutput = stdoutput.trimmed();
