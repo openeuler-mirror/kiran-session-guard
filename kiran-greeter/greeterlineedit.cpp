@@ -36,12 +36,12 @@ void GreeterLineEdit::initUI()
 
 void GreeterLineEdit::initConnection()
 {
-    connect(ui->edit,SIGNAL(returnPressed()),
-            this,SLOT(slotEditReturnPressed()));
-    connect(ui->button,SIGNAL(clicked()),
-            this,SLOT(slotButtonPressed()));
-    connect(ui->edit,SIGNAL(textChanged(const QString &)),
-            this,SLOT(slotEditTextChanged(const QString &)));
+    connect(ui->edit,&QLineEdit::returnPressed,
+            this,&GreeterLineEdit::slotEditReturnPressed);
+    connect(ui->button,&QToolButton::clicked,
+            this,&GreeterLineEdit::slotButtonPressed);
+    connect(ui->edit,&QLineEdit::textChanged,
+            this,&GreeterLineEdit::slotEditTextChanged);
 }
 
 void GreeterLineEdit::setDefaultIcon()

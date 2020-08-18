@@ -82,7 +82,7 @@ void GreeterLoginWindow::initUI()
     });
 
     ///会话选择按钮点击
-    connect(ui->btn_session,&QToolButton::pressed,this,[=]{
+    connect(ui->btn_session,&QToolButton::pressed,[this]{
         QPoint menuLeftTop;
         QPoint btnRightTopPos;
         QSize  menuSize;
@@ -106,7 +106,7 @@ void GreeterLoginWindow::initUI()
         m_powerMenu->hide();
     });
     ///电源按钮点击
-    connect(ui->btn_power,&QToolButton::pressed,this,[this]{
+    connect(ui->btn_power,&QToolButton::pressed,[this]{
         if( m_powerMenu->isVisible() ){
             m_powerMenu->hide();
             return;
@@ -115,22 +115,22 @@ void GreeterLoginWindow::initUI()
         //重新设置选项
         m_powerMenu->clear();
         if( m_powerIface.canHibernate()){
-            m_powerMenu->addAction(tr("hibernate"),this,[this]{
+            m_powerMenu->addAction(tr("hibernate"),[this]{
                 this->m_powerIface.hibernate();
             });
         }
         if( m_powerIface.canRestart() ){
-            m_powerMenu->addAction(tr("restart"),this,[this]{
+            m_powerMenu->addAction(tr("restart"),[this]{
                 this->m_powerIface.restart();
             });
         }
         if( m_powerIface.canShutdown() ){
-            m_powerMenu->addAction(tr("shutdown"),this,[this]{
+            m_powerMenu->addAction(tr("shutdown"),[this]{
                 this->m_powerIface.shutdown();
             });
         }
         if( m_powerIface.canSuspend() ){
-            m_powerMenu->addAction(tr("suspend"),this,[this]{
+            m_powerMenu->addAction(tr("suspend"),[this]{
                 this->m_powerIface.suspend();
             });
         }
@@ -147,7 +147,8 @@ void GreeterLoginWindow::initUI()
     });
 
     ///用户列表点击
-    connect(ui->userlist,SIGNAL(userActivated(const UserInfo&)),this,SLOT(slotUserActivated(const UserInfo&)));
+    connect(ui->userlist,&UserListWidget::userActivated,
+            this,&GreeterLoginWindow::slotUserActivated);
     ///自动登录按钮点击
     connect(ui->btn_autologin,&LoginButton::sigClicked,[this](){
         m_greeter.authenticateAutologin();
@@ -156,21 +157,22 @@ void GreeterLoginWindow::initUI()
         m_greeter.authenticateAutologin();
     });
     ///连接输入框回车和按钮点击信号
-    connect(ui->promptEdit,SIGNAL(textConfirmed(const QString&)),this,SLOT(slotTextConfirmed(const QString&)));
+    connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,
+            this,&GreeterLoginWindow::slotTextConfirmed);
     ///切换模式按钮和返回按钮
-    connect(ui->btn_notListAndCancel,SIGNAL(pressed()),
-            this,SLOT(slotButtonClicked()));
-    connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
-        GreeterKeyboard& keyboard = GreeterKeyboard::instance();
-        if( keyboard.isVisible() ){
-            keyboard.hide();
+    connect(ui->btn_notListAndCancel,&QToolButton::pressed,
+            this,&GreeterLoginWindow::slotButtonClicked);
+    connect(ui->btn_keyboard,&QToolButton::pressed,[this]{
+        GreeterKeyboard* keyboard = GreeterKeyboard::instance();
+        if( keyboard->isVisible() ){
+            keyboard->hide();
         } else {
-            keyboard.showAdjustSize(this);
+            keyboard->showAdjustSize(this);
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
     ///用户列表请求重置用户选择登录界面
-    connect(ui->userlist,&UserListWidget::sigRequestResetUI,this,[this]{
+    connect(ui->userlist,&UserListWidget::sigRequestResetUI,[this]{
         Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
         resetUIForUserListLogin();
     });
@@ -215,7 +217,7 @@ void GreeterLoginWindow::initMenu()
         itemWidget->setMinimumWidth(90);
         itemWidget->setMaximumWidth(120);
         itemWidget->setExclusiveGroup(buttonGroup);
-        connect(itemWidget,static_cast<void(GreeterMenuItem::*)(QString)>(&GreeterMenuItem::sigChecked),this,[this](QString action){
+        connect(itemWidget,&GreeterMenuItem::sigChecked,[this](QString action){
             qInfo() << "select session:" << action;
             m_session = action;
             m_sessionMenu->hide();
@@ -242,12 +244,12 @@ void GreeterLoginWindow::initLightdmGreeter()
     }
     m_promptMsgHandler.start();
     ///通过连接到处理Prompt,Message的队列提供的信号
-    connect(&m_promptMsgHandler,SIGNAL(showMessage(QString,QLightDM::Greeter::MessageType)),
-            this,SLOT(slotShowMessage(QString,QLightDM::Greeter::MessageType)));
-    connect(&m_promptMsgHandler,SIGNAL(showPrompt(QString,QLightDM::Greeter::PromptType)),
-            this,SLOT(slotShowprompt(QString,QLightDM::Greeter::PromptType)));
-    connect(&m_promptMsgHandler,SIGNAL(authenticationComplete(bool,bool)),
-            this,SLOT(slotAuthenticationComplete(bool,bool)));
+    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::showMessage,
+            this,&GreeterLoginWindow::slotShowMessage);
+    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::showPrompt,
+            this,&GreeterLoginWindow::slotShowprompt);
+    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::authenticationComplete,
+            this,&GreeterLoginWindow::slotAuthenticationComplete);
 
     ui->userlist->loadUserList();
 }
@@ -275,9 +277,9 @@ void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
     if( !event->isAccepted() ){
-        if(GreeterKeyboard::instance().getKeyboard()!=nullptr&&
-           GreeterKeyboard::instance().getKeyboard()->isVisible()){
-            GreeterKeyboard::instance().getKeyboard()->hide();
+        if(GreeterKeyboard::instance()->getKeyboard()!=nullptr&&
+           GreeterKeyboard::instance()->getKeyboard()->isVisible()){
+            GreeterKeyboard::instance()->getKeyboard()->hide();
         }
     }
 }

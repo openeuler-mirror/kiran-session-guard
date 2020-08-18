@@ -11,17 +11,17 @@ GreeterPromptMsgManager::GreeterPromptMsgManager(QLightDM::Greeter *greeter, QOb
     qRegisterMetaType<QLightDM::Greeter::PromptType>("QLightDM::Greeter::PromptType");
     qRegisterMetaType<QLightDM::Greeter::MessageType>("QLightDM::Greeter::MessageType");
     connect(m_greeter,
-            SIGNAL(showMessage(QString,QLightDM::Greeter::MessageType)),
+            &QLightDM::Greeter::showMessage,
             this,
-            SLOT(addMsgToQueue(QString,QLightDM::Greeter::MessageType)));
+            &GreeterPromptMsgManager::addMsgToQueue);
     connect(m_greeter,
-            SIGNAL(showPrompt(QString,QLightDM::Greeter::PromptType)),
+            &QLightDM::Greeter::showPrompt,
             this,
-            SLOT(addPromptToQueue(QString,QLightDM::Greeter::PromptType)));
+            &GreeterPromptMsgManager::addPromptToQueue);
     connect(m_greeter,
-            SIGNAL(authenticationComplete()),
+            &QLightDM::Greeter::authenticationComplete,
             this,
-            SLOT(addAuthenticationCompleteToQueue()));
+            &GreeterPromptMsgManager::addAuthenticationCompleteToQueue);
 }
 
 GreeterPromptMsgManager::~GreeterPromptMsgManager()

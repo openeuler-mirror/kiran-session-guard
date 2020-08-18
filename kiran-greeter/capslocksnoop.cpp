@@ -29,6 +29,7 @@ CapsLockSnoop::CapsLockSnoop()
 
 CapsLockSnoop::~CapsLockSnoop()
 {
+    stop();
     delete m_private;
 }
 
