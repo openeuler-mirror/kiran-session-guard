@@ -7,8 +7,11 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QValidator>
+#include <QMessageBox>
 
 #define KEY_FONT_NAME "fontName"
+
+#define BACKGROUND_SAVE_LOCATION  "/usr/share/lightdm-kiran-greeter/background"
 
 using namespace DBusApi;
 
@@ -92,7 +95,24 @@ void GreeterSetting::initUI()
                                                         "/usr/share/backgrounds/",
                                                         tr("image files(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)"));
         if(!fileName.isEmpty()){
-            LightdmPrefs::instance()->setGreeterBackground(fileName);
+            QFile file(fileName);
+            QFileInfo fileInfo(fileName);
+
+            QString destPath = BACKGROUND_SAVE_LOCATION;
+            QFileInfo destPathFile(destPath);
+
+            if(destPathFile.exists()){
+                QFile::remove(destPath);
+            }
+
+            if( !QFile::copy(fileName,destPath) ){
+                qWarning() << "copy" << fileName << "-->" << destPath;
+                QMessageBox::warning(this,tr("warning"),tr("Failed to set background image."));
+                return;
+            }
+            QFile backgroudnFile(destPath);
+            backgroudnFile.setPermissions(backgroudnFile.permissions()|QFile::ReadOther|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOwner);
+            LightdmPrefs::instance()->setGreeterBackground(destPath);
         }
     });
     //缩放模式

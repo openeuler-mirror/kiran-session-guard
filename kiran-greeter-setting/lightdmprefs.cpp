@@ -332,9 +332,6 @@ void LightdmPrefs::setScaleFactor(QString scaleFactor)
 
 void LightdmPrefs::setGreeterBackground(QString greeterBackground)
 {
-    if (m_greeterBackground == greeterBackground)
-        return;
-
     if( !m_greeterConf.isWritable() ){
         qInfo() << GREETER_SETTING_PATH << "can't write";
         return;
