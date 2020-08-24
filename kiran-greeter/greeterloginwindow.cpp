@@ -119,6 +119,11 @@ void GreeterLoginWindow::initUI()
                 this->m_powerIface.hibernate();
             });
         }
+        if( m_powerIface.canSuspend() ){
+            m_powerMenu->addAction(tr("suspend"),[this]{
+                this->m_powerIface.suspend();
+            });
+        }
         if( m_powerIface.canRestart() ){
             m_powerMenu->addAction(tr("restart"),[this]{
                 this->m_powerIface.restart();
@@ -127,11 +132,6 @@ void GreeterLoginWindow::initUI()
         if( m_powerIface.canShutdown() ){
             m_powerMenu->addAction(tr("shutdown"),[this]{
                 this->m_powerIface.shutdown();
-            });
-        }
-        if( m_powerIface.canSuspend() ){
-            m_powerMenu->addAction(tr("suspend"),[this]{
-                this->m_powerIface.suspend();
             });
         }
         //计算菜单显示坐标
