@@ -103,7 +103,7 @@ void GreeterPromptMsgManager::reset()
 
 void GreeterPromptMsgManager::addMsgItemToQueue(const GreeterPromptMsgManager::LightdmPromptMsg &msg)
 {
-    qInfo() <<"queue append: " << msg.type << msg.text;
+    qInfo() <<"queue append: " << dumpMsgInfoToString(msg);
     m_semaphore.release();
 
     m_msgQueueMutex.lock();
@@ -120,7 +120,7 @@ bool GreeterPromptMsgManager::getMsgItemFromQueue(GreeterPromptMsgManager::Light
             return false;
         }
         msg = m_msgQueue.dequeue();
-        qInfo() << "queue getItem: " << msg.type << msg.text;
+        qInfo() << "queue getItem: " << dumpMsgInfoToString(msg);
         return true;
     }
     return false;
@@ -140,6 +140,22 @@ qint64 GreeterPromptMsgManager::getUpTime()
 
     uptime = sysInfo.uptime;
     return uptime;
+}
+
+QString GreeterPromptMsgManager::dumpMsgInfoToString(const GreeterPromptMsgManager::LightdmPromptMsg &msg)
+{
+    QString ret;
+    static QMap<LightdmPromptMsgType,QString> msgTypeDescMap = {
+        {LIGHTDM_MSG,"Message"},
+        {LIGHTDM_PROMPT,"Prompt"},
+        {LIGHTDM_AUTHENTICATION_COMPLETE,"Authentication Complete"}
+    };
+
+    auto iter = msgTypeDescMap.find(msg.type);
+    ret = QString("[%1] text:%2")
+            .arg(iter==msgTypeDescMap.end()?"none":iter.value())
+            .arg(msg.text);
+    return ret;
 }
 
 void GreeterPromptMsgManager::run()

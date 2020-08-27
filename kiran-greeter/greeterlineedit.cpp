@@ -188,7 +188,7 @@ bool GreeterLineEdit::eventFilter(QObject *obj, QEvent *event)
 
 void GreeterLineEdit::startMovieAndEmitSignal()
 {
-    ui->edit->setEnabled(false);
+    this->setEnabled(false);
     if( m_animationTimerId == 0 ){
         m_animationTimerId = startTimer(50);
     }
@@ -197,7 +197,7 @@ void GreeterLineEdit::startMovieAndEmitSignal()
 
 void GreeterLineEdit::reset()
 {
-    ui->edit->setEnabled(true);
+    this->setEnabled(true);
     ui->edit->clear();
     ui->edit->setPlaceholderText("");
     setEchoMode(QLineEdit::Normal);

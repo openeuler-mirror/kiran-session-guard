@@ -242,6 +242,7 @@ void GreeterLoginWindow::initLightdmGreeter()
         qWarning("connect to lightdm greeter failed.");
         return;
     }
+    qInfo() << "GreeterPromptMsgManager start";
     m_promptMsgHandler.start();
     ///通过连接到处理Prompt,Message的队列提供的信号
     connect(&m_promptMsgHandler,&GreeterPromptMsgManager::showMessage,
@@ -351,8 +352,15 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
         switchToPromptEdit();
     }
     ui->promptEdit->reset();
+
+    ///NOTE:为了解决在某些环境启动过快，导致的lightdm的认证回复prompt过慢几秒，
+    ///     登录界面输入框未切换到密码模式,用户直接输入明文密码
+    ///     暂时解决方案单独禁用输入框，等待lightdm的prompt消息会启用输入框
+    ui->promptEdit->setEnabled(false);
+
     ///FIXME:鼠标点击认证用户列表时，需要延时设置输入焦点到输入框，不然又会被置回UserItem
-    setEditPromptFocus(100);
+    setEditPromptFocus(200);
+
     m_greeter.authenticate(username);
 }
 
@@ -523,7 +531,7 @@ void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptT
     ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
     ui->promptEdit->setEchoMode(type==QLightDM::Greeter::PromptType::PromptTypeSecret?QLineEdit::Password:QLineEdit::Normal);
     ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
-    setEditPromptFocus(100);
+    setEditPromptFocus(200);
 }
 
 void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthentication)

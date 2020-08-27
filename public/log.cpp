@@ -68,7 +68,7 @@ void Log::write(QtMsgType type, const QMessageLogContext &context, const QString
         {QtInfoMsg,    "[INFO]"}
     };
 
-    QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    QString curTime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
     QMap<QtMsgType,QString>::Iterator it = msgDescMap.find(type);
     QString logContent = QString("%1 %2 <%3:%4>: %5")
             .arg(curTime)
