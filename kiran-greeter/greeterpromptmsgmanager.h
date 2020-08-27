@@ -105,6 +105,8 @@ private:
      * @return 开机到现在的时间
      */
     qint64 getUpTime();
+
+    QString dumpMsgInfoToString(const LightdmPromptMsg& msg);
 protected:
     /**
      * @brief 线程中运行,负责对消息队列中的消息进行分发和阻塞等待

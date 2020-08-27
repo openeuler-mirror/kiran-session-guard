@@ -100,7 +100,7 @@ GreeterLineEdit#promptEdit{
     border-radius:8px;
     background-color:rgba(0,0,0,0.2);
 }
-GreeterLineEdit#promptEdit[editFocus=true]{
+GreeterLineEdit#promptEdit:enabled[editFocus=true]{
     border:1px solid rgba(46,179,255,0.4);
     border-radius:8px;
 }
