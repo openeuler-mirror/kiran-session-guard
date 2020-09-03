@@ -50,33 +50,33 @@
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="123"/>
+        <location filename="../greeterloginwindow.cpp" line="128"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="128"/>
+        <location filename="../greeterloginwindow.cpp" line="133"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="133"/>
+        <location filename="../greeterloginwindow.cpp" line="123"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="366"/>
+        <location filename="../greeterloginwindow.cpp" line="376"/>
         <source>Not Listed?</source>
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="407"/>
-        <location filename="../greeterloginwindow.cpp" line="514"/>
+        <location filename="../greeterloginwindow.cpp" line="417"/>
+        <location filename="../greeterloginwindow.cpp" line="524"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="419"/>
+        <location filename="../greeterloginwindow.cpp" line="429"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
