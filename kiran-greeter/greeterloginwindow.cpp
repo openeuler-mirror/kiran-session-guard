@@ -553,7 +553,6 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 {
     qInfo() << "lineedit confirmed";
     if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_PROMPT ){
-        qInfo() << "respond: " << ui->promptEdit->getText();
         m_greeter.respond(ui->promptEdit->getText());
     }else{
         startAuthUser(ui->promptEdit->getText(),

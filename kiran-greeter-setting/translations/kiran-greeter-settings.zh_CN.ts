@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>GreeterSetting</name>
     <message>
@@ -43,7 +43,7 @@
     </message>
     <message>
         <source>auto login delay(seconds)</source>
-        <translation>自动登录延时(秒)</translation>
+        <translation type="vanished">自动登录延时(秒)</translation>
     </message>
     <message>
         <location filename="../greetersetting.cpp" line="70"/>
@@ -82,11 +82,11 @@
     </message>
     <message>
         <source>auto login account</source>
-        <translation>自动登录用户名</translation>
+        <translation type="vanished">自动登录用户名</translation>
     </message>
     <message>
         <source>auto login delay(ms)</source>
-        <translation>自动登录延时(毫秒)</translation>
+        <translation type="vanished">自动登录延时(毫秒)</translation>
     </message>
     <message>
         <location filename="../greetersetting.cpp" line="42"/>
