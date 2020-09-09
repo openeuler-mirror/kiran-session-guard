@@ -104,11 +104,11 @@ void GreeterPromptMsgManager::reset()
 void GreeterPromptMsgManager::addMsgItemToQueue(const GreeterPromptMsgManager::LightdmPromptMsg &msg)
 {
     qInfo() <<"queue append: " << dumpMsgInfoToString(msg);
-    m_semaphore.release();
-
     m_msgQueueMutex.lock();
     m_msgQueue.enqueue(msg);
     m_msgQueueMutex.unlock();
+
+    m_semaphore.release();
 }
 
 bool GreeterPromptMsgManager::getMsgItemFromQueue(GreeterPromptMsgManager::LightdmPromptMsg &msg,
