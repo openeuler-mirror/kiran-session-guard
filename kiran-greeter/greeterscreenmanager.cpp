@@ -5,21 +5,17 @@
 #include "greeterbackground.h"
 #include "greeterloginwindow.h"
 
-GreeterScreenManager *GreeterScreenManager::instance()
-{
-    static GreeterScreenManager monitor;
-    return &monitor;
-}
-
 ///析构:
 ///     清理登录窗口和背景窗口
 GreeterScreenManager::~GreeterScreenManager()
 {
     if(m_greeterWindow!=nullptr){
-        m_greeterWindow->deleteLater();
+        delete m_greeterWindow;
     }
     for(auto iter=m_BackgroundWidgetMap.begin();iter!=m_BackgroundWidgetMap.end();){
-        iter.value()->deleteLater();
+        GreeterBackground* background = iter.value();
+        delete background;
+        background = nullptr;
         m_BackgroundWidgetMap.erase(iter++);
     }
 }

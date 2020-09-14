@@ -12,7 +12,7 @@ class GreeterScreenManager:public QObject
 {
     Q_OBJECT
 public:
-    static GreeterScreenManager* instance();
+    GreeterScreenManager(QObject* parent=nullptr);
     ~GreeterScreenManager();
     void init();
 private slots:
@@ -22,8 +22,6 @@ private slots:
 private:
     void newScreenBackgroundWidget(QScreen* screen);
     void setGreeterOnBackground(GreeterBackground* background);
-private:
-    GreeterScreenManager(QObject* parent=nullptr);
 private:
     //保存屏幕和屏幕的映射
     QMap<QScreen*,GreeterBackground*> m_BackgroundWidgetMap;
