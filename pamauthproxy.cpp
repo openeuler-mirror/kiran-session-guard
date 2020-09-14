@@ -197,7 +197,7 @@ int PamAuthProxy::conversation(int num_msg, const pam_message **msg, pam_respons
             if( This->m_authCallback ){
                 This->m_authCallback->requestResponse(msg[replies]->msg,visiable);
                 This->waitForResponse(replyRet,reply[replies].resp);
-                qInfo() << msg[replies]->msg << " reply:" << reply[replies].resp;
+                //qInfo() << msg[replies]->msg << " reply:" << reply[replies].resp;
             }
             break;
         case PAM_ERROR_MSG:
