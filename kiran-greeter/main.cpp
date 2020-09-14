@@ -17,8 +17,7 @@
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
 void termSignalHandler(int unused){
-    qInfo() << "termSignalHandler";
-    GreeterKeyboard::instance()->resetParentAndTermProcess();
+    qApp->quit();
 }
 
 void setup_unix_signal_handlers(){
@@ -26,7 +25,6 @@ void setup_unix_signal_handlers(){
     term.sa_handler = termSignalHandler;
     sigemptyset(&term.sa_mask);
     term.sa_flags = 0;
-    term.sa_flags |= SA_RESETHAND;
     int iRet = sigaction(SIGTERM,&term,0);
     if(iRet!=0){
         qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
@@ -100,7 +98,8 @@ int main(int argc, char *argv[])
     GreeterKeyboard::instance()->init();
 
     ///初始化屏幕管理,在屏幕管理中创建背景窗口和登录窗口，负责处理屏幕增加删除的情况
-    GreeterScreenManager::instance()->init();
+    GreeterScreenManager screenManager;
+    screenManager.init();
 
     return a.exec();
 }

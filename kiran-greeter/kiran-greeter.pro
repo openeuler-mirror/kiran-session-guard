@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #配置项
 CONFIG += c++11
+CONFIG += link_pkgconfig
 
 #头文件包含路径
 INCLUDEPATH += /usr/include/lightdm-qt5-3/

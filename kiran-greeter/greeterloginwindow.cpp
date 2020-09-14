@@ -54,6 +54,7 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
 GreeterLoginWindow::~GreeterLoginWindow()
 {
     m_snoop.stop();
+    GreeterKeyboard::instance()->keyboardProcessExit();
     delete ui;
 }
 

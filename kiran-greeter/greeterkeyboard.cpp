@@ -3,8 +3,11 @@
 #include <QDebug>
 #include <QWindow>
 #include <QWidget>
-#include <QMutex>
 #include <QApplication>
+
+#include <QMutex>
+#include <QScopedPointer>
+
 
 #define ONBOARD_LAYOUT "Phone"
 #define ONBOARD_THEME  "Blackboard"
@@ -27,32 +30,46 @@ GreeterKeyboard *GreeterKeyboard::instance()
     return pInst.data();
 }
 
-void GreeterKeyboard::init(QWidget*parent)
+GreeterKeyboard::~GreeterKeyboard()
+{
+    if(m_process->state()!=QProcess::NotRunning){
+        m_process->terminate();
+        m_process->waitForFinished(300);
+    }
+}
+
+bool GreeterKeyboard::init(QWidget*parent)
 {
     if(m_keyboardWidget!=nullptr){
-        return;
+        return false;
     }
-    qDebug() << "greeter keyboard init";
     m_process = new QProcess(this);
     connect(m_process,QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),
             this,&GreeterKeyboard::slot_finished);
     connect(m_process,&QProcess::readyReadStandardOutput,this,[this,parent]{
-        QString stdoutput = m_process->readAllStandardOutput();
+        QString stdoutput;
+        qulonglong xid = 0;
+        QWindow* foreignWindow=nullptr;
+
+        stdoutput = m_process->readAllStandardOutput();
         stdoutput = stdoutput.trimmed();
         if(stdoutput.isEmpty()){
             qWarning() << "onboard output is empty,can't get onbaord xid.";
             return;
         }
-        qulonglong xid = stdoutput.toULongLong();
-        QWindow* window = QWindow::fromWinId(xid);
-        m_keyboardWidget = QWidget::createWindowContainer(window,nullptr,Qt::ForeignWindow);
 
+        xid = stdoutput.toULongLong();
+
+        foreignWindow = QWindow::fromWinId(xid);
+        foreignWindow->setFlag(Qt::ForeignWindow);
+        m_keyboardWidget = QWidget::createWindowContainer(foreignWindow,nullptr);
         m_keyboardWidget->setParent(parent);
         m_keyboardWidget->setFocusPolicy(Qt::NoFocus);
         m_keyboardWidget->raise();
         qDebug() << "greeter keyboard init finish";
     });
     m_process->start("onboard",QStringList()<<"--xid"<<"-t" ONBOARD_THEME<<"-l" ONBOARD_LAYOUT<<"-d"<<"all");
+    return true;
 }
 
 bool GreeterKeyboard::isVisible()
@@ -69,6 +86,12 @@ void GreeterKeyboard::showAdjustSize(QWidget *parent)
         qWarning() << "GreeterKeyboard::showAdjustSize must call after init";
         return;
     }
+
+    if(parent==nullptr){
+        qWarning() << "GreeterKeyboard::showAdjustSize parent can't be nullptr";
+    }
+
+    qDebug() << "GreeterKeyboard::showAdjustSize" << parent->objectName();
     m_keyboardWidget->hide();
     QRect parentRect = parent->geometry();
     m_keyboardWidget->setParent(parent);
@@ -95,36 +118,25 @@ QWidget *GreeterKeyboard::getKeyboard()
     return m_keyboardWidget;
 }
 
-///FIXME: 不复位parent，当parent析构时，onboard会crash
-void GreeterKeyboard::resetParentAndTermProcess()
+void GreeterKeyboard::keyboardProcessExit()
 {
-    if(m_keyboardWidget!=nullptr){
-        m_keyboardWidget->setParent(nullptr);
-        m_keyboardWidget->deleteLater();
+    if(m_process->state()!=QProcess::NotRunning){
+        qInfo() << "terminate keyboard process and wait exit.";
         m_process->terminate();
-        m_process->waitForFinished();
+        m_process->waitForFinished(300);
     }
 }
 
 void GreeterKeyboard::slot_finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    qInfo() << "onboard: " << "exitCode" << exitCode << "exitStaus" << exitStatus;
+    qInfo() << "onboard process finished : " << "exitCode" << exitCode << "exitStaus" << exitStatus;
 }
 
 GreeterKeyboard::GreeterKeyboard(QObject *parent)
     : QObject(parent)
     , m_keyboardWidget(nullptr)
 {
-    qApp->installEventFilter(this);
-}
 
-bool GreeterKeyboard::eventFilter(QObject *obj, QEvent *event)
-{
-    if(m_keyboardWidget!=nullptr&&m_keyboardWidget->parentWidget()!=nullptr&&
-            obj==qApp&&event->type()==QEvent::Quit){
-        GreeterKeyboard::resetParentAndTermProcess();
-    }
-    return false;
 }
 
 void GreeterKeyboard::slotReadyReadStandardOutput()
