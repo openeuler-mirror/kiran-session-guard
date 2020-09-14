@@ -34,6 +34,7 @@ ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
+    GreeterKeyboard::instance()->keyboardProcessExit();
     delete ui;
 }
 

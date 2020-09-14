@@ -16,7 +16,6 @@
 
 
 void termSignalHandler(int unused){
-    GreeterKeyboard::instance()->keyboardProcessExit();
     qApp->quit();
 }
 
