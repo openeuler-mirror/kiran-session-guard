@@ -3,7 +3,6 @@
 #include <iostream>
 #include <QDebug>
 #include <QPainter>
-#include <unistd.h>
 #include <QMenu>
 #include <QFile>
 #include <QMouseEvent>
@@ -11,6 +10,10 @@
 #include <QGraphicsDropShadowEffect>
 #include <QtDBus>
 #include <QMetaObject>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <error.h>
 
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
@@ -154,11 +157,41 @@ void ScreenSaverDialog::InitUI()
 
 QString ScreenSaverDialog::getUser()
 {
-    char* userNmae = getlogin();
-    if(userNmae==nullptr){
-        qWarning() << "getlogin faield,errno:" << errno << strerror(errno);
+
+    uid_t uid = getuid();
+    qInfo() << "current uid:" << uid;
+
+    long bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if( bufSize == -1 ){
+        qWarning() << "autodetect getpw_r bufsize failed.";
+        return QString("");
     }
-    return QString(userNmae);
+
+    std::vector<char> buf(bufSize);
+    struct passwd  pwd;
+    struct passwd* pResult = nullptr;
+    int iRet = 0;
+
+    do{
+        iRet = getpwuid_r(uid,&pwd,&buf[0],bufSize,&pResult);
+        if(iRet == ERANGE){
+            bufSize *= 2;
+            buf.resize(bufSize);
+        }
+    }while((iRet==EINTR)||(iRet==ERANGE));
+
+    if( iRet != 0 ){
+        qWarning() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
+        return QString("");
+    }
+
+    if(pResult == nullptr){
+        qWarning() << "getpwuid_r no matching password record was found";
+        return QString("");
+    }
+
+    qInfo() << "getpwuid_r: " << pResult->pw_name;
+    return pResult->pw_name;
 }
 
 void ScreenSaverDialog::startUpdateTimeTimer()
