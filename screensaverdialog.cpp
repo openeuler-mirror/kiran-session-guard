@@ -155,6 +155,9 @@ void ScreenSaverDialog::InitUI()
 QString ScreenSaverDialog::getUser()
 {
     char* userNmae = getlogin();
+    if(userNmae==nullptr){
+        qWarning() << "getlogin faield,errno:" << errno << strerror(errno);
+    }
     return QString(userNmae);
 }
 
