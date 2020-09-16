@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 
     ///scaling
     int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
+    qInfo() << "org.mate.interface window-scaling-factor" << windowScalingFactor;
     switch (windowScalingFactor) {
     case 0:
         ScalingHelper::auto_calculate_screen_scaling();

@@ -86,6 +86,7 @@ void ScreenSaverDialog::InitUI()
 
     ///背景图
     QString backgroundPath = GSettingsHelper::getBackgrountPath();
+    qInfo() << "org.mate.background picture-filename " << backgroundPath;
     if( !m_background.load(backgroundPath) ){
         qWarning() << "load background" << backgroundPath << "failed";
         m_background.load(DEFAULT_BACKGROUND);
@@ -93,6 +94,7 @@ void ScreenSaverDialog::InitUI()
 
     ///用户
     m_userName = getUser();
+    qInfo() << "getlogin " << m_userName;
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
