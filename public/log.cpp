@@ -41,7 +41,7 @@ bool Log::init(QString filePath)
             fprintf(stderr,"make log file failed\n");
             return false;
         }
-        if( !file.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text) ){
+        if( !file.open(QIODevice::WriteOnly|QIODevice::Truncate|QIODevice::Text) ){
             return false;
         }
         file.close();
