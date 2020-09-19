@@ -35,8 +35,7 @@ SOURCES += \
     logingreeterpreviewwidget.cpp \
     lightdmprefs.cpp \
     single/singleapplication.cpp \
-    single/singleapplication_p.cpp \
-    scalinghelper.cpp
+    single/singleapplication_p.cpp
 
 #头文件
 HEADERS += \
@@ -49,8 +48,7 @@ HEADERS += \
     logingreeterpreviewwidget.h \
     lightdmprefs.h \
     single/singleapplication.h \
-    single/singleapplication_p.h \
-    scalinghelper.h
+    single/singleapplication_p.h
 
 #界面文件
 FORMS += \
