@@ -38,13 +38,17 @@ void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
     if (resources) {
         for (int i = 0; i < resources->noutput; i++) {
             XRROutputInfo* outputInfo = XRRGetOutputInfo(display, resources, resources->outputs[i]);
-            if (outputInfo->crtc == 0 || outputInfo->mm_width == 0)
+            if (outputInfo->crtc == 0 || outputInfo->mm_width == 0){
+                if( outputInfo != nullptr ){
+                    XRRFreeOutputInfo(outputInfo);
+                }
                 continue;
-
+            }
             XRRCrtcInfo *crtInfo = XRRGetCrtcInfo(display, resources, outputInfo->crtc);
-            if (crtInfo == nullptr)
+            if (crtInfo == nullptr){
+                XRRFreeOutputInfo(outputInfo);
                 continue;
-
+            }
             //计算屏幕尺寸
             qreal screenInch;
             screenInch = qSqrt(qPow(outputInfo->mm_width,2.0)+qPow(outputInfo->mm_height,2.0))/qreal(25.4);
@@ -68,6 +72,8 @@ void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
                 screen_scale_factor = 2.0;
             }
             scaleFactors.push_back(screen_scale_factor);
+            XRRFreeCrtcInfo(crtInfo);
+            XRRFreeOutputInfo(outputInfo);
         }
         XRRFreeScreenResources(resources);
     }
