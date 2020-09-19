@@ -112,7 +112,6 @@ void GreeterLoginWindow::initUI()
             m_powerMenu->hide();
             return;
         }
-
         //重新设置选项
         m_powerMenu->clear();
         if( m_powerIface.canHibernate()){
@@ -252,7 +251,24 @@ void GreeterLoginWindow::initLightdmGreeter()
             this,&GreeterLoginWindow::slotShowprompt);
     connect(&m_promptMsgHandler,&GreeterPromptMsgManager::authenticationComplete,
             this,&GreeterLoginWindow::slotAuthenticationComplete);
-
+    ///处理用户个数从0到1个和1到0的情况
+    qInfo() << "connect rowsInserted: " << connect(&m_userModel,&QLightDM::UsersModel::rowsInserted,[this](const QModelIndex &parent, int first, int last){
+        ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
+        ///显示返回按钮
+        qInfo() << "rowInserted:" << m_userModel.rowCount(QModelIndex());
+        if((m_userModel.rowCount(QModelIndex())==1)&&m_showUserList
+                &&m_loginMode==LOGIN_BY_INPUT_USER&&!m_greeter.isAuthenticated()){
+            qInfo() << "setReturn visible true";
+            ui->btn_notListAndCancel->setVisible(true);
+        }
+    });
+    qInfo() << "connect rowsRemoved: " << connect(&m_userModel,&QLightDM::UsersModel::rowsRemoved,[this](const QModelIndex &parent, int first, int last){
+        qInfo() << "rowRemoved:" << m_userModel.rowCount(QModelIndex());
+        if((m_userModel.rowCount(QModelIndex())==0)){
+            ///TODO:是否需要判断配置文件中能否手动登录
+            resetUIForManualLogin();
+        }
+    });
     ui->userlist->loadUserList();
 }
 
@@ -268,7 +284,7 @@ void GreeterLoginWindow::initSettings()
 
     m_promptMsgHandler.setMessageInterval(GreeterSetting::instance()->messageDisplayInterval());
 
-    if(m_showUserList && ui->userlist->userCount()>0){
+    if(m_showUserList && m_userModel.rowCount(QModelIndex())>0 ){
         resetUIForUserListLogin();
     }else{
         resetUIForManualLogin();

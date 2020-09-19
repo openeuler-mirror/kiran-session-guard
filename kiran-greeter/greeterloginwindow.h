@@ -76,6 +76,7 @@ protected:
 private:
     Ui::GreeterLoginWindow *ui;
     QLightDM::Greeter m_greeter;
+    QLightDM::UsersModel m_userModel;
     GreeterPromptMsgManager m_promptMsgHandler;
     QLightDM::PowerInterface m_powerIface;
     QMenu* m_powerMenu;
