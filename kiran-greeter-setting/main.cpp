@@ -9,13 +9,12 @@
 #include "single/singleapplication.h"
 #include "log.h"
 #include "lightdmprefs.h"
-#include "scalinghelper.h"
+#include "dbusapi.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations/"
 #define ENV_XDG_CURRENT_DESKTOP "XDG_CURRENT_DESKTOP"
 #define DEFAULT_STYLE_FILE   ":/themes/kiran-greeter-settings-normal.qss"
 
-#include "dbusapi.h"
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
@@ -40,38 +39,12 @@ int main(int argc, char *argv[])
 
     QCommandLineParser parser;
     QCommandLineOption envOption("xdg-desktop","set environment to XDG_CURRENT_DESKTOP","env","");
-    QCommandLineOption windowScalingFactor("window-scaling-factor","set window scaling factor","scaling-factor","1");
     parser.addOption(envOption);
-    parser.addOption(windowScalingFactor);
     parser.addHelpOption();
 
     parser.process(arguments);
     if(parser.isSet(envOption)){
         qputenv(ENV_XDG_CURRENT_DESKTOP,parser.value(envOption).toUtf8());
-    }
-
-    int scalingFactor = 0;
-    if(parser.isSet(windowScalingFactor)){
-        bool toIntOk = false;
-        int tmp =  parser.value(windowScalingFactor).toInt(&toIntOk);
-        if(toIntOk){
-            scalingFactor = tmp;
-        }else{
-            qWarning() << "toInt failed";
-        }
-    }
-    switch (scalingFactor) {
-    case 0:
-        ScalingHelper::auto_calculate_screen_scaling();
-        break;
-    case 1:
-        break;
-    case 2:
-        ScalingHelper::set_scale_factor(2);
-        break;
-    default:
-        qWarning() << "Unsupported option" << "window-scaling-factor" << scalingFactor;
-        break;
     }
 
     SingleApplication a(argc,argv);
