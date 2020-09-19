@@ -9,13 +9,12 @@
 #include "single/singleapplication.h"
 #include "log.h"
 #include "lightdmprefs.h"
-#include "scalinghelper.h"
+#include "dbusapi.h"
 
 #define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations/"
 #define ENV_XDG_CURRENT_DESKTOP "XDG_CURRENT_DESKTOP"
 #define DEFAULT_STYLE_FILE   ":/themes/kiran-greeter-settings-normal.qss"
 
-#include "dbusapi.h"
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
