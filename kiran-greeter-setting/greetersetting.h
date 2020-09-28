@@ -3,16 +3,17 @@
 
 #include <QWidget>
 #include <QGSettings>
+#include <kiranwidgets-qt5/kiran-titlebar-window.h>
 
 namespace Ui {
 class GreeterSetting;
 }
 
-class GreeterSetting : public QWidget
+class GreeterSetting : public KiranTitlebarWindow
 {
     Q_OBJECT
 public:
-    explicit GreeterSetting(QWidget *parent = nullptr);
+    explicit GreeterSetting();
     ~GreeterSetting();
 private:
     void initUI();
