@@ -15,12 +15,12 @@
 
 using namespace DBusApi;
 
-GreeterSetting::GreeterSetting(QWidget *parent) :
-    QWidget(parent),
+GreeterSetting::GreeterSetting() :
+    KiranTitlebarWindow(),
     ui(new Ui::GreeterSetting),
     m_mateInterfaceSettings("org.mate.interface")
 {
-    ui->setupUi(this);
+    ui->setupUi(getWindowContentWidget());
     initUI();
     connect(&m_mateInterfaceSettings,&QGSettings::changed,[this](const QString& key){
         qInfo() << "changed:" << key;
@@ -39,8 +39,10 @@ GreeterSetting::~GreeterSetting()
 
 void GreeterSetting::initUI()
 {
-    setWindowTitle(tr("greeter settings"));
-    resize(760,520);
+    setTitle(tr("greeter settings"));
+    setIcon(QIcon::fromTheme("preferences-system-login"));
+
+    resize(790,540);
 
     ///初始化左侧选择页列表
     connect(ui->tabList,&QListWidget::itemSelectionChanged,[this](){

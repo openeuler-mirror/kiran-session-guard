@@ -72,7 +72,7 @@ OTHER_FILES+= \
     config/com.kiran.kiran-greeter-settings.policy \
     config/kiran-greeter-settings
 
-LIBS += -lX11 -lXrandr
+LIBS += -lX11 -lXrandr -lkiranwidgets-qt5
 #安装选项
 ##翻译文件
 target_translation.files = ./translations/kiran-greeter-settings.zh_CN.qm
