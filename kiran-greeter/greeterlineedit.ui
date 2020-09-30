@@ -52,6 +52,9 @@
    </property>
    <item alignment="Qt::AlignVCenter">
     <widget class="QLineEdit" name="edit">
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>

@@ -15,6 +15,7 @@ GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
     m_animationTimerId(0)
 {
     ui->setupUi(this);
+    ui->edit->setContextMenuPolicy(Qt::NoContextMenu);
     setDefaultIcon();
     initConnection();
     ui->edit->installEventFilter(this);
