@@ -18,6 +18,7 @@ GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
     m_showPasswordModeStyle(false)
 {
     ui->setupUi(this);
+    ui->edit->setContextMenuPolicy(Qt::NoContextMenu);
     setDefaultIcon();
     initConnection();
     ui->edit->installEventFilter(this);
