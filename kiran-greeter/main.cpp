@@ -94,8 +94,10 @@ int main(int argc, char *argv[])
         qWarning() << "load style sheet failed";
     }
 
+#ifdef VIRTUAL_KEYBOARD
     ///初始键盘配置
     GreeterKeyboard::instance()->init();
+#endif
 
     ///初始化屏幕管理,在屏幕管理中创建背景窗口和登录窗口，负责处理屏幕增加删除的情况
     GreeterScreenManager screenManager;
