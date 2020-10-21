@@ -54,7 +54,9 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
 GreeterLoginWindow::~GreeterLoginWindow()
 {
     m_snoop.stop();
+#ifdef VIRTUAL_KEYBOARD
     GreeterKeyboard::instance()->keyboardProcessExit();
+#endif
     delete ui;
 }
 
@@ -162,6 +164,7 @@ void GreeterLoginWindow::initUI()
     ///切换模式按钮和返回按钮
     connect(ui->btn_notListAndCancel,&QToolButton::pressed,
             this,&GreeterLoginWindow::slotButtonClicked);
+#ifdef VIRTUAL_KEYBOARD
     connect(ui->btn_keyboard,&QToolButton::pressed,[this]{
         GreeterKeyboard* keyboard = GreeterKeyboard::instance();
         if( keyboard->isVisible() ){
@@ -171,6 +174,9 @@ void GreeterLoginWindow::initUI()
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
+#else
+    ui->btn_keyboard->setVisible(false);
+#endif
     ///用户列表请求重置用户选择登录界面
     connect(ui->userlist,&UserListWidget::sigRequestResetUI,[this]{
         Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
@@ -294,12 +300,14 @@ void GreeterLoginWindow::initSettings()
 void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
+#ifdef VIRTUAL_KEYBOARD
     if( !event->isAccepted() ){
         if(GreeterKeyboard::instance()->getKeyboard()!=nullptr&&
            GreeterKeyboard::instance()->getKeyboard()->isVisible()){
             GreeterKeyboard::instance()->getKeyboard()->hide();
         }
     }
+#endif
 }
 
 /**

@@ -27,8 +27,8 @@ SOURCES += \
     ../public/disabledeselectlistwidget.cpp\
     ../public/useravatarwidget.cpp \
     capslocksnoop.cpp \
-    greeterbackground.cpp \
     greeterkeyboard.cpp \
+    greeterbackground.cpp \
     greeterlineedit.cpp \
     greeterloginwindow.cpp \
     greeterscreenmanager.cpp \
