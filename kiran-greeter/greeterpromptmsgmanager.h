@@ -9,6 +9,12 @@
 #include <QWaitCondition>
 #include <QMutex>
 
+
+enum LoginMode{
+    LOGIN_BY_USER_LIST,
+    LOGIN_BY_INPUT_USER
+};
+
 /**
  * @brief 为了解决消息显示覆盖的问题,提供LightdmGreeter认证消息的一个队列
  */
@@ -50,6 +56,12 @@ public:
      * @brief 清空所有消息,重置消息队列,复位所有标志位
      */
     void reset();
+
+    /**
+     * @brief 设置登录模式，用该信息返回不同认证错误的信息
+     * @param loginMode
+     */
+    void setLoginMode(LoginMode loginMode);
 
 private Q_SLOTS:
     /**
@@ -131,6 +143,7 @@ private:
     QMutex m_sleepCancelMutex;
     /// 分发消息阻塞条件变量(提供线程外取消阻塞的方法)
     QWaitCondition m_sleepCancelCondition;
+    LoginMode m_loginMode;
 };
 
 #endif // LIGHTDMGREETERQUEUEWRAPPER_H

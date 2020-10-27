@@ -421,6 +421,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     ui->userlist->setEnabled(true);
 
     m_loginMode = LOGIN_BY_USER_LIST;
+    m_promptMsgHandler.setLoginMode(LOGIN_BY_USER_LIST);
 
     UserInfo userinfo;
     if( ui->userlist->getCurrentSelected(userinfo) ){
@@ -464,6 +465,7 @@ void GreeterLoginWindow::resetUIForManualLogin()
     ui->userlist->setVisible(false);
 
     m_loginMode = LOGIN_BY_INPUT_USER;
+    m_promptMsgHandler.setLoginMode(LOGIN_BY_INPUT_USER);
 }
 
 void GreeterLoginWindow::startUpdateTimeTimer()
