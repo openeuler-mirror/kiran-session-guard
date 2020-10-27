@@ -68,7 +68,14 @@ void GreeterPromptMsgManager::addAuthenticationCompleteToQueue()
         authFailedMsg.type = LIGHTDM_MSG;
         if(m_havePrompted){
             if(!m_havePAMError){
-                authFailedMsg.text = tr("Incorrect password, please try again");
+                switch (m_loginMode) {
+                case LOGIN_BY_USER_LIST:
+                    authFailedMsg.text = tr("Incorrect password, please try again");
+                    break;
+                case LOGIN_BY_INPUT_USER:
+                    authFailedMsg.text = tr("Incorrect username or password");
+                    break;
+                }
             }
             reAuthentication = true;
         }else{
@@ -99,6 +106,11 @@ void GreeterPromptMsgManager::reset()
     m_messageShowTime = 0;
     m_havePAMError = false;
     m_havePrompted = false;
+}
+
+void GreeterPromptMsgManager::setLoginMode(LoginMode loginMode)
+{
+    m_loginMode = loginMode;
 }
 
 void GreeterPromptMsgManager::addMsgItemToQueue(const GreeterPromptMsgManager::LightdmPromptMsg &msg)

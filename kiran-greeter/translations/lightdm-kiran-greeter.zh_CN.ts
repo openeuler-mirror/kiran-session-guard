@@ -6,7 +6,7 @@
     <message>
         <location filename="../greeterlineedit.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -27,56 +27,56 @@
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="76"/>
+        <location filename="../greeterloginwindow.cpp" line="79"/>
         <source>session menu</source>
         <translatorcomment>会话菜单</translatorcomment>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="77"/>
+        <location filename="../greeterloginwindow.cpp" line="80"/>
         <source>virtual keyboard</source>
         <translatorcomment>虚拟键盘</translatorcomment>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="78"/>
+        <location filename="../greeterloginwindow.cpp" line="81"/>
         <source>power menu</source>
         <translatorcomment>电源菜单</translatorcomment>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="118"/>
+        <location filename="../greeterloginwindow.cpp" line="120"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="128"/>
+        <location filename="../greeterloginwindow.cpp" line="130"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="133"/>
+        <location filename="../greeterloginwindow.cpp" line="135"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="123"/>
+        <location filename="../greeterloginwindow.cpp" line="125"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="376"/>
+        <location filename="../greeterloginwindow.cpp" line="401"/>
         <source>Not Listed?</source>
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="417"/>
-        <location filename="../greeterloginwindow.cpp" line="524"/>
+        <location filename="../greeterloginwindow.cpp" line="443"/>
+        <location filename="../greeterloginwindow.cpp" line="551"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="429"/>
+        <location filename="../greeterloginwindow.cpp" line="455"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
@@ -96,12 +96,17 @@
 <context>
     <name>GreeterPromptMsgManager</name>
     <message>
-        <location filename="../greeterpromptmsgmanager.cpp" line="71"/>
+        <location filename="../greeterpromptmsgmanager.cpp" line="73"/>
         <source>Incorrect password, please try again</source>
         <translation>密码错误，请再次尝试</translation>
     </message>
     <message>
         <location filename="../greeterpromptmsgmanager.cpp" line="76"/>
+        <source>Incorrect username or password</source>
+        <translation>用户名或密码错误</translation>
+    </message>
+    <message>
+        <location filename="../greeterpromptmsgmanager.cpp" line="83"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -116,7 +121,7 @@
     <message>
         <location filename="../loginbutton.ui" line="51"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -124,12 +129,12 @@
     <message>
         <location filename="../userlistitem.ui" line="17"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../userlistitem.ui" line="77"/>
         <source>Tom Hardy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -137,7 +142,7 @@
     <message>
         <location filename="../userlistwidget.ui" line="23"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

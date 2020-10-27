@@ -22,11 +22,6 @@ enum ButtonType{
     BUTTON_RETURN,
 };
 
-enum LoginMode{
-    LOGIN_BY_USER_LIST,
-    LOGIN_BY_INPUT_USER
-};
-
 class QProcess;
 class QScreen;
 class QMenu;
