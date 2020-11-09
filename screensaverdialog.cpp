@@ -37,7 +37,9 @@ ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
+#ifdef VIRTUAL_KEYBOARD
     GreeterKeyboard::instance()->keyboardProcessExit();
+#endif
     delete ui;
 }
 
@@ -56,7 +58,7 @@ void ScreenSaverDialog::InitUI()
     connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,this,[=]{
         m_authProxy.response(true,ui->promptEdit->getText());
     });
-
+#ifdef VIRTUAL_KEYBOARD
     connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
         GreeterKeyboard* keyboard = GreeterKeyboard::instance();
         if( keyboard->isVisible() ){
@@ -66,7 +68,9 @@ void ScreenSaverDialog::InitUI()
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
-
+#else
+    ui->btn_keyboard->setVisible(false);
+#endif
     connect(ui->btn_switchuser,&QToolButton::pressed,this,[=]{
         QTimer::singleShot(2000,this,SLOT(responseCancelAndQuit()));
         if( !DBusApi::DisplayManager::switchToGreeter() ){

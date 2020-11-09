@@ -83,10 +83,12 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.process(app);
 
+#ifdef VIRTUAL_KEYBOARD
     ///初始化虚拟键盘
     if(!GreeterKeyboard::instance()->init()){
         qWarning() << "init keyboard failed";
     }
+#endif
 
     ///加载样式文件
     QFile file(DEFAULT_STYLE_PATH);
