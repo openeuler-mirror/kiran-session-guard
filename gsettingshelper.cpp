@@ -1,6 +1,7 @@
 #include "gsettingshelper.h"
 #include <gio/gio.h>
 #include <glib-object.h>
+#include <QDebug>
 
 GSettingsHelper::GSettingsHelper()
 {
@@ -30,14 +31,28 @@ int GSettingsHelper::getMateScalingFactor()
 {
     GSettings* settings = g_settings_new("org.mate.interface");
     if(!settings){
+        qWarning() << "g_settings_new org.mate.interface failed";
         return 0;
     }
-    GSettingsSchema* mateSchema = g_settings_schema_source_lookup(g_settings_schema_source_get_default(),"org.mate.interface",FALSE);
+
+    GSettingsSchemaSource* schemaSource = g_settings_schema_source_get_default();
+    if( schemaSource==nullptr ){
+        qWarning() << "g_settings_schema_source_get_default failed";
+        return 0;
+    }
+
+    GSettingsSchema* mateSchema = g_settings_schema_source_lookup(schemaSource,"org.mate.interface",TRUE);
+    if( mateSchema==nullptr ){
+        qWarning() << "g_settings_schema_source_lookup org.mate.interface failed";
+        return 0;
+    }
+
     if(!g_settings_schema_has_key(mateSchema,"window-scaling-factor")){
         g_settings_schema_unref(mateSchema);
         g_object_unref(settings);
         return 0;
     }
+
     int res = g_settings_get_int(settings,"window-scaling-factor");
     g_settings_schema_unref(mateSchema);
     g_object_unref(settings);
