@@ -3,6 +3,7 @@
 #include "greeterkeyboard.h"
 #include "gsettingshelper.h"
 #include "scalinghelper.h"
+#include "single/singleapplication.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
     }
 
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
-    QApplication app(argc, argv);
+    SingleApplication app(argc,argv);
     qInfo() << "arguments: " <<  app.arguments();
 
     ///翻译 filename+prefix+language name+suffix
