@@ -1,5 +1,5 @@
 #依赖的Qt模块
-QT += core gui x11extras dbus
+QT += core gui x11extras dbus network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 #目标文件名
@@ -10,7 +10,7 @@ TEMPLATE = app
 
 #宏定义
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += TEST
+#DEFINES += TEST
 
 #配置项 g++
 CONFIG += c++11
@@ -27,6 +27,8 @@ INCLUDEPATH += \
 SOURCES += \
     main.cpp \
     log.cpp \
+    single/singleapplication.cpp \
+    single/singleapplication_p.cpp \
     xlibhelper.cpp \
     screensaverdialog.cpp \
     useravatarwidget.cpp \
@@ -41,6 +43,8 @@ SOURCES += \
 #头文件
 HEADERS += \
     log.h \
+    single/singleapplication.h \
+    single/singleapplication_p.h \
     xlibhelper.h \
     screensaverdialog.h \
     useravatarwidget.h \
