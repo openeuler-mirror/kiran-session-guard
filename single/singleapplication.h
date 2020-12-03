@@ -25,9 +25,9 @@
 
 #include <QtCore/QtGlobal>
 #include <QtNetwork/QLocalSocket>
-#define QAPPLICATION_CLASS QApplication
+
 #ifndef QAPPLICATION_CLASS
-  #define QAPPLICATION_CLASS QCoreApplication
+  #define QAPPLICATION_CLASS QApplication
 #endif
 
 #include QT_STRINGIFY(QAPPLICATION_CLASS)
@@ -140,6 +140,7 @@ Q_SIGNALS:
 private:
     SingleApplicationPrivate *d_ptr;
     Q_DECLARE_PRIVATE(SingleApplication)
+    void abortSafely();
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(SingleApplication::Options)
