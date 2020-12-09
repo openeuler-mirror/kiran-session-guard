@@ -144,7 +144,6 @@ void GreeterLoginWindow::initUI()
         menuLeftTop.setX(btnRightTopPos.x()-menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y()-4-menuSize.height());
 
-        qInfo() << "btn_power clicked,popup menu " << menuLeftTop;
         m_powerMenu->popup(menuLeftTop);
     });
 
@@ -157,6 +156,14 @@ void GreeterLoginWindow::initUI()
     });
     connect(&m_greeter,&QLightDM::Greeter::autologinTimerExpired,[this](){
         m_greeter.authenticateAutologin();
+    });
+    ///重新认证按钮点击
+    connect(ui->btn_reAuth,&QPushButton::clicked,[this](){
+        if( m_loginMode==LOGIN_BY_USER_LIST ){
+            resetUIForUserListLogin();
+        }else{
+            resetUIForManualLogin();
+        }
     });
     ///连接输入框回车和按钮点击信号
     connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,
@@ -523,12 +530,21 @@ void GreeterLoginWindow::switchToPromptEdit()
 {
     ui->promptEdit->setVisible(true);
     ui->btn_autologin->setVisible(false);
+    ui->btn_reAuth->setVisible(false);
 }
 
 void GreeterLoginWindow::switchToAutoLogin()
 {
     ui->promptEdit->setVisible(false);
     ui->btn_autologin->setVisible(true);
+    ui->btn_reAuth->setVisible(false);
+}
+
+void GreeterLoginWindow::switchToReAuthentication()
+{
+    ui->promptEdit->setVisible(false);
+    ui->btn_autologin->setVisible(false);
+    ui->btn_reAuth->setVisible(true);
 }
 
 void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::MessageType type)
@@ -572,6 +588,8 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
         if(reAuthentication){
             startAuthUser(m_greeter.authenticationUser(),
                           ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
+        }else{
+            switchToReAuthentication();
         }
     }
 }
