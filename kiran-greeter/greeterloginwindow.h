@@ -56,6 +56,7 @@ private:
     static void capsLockStatusChanged(bool on,void* user_data);
     void switchToPromptEdit();
     void switchToAutoLogin();
+    void switchToReAuthentication();
 public slots:
     void slotUserActivated(const UserInfo&userInfo);
 private slots:

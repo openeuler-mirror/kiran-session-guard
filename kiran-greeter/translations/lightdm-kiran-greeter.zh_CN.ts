@@ -22,7 +22,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.ui" line="602"/>
+        <location filename="../greeterloginwindow.ui" line="524"/>
+        <source>Recertification</source>
+        <translation>重新认证</translation>
+    </message>
+    <message>
+        <location filename="../greeterloginwindow.ui" line="621"/>
         <source>Not List</source>
         <translation>未列出?</translation>
     </message>
@@ -65,18 +70,18 @@
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="401"/>
+        <location filename="../greeterloginwindow.cpp" line="409"/>
         <source>Not Listed?</source>
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="443"/>
-        <location filename="../greeterloginwindow.cpp" line="551"/>
+        <location filename="../greeterloginwindow.cpp" line="452"/>
+        <location filename="../greeterloginwindow.cpp" line="569"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../greeterloginwindow.cpp" line="455"/>
+        <location filename="../greeterloginwindow.cpp" line="464"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
