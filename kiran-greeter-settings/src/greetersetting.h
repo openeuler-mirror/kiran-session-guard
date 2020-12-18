@@ -10,6 +10,7 @@ namespace Ui
     class GreeterSetting;
 }
 
+class KiranSwitchButton;
 class GreeterSetting : public KiranTitlebarWindow
 {
     Q_OBJECT
@@ -23,6 +24,8 @@ private:
 private:
     Ui::GreeterSetting *ui;
     QGSettings m_mateInterfaceSettings;
+    KiranSwitchButton* m_hideUserListBtn;
+    KiranSwitchButton* m_enableManualLoginBtn;
 };
 
 #endif // GREETERSETTING_H
