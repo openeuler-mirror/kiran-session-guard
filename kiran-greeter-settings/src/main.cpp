@@ -4,6 +4,7 @@
 #include <QCommandLineParser>
 #include <QStringList>
 #include <QFile>
+#include <kiran-single-application.h>
 
 #include "greetersetting.h"
 #include "single/singleapplication.h"
@@ -14,7 +15,7 @@
 #define ENV_XDG_CURRENT_DESKTOP "XDG_CURRENT_DESKTOP"
 #define DEFAULT_STYLE_FILE   ":/themes/kiran-greeter-settings-normal.qss"
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter-settings.log");
@@ -22,8 +23,7 @@ int main (int argc, char *argv[])
 
 #ifndef TEST
     ///限制普通用户启动
-    if (getuid() != 0 || getgid() != 0)
-    {
+    if(getuid()!=0||getgid()!=0){
         qWarning() << "need run with admin privilege.";
         return 0;
     }
@@ -33,23 +33,21 @@ int main (int argc, char *argv[])
     ///      通过手动设置XDG_CURRENT_DESKTOP环境变量
     ///参数解析
     QStringList arguments;
-    for (int i = 0; i < argc; i++)
-    {
+    for(int i=0;i<argc;i++){
         arguments << argv[i];
     }
 
     QCommandLineParser parser;
-    QCommandLineOption envOption("xdg-desktop", "set environment to XDG_CURRENT_DESKTOP", "env", "");
+    QCommandLineOption envOption("xdg-desktop","set environment to XDG_CURRENT_DESKTOP","env","");
     parser.addOption(envOption);
     parser.addHelpOption();
 
     parser.process(arguments);
-    if (parser.isSet(envOption))
-    {
-        qputenv(ENV_XDG_CURRENT_DESKTOP, parser.value(envOption).toUtf8());
+    if(parser.isSet(envOption)){
+        qputenv(ENV_XDG_CURRENT_DESKTOP,parser.value(envOption).toUtf8());
     }
 
-    SingleApplication a(argc, argv);
+    KiranSingleApplication a(argc,argv);
 
     ///翻译
     QTranslator tsor;
@@ -60,12 +58,9 @@ int main (int argc, char *argv[])
 
     ///加载样式表
     QFile styleFile(DEFAULT_STYLE_FILE);
-    if (styleFile.open(QIODevice::ReadOnly))
-    {
+    if(styleFile.open(QIODevice::ReadOnly)){
         qApp->setStyleSheet(styleFile.readAll());
-    }
-    else
-    {
+    }else{
         qWarning() << "load style sheet failed";
     }
 
