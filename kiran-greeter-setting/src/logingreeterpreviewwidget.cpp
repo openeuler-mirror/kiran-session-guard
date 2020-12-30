@@ -2,7 +2,6 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
-#include "imagehelper.h"
 
 //#define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 #define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"

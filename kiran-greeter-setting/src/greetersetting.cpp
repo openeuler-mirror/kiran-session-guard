@@ -8,7 +8,7 @@
 #include <QFileDialog>
 #include <QValidator>
 #include <QMessageBox>
-#include <style-property-helper.h>
+#include <widget-property-helper.h>
 #include <kiran-switch-button.h>
 
 #define KEY_FONT_NAME "fontName"
@@ -87,7 +87,7 @@ void GreeterSetting::initUI()
             [this](QString background){
         ui->preview->updatePreviewBackground(background);
     });
-    Kiran::PropertyHelper::setButtonType(ui->btn_browse,Kiran::ButtonType::BUTTON_Default);
+    Kiran::WidgetPropertyHelper::setButtonType(ui->btn_browse,Kiran::ButtonType::BUTTON_Default);
     //选择图片触发
     connect(ui->btn_browse,&QToolButton::clicked,[this]{
         QFileDialog selectImageDialog;
