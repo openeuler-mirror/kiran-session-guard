@@ -1,4 +1,10 @@
 <RCC>
+    <!--主题-->
+    <qresource prefix="/">
+        <file>themes/lightdm-kiran-greeter-normal.qss</file>
+    </qresource>
+
+    <!--图片-->
     <qresource prefix="/">
         <file>images/arrow.png</file>
         <file>images/btn_enter.png</file>
@@ -44,4 +50,5 @@
         <file>images/switch users_select.png</file>
         <file>images/session_select.png</file>
     </qresource>
+
 </RCC>

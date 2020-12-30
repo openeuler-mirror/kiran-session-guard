@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QValidator>
 #include <QMessageBox>
+#include <style-property-helper.h>
+#include <kiran-switch-button.h>
 
 #define KEY_FONT_NAME "fontName"
 
@@ -42,7 +44,7 @@ void GreeterSetting::initUI()
     setTitle(tr("greeter settings"));
     setIcon(QIcon::fromTheme("preferences-system-login"));
 
-    resize(790,540);
+    resize(790,580);
 
     ///初始化左侧选择页列表
     connect(ui->tabList,&QListWidget::itemSelectionChanged,[this](){
@@ -52,19 +54,14 @@ void GreeterSetting::initUI()
         }
         ui->stackedWidget->setCurrentIndex(ui->tabList->row(selecteds.at(0)));
     });
-    ui->tabList->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tabList->setSelectionMode(QAbstractItemView::SingleSelection);
     QListWidgetItem* item;
-    TabItem* tabItem;
-    item = new QListWidgetItem(ui->tabList);
-    tabItem = new TabItem(":/images/appearance_setting.png",tr("appearance"),ui->tabList);
+    item = new QListWidgetItem(tr("appearance"),ui->tabList);
+    item->setIcon(QIcon(":/images/appearance_setting.png"));
     ui->tabList->addItem(item);
-    ui->tabList->setItemWidget(item,tabItem);
 
-    item = new QListWidgetItem(ui->tabList);
-    tabItem = new TabItem(":/images/user_login_setting.png",tr("user login"),ui->tabList);
+    item = new QListWidgetItem(tr("user login"),ui->tabList);
+    item->setIcon(QIcon(":/images/user_login_setting.png"));
     ui->tabList->addItem(item);
-    ui->tabList->setItemWidget(item,tabItem);
     ui->tabList->setCurrentRow(0);
 
     ///初始化下拉栏样式
@@ -90,6 +87,7 @@ void GreeterSetting::initUI()
             [this](QString background){
         ui->preview->updatePreviewBackground(background);
     });
+    Kiran::PropertyHelper::setButtonType(ui->btn_browse,Kiran::ButtonType::BUTTON_Default);
     //选择图片触发
     connect(ui->btn_browse,&QToolButton::clicked,[this]{
         QFileDialog selectImageDialog;
@@ -118,23 +116,22 @@ void GreeterSetting::initUI()
         }
     });
     //缩放模式
+    QString str;
     str = LightdmPrefs::instance()->scaleMode();
     int idx = ui->combo_mode->findData(str);
     if(idx==-1)
         qFatal("can't find scale mode combo box option,%s",str.toStdString().c_str()) ;
     if(str!="manual"){
-        ui->label_scaleFactor->setVisible(false);
-        ui->combo_scaleFactor->setVisible(false);
+        ui->combo_scaleFactor->setDisabled(true);
     }
     ui->combo_mode->setCurrentIndex(idx);
     connect(ui->combo_mode,QOverload<int>::of(&QComboBox::currentIndexChanged),[this](int idx){
-        bool showScaleFactor = false;
+        bool enableScaleFactor = false;
         QVariant userData = ui->combo_mode->itemData(idx);
         if(userData.toString()=="manual"){
-            showScaleFactor = true;
+            enableScaleFactor = true;
         }
-        ui->label_scaleFactor->setVisible(showScaleFactor);
-        ui->combo_scaleFactor->setVisible(showScaleFactor);
+        ui->combo_scaleFactor->setEnabled(enableScaleFactor);
         LightdmPrefs::instance()->setScaleMode(userData.toString());
     });
 
@@ -155,11 +152,13 @@ void GreeterSetting::initUI()
         LightdmPrefs::instance()->setEnableManualLogin(ui->check_enableManual->isChecked());
     });
 
+
     //隐藏用户列表
     ui->check_hideUserList->setChecked(LightdmPrefs::instance()->hideUserList());
     connect(ui->check_hideUserList,&QCheckBox::stateChanged,this,[this](int state){
         LightdmPrefs::instance()->setHideUserList(ui->check_hideUserList->isChecked());
     });
+
 
     //自动登录用户名
     ui->combo_autoLoginUser->setView(new QListView);
