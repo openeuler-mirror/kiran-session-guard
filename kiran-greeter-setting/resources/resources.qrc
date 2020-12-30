@@ -1,4 +1,9 @@
 <RCC>
+    <!--主题-->
+    <qresource prefix="/">
+        <file>themes/kiran-greeter-settings-normal.qss</file>
+    </qresource>
+    <!--图片-->
     <qresource prefix="/">
         <file>images/appearance_setting.png</file>
         <file>images/user_login_setting.png</file>
