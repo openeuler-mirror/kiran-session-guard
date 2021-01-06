@@ -55,16 +55,19 @@ class KiranSwitchButton;
 class KiranSidebarWidget;
 class QStackedWidget;
 class QLabel;
+class LoginGreeterPreviewWidget;
 class QComboBox;
 class QLineEdit;
 class QPushButton;
 class HoverTips;
-class KiranImageSelector;
 class GreeterSettingWindow : public KiranTitlebarWindow {
     Q_OBJECT
 public:
     explicit GreeterSettingWindow();
+
     ~GreeterSettingWindow();
+
+    virtual bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     void initUI();
@@ -73,6 +76,8 @@ private:
     QWidget *initPageAutoLogin();
 
     void initUserComboBox(QComboBox *userComboBox);
+
+    void updateSpecialFont();
 
     void saveAppearanceSettings();
     void resetAppearanceSettings();
@@ -94,15 +99,19 @@ private:
     KiranSidebarWidget *m_sidebarWidget;
     QStackedWidget *m_stackedWidget;
 
-    KiranImageSelector *m_imageSelector;  /** < 图片选择控件 **/
-    QComboBox *m_comboScaleMode;          /** < 缩放下拉框 */
-    QComboBox *m_comboScaleFactor;        /** < 缩放比例下拉框 */
+    QLabel *m_labelAppearance;          /** < 外观设置标题 */
+    using GreeterPreview = LoginGreeterPreviewWidget;
+    GreeterPreview *m_greeterPreview;   /** < 登录界面预览控件 */
+    QPushButton *m_btnBrowse;           /** < 选择背景图片按钮 */
+    QComboBox *m_comboScaleMode;        /** < 缩放下拉框 */
+    QComboBox *m_comboScaleFactor;      /** < 缩放比例下拉框 */
     using SwitchButton = KiranSwitchButton;
-    SwitchButton *m_enableManualSwitch;   /** < 启用手动登录开关 */
-    SwitchButton *m_hideUserListSwitch;   /** < 隐藏用户列表开关 */
+    SwitchButton *m_enableManualSwitch; /** < 启用手动登录开关 */
+    SwitchButton *m_hideUserListSwitch; /** < 隐藏用户列表开关 */
 
-    QComboBox *m_comboAutoLoginAccount;   /** < 自动登录账户下拉框 */
-    QLineEdit *m_editAutoLoginDelay;      /** < 自动登录延时输入框 */
+    QLabel *m_labelAutomaticLogon;      /** < 自定登录设置标题 */
+    QComboBox *m_comboAutoLoginAccount; /** < 自动登录账户下拉框 */
+    QLineEdit *m_editAutoLoginDelay;    /** < 自动登录延时输入框 */
 };
 
 #endif // GREETERSETTING_H
