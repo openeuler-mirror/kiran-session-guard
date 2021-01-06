@@ -7,33 +7,3 @@ QWidget#preview{
 QWidget#tab{
     border-right:1px solid rgba(255,255,255,25);
 }
-/*******************Label***********************/
-QLabel#label_appearence{
-    margin-bottom:18px;
-}
-QLabel#label_userlogin{
-    margin-bottom:18px;
-}
-QLabel#label_selectPix{
-    margin-top:20px;
-    margin-bottom:10;
-}
-QLabel#label_selectMode{
-    width:84px;
-    height:14px;
-    margin-top:15px;
-    margin-bottom:8px;
-}
-QLabel#label_scaleFactor{
-    width:84px;
-    height:14px;
-    margin-top:10px;
-    margin-bottom:5px;
-}
-QLabel#label_autoLoginUserName{
-    margin-bottom:10px;
-}
-QLabel#label_autoLoginDelay{
-    margin-top:20px;
-    margin-bottom:10px;
-}

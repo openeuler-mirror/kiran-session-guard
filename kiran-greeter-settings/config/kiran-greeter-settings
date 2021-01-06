@@ -1,3 +1,0 @@
-#!/bin/bash
-
-/usr/bin/pkexec /usr/sbin/kiran-greeter-settings --xdg-desktop=$XDG_CURRENT_DESKTOP

@@ -49,7 +49,7 @@ add_executable(${PROJECT_NAME}
         ${RESOURCES}
         ${GREETER_SETTINS_QM_FILES})
 
-include_directories(${CMAKE_BINARY_DIR})
+include_directories("${CMAKE_BINARY_DIR}")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ../public
@@ -67,18 +67,8 @@ target_link_libraries(${PROJECT_NAME}
 
 # 安装
 #安装kiran-greeter-settings
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR}/)
-
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR})
 #翻译文件
-install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations/)
-
-#polkit提权策略
-install(FILES config/com.kiran.kiran-greeter-settings.policy DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
-
+install(FILES ${QML_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
 #桌面快捷方式
-install(FILES config/kiran-greeter-settings.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/applications/)
-
-#shell
-install(FILES config/kiran-greeter-settings
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/
-        PERMISSIONS WORLD_EXECUTE WORLD_READ OWNER_WRITE)
+install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)

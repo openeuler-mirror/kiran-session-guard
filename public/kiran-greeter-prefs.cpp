@@ -43,6 +43,7 @@ void KiranGreeterPrefs::handlePropertiesChanged(QDBusMessage msg)
     QList<QVariant> arguments = msg.arguments();
     QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
     for(auto iter=changedProps.begin();iter!=changedProps.end();iter++){
+        qInfo() << iter.key() << iter.value();
         emit propertyChanged(iter.key(),iter.value());
     }
 }

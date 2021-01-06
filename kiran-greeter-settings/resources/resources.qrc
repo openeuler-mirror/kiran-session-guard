@@ -12,5 +12,9 @@
         <file>images/on.png</file>
         <file>images/default_background.jpg</file>
         <file>images/user_180.png</file>
+        <file>images/err.svg</file>
+        <file>images/info.svg</file>
+        <file>images/suc.svg</file>
+        <file>images/warning.svg</file>
     </qresource>
 </RCC>
