@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(kiran-greeter-settings)
+project(kiran-greeter-setting)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,12 +29,13 @@ set(CMAKE_AUTORCC ON)
 file(GLOB_RECURSE PUBLIC_CPP "../public/*.cpp")
 file(GLOB_RECURSE PUBLIC_HEADER "../public/*.h")
 
-file(GLOB_RECURSE SRC_CPP "src/*.cpp")
-file(GLOB_RECURSE SRC_HEADER "src/*.h")
-file(GLOB_RECURSE SRC_FORMS "src/*.ui")
+file(GLOB_RECURSE SETTINGS_SRC_CPP "src/*.cpp")
+file(GLOB_RECURSE SETTINGS_SRC_HEADER "src/*.h")
+
+file(GLOB_RECURSE SETTINGS_SRC_FORMS "src/*.ui")
 
 # 资源文件
-file(GLOB_RECURSE RESOURCES "resources/*.qrc")
+file(GLOB_RECURSE SETTINGS_RESOURCES "resources/*.qrc")
 
 # 翻译
 set(TS_FILES "translations/kiran-greeter-settings.zh_CN.ts")
@@ -43,11 +44,11 @@ qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 add_executable(${PROJECT_NAME}
         ${PUBLIC_CPP}
         ${PUBLIC_HEADER}
-        ${SRC_CPP}
-        ${SRC_HEADER}
-        ${SRC_FORMS}
-        ${RESOURCES}
-        ${GREETER_SETTINS_QM_FILES})
+        ${SETTINGS_SRC_CPP}
+        ${SETTINGS_SRC_HEADER}
+        ${SETTINGS_SRC_FORMS}
+        ${SETTINGS_RESOURCES}
+        ${SETTINGS_QM_FILES})
 
 include_directories("${CMAKE_BINARY_DIR}")
 
@@ -67,8 +68,8 @@ target_link_libraries(${PROJECT_NAME}
 
 # 安装
 #安装kiran-greeter-settings
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
 #翻译文件
-install(FILES ${QML_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
+install(FILES ${SETTINGS_QM_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
 #桌面快捷方式
 install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)

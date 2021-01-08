@@ -12,6 +12,11 @@
 class KiranGreeterPrefs : public ComKylinsecKiranSystemDaemonGreeterSettingsInterface{
     Q_OBJECT
 public:
+    enum ScaleModeEnum {
+        ScaleMode_Auto = 0,
+        ScaleMode_Manual,
+        ScaleMode_Disable
+    };
     static KiranGreeterPrefs* instance();
     ~KiranGreeterPrefs();
 
