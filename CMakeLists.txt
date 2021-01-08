@@ -15,6 +15,7 @@ find_package(Qt5 COMPONENTS
         Widgets
         DBus
         X11Extras
+        DBus
         LinguistTools)
 
 # 第三方依赖
@@ -47,6 +48,8 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 set(TS_FILES "translations/lightdm-kiran-greeter.zh_CN.ts")
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
+include_directories(${CMAKE_BINARY_DIR})
+
 add_executable(${PROJECT_NAME}
         ${PUBLIC_CPP}
         ${PUBLIC_HEADER}
@@ -55,8 +58,6 @@ add_executable(${PROJECT_NAME}
         ${SRC_FORMS}
         ${QM_FILES}
         ${RESOURCES})
-
-include_directories("${CMAKE_BINARY_DIR}")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ./public/
