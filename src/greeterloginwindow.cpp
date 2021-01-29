@@ -440,16 +440,17 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
 
     mouseEvent = dynamic_cast<QMouseEvent*>(event);
 
-    QPoint mousePressGlobal = mouseEvent->globalPos();
+    QPoint mapedPoint = this->mapFromGlobal(mouseEvent->globalPos());
+
     QRect m_sessionMenuGemometry = m_sessionMenu->geometry();
     QRect m_powerMenuGeometry = m_powerMenu->geometry();
 
-    if( (!m_sessionMenuGemometry.contains(mousePressGlobal)) && m_sessionMenu->isVisible() ){
+    if( (!m_sessionMenuGemometry.contains(mapedPoint)) && m_sessionMenu->isVisible() ){
         m_sessionMenu->hide();
         needFilter = true;
         qInfo() << " session menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
     }
-    if( (!m_powerMenuGeometry.contains(mousePressGlobal)) && m_powerMenu->isVisible() ){
+    if( (!m_powerMenuGeometry.contains(mapedPoint)) && m_powerMenu->isVisible() ){
         m_powerMenu->hide();
         needFilter = true;
         qInfo() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
@@ -457,7 +458,7 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
     if(needFilter){
         qInfo() << "session: " << m_sessionMenuGemometry;
         qInfo() << "menu:    " << m_powerMenuGeometry;
-        qInfo() << "pos:     " << mousePressGlobal;
+        qInfo() << "pos:     " << mapedPoint;
     }
     return needFilter;
 }
