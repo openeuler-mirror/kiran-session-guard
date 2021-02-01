@@ -2,7 +2,6 @@
 #include "tabitem.h"
 #include "dbusapi.h"
 #include "kiran-greeter-prefs.h"
-#include "logingreeterpreviewwidget.h"
 #include "hover-tips.h"
 
 #include <QLabel>
@@ -14,12 +13,14 @@
 #include <QComboBox>
 #include <QApplication>
 #include <QLineEdit>
+#include <QDir>
 #include <QStandardPaths>
 #include <widget-property-helper.h>
 
 #include <kiran-switch-button.h>
 #include <kiran-sidebar-widget.h>
 #include <kiran-message-box.h>
+#include <kiran-image-selector.h>
 
 #include "kiran-greeter-prefs.h"
 
@@ -30,7 +31,6 @@ enum GreeterSettingsPageEnum {
     GreeterSettings_Appearance,
     GreeterSettings_Autologin
 };
-
 
 GreeterSettingWindow::GreeterSettingWindow() :
         KiranTitlebarWindow()
@@ -117,9 +117,6 @@ void GreeterSettingWindow::initUI()
     m_sidebarWidget->setCurrentRow(0);
     resetAppearanceSettings();
     resetAutoLoginSettings();
-
-    /* 更新特殊字体要求的控件 */
-    updateSpecialFont();
 }
 
 QWidget *GreeterSettingWindow::initPageAutoLogin()
@@ -127,31 +124,23 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     auto pageAutoLogin = new QWidget(this);
 
     auto mainLayout = new QVBoxLayout(pageAutoLogin);
-    mainLayout->setContentsMargins(12, 0, 0, 0);
+    mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
-
-    /* 自动登录设置标题 */
-    m_labelAutomaticLogon = new QLabel(tr("Automatic Logon"), this);
-    m_labelAutomaticLogon->setObjectName("label_automaticLogon");
-    m_labelAutomaticLogon->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    m_labelAutomaticLogon->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_labelAutomaticLogon->setStyleSheet("QLabel{margin-bottom:18px;}");
-    m_labelAutomaticLogon->installEventFilter(this);
-    mainLayout->addWidget(m_labelAutomaticLogon, 0, Qt::AlignLeft | Qt::AlignTop);
 
     /* 自动登录账户 */
     auto labelAutoLogonAccount = new QLabel(tr("auto login account(take effect after restart)"), this);
     labelAutoLogonAccount->setObjectName("label_autoLogonAccount");
     labelAutoLogonAccount->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelAutoLogonAccount->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelAutoLogonAccount->setStyleSheet("QLabel{margin-bottom:8px; margin-top:15px;}");
+    labelAutoLogonAccount->setStyleSheet("QLabel{margin-bottom:8px;}");
     mainLayout->addWidget(labelAutoLogonAccount);
 
     m_comboAutoLoginAccount = new QComboBox(this);
-    m_comboAutoLoginAccount->setFixedSize(280, 40);
+    m_comboAutoLoginAccount->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboAutoLoginAccount->setFixedHeight(40);
     m_comboAutoLoginAccount->setIconSize(QSize(24, 24));
     initUserComboBox(m_comboAutoLoginAccount);
-    mainLayout->addWidget(m_comboAutoLoginAccount, 0, Qt::AlignLeft);
+    mainLayout->addWidget(m_comboAutoLoginAccount, 0);
 
     /* 自动登录延时 */
     auto labelAutoLogonDealy = new QLabel(tr("auto login dealy(seconds)(take effect after restart)"), this);
@@ -161,10 +150,11 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     mainLayout->addWidget(labelAutoLogonDealy);
 
     m_editAutoLoginDelay = new QLineEdit(this);
-    m_editAutoLoginDelay->setFixedSize(280, 40);
+    m_editAutoLoginDelay->setFixedHeight(40);
+    m_editAutoLoginDelay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
     QValidator *validator = new QIntValidator(0, INT_MAX, this);
     m_editAutoLoginDelay->setValidator(validator);
-    mainLayout->addWidget(m_editAutoLoginDelay, 0, Qt::AlignLeft);
+    mainLayout->addWidget(m_editAutoLoginDelay, 0);
 
     /* 占位 */
     auto mainLayoutSpacerItem = new QSpacerItem(10, 20,
@@ -224,60 +214,19 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 {
     auto pageAppearance = new QWidget(this);
     auto mainLayout = new QVBoxLayout(pageAppearance);
-    mainLayout->setContentsMargins(12, 0, 0, 0);
+    mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
 
-    /* 外观设置标题 */
-    m_labelAppearance = new QLabel(tr("Appearance Settings"), this);
-    m_labelAppearance->setObjectName("label_appearance");
-    m_labelAppearance->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    m_labelAppearance->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    m_labelAppearance->setStyleSheet("QLabel{margin-bottom:18px;}");
-    m_labelAppearance->installEventFilter(this);
-    mainLayout->addWidget(m_labelAppearance, 0, Qt::AlignLeft | Qt::AlignTop);
-
-    /* 登录外观预览 */
-    m_greeterPreview = new LoginGreeterPreviewWidget(this);
-    m_greeterPreview->setObjectName("loginGreeterPreviewWidget");
-    m_greeterPreview->updatePreviewBackground(KiranGreeterPrefs::instance()->backgroundFile());
-    mainLayout->addWidget(m_greeterPreview, 0, Qt::AlignLeft);
-
-    /* 更换背景 */
-    auto labelSelectImage = new QLabel(tr("Select Image"), this);
-    labelSelectImage->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    labelSelectImage->setObjectName("label_selectImage");
-    labelSelectImage->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelSelectImage->setStyleSheet("QLabel{margin-top:15px;margin-bottom:8px;}");
-    mainLayout->addWidget(labelSelectImage);
-
-    m_btnBrowse = new QPushButton(tr("Browse"), this);
-    m_btnBrowse->setFixedSize(70, 30);
-    m_btnBrowse->setObjectName("btn_Browse");
-    Kiran::WidgetPropertyHelper::setButtonType(m_btnBrowse, Kiran::BUTTON_Default);
-    mainLayout->addWidget(m_btnBrowse);
-
-    connect(m_btnBrowse, &QPushButton::clicked, [this] {
-        QFileDialog selectImageDialog;
-        QString fileName = QFileDialog::getOpenFileName(this, tr("select greeter background"),
-                                                        "/usr/share/backgrounds/",
-                                                        tr("image files(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)"));
-        if (!fileName.isEmpty()) {
-            QFile file(fileName);
-            QFileInfo fileInfo(fileName);
-            /* 判断文件是否在用户目录,提示是否需要选择,可能登录界面加载不到 */
-            if (fileName.startsWith(QStandardPaths::locate(QStandardPaths::HomeLocation, ""))) {
-                KiranMessageBox::KiranStandardButton standardButton;
-                standardButton = KiranMessageBox::message(this,
-                                                          tr("Warning"),
-                                                          tr("The login greeter may not be able to read the file normally. Do you want to continue?"),
-                                                          KiranMessageBox::Yes | KiranMessageBox::No);
-                if( standardButton == KiranMessageBox::No ){
-                    return;
-                }
-            }
-            m_greeterPreview->updatePreviewBackground(fileName);
-        }
-    });
+    /* 外观设置 */
+    /* 图片选择控件 */
+    m_imageSelector = new KiranImageSelector(this);
+    m_imageSelector->setFixedHeight(148);
+    mainLayout->addWidget(m_imageSelector);
+    QDir dir("/usr/share/backgrounds/kiran/");
+    QFileInfoList fileInfoList = dir.entryInfoList(QStringList()<<"*.jpg"<<"*.png",QDir::Files);
+    for( QFileInfo fileInfo:fileInfoList ){
+        m_imageSelector->addImage(fileInfo.absoluteFilePath());
+    }
 
     /* 缩放模式 */
     auto labelScaleMode = new QLabel(tr("Scale Mode"), this);
@@ -289,11 +238,12 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_comboScaleMode = new QComboBox(this);
     m_comboScaleMode->setObjectName("combo_scaleMode");
-    m_comboScaleMode->setFixedSize(280, 40);
+    m_comboScaleMode->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboScaleMode->setFixedHeight(40);
     m_comboScaleMode->addItem(tr("auto"), KiranGreeterPrefs::ScaleMode_Auto);
     m_comboScaleMode->addItem(tr("manual"), KiranGreeterPrefs::ScaleMode_Manual);
     m_comboScaleMode->addItem(tr("disable"), KiranGreeterPrefs::ScaleMode_Disable);
-    mainLayout->addWidget(m_comboScaleMode, 0, Qt::AlignLeft);
+    mainLayout->addWidget(m_comboScaleMode, 0);
 
     connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int idx) {
         bool enableScaleFactor = false;
@@ -314,16 +264,16 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_comboScaleFactor = new QComboBox(this);
     m_comboScaleFactor->setObjectName("combo_scaleFactor");
-    m_comboScaleFactor->setFixedSize(280, 40);
+    m_comboScaleFactor->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboScaleFactor->setFixedHeight(40);
     m_comboScaleFactor->addItem("100%", 1);
     m_comboScaleFactor->addItem("200%", 2);
-    mainLayout->addWidget(m_comboScaleFactor, 0, Qt::AlignLeft);
+    mainLayout->addWidget(m_comboScaleFactor, 0);
 
     /* 手动登录 */
     auto widgetManualLogin = new QWidget(this);
     widgetManualLogin->setObjectName("widget_manualLogin");
-    widgetManualLogin->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    widgetManualLogin->setFixedWidth(280);
+    widgetManualLogin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     mainLayout->addWidget(widgetManualLogin);
 
     auto layoutManualLogin = new QHBoxLayout(widgetManualLogin);
@@ -347,8 +297,7 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     /* 用户列表登录设置 */
     auto widgetUserListLogin = new QWidget(this);
     widgetUserListLogin->setObjectName("widget_hideUserList");
-    widgetUserListLogin->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    widgetUserListLogin->setFixedWidth(280);
+    widgetUserListLogin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     mainLayout->addWidget(widgetUserListLogin);
 
     auto layoutUserList = new QHBoxLayout(widgetUserListLogin);
@@ -367,7 +316,8 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_hideUserListSwitch = new KiranSwitchButton(this);
     m_hideUserListSwitch->setObjectName("btn_hideUserList");
-    layoutUserList->addWidget(m_hideUserListSwitch);
+    m_hideUserListSwitch->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+    layoutUserList->addWidget(m_hideUserListSwitch,0,Qt::AlignVCenter|Qt::AlignRight);
 
     /* 占位 */
     auto mainLayoutSpacerItem = new QSpacerItem(10, 20,
@@ -424,27 +374,6 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutButtonBox->setStretch(4, 5);
 
     return pageAppearance;
-}
-
-
-bool GreeterSettingWindow::eventFilter(QObject *watched, QEvent *event)
-{
-    if ((watched == m_labelAutomaticLogon || watched == m_labelAutomaticLogon) &&
-        (event->type() == QEvent::ApplicationFontChange)) {
-        updateSpecialFont();
-        return true;
-    }
-    return KiranTitlebarWindow::eventFilter(watched, event);
-}
-
-void GreeterSettingWindow::updateSpecialFont()
-{
-    QFont font = QApplication::font();
-    font.setPointSize(font.pointSize() * 2);
-
-
-    m_labelAppearance->setFont(font);
-    m_labelAutomaticLogon->setFont(font);
 }
 
 void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
@@ -520,7 +449,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     QDBusPendingReply<> reply;
     bool hasError = false;
 
-    reply = KiranGreeterPrefs::instance()->SetBackgroundFile(m_greeterPreview->backgroundPath());
+    reply = KiranGreeterPrefs::instance()->SetBackgroundFile(m_imageSelector->selectedImage());
     reply.waitForFinished();
     if (reply.isError()) {
         qInfo() << "SetBackgroundFile failed," << reply.error();
@@ -619,7 +548,7 @@ void GreeterSettingWindow::resetAppearanceSettings()
 {
     GreeterSettingInfo::AppearanceSetting appearanceSetting = getAppearanceSettingInfoFromBackend();
 
-    m_greeterPreview->updatePreviewBackground(appearanceSetting.background);
+    m_imageSelector->setSelectedImage(appearanceSetting.background);
     m_hideUserListSwitch->setChecked(appearanceSetting.hideUserList);
     m_enableManualSwitch->setChecked(appearanceSetting.allowManualLogin);
     int idx = m_comboScaleMode->findData(appearanceSetting.scaleMode);
@@ -680,7 +609,7 @@ GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSetting
 {
     GreeterSettingInfo::AppearanceSetting appearanceSetting;
 
-    appearanceSetting.background = m_greeterPreview->backgroundPath();
+    appearanceSetting.background = m_imageSelector->selectedImage();
     appearanceSetting.scaleFactor = m_comboScaleFactor->currentData().toUInt();
     appearanceSetting.scaleMode = m_comboScaleMode->currentData().toUInt();
     appearanceSetting.allowManualLogin = m_enableManualSwitch->isChecked();
