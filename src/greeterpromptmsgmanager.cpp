@@ -1,3 +1,4 @@
+#if 0
 #include "greeterpromptmsgmanager.h"
 #include <QDebug>
 #include <QMetaType>
@@ -195,7 +196,7 @@ void GreeterPromptMsgManager::run()
             }
             /// 分发消息
             switch (msg.type) {
-            case LIGHTDM_MSG:
+            case LIGHTDM_MSG:GreeterPromptMsgManager
                 m_messageShowTime = uptime;
                 if(msg.info.msgType==QLightDM::Greeter::MessageType::MessageTypeError){
                     m_havePAMError = true;
@@ -214,3 +215,4 @@ void GreeterPromptMsgManager::run()
         }
     }
 }
+#endif

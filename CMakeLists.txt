@@ -56,6 +56,7 @@ include_directories("${CMAKE_BINARY_DIR}")
 target_include_directories(${PROJECT_NAME} PRIVATE
         ./public/
         ./src/
+        ./src/auth/
         ${LIGHTDM_QT5_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}

@@ -87,7 +87,6 @@ void GreeterSetting::initUI()
             [this](QString background){
         ui->preview->updatePreviewBackground(background);
     });
-    Kiran::WidgetPropertyHelper::setButtonType(ui->btn_browse,Kiran::ButtonType::BUTTON_Default);
     //选择图片触发
     connect(ui->btn_browse,&QToolButton::clicked,[this]{
         QFileDialog selectImageDialog;
@@ -116,7 +115,6 @@ void GreeterSetting::initUI()
         }
     });
     //缩放模式
-    QString str;
     str = LightdmPrefs::instance()->scaleMode();
     int idx = ui->combo_mode->findData(str);
     if(idx==-1)
