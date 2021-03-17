@@ -1,39 +1,36 @@
-#include "greeterloginwindow.h"
-#include "ui_greeterloginwindow.h"
+
 #include <QPainter>
 #include <QGraphicsBlurEffect>
-#include <QGraphicsDropShadowEffect>
-#include <QProcess>
 #include <QDebug>
 #include <QDesktopWidget>
-#include <QDesktopWidget>
-#include <QVector>
 #include <QMouseEvent>
 #include <QMenu>
-#include "greeterkeyboard.h"
-#include "greetersetting.h"
-#include "greetermenuitem.h"
 #include <QScreen>
-#include <QAction>
 #include <QSessionManager>
 #include <QLightDM/SessionsModel>
 #include <QWidgetAction>
 #include <QDateTime>
 #include <QTimer>
 #include <QButtonGroup>
-#include <libintl.h>
+
+#include "greeterkeyboard.h"
+#include "greetersetting.h"
+#include "greetermenuitem.h"
+#include "greeterloginwindow.h"
+#include "ui_greeterloginwindow.h"
 
 Q_DECLARE_METATYPE(UserInfo);
+using namespace QLightDM;
 GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
     QWidget(parent)
   , ui(new Ui::GreeterLoginWindow)
   , m_greeter(this)
-  , m_promptMsgHandler(&m_greeter)
+  , m_authQueue(this)
   , m_powerMenu(nullptr)
   , m_sessionMenu(nullptr)
   , m_noListButotnVisiable(true)
   , m_showUserList(false)
-  , m_loginMode(LOGIN_BY_USER_LIST)
+  , m_loginMode(LOGIN_MODE_USER_LIST)
   , m_buttonType(BUTTON_SWITCH_TO_MANUAL_LOGIN)
 {
     qRegisterMetaType<UserInfo>("UserInfo");
@@ -159,7 +156,7 @@ void GreeterLoginWindow::initUI()
     });
     ///重新认证按钮点击
     connect(ui->btn_reAuth,&QPushButton::clicked,[this](){
-        if( m_loginMode==LOGIN_BY_USER_LIST ){
+        if( m_loginMode==LOGIN_MODE_USER_LIST ){
             resetUIForUserListLogin();
         }else{
             resetUIForManualLogin();
@@ -186,8 +183,9 @@ void GreeterLoginWindow::initUI()
 #endif
     ///用户列表请求重置用户选择登录界面
     connect(ui->userlist,&UserListWidget::sigRequestResetUI,[this]{
-        Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
-        resetUIForUserListLogin();
+        if( m_loginMode==LOGIN_MODE_USER_LIST ){
+            resetUIForUserListLogin();
+        }
     });
     startUpdateTimeTimer();
 }
@@ -247,41 +245,104 @@ void GreeterLoginWindow::initMenu()
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
-#ifdef TEST
-    ui->userlist->JustForTest(10);
-#endif
     //连接到Lightdm
     if( !m_greeter.connectSync() ){
         qWarning("connect to lightdm greeter failed.");
         return;
     }
-    qInfo() << "GreeterPromptMsgManager start";
-    m_promptMsgHandler.start();
-    ///通过连接到处理Prompt,Message的队列提供的信号
-    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::showMessage,
-            this,&GreeterLoginWindow::slotShowMessage);
-    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::showPrompt,
-            this,&GreeterLoginWindow::slotShowprompt);
-    connect(&m_promptMsgHandler,&GreeterPromptMsgManager::authenticationComplete,
-            this,&GreeterLoginWindow::slotAuthenticationComplete);
+
+    ///将lightdm的认证消息发往队列，从队列中获取事件，而不是直接从lightdm的认证接口
+    connect(&m_greeter,&Greeter::showMessage,[this](QString text, QLightDM::Greeter::MessageType type){
+        if( type==Greeter::MessageTypeError ){
+            m_havePAMError = true;
+        }
+        AuthMsgQueue::PamMessage msg;
+        msg.text = text;
+        msg.type = AuthMsgQueue::PMT_MSG;
+        msg.extra.msgType = type==Greeter::MessageTypeInfo?AuthMsgQueue::MESSAGE_TYPE_INFO:AuthMsgQueue::MESSAGE_TYPE_ERROR;
+        m_authQueue.append(msg);
+    });
+    connect(&m_greeter,&Greeter::showPrompt,[this](QString text, QLightDM::Greeter::PromptType type){
+        if( !m_havePrompted ){
+            m_havePrompted = true;
+        }
+        AuthMsgQueue::PamMessage msg;
+        msg.text = text;
+        msg.type = AuthMsgQueue::PMT_PROMPT;
+        msg.extra.promptType = type==Greeter::PromptTypeQuestion?AuthMsgQueue::PROMPT_TYPE_QUESTION:AuthMsgQueue::PROMPT_TYPE_SECRET;
+        m_authQueue.append(msg);
+    });
+    connect(&m_greeter,&Greeter::authenticationComplete,[this](){
+        AuthMsgQueue::PamMessage authCompleteMsg;
+        authCompleteMsg.type = AuthMsgQueue::PMT_AUTHENTICATION_COMPLETE;
+        authCompleteMsg.extra.completeResult.isSuccess = m_greeter.isAuthenticated();
+        bool reAuth = false;
+
+        if( !m_greeter.isAuthenticated() ){
+            AuthMsgQueue::PamMessage errorMsg;
+            errorMsg.type = AuthMsgQueue::PMT_MSG;
+            errorMsg.extra.msgType = AuthMsgQueue::MESSAGE_TYPE_ERROR;
+            ///如果存在过prompt消息但是没有error消息，伪造一个错误消息
+            ///存在过prompt消息才会开始重新认证，避免没有prompt反复调用pam开始认证，陷入死循环
+            if(m_havePrompted){
+                if( !m_havePAMError ){
+                    switch (m_loginMode) {
+                        case LOGIN_MODE_USER_LIST:
+                            errorMsg.text = tr("Incorrect password, please try again");
+                            break;
+                        case LOGIN_MODE_MANUAL:
+                            errorMsg.text = tr("Incorrect username or password");
+                            break;
+                    }
+                }
+                reAuth = true;
+            }else{
+                ///没存在过prompt消息，也没有error消息，抽象点的提示给用户
+                if( !m_havePAMError ){
+                    errorMsg.text = tr("Failed to authenticate");
+                }
+            }
+            if( !errorMsg.text.isEmpty() ){
+                m_authQueue.append(errorMsg);
+            }
+        }
+        authCompleteMsg.extra.completeResult.reAuthentication = reAuth;
+        m_authQueue.append(authCompleteMsg);
+    });
+    m_authQueue.startDispatcher();
+
+    ///连接到队列发出的事件，进行处理
+    qInfo() << "connect showMessage:" << connect(&m_authQueue,&AuthMsgQueue::showMessage,this,&GreeterLoginWindow::slotShowMessage);
+    qInfo() << "connect showPrompt:" << connect(&m_authQueue,&AuthMsgQueue::showPrompt,this,&GreeterLoginWindow::slotShowprompt);
+    qInfo() << "connect Authticate Complete:" << connect(&m_authQueue,&AuthMsgQueue::authenticateComplete,this,&GreeterLoginWindow::slotAuthenticationComplete);
+
     ///处理用户个数从0到1个和1到0的情况
-    qInfo() << "connect rowsInserted: " << connect(&m_userModel,&QLightDM::UsersModel::rowsInserted,[this](const QModelIndex &parent, int first, int last){
+    bool bres;
+    bres = connect(&m_userModel,&QLightDM::UsersModel::rowsInserted,[this](const QModelIndex &parent, int first, int last){
         ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
         ///显示返回按钮
         qInfo() << "rowInserted:" << m_userModel.rowCount(QModelIndex());
         if((m_userModel.rowCount(QModelIndex())==1)&&m_showUserList
-                &&m_loginMode==LOGIN_BY_INPUT_USER&&!m_greeter.isAuthenticated()){
+                &&m_loginMode==LOGIN_MODE_MANUAL&&!m_greeter.isAuthenticated()){
             qInfo() << "setReturn visible true";
             ui->btn_notListAndCancel->setVisible(true);
         }
     });
-    qInfo() << "connect rowsRemoved: " << connect(&m_userModel,&QLightDM::UsersModel::rowsRemoved,[this](const QModelIndex &parent, int first, int last){
+    if( !bres ){
+        qWarning() << "connect rowsInserted failed!";
+    }
+
+    bres = connect(&m_userModel,&QLightDM::UsersModel::rowsRemoved,[this](const QModelIndex &parent, int first, int last){
         qInfo() << "rowRemoved:" << m_userModel.rowCount(QModelIndex());
         if((m_userModel.rowCount(QModelIndex())==0)){
             ///TODO:是否需要判断配置文件中能否手动登录
             resetUIForManualLogin();
         }
     });
+    if( !bres ){
+        qInfo() << "connect rowsRemoved failed!";
+    }
+
     ui->userlist->loadUserList();
 }
 
@@ -295,7 +356,8 @@ void GreeterLoginWindow::initSettings()
         m_showUserList = !GreeterSetting::instance()->getUserListHiding();
     }
 
-    m_promptMsgHandler.setMessageInterval(GreeterSetting::instance()->messageDisplayInterval());
+
+    m_authQueue.setMsgInterval(GreeterSetting::instance()->messageDisplayInterval());
 
     if(m_showUserList && m_userModel.rowCount(QModelIndex())>0 ){
         resetUIForUserListLogin();
@@ -357,7 +419,7 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
     return needFilter;
 }
 
-void GreeterLoginWindow::setTips(QLightDM::Greeter::MessageType type, const QString &text)
+void GreeterLoginWindow::setTips(AuthMsgQueue::MessageType type, const QString &text)
 {
     QString colorText = QString("<font color=%1>%2</font>")
                         .arg("white")
@@ -374,7 +436,12 @@ void GreeterLoginWindow::startAuthUser(const QString &username,QString userIcon)
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
-    m_promptMsgHandler.reset();
+
+    m_authQueue.clean();
+
+    m_havePrompted = false;
+    m_havePAMError = false;
+
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
     if(username==m_greeter.autologinUserHint()){
@@ -402,7 +469,9 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
-    m_promptMsgHandler.reset();
+
+    m_authQueue.clean();
+
     //NotList按钮
     m_buttonType = BUTTON_SWITCH_TO_MANUAL_LOGIN;
     ui->btn_notListAndCancel->setText(tr("Not Listed?"));
@@ -427,8 +496,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
     ui->userlist->setVisible(true);
     ui->userlist->setEnabled(true);
 
-    m_loginMode = LOGIN_BY_USER_LIST;
-    m_promptMsgHandler.setLoginMode(LOGIN_BY_USER_LIST);
+    m_loginMode = LOGIN_MODE_USER_LIST;
 
     UserInfo userinfo;
     if( ui->userlist->getCurrentSelected(userinfo) ){
@@ -444,7 +512,9 @@ void GreeterLoginWindow::resetUIForManualLogin()
     if( m_greeter.inAuthentication() ){
         m_greeter.cancelAuthentication();
     }
-    m_promptMsgHandler.reset();
+
+    m_authQueue.clean();
+
     //返回使用用户列表登录模式
     m_buttonType = BUTTON_RETURN;
     ui->btn_notListAndCancel->setText(tr("Return"));
@@ -471,8 +541,7 @@ void GreeterLoginWindow::resetUIForManualLogin()
     ui->userlist->setEnabled(false);
     ui->userlist->setVisible(false);
 
-    m_loginMode = LOGIN_BY_INPUT_USER;
-    m_promptMsgHandler.setLoginMode(LOGIN_BY_INPUT_USER);
+    m_loginMode = LOGIN_MODE_MANUAL;
 }
 
 void GreeterLoginWindow::startUpdateTimeTimer()
@@ -493,6 +562,8 @@ QString GreeterLoginWindow::getCurrentDateTime()
     QDateTime dateTime = QDateTime::currentDateTime();
     QLocale locale;
     QString dateString;
+
+    //TODO:修改
     if( locale.language()==QLocale::Chinese ){
         ///5月21日 星期四 09:52
         static const char* dayOfWeekArray[] = {"星期一","星期二","星期三","星期四","星期五","星期六","星期日"};
@@ -547,56 +618,9 @@ void GreeterLoginWindow::switchToReAuthentication()
     ui->btn_reAuth->setVisible(true);
 }
 
-void GreeterLoginWindow::slotShowMessage(QString text, QLightDM::Greeter::MessageType type)
-{
-    qInfo() << "lightdm show message: type[" << type << "] text[" << text << "]";
-    std::string stdText = text.toStdString();
-    setTips(type,stdText.c_str());
-}
-
-void GreeterLoginWindow::slotShowprompt(QString text, QLightDM::Greeter::PromptType type)
-{
-    qInfo() << "lightdm show prompt: type[" << type << "] text[" << text << "]";
-    //用户手动登录，需要设置用户名
-    if( m_loginMode==LOGIN_BY_INPUT_USER ){
-        if( m_greeter.authenticationUser()!=ui->label_userName->text() ){
-            ui->label_userName->setText(m_greeter.authenticationUser());
-        }
-        //显示返回按钮
-        m_buttonType = BUTTON_RETURN;
-        ui->btn_notListAndCancel->setText(tr("Return"));
-        ui->btn_notListAndCancel->setVisible(true);
-        ui->btn_notListAndCancel->setEnabled(true);
-    }
-    ui->promptEdit->reset();
-    std::string stdText = text.toStdString();
-    ui->promptEdit->setPlaceHolderText(stdText.c_str());
-    ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
-    ui->promptEdit->setEchoMode(type==QLightDM::Greeter::PromptType::PromptTypeSecret?QLineEdit::Password:QLineEdit::Normal);
-    ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
-    setEditPromptFocus(200);
-}
-
-void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthentication)
-{
-    qInfo() << "lightdm authentication complete";
-    if(success){
-        if(!m_greeter.startSessionSync(m_session)){
-            qInfo("start session %s failed",m_session.toStdString().c_str());
-        }
-    }else{
-        if(reAuthentication){
-            startAuthUser(m_greeter.authenticationUser(),
-                          ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
-        }else{
-            switchToReAuthentication();
-        }
-    }
-}
-
 void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 {
-    qInfo() << "lineedit confirmed";
+    ///如果输入框当前是输入
     if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_PROMPT ){
         m_greeter.respond(ui->promptEdit->getText());
     }else{
@@ -619,10 +643,10 @@ void GreeterLoginWindow::slotButtonClicked()
     qInfo() << "    intput mode[" << ui->promptEdit->inputMode() << "]";
 
     if(m_buttonType == BUTTON_SWITCH_TO_MANUAL_LOGIN){
-        Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
+        Q_ASSERT(m_loginMode==LOGIN_MODE_USER_LIST);
         resetUIForManualLogin();
     }else if(m_buttonType == BUTTON_RETURN){
-        Q_ASSERT(m_loginMode==LOGIN_BY_INPUT_USER);
+        Q_ASSERT(m_loginMode==LOGIN_MODE_MANUAL);
         //输入用户名返回则返回至用户列表选择
         if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_USERNAME ){
             //用户列表不显示不应该执行到这
@@ -641,3 +665,44 @@ void GreeterLoginWindow::resizeEvent(QResizeEvent *event)
     activateWindow();
     QWidget::resizeEvent(event);
 }
+
+void GreeterLoginWindow::slotShowMessage(QString text, AuthMsgQueue::MessageType type) {
+    std::string stdText = text.toStdString();
+    setTips(type,stdText.c_str());
+}
+
+void GreeterLoginWindow::slotShowprompt(QString text, AuthMsgQueue::PromptType type) {
+    //用户手动登录，需要设置用户名
+    if( m_loginMode==LOGIN_MODE_MANUAL ){
+        if( m_greeter.authenticationUser()!=ui->label_userName->text() ){
+            ui->label_userName->setText(m_greeter.authenticationUser());
+        }
+        //显示返回按钮
+        m_buttonType = BUTTON_RETURN;
+        ui->btn_notListAndCancel->setText(tr("Return"));
+        ui->btn_notListAndCancel->setVisible(true);
+        ui->btn_notListAndCancel->setEnabled(true);
+    }
+    ui->promptEdit->reset();
+    ui->promptEdit->setPlaceHolderText(text);
+    ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
+    ui->promptEdit->setEchoMode(type==AuthMsgQueue::PromptType::PROMPT_TYPE_SECRET?QLineEdit::Password:QLineEdit::Normal);
+    ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
+    setEditPromptFocus(200);
+}
+
+void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthentication) {
+    if(success){
+        if(!m_greeter.startSessionSync(m_session)){
+            qInfo("start session %s failed",m_session.toStdString().c_str());
+        }
+    }else{
+        if(reAuthentication){
+            startAuthUser(m_greeter.authenticationUser(),
+                          ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
+        }else{
+            switchToReAuthentication();
+        }
+    }
+}
+
