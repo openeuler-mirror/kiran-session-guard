@@ -89,11 +89,6 @@ QString GreeterLineEdit::getText()
     return ui->edit->text();
 }
 
-void GreeterLineEdit::setInputMode(GreeterLineEdit::InputMode inputMode)
-{
-    m_inputMode = inputMode;
-}
-
 void GreeterLineEdit::setEditFocus(bool editFocus)
 {
     if (m_editFocus == editFocus)
@@ -207,11 +202,6 @@ void GreeterLineEdit::reset()
         m_animationTimerId=0;
     }
     setDefaultIcon();
-}
-
-GreeterLineEdit::InputMode GreeterLineEdit::inputMode() const
-{
-    return m_inputMode;
 }
 
 bool GreeterLineEdit::editFocus() const

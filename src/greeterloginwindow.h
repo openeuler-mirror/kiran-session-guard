@@ -20,13 +20,24 @@ class GreeterLoginWindow;
 
 /* 标志按钮的两种功能 */
 enum ButtonType{
-    BUTTON_SWITCH_TO_MANUAL_LOGIN,
-    BUTTON_RETURN,
+    BUTTON_SWITCH_TO_MANUAL_LOGIN, /** < 标志按钮为切换到手动登录 **/
+    BUTTON_RETURN,                 /** < 标志按钮为返回 **/
 };
 
 enum LoginMode{
     LOGIN_MODE_USER_LIST,     /** < 通过用户列表登录 **/
     LOGIN_MODE_MANUAL         /** < 通过手动输入用户密码名方式登录 **/
+};
+
+enum EditInputMode{
+    EDIT_INPUT_USER_NAME,       /** < 输入框当前输入用户名 **/
+    EDIT_INPUT_PROMPT_RESPOND   /** < 输入框当前输入pam prompt回复内容 **/
+};
+
+enum AuthType{
+    AUTH_TYPE_PASSWD,
+    AUTH_TYPE_FINGER,
+    AUTH_TYPE_FACE
 };
 
 class QProcess;
@@ -90,26 +101,20 @@ private:
     QLightDM::UsersModel m_userModel;
     QLightDM::PowerInterface m_powerIface;
 
-    AuthMsgQueue m_authQueue;
-
     QMenu* m_powerMenu;
     QMenu* m_sessionMenu;
-
-    //配置项 允许手动登录
-    bool m_noListButotnVisiable;
-    //配置项 显示用户列表
-    bool m_showUserList;
-    //标志当前登录的模式,当前是手动输入用户名或选择用户进行登录
-    //TODO:input mode移动到这
-    LoginMode m_loginMode;
-    //标志按钮当前的作用
-    bool m_buttonType;
-    //选中的session的名称
     QString m_session;
-    CapsLockSnoop m_snoop;
 
-    bool m_havePAMError = false;
-    bool m_havePrompted = false;
+    CapsLockSnoop m_snoop;
+    AuthMsgQueue m_authQueue;                     /** < 认证消息队列:将lightdm发来的认证消息，加入队列，从队列中监听事件，已保证每个消息得到足够时间显示 **//** < 用户选中session的名称 **/
+    bool m_noListButotnVisiable;                  /** < 配置项: 是否允许手动登录 **/
+    bool m_showUserList;                          /** < 配置项: 显示用户列表 **/
+    LoginMode m_loginMode;                        /** < 标志当前登录的模式,当前是手动输入用户名或选择用户进行登录 **/
+    ButtonType m_buttonType;                      /** < 标志'btn_notListAndCancel'按钮当前的作用 **/
+    EditInputMode m_inputMode;                    /** < 标志输入框输入模式,输入用户名/还是回复prompt消息 **/
+    AuthType m_authType=AUTH_TYPE_PASSWD;         /** < 标志当前的认证模式 **/
+    bool m_havePAMError = false;                  /** < 标志该次认证是否有过PAM的错误消息,用于给予不同的错误提示 **/
+    bool m_havePrompted = false;                  /** < 该次认证是否有过PAM的prompt消息，用于判断是否重新开始认证，避免死循环 **/
 };
 
 #endif // GREETERLOGINWINDOW_H

@@ -530,7 +530,8 @@ void GreeterLoginWindow::resetUIForManualLogin()
     //输入框复位
     ui->promptEdit->reset();
     ui->promptEdit->setPlaceHolderText(tr("Entry your name"));
-    ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_USERNAME);
+    m_inputMode = EDIT_INPUT_USER_NAME;
+
     switchToPromptEdit();
     setEditPromptFocus();
 
@@ -604,7 +605,7 @@ void GreeterLoginWindow::switchToReAuthentication()
 void GreeterLoginWindow::slotTextConfirmed(const QString &text)
 {
     ///如果输入框当前是输入
-    if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_PROMPT ){
+    if( m_inputMode==EDIT_INPUT_PROMPT_RESPOND ){
         m_greeter.respond(ui->promptEdit->getText());
     }else{
         startAuthUser(ui->promptEdit->getText(),
@@ -623,7 +624,7 @@ void GreeterLoginWindow::slotButtonClicked()
     qInfo() << "button clicked:";
     qInfo() << "    button type[" << m_buttonType << "]";
     qInfo() << "    login  mode[" << m_loginMode << "]";
-    qInfo() << "    intput mode[" << ui->promptEdit->inputMode() << "]";
+    qInfo() << "    intput mode[" << m_inputMode << "]";
 
     if(m_buttonType == BUTTON_SWITCH_TO_MANUAL_LOGIN){
         Q_ASSERT(m_loginMode==LOGIN_MODE_USER_LIST);
@@ -631,11 +632,11 @@ void GreeterLoginWindow::slotButtonClicked()
     }else if(m_buttonType == BUTTON_RETURN){
         Q_ASSERT(m_loginMode==LOGIN_MODE_MANUAL);
         //输入用户名返回则返回至用户列表选择
-        if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_USERNAME ){
+        if( m_inputMode == EDIT_INPUT_USER_NAME ){
             //用户列表不显示不应该执行到这
             Q_ASSERT(m_showUserList);
             resetUIForUserListLogin();
-        }else if( ui->promptEdit->inputMode()==GreeterLineEdit::INPUT_PROMPT ){
+        }else if( m_inputMode == EDIT_INPUT_PROMPT_RESPOND ){
             Q_ASSERT(m_noListButotnVisiable);
             resetUIForManualLogin();
         }
@@ -668,7 +669,7 @@ void GreeterLoginWindow::slotShowprompt(QString text, AuthMsgQueue::PromptType t
     }
     ui->promptEdit->reset();
     ui->promptEdit->setPlaceHolderText(text);
-    ui->promptEdit->setInputMode(GreeterLineEdit::INPUT_PROMPT);
+    m_inputMode = EDIT_INPUT_PROMPT_RESPOND;
     ui->promptEdit->setEchoMode(type==AuthMsgQueue::PromptType::PROMPT_TYPE_SECRET?QLineEdit::Password:QLineEdit::Normal);
     ///FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
     setEditPromptFocus(200);
