@@ -560,26 +560,9 @@ void GreeterLoginWindow::updateTimeLabel()
 QString GreeterLoginWindow::getCurrentDateTime()
 {
     QDateTime dateTime = QDateTime::currentDateTime();
-    QLocale locale;
-    QString dateString;
-
-    //TODO:修改
-    if( locale.language()==QLocale::Chinese ){
-        ///5月21日 星期四 09:52
-        static const char* dayOfWeekArray[] = {"星期一","星期二","星期三","星期四","星期五","星期六","星期日"};
-        QString  dayOfWeekString = dayOfWeekArray[dateTime.date().dayOfWeek()-1];
-        dateString = QString("%1 %2 %3").arg(dateTime.toString("MM月dd日"))
-                                        .arg(dayOfWeekString)
-                                        .arg(dateTime.toString("HH:mm"));
-    }else{
-        ///Thu May 21 09:52
-        static const char* dayOfWeekArray[] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
-        static const char* monthOfYearArray[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"};
-        dateString = QString("%1 %2 %3").arg(dayOfWeekArray[dateTime.date().dayOfWeek()-1])
-                                        .arg(monthOfYearArray[dateTime.date().month()-1])
-                                        .arg(dateTime.toString("HH:mm"));
-    }
-    return dateString;
+    //tr : MM月MM日 dddd HH:mm
+    QString res = dateTime.toString(tr("dddd MMM HH:mm"));
+    return res;
 }
 
 void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)

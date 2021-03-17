@@ -37,61 +37,66 @@
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="78"/>
+        <location filename="../src/greeterloginwindow.cpp" line="67"/>
         <source>session menu</source>
         <translatorcomment>会话菜单</translatorcomment>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="79"/>
+        <location filename="../src/greeterloginwindow.cpp" line="68"/>
         <source>virtual keyboard</source>
         <translatorcomment>虚拟键盘</translatorcomment>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="80"/>
+        <location filename="../src/greeterloginwindow.cpp" line="69"/>
         <source>power menu</source>
         <translatorcomment>电源菜单</translatorcomment>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="119"/>
+        <location filename="../src/greeterloginwindow.cpp" line="108"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="129"/>
+        <location filename="../src/greeterloginwindow.cpp" line="118"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="134"/>
+        <location filename="../src/greeterloginwindow.cpp" line="123"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="124"/>
+        <location filename="../src/greeterloginwindow.cpp" line="551"/>
+        <source>dddd MMM HH:mm</source>
+        <translation>MM月MM日 dddd HH:mm</translation>
+    </message>
+    <message>
+        <location filename="../src/greeterloginwindow.cpp" line="113"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="296"/>
+        <location filename="../src/greeterloginwindow.cpp" line="285"/>
         <source>Incorrect username or password</source>
-        <translation type="unfinished">用户名或密码错误</translation>
+        <translation>用户名或密码错误</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="514"/>
+        <location filename="../src/greeterloginwindow.cpp" line="467"/>
         <source>Not Listed?</source>
         <translation>未列出?</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="329"/>
-        <location filename="../src/greeterloginwindow.cpp" line="557"/>
+        <location filename="../src/greeterloginwindow.cpp" line="509"/>
+        <location filename="../src/greeterloginwindow.cpp" line="645"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="569"/>
+        <location filename="../src/greeterloginwindow.cpp" line="521"/>
         <source>Entry your name</source>
         <translation>账户</translation>
     </message>
@@ -100,12 +105,12 @@
         <translation type="vanished">开启会话失败</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="293"/>
+        <location filename="../src/greeterloginwindow.cpp" line="282"/>
         <source>Incorrect password, please try again</source>
         <translation>密码错误，请再次尝试</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="304"/>
+        <location filename="../src/greeterloginwindow.cpp" line="293"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -256,7 +261,7 @@
     <message>
         <location filename="../kiran-greeter-setting/src/tabitem.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
