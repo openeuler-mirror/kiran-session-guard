@@ -145,6 +145,9 @@ void ScreenSaverDialog::InitUI()
         m_powerMenu->popup(menuLeftTop);
     });
 
+    //NOTE:暂时解决方案单独禁用输入框，等待pam的prompt消息会启用输入框
+    ui->promptEdit->setEnabled(false);
+
     if( !m_authProxy.startAuthenticate(m_userName.toStdString().c_str()) ){
         qWarning() << "PamAuthProxy::startAuthenticate failed";
     }

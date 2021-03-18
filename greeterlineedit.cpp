@@ -19,6 +19,7 @@ GreeterLineEdit::GreeterLineEdit(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->edit->setContextMenuPolicy(Qt::NoContextMenu);
+    ui->edit->setAttribute(Qt::WA_InputMethodEnabled, false);
     setDefaultIcon();
     initConnection();
     ui->edit->installEventFilter(this);
@@ -209,6 +210,7 @@ void GreeterLineEdit::startMovieAndEmitSignal()
 
 void GreeterLineEdit::reset()
 {
+    this->setEnabled(true);
     ui->edit->setEnabled(true);
     ui->edit->clear();
     ui->edit->setPlaceholderText("");
