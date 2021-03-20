@@ -3,7 +3,7 @@
 #include "greeterkeyboard.h"
 #include "gsettingshelper.h"
 #include "scalinghelper.h"
-#include "single/singleapplication.h"
+#include "singleapplication.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -14,7 +14,6 @@
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
-
 
 void termSignalHandler(int unused){
     qApp->quit();
