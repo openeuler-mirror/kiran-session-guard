@@ -17,7 +17,7 @@
 
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
-#include "dbusapihelper.h"
+#include "dbus-api-wrapper/dbusapihelper.h"
 
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
