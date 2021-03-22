@@ -46,11 +46,12 @@ class QMenu;
 class GreeterLoginWindow : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit GreeterLoginWindow(QWidget *parent = nullptr);
     virtual ~GreeterLoginWindow() override;
-
     void setEditPromptFocus(int ms=0);
+
 private:
     //初始化LightdmGreeter，并连接信号槽
     void initLightdmGreeter();
@@ -78,6 +79,8 @@ private:
     ///当前用户为自动登录用户时,切换到自动登录按钮显示,
     void switchToAutoLogin();
     void switchToReAuthentication();
+
+    void setCurrentAuthType(AuthType type);
 
 private slots:
     void slotTextConfirmed(const QString& text);
