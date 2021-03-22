@@ -30,7 +30,6 @@ void setup_unix_signal_handlers(){
         qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
     }
 }
-
 int main(int argc, char *argv[])
 {
     ///初始化日志模块

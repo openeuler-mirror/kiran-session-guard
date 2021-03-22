@@ -19,6 +19,12 @@
 #include "greeterloginwindow.h"
 #include "ui_greeterloginwindow.h"
 
+#define ASK_FPINT       "ReqFingerprint" //请求指纹认证界面
+#define ASK_FACE        "ReqFace"        //请求人脸认证界面
+
+#define REP_FPINT       "RepFingerprintReady" //指纹认证界面准备完毕
+#define REP_FACE        "RepFaceReady" //人脸认证界面准备完毕
+
 Q_DECLARE_METATYPE(UserInfo);
 using namespace QLightDM;
 GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) :
@@ -263,9 +269,20 @@ void GreeterLoginWindow::initLightdmGreeter()
         m_authQueue.append(msg);
     });
     connect(&m_greeter,&Greeter::showPrompt,[this](QString text, QLightDM::Greeter::PromptType type){
+        if( text == ASK_FPINT ){
+            setCurrentAuthType(AUTH_TYPE_FINGER);
+            m_greeter.respond(REP_FPINT);
+        }else if( text == ASK_FACE ){
+            setCurrentAuthType(AUTH_TYPE_FACE);
+            m_greeter.respond(REP_FACE);
+        }else{
+            setCurrentAuthType(AUTH_TYPE_PASSWD);
+        }
+
         if( !m_havePrompted ){
             m_havePrompted = true;
         }
+
         AuthMsgQueue::PamMessage msg;
         msg.text = text;
         msg.type = AuthMsgQueue::PMT_PROMPT;
@@ -690,3 +707,18 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
     }
 }
 
+void GreeterLoginWindow::setCurrentAuthType(AuthType type) {
+    ui->promptEdit->setVisible(type==AUTH_TYPE_PASSWD);
+    ui->loginAvatar->setVisible(type==AUTH_TYPE_PASSWD);
+
+    ui->faceAvatar->setVisible(type==AUTH_TYPE_FACE);
+
+    ui->fingerAvatar->setVisible(type==AUTH_TYPE_FINGER);
+    if( type==AUTH_TYPE_FINGER ){
+        ui->fingerAvatar->startAnimation();
+    }else{
+        ui->fingerAvatar->stopAnimation();
+    }
+
+    m_authType = type;
+}
