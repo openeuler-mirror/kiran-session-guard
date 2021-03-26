@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>GreeterLineEdit</name>
     <message>
@@ -36,15 +36,15 @@
     </message>
     <message>
         <source>Recertification</source>
-        <translation type="unfinished"></translation>
+        <translation>重新认证</translation>
     </message>
     <message>
         <source>Start fingerprint authentication</source>
-        <translation type="unfinished"></translation>
+        <translation>开始指纹认证</translation>
     </message>
     <message>
         <source>Start face authentication</source>
-        <translation type="unfinished"></translation>
+        <translation>开始人脸认证</translation>
     </message>
 </context>
 </TS>
