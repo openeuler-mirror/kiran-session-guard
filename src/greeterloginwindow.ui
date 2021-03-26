@@ -290,7 +290,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QWidget" name="faceAvatar" native="true">
+             <widget class="FaceAuthAvatar" name="faceAvatar" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -1023,6 +1023,12 @@
    <class>FingerAuthAvatar</class>
    <extends>QWidget</extends>
    <header location="global">finger-auth-avatar.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FaceAuthAvatar</class>
+   <extends>QWidget</extends>
+   <header location="global">face-auth-avatar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
