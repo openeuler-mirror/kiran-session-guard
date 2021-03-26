@@ -18,16 +18,17 @@
 
 #define TIMEOUT_MS 300
 
-bool DBusApi::SessionManager::suspend()
+bool DBusApi::SessionManager::suspend ()
 {
     QDBusMessage methodSuspend = QDBusMessage::createMethodCall(SESSION_MANAGER_DBUS,
                                                                 SESSION_MANAGER_PATH,
                                                                 SESSION_MANAGER_INTERFACE,
                                                                 METHOD_SUSPEND);
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(methodSuspend,QDBus::Block,TIMEOUT_MS);
+    QDBusMessage reply = QDBusConnection::sessionBus().call(methodSuspend, QDBus::Block, TIMEOUT_MS);
 
-    if(reply.type() == QDBusMessage::ReplyMessage ){
+    if (reply.type() == QDBusMessage::ReplyMessage)
+    {
         return true;
     }
 
@@ -36,16 +37,17 @@ bool DBusApi::SessionManager::suspend()
     return false;
 }
 
-bool DBusApi::SessionManager::hibernate()
+bool DBusApi::SessionManager::hibernate ()
 {
     QDBusMessage methodHibernate = QDBusMessage::createMethodCall(SESSION_MANAGER_DBUS,
                                                                   SESSION_MANAGER_PATH,
                                                                   SESSION_MANAGER_INTERFACE,
                                                                   METHOD_HIBERNATE);
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(methodHibernate,QDBus::Block,TIMEOUT_MS);
+    QDBusMessage reply = QDBusConnection::sessionBus().call(methodHibernate, QDBus::Block, TIMEOUT_MS);
 
-    if(reply.type() == QDBusMessage::ReplyMessage ){
+    if (reply.type() == QDBusMessage::ReplyMessage)
+    {
         return true;
     }
 
@@ -54,16 +56,17 @@ bool DBusApi::SessionManager::hibernate()
     return false;
 }
 
-bool DBusApi::SessionManager::shutdown()
+bool DBusApi::SessionManager::shutdown ()
 {
     QDBusMessage methodShutdown = QDBusMessage::createMethodCall(SESSION_MANAGER_DBUS,
-                                                                  SESSION_MANAGER_PATH,
-                                                                  SESSION_MANAGER_INTERFACE,
-                                                                  METHOD_SHUTDOWN);
+                                                                 SESSION_MANAGER_PATH,
+                                                                 SESSION_MANAGER_INTERFACE,
+                                                                 METHOD_SHUTDOWN);
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(methodShutdown,QDBus::Block,TIMEOUT_MS);
+    QDBusMessage reply = QDBusConnection::sessionBus().call(methodShutdown, QDBus::Block, TIMEOUT_MS);
 
-    if(reply.type() == QDBusMessage::ReplyMessage ){
+    if (reply.type() == QDBusMessage::ReplyMessage)
+    {
         return true;
     }
 
@@ -72,16 +75,17 @@ bool DBusApi::SessionManager::shutdown()
     return false;
 }
 
-bool DBusApi::SessionManager::reboot()
+bool DBusApi::SessionManager::reboot ()
 {
     QDBusMessage methodReboot = QDBusMessage::createMethodCall(SESSION_MANAGER_DBUS,
-                                                                  SESSION_MANAGER_PATH,
-                                                                  SESSION_MANAGER_INTERFACE,
-                                                                  METHOD_REBOOT);
+                                                               SESSION_MANAGER_PATH,
+                                                               SESSION_MANAGER_INTERFACE,
+                                                               METHOD_REBOOT);
 
-    QDBusMessage reply = QDBusConnection::sessionBus().call(methodReboot,QDBus::Block,TIMEOUT_MS);
+    QDBusMessage reply = QDBusConnection::sessionBus().call(methodReboot, QDBus::Block, TIMEOUT_MS);
 
-    if(reply.type() == QDBusMessage::ReplyMessage ){
+    if (reply.type() == QDBusMessage::ReplyMessage)
+    {
         return true;
     }
 
@@ -90,16 +94,17 @@ bool DBusApi::SessionManager::reboot()
     return false;
 }
 
-bool DBusApi::DisplayManager::switchToGreeter()
+bool DBusApi::DisplayManager::switchToGreeter ()
 {
     QDBusMessage methodSwitchToGreeter = QDBusMessage::createMethodCall("org.freedesktop.DisplayManager",
                                                                         qgetenv("XDG_SEAT_PATH"),
                                                                         "org.freedesktop.DisplayManager.Seat",
                                                                         "SwitchToGreeter");
 
-    QDBusMessage reply = QDBusConnection::systemBus().call(methodSwitchToGreeter,QDBus::Block,TIMEOUT_MS);
+    QDBusMessage reply = QDBusConnection::systemBus().call(methodSwitchToGreeter, QDBus::Block, TIMEOUT_MS);
 
-    if(reply.type() == QDBusMessage::ReplyMessage ){
+    if (reply.type() == QDBusMessage::ReplyMessage)
+    {
         return true;
     }
 
@@ -109,32 +114,35 @@ bool DBusApi::DisplayManager::switchToGreeter()
     return false;
 }
 
-QString DBusApi::AccountService::getUserIconFilePath(const QString &user)
+QString DBusApi::AccountService::getUserIconFilePath (const QString &user)
 {
-    QString userObj,iconFile;
+    QString userObj, iconFile;
     userObj = findUserObjectByName(user);
-    if(userObj.isEmpty()){
+    if (userObj.isEmpty())
+    {
         return "";
     }
     iconFile = getUserObjectIconFileProperty(userObj);
     return iconFile;
 }
 
-QString DBusApi::AccountService::findUserObjectByName(const QString &user)
+QString DBusApi::AccountService::findUserObjectByName (const QString &user)
 {
     QDBusMessage methodFindUserByName = QDBusMessage::createMethodCall(ACCOUNT_SERVICE_DBUS,
-                                                                     ACCOUNT_SERVICE_PATH,
-                                                                     ACCOUNT_SERVICE_INTERFACE,
-                                                                     "FindUserByName");
+                                                                       ACCOUNT_SERVICE_PATH,
+                                                                       ACCOUNT_SERVICE_INTERFACE,
+                                                                       "FindUserByName");
     methodFindUserByName << user;
     QDBusMessage reply = QDBusConnection::systemBus().call(methodFindUserByName,
-                                                           QDBus::Block,TIMEOUT_MS);
-    if( reply.type() != QDBusMessage::ReplyMessage ){
+                                                           QDBus::Block, TIMEOUT_MS);
+    if (reply.type() != QDBusMessage::ReplyMessage)
+    {
         qWarning() << reply.errorMessage();
         return QString("");
     }
     QList<QVariant> args = reply.arguments();
-    if(args.size()==0){
+    if (args.size() == 0)
+    {
         qWarning() << "no arguments";
         return "";
     }
@@ -143,7 +151,7 @@ QString DBusApi::AccountService::findUserObjectByName(const QString &user)
     return objPath.path();
 }
 
-QString DBusApi::AccountService::getUserObjectIconFileProperty(const QString &userObjPath)
+QString DBusApi::AccountService::getUserObjectIconFileProperty (const QString &userObjPath)
 {
     QDBusMessage methodGetIconFile = QDBusMessage::createMethodCall(ACCOUNT_SERVICE_DBUS,
                                                                     userObjPath,
@@ -151,13 +159,15 @@ QString DBusApi::AccountService::getUserObjectIconFileProperty(const QString &us
                                                                     "Get");
     methodGetIconFile << QString("org.freedesktop.Accounts.User") << QString("IconFile");
     QDBusMessage reply = QDBusConnection::systemBus().call(methodGetIconFile,
-                                              QDBus::Block,TIMEOUT_MS);
-    if( reply.type() != QDBusMessage::ReplyMessage ){
+                                                           QDBus::Block, TIMEOUT_MS);
+    if (reply.type() != QDBusMessage::ReplyMessage)
+    {
         qWarning() << reply.errorMessage();
         return QString("");
     }
     QList<QVariant> argList = reply.arguments();
-    if(argList.size()==0){
+    if (argList.size() == 0)
+    {
         qWarning() << "no arguments";
         return "";
     }

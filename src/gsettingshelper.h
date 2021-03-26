@@ -6,10 +6,10 @@
 class GSettingsHelper
 {
 private:
-    GSettingsHelper();
+    GSettingsHelper ();
 public:
-    static QString getBackgrountPath();
-    static int getMateScalingFactor();
+    static QString getBackgrountPath ();
+    static int getMateScalingFactor ();
 };
 
 #endif // GSETTINGSHELPER_H
