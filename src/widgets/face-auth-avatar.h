@@ -5,25 +5,26 @@
 #include <QPixmap>
 #include <QPropertyAnimation>
 
-class FaceAuthAvatar : public QWidget{
+class FaceAuthAvatar : public QWidget
+{
     Q_OBJECT
     Q_PROPERTY(uint progress READ progress WRITE setProgress)
 public:
-    explicit FaceAuthAvatar(QWidget* parent = nullptr);
-    ~FaceAuthAvatar();
+    explicit FaceAuthAvatar (QWidget *parent = nullptr);
+    ~FaceAuthAvatar ();
 
-    void startAnimation();
-    void stopAnimation();
+    void startAnimation ();
+    void stopAnimation ();
 
 private:
-    void init();
-    uint progress();
-    void setProgress(uint progress);
-    QPixmap scalePixmapAdjustSize(const QPixmap &pixmap);
+    void init ();
+    uint progress ();
+    void setProgress (uint progress);
+    QPixmap scalePixmapAdjustSize (const QPixmap &pixmap);
 
 protected:
-    virtual void paintEvent(QPaintEvent *event) override final;
-    virtual void resizeEvent(QResizeEvent *event) override final;
+    virtual void paintEvent (QPaintEvent *event) override final;
+    virtual void resizeEvent (QResizeEvent *event) override final;
 
 private:
     QPixmap m_pixmap;
