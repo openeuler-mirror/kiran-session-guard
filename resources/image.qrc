@@ -41,5 +41,7 @@
         <file>images/switch_users_normal.png</file>
         <file>images/switch_users_pressed.png</file>
         <file>images/switch_users_select.png</file>
+        <file>images/finger_auth.png</file>
+        <file>images/face_auth.png</file>
     </qresource>
 </RCC>

@@ -19,7 +19,7 @@ void termSignalHandler(int unused){
     qApp->quit();
 }
 
-void setup_unix_signal_handlers(){
+void setupUnixSignalHandlers(){
     struct sigaction term;
     term.sa_handler = termSignalHandler;
     sigemptyset(&term.sa_mask);
@@ -27,9 +27,30 @@ void setup_unix_signal_handlers(){
     term.sa_flags |= SA_RESETHAND;
     int iRet = sigaction(SIGTERM,&term,nullptr);
     if(iRet!=0){
-        qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
+        qWarning() << "setupUnixSignalHandlers failed," << strerror(iRet);
     }
 }
+
+void handleWindowScaleFactor()
+{
+    ///scaling
+    int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
+    qInfo() << "screensaver-dialog scale-factor: " << windowScalingFactor;
+    switch (windowScalingFactor) {
+        case 0:
+            ScalingHelper::auto_calculate_screen_scaling();
+            break;
+        case 1:
+            break;
+        case 2:
+            ScalingHelper::set_scale_factor(2);
+            break;
+        default:
+            qWarning() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
+            break;
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -40,30 +61,14 @@ int main(int argc, char *argv[])
     Log::instance()->setAppend2File(true);
 #endif
 
-    setup_unix_signal_handlers();
+    setupUnixSignalHandlers();
 
-    ///scaling
-    int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
-    qInfo() << "org.mate.interface window-scaling-factor" << windowScalingFactor;
-    switch (windowScalingFactor) {
-    case 0:
-        ScalingHelper::auto_calculate_screen_scaling();
-        break;
-    case 1:
-        break;
-    case 2:
-        ScalingHelper::set_scale_factor(2);
-        break;
-    default:
-        qWarning() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
-        break;
-    }
+    handleWindowScaleFactor();
 
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
     SingleApplication app(argc,argv);
-    qInfo() << "arguments: " <<  app.arguments();
 
-    ///翻译 filename+prefix+language name+suffix
+    ///安装翻译
     QTranslator tsor;
     qInfo() << "load translation file: " << tsor.load(QLocale(),
                                                       "kiran-screensaver-dialog"/*filename*/,

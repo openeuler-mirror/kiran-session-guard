@@ -18,6 +18,7 @@
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
+#include <kiran-pam-msg.h>
 
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
@@ -32,7 +33,7 @@ ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     printWindowID();
-    InitUI();
+    init();
 }
 
 ScreenSaverDialog::~ScreenSaverDialog()
@@ -48,16 +49,34 @@ void ScreenSaverDialog::setSwitchUserEnabled(bool enable)
     ui->btn_switchuser->setVisible(enable);
 }
 
-void ScreenSaverDialog::InitUI()
-{
+void ScreenSaverDialog::init() {
+    ///初始化PAM认证代理
+    initPamAuthProxy();
+    ///初始化UI
+    initUI();
+    ///开始更新时间Timer
+    startUpdateTimeTimer();
+    ///开始认证
+    startAuth();
+}
 
+void ScreenSaverDialog::initPamAuthProxy() {
+    connect(&m_authProxy,&PamAuthProxy::showMessage,this,&ScreenSaverDialog::slotShowMessage);
+    connect(&m_authProxy,&PamAuthProxy::showPrompt,this,&ScreenSaverDialog::slotShowPrompt);
+    connect(&m_authProxy,&PamAuthProxy::authenticationComplete,this,&ScreenSaverDialog::slotAuthenticationComplete);
+}
+
+void ScreenSaverDialog::initUI() {
+    ///取消按钮
     connect(ui->btn_cancel,&QToolButton::pressed,this,[=]{
         responseCancelAndQuit();
     });
 
+    ///输入框封装
     connect(ui->promptEdit,&GreeterLineEdit::textConfirmed,this,[=]{
-        m_authProxy.response(true,ui->promptEdit->getText());
+        m_authProxy.response(ui->promptEdit->getText());
     });
+
 #ifdef VIRTUAL_KEYBOARD
     connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
         GreeterKeyboard* keyboard = GreeterKeyboard::instance();
@@ -71,17 +90,12 @@ void ScreenSaverDialog::InitUI()
 #else
     ui->btn_keyboard->setVisible(false);
 #endif
+    ///切换用户按钮
     connect(ui->btn_switchuser,&QToolButton::pressed,this,[=]{
         QTimer::singleShot(2000,this,SLOT(responseCancelAndQuit()));
         if( !DBusApi::DisplayManager::switchToGreeter() ){
             qWarning() << "call SwitchToGreeter failed.";
         }
-    });
-
-    connect(&m_authProxy,SIGNAL(authenticateComplete(bool)),this,SLOT(slotAuthenticateComplete(bool)));
-
-    connect(&m_authProxy,&PamAuthProxy::authenticateError,this,[=]{
-        ui->promptEdit->setHasError(true);
     });
 
     ///设置阴影
@@ -93,7 +107,7 @@ void ScreenSaverDialog::InitUI()
 
     ///背景图
     QString backgroundPath = GSettingsHelper::getBackgrountPath();
-    qInfo() << "org.mate.background picture-filename " << backgroundPath;
+    qDebug() << "screensaver-dialog background: " << backgroundPath;
     if( !m_background.load(backgroundPath) ){
         qWarning() << "load background" << backgroundPath << "failed";
         m_background.load(DEFAULT_BACKGROUND);
@@ -101,7 +115,7 @@ void ScreenSaverDialog::InitUI()
 
     ///用户
     m_userName = getUser();
-    qInfo() << "getlogin " << m_userName;
+    qDebug() << "screensaver-dialog login user: " << m_userName;
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
@@ -131,6 +145,7 @@ void ScreenSaverDialog::InitUI()
         m_powerMenu->hide();
     });
 
+    ///电源按钮
     connect(ui->btn_power,&QToolButton::pressed,this,[=]{
         if(m_powerMenu->isVisible()){
             m_powerMenu->hide();
@@ -145,21 +160,18 @@ void ScreenSaverDialog::InitUI()
         m_powerMenu->popup(menuLeftTop);
     });
 
+    ///重新认证按钮
+    connect(ui->btn_reAuth,&QPushButton::clicked,this,[=]{
+        startAuth();
+    });
+
     //NOTE:暂时解决方案单独禁用输入框，等待pam的prompt消息会启用输入框
     ui->promptEdit->setEnabled(false);
-
-    if( !m_authProxy.startAuthenticate(m_userName.toStdString().c_str()) ){
-        qWarning() << "PamAuthProxy::startAuthenticate failed";
-    }
-
     ui->btn_switchuser->setVisible(false);
-
     ui->loginAvatar->setImage(DBusApi::AccountService::getUserIconFilePath(m_userName));
 
     ///安装事件过滤器，来实现菜单的自动隐藏
     qApp->installEventFilter(this);
-
-    startUpdateTimeTimer();
 }
 
 QString ScreenSaverDialog::getUser()
@@ -219,6 +231,7 @@ QString ScreenSaverDialog::getCurrentDateTime()
     QDateTime dateTime = QDateTime::currentDateTime();
     QLocale locale;
     QString dateString;
+    //TODO:修改
     if( locale.language()==QLocale::Chinese ){
         ///5月21日 星期四 09:52
         static const char* dayOfWeekArray[] = {"星期一","星期二","星期三","星期四","星期五","星期六","星期日"};
@@ -237,34 +250,32 @@ QString ScreenSaverDialog::getCurrentDateTime()
     return dateString;
 }
 
-void ScreenSaverDialog::requestResponse(const char *msg, bool visiable)
-{
-    QMetaObject::invokeMethod(this,"requestResponse",Qt::QueuedConnection,
-                              Q_ARG(QString,msg),Q_ARG(bool,visiable));
-}
+void ScreenSaverDialog::updateCurrentAuthType(ScreenSaverDialog::AuthType type) {
+    ui->loginAvatar->setVisible(type==AUTH_TYPE_PASSWD);
+    ui->promptEdit->setVisible(type==AUTH_TYPE_PASSWD);
 
-void ScreenSaverDialog::requestResponse(const QString &msg, bool visiable)
-{
-    ui->promptEdit->reset();
-    ui->promptEdit->setPlaceHolderText(msg);
-    ui->promptEdit->setEchoMode(visiable?QLineEdit::Normal:QLineEdit::Password);
-    ui->promptEdit->setFocus();
-}
+    ui->fingerAvatar->setVisible(type==AUTH_TYPE_FINGER);
+    if(type == AUTH_TYPE_FINGER){
+        slotShowMessage(tr("Start fingerprint authentication"),PamAuthProxy::MessageTypeInfo);
+        ui->fingerAvatar->startAnimation();
+    }else{
+        ui->fingerAvatar->stopAnimation();
+    }
 
-void ScreenSaverDialog::onDisplayError(const char *msg)
-{
-    //暂时不需要
-}
+    ui->faceAvatar->setVisible(type==AUTH_TYPE_FACE);
+    if( type == AUTH_TYPE_FACE ){
+        slotShowMessage(tr("Start face authentication"),PamAuthProxy::MessageTypeInfo);
+        ui->faceAvatar->startAnimation();
+    }else{
+        ui->faceAvatar->stopAnimation();
+    }
 
-void ScreenSaverDialog::onDisplayTextInfo(const char *msg)
-{
-    //暂时不需要
+    m_authType = type;
 }
 
 void ScreenSaverDialog::printWindowID()
 {
     std::cout << "WINDOW ID=" << winId() << std::endl;
-    qInfo() << "WINDOW ID=" << winId();
 }
 
 void ScreenSaverDialog::responseOkAndQuit()
@@ -289,17 +300,6 @@ void ScreenSaverDialog::responseNoticeAuthFailed()
     static const char* response = "NOTICE=AUTH FAILED";
     std::cout << response << std::endl;
     qInfo() << response;
-}
-
-void ScreenSaverDialog::slotAuthenticateComplete(bool isSuccess)
-{
-    if(!isSuccess){
-        responseCancelAndQuit();
-    }else{
-        ui->promptEdit->reset();
-        ui->promptEdit->setHasError(false);
-        responseOkAndQuit();
-    }
 }
 
 bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
@@ -362,4 +362,65 @@ void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
         m_scaledBackground = QPixmap::fromImage(tmp);
     }
     QWidget::resizeEvent(event);
+}
+
+void ScreenSaverDialog::slotAuthenticationComplete() {
+    bool isSuccess = m_authProxy.isAuthenticated();
+    if(!isSuccess){
+        //responseCancelAndQuit();
+        switchToReauthentication();
+    }else{
+        ui->promptEdit->reset();
+        ui->promptEdit->setHasError(false);
+        responseOkAndQuit();
+    }
+}
+
+void ScreenSaverDialog::slotShowPrompt(QString text, PamAuthProxy::PromptType promptType) {
+    if(text == ASK_FPINT){
+        updateCurrentAuthType(AUTH_TYPE_FINGER);
+        m_authProxy.response(REP_FPINT);
+    }else if(text == ASK_FACE){
+        updateCurrentAuthType(AUTH_TYPE_FACE);
+        m_authProxy.response(REP_FACE);
+    }else{
+        updateCurrentAuthType(AUTH_TYPE_PASSWD);
+    }
+    ui->promptEdit->reset();
+    ui->promptEdit->setPlaceHolderText(text);
+    ui->promptEdit->setEchoMode(promptType==PamAuthProxy::PromptTypeQuestion?QLineEdit::Normal:QLineEdit::Password);
+    ui->promptEdit->setFocus();
+}
+
+void ScreenSaverDialog::slotShowMessage(QString text, PamAuthProxy::MessageType messageType) {
+    QString colorText = QString("<font color=%1>%2</font>")
+            .arg(messageType==PamAuthProxy::MessageTypeInfo?"white":"red")
+            .arg(text);
+    ui->label_tips->setText(colorText);
+}
+
+void ScreenSaverDialog::switchToReauthentication() {
+    ui->promptEdit->setVisible(false);
+    ui->label_capsLock->setVisible(false);
+    ui->label_JustForSpace->setVisible(false);
+
+    ui->btn_reAuth->setVisible(true);
+}
+
+void ScreenSaverDialog::switchToPromptEdit() {
+    ui->btn_reAuth->setVisible(false);
+
+    ui->promptEdit->setVisible(true);
+    ui->label_capsLock->setVisible(true);
+    ui->label_JustForSpace->setVisible(true);
+}
+
+void ScreenSaverDialog::startAuth() {
+    updateCurrentAuthType(AUTH_TYPE_PASSWD);
+    if( m_authProxy.isRunning() ){
+        m_authProxy.reAuthenticate();
+    }else{
+        m_authProxy.startAuthenticate(m_userName);
+    }
+    switchToPromptEdit();
 }

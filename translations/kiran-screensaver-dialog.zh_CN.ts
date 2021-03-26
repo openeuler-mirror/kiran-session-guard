@@ -34,5 +34,17 @@
         <source>cancel</source>
         <translation>取消</translation>
     </message>
+    <message>
+        <source>Recertification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start fingerprint authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start face authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

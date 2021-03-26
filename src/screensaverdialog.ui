@@ -176,7 +176,7 @@
              <height>16777215</height>
             </size>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,5,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,5,0,0,0">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -233,6 +233,50 @@
               </property>
               <property name="styleSheet">
                <string notr="true"/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="FingerAuthAvatar" name="fingerAvatar" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>180</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="FaceAuthAvatar" name="faceAvatar" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>180</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -371,7 +415,7 @@
              <height>60</height>
             </size>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0">
+           <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0,0,0,0">
             <property name="spacing">
              <number>10</number>
             </property>
@@ -472,6 +516,25 @@
               </property>
               <property name="text">
                <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_reAuth">
+              <property name="minimumSize">
+               <size>
+                <width>150</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>180</width>
+                <height>36</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Recertification</string>
               </property>
              </widget>
             </item>
@@ -879,6 +942,18 @@ ShadowLabel{
    <class>ShadowLabel</class>
    <extends>QLabel</extends>
    <header location="global">shadowlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FingerAuthAvatar</class>
+   <extends>QWidget</extends>
+   <header location="global">finger-auth-avatar.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FaceAuthAvatar</class>
+   <extends>QWidget</extends>
+   <header location="global">face-auth-avatar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
