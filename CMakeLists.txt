@@ -25,7 +25,8 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h" "src/*.ui")
-
+# 资源文件
+file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} )
 

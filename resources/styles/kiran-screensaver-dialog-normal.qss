@@ -144,3 +144,21 @@ GreeterMenuItem#GreeterMenuItem:hover{
     border-right:2px solid #2EB3FF;
     background: rgba(255, 255, 255, 0.1);
 }
+/*重新认证按钮*/
+QPushButton#btn_reAuth{
+    border:1px solid rgba(255,255,255,0.01);
+    border-radius:8px;
+    background-color:rgba(255,255,255,0.05);
+    color:white;
+}
+QPushButton#btn_reAuth:pressed{
+    background-color:rgba(0,0,0,0.1);
+    border:1px solid rgba(67,163,242,0.03);
+}
+QPushButton#btn_reAuth:hover{
+    background-color:rgba(255,255,255,0.1);
+}
+
+QPushButton#btn_reAuth:focus{
+    border:1px solid rgba(67,163,242,0.1);
+}
