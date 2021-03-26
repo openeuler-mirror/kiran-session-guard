@@ -6,8 +6,9 @@
 #include <QLabel>
 #include <QColor>
 
-namespace Ui {
-class LoginButton;
+namespace Ui
+{
+    class LoginButton;
 }
 
 class LoginButton : public QWidget
@@ -16,20 +17,20 @@ class LoginButton : public QWidget
     Q_PROPERTY(bool pressed READ pressed WRITE setPressed)
     Q_PROPERTY(QPixmap icon READ icon WRITE setIcon)
 public:
-    explicit LoginButton(QWidget *parent = nullptr);
-    ~LoginButton();
-    bool pressed() const;
-    QPixmap icon() const;
+    explicit LoginButton (QWidget *parent = nullptr);
+    ~LoginButton ();
+    bool pressed () const;
+    QPixmap icon () const;
 public slots:
-    void setPressed(bool pressed);
-    void setIcon(QPixmap icon);
+    void setPressed (bool pressed);
+    void setIcon (QPixmap icon);
 Q_SIGNALS:
-    void sigPressed();
-    void sigClicked();
+    void sigPressed ();
+    void sigClicked ();
 protected:
-    virtual void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
-    virtual void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    virtual void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent (QPaintEvent *event) Q_DECL_OVERRIDE;
+    virtual void mousePressEvent (QMouseEvent *event) Q_DECL_OVERRIDE;
+    virtual void mouseReleaseEvent (QMouseEvent *event) Q_DECL_OVERRIDE;
 private:
     Ui::LoginButton *ui;
     bool m_pressed;

@@ -5,17 +5,17 @@
 
 class LoginGreeterPreviewWidget : public QWidget
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-    explicit LoginGreeterPreviewWidget(QWidget *parent = nullptr);
-    ~LoginGreeterPreviewWidget();
-    void updatePreviewBackground(const QString& path);
+    explicit LoginGreeterPreviewWidget (QWidget *parent = nullptr);
+    ~LoginGreeterPreviewWidget ();
+    void updatePreviewBackground (const QString &path);
 private:
-    void setDefaultPreviewBackground();
-    QPixmap generatePreviewBackground(const QString& path);
+    void setDefaultPreviewBackground ();
+    QPixmap generatePreviewBackground (const QString &path);
 signals:
 protected:
-    virtual void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    virtual void paintEvent (QPaintEvent *event) Q_DECL_OVERRIDE;
 private:
     QPixmap m_previewBackground;
 };

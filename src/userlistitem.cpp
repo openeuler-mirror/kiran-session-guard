@@ -3,46 +3,47 @@
 #include "userinfo.h"
 #include <QPainter>
 
-UserListItem::UserListItem(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::UserListItem)
+UserListItem::UserListItem (QWidget *parent) :
+        QWidget(parent),
+        ui(new Ui::UserListItem)
 {
     ui->setupUi(this);
     setFocusPolicy(Qt::NoFocus);
     setObjectName(USERITEM_OBJ_NAME);
 }
 
-UserListItem::~UserListItem()
+UserListItem::~UserListItem ()
 {
     delete ui;
 }
 
-void UserListItem::setUserInfo(const UserInfo &userInfo)
+void UserListItem::setUserInfo (const UserInfo &userInfo)
 {
     m_userInfo = userInfo;
     ui->avatar->setImage(userInfo.imagePath);
     ui->label_username->setText(userInfo.name);
-    if( userInfo.loggedIn ){
+    if (userInfo.loggedIn)
+    {
         ui->label_logined->setPixmap(QPixmap(":/images/checked.png"));
     }
 }
 
-void UserListItem::setListItem(const QListWidgetItem *item)
+void UserListItem::setListItem (const QListWidgetItem *item)
 {
     m_listItem = item;
 }
 
-const QListWidgetItem *UserListItem::getListItem()
+const QListWidgetItem *UserListItem::getListItem ()
 {
     return m_listItem;
 }
 
-UserInfo UserListItem::getUserInfo()
+UserInfo UserListItem::getUserInfo ()
 {
     return m_userInfo;
 }
 
-void UserListItem::paintEvent(QPaintEvent *e)
+void UserListItem::paintEvent (QPaintEvent *e)
 {
     QStyleOption opt;
     opt.initFrom(this);

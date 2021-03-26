@@ -5,7 +5,8 @@
 #include <QVariant>
 
 //TODO:暂时这样
-struct UserInfo{
+struct UserInfo
+{
     QString name;
     QString realName;
     QString session;
