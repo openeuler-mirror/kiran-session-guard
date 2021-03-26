@@ -4,9 +4,9 @@
 #include <QStyleOption>
 #include <QStyle>
 
-TabItem::TabItem(const QString &image, const QString &text, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::TabItem)
+TabItem::TabItem (const QString &image, const QString &text, QWidget *parent) :
+        QWidget(parent),
+        ui(new Ui::TabItem)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -14,17 +14,17 @@ TabItem::TabItem(const QString &image, const QString &text, QWidget *parent) :
     ui->image->setPixmap(image);
 }
 
-TabItem::~TabItem()
+TabItem::~TabItem ()
 {
     delete ui;
 }
 
-QSize TabItem::sizeHint() const
+QSize TabItem::sizeHint () const
 {
-    return QSize(274,60);
+    return QSize(274, 60);
 }
 
-void TabItem::paintEvent(QPaintEvent *event)
+void TabItem::paintEvent (QPaintEvent *event)
 {
     QStyleOption opt;
     opt.initFrom(this);

@@ -5,20 +5,21 @@
 #include <QGSettings>
 #include <kiranwidgets-qt5/kiran-titlebar-window.h>
 
-namespace Ui {
-class GreeterSetting;
+namespace Ui
+{
+    class GreeterSetting;
 }
 
 class GreeterSetting : public KiranTitlebarWindow
 {
     Q_OBJECT
 public:
-    explicit GreeterSetting();
-    ~GreeterSetting();
+    explicit GreeterSetting ();
+    ~GreeterSetting ();
 private:
-    void initUI();
-    bool initUserComboBox();
-    void updateFont();
+    void initUI ();
+    bool initUserComboBox ();
+    void updateFont ();
 private:
     Ui::GreeterSetting *ui;
     QGSettings m_mateInterfaceSettings;

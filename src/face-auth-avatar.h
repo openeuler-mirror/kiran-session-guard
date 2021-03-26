@@ -1,27 +1,23 @@
-/**
- *@file  FingerAuthAvatar.h
- *@brief 
- *@auth  liuxinhao <liuxinhao@kylinos.com.cn>
- *@copyright (c) 2021 KylinSec. All rights reserved.
- */
-#ifndef __FINGERAUTHAVATAR_H__
-#define __FINGERAUTHAVATAR_H__
+#ifndef KIRAN_SCREENSAVER_DIALOG_FACEAUTHAVATAR_H
+#define KIRAN_SCREENSAVER_DIALOG_FACEAUTHAVATAR_H
 
 #include <QWidget>
+#include <QPixmap>
 #include <QPropertyAnimation>
 
-class FingerAuthAvatar : public QWidget
+class FaceAuthAvatar : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(uint progress READ progress WRITE setProgress)
 public:
-    FingerAuthAvatar (QWidget *parent = nullptr);
-    ~FingerAuthAvatar ();
+    explicit FaceAuthAvatar (QWidget *parent = nullptr);
+    ~FaceAuthAvatar ();
 
     void startAnimation ();
     void stopAnimation ();
 
 private:
+    void init ();
     uint progress ();
     void setProgress (uint progress);
     QPixmap scalePixmapAdjustSize (const QPixmap &pixmap);
@@ -37,5 +33,4 @@ private:
     QPropertyAnimation m_animation;
 };
 
-
-#endif //__FINGERAUTHAVATAR_H__
+#endif //KIRAN_SCREENSAVER_DIALOG_FACEAUTHAVATAR_H

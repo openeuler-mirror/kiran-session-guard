@@ -10,68 +10,67 @@
 #include <QSpacerItem>
 #include <QFontMetrics>
 
-GreeterMenuItem::GreeterMenuItem(const QString &text, bool checkable, QWidget *parent)
-    :QWidget (parent)
-    ,m_checkable(checkable)
-    ,m_actionName(text)
-    ,m_label(nullptr)
-    ,m_checkbox(nullptr)
+GreeterMenuItem::GreeterMenuItem (const QString &text, bool checkable, QWidget *parent)
+        : QWidget(parent), m_checkable(checkable), m_actionName(text), m_label(nullptr), m_checkbox(nullptr)
 {
     setMouseTracking(true);
     initUI();
 }
 
-void GreeterMenuItem::setExclusiveGroup(QButtonGroup *group)
+void GreeterMenuItem::setExclusiveGroup (QButtonGroup *group)
 {
     group->addButton(m_checkbox);
 }
 
-QString GreeterMenuItem::getActionName()
+QString GreeterMenuItem::getActionName ()
 {
     return m_actionName;
 }
 
-void GreeterMenuItem::setChecked(bool isChecked)
+void GreeterMenuItem::setChecked (bool isChecked)
 {
-    if(!m_checkable){
+    if (!m_checkable)
+    {
         return;
     }
     m_checkbox->setChecked(isChecked);
 }
 
-void GreeterMenuItem::initUI()
+void GreeterMenuItem::initUI ()
 {
-    QHBoxLayout* hboxLayout = new QHBoxLayout(this);
+    QHBoxLayout *hboxLayout = new QHBoxLayout(this);
     hboxLayout->setSpacing(0);
     hboxLayout->setMargin(0);
 
     m_label = new QLabel(m_actionName);
-    m_label->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    m_label->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    m_label->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_label->setToolTip(m_actionName);
-    hboxLayout->addWidget(m_label,Qt::AlignVCenter);
-    if( m_checkable ){
+    hboxLayout->addWidget(m_label, Qt::AlignVCenter);
+    if (m_checkable)
+    {
         m_checkbox = new QCheckBox("");
-        m_checkbox->setFixedSize(QSize(22,14));
-        m_checkbox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+        m_checkbox->setFixedSize(QSize(22, 14));
+        m_checkbox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         ///鼠标事件由父窗口处理，不可直接取消勾选
-        m_checkbox->setAttribute(Qt::WA_TransparentForMouseEvents,true);
-        connect(m_checkbox,&QCheckBox::stateChanged,[this](){
-            if(m_checkbox->isChecked()){
+        m_checkbox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+        connect(m_checkbox, &QCheckBox::stateChanged, [this] () {
+            if (m_checkbox->isChecked())
+            {
                 emit sigChecked(m_actionName);
             }
         });
-        hboxLayout->addWidget(m_checkbox,Qt::AlignVCenter|Qt::AlignRight);
+        hboxLayout->addWidget(m_checkbox, Qt::AlignVCenter | Qt::AlignRight);
     }
     this->setLayout(hboxLayout);
 }
 
-void GreeterMenuItem::paintEvent(QPaintEvent *event)
+void GreeterMenuItem::paintEvent (QPaintEvent *event)
 {
     QPainter painter(this);
     QStyleOption option;
     option.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget,&option,&painter,this);
+    style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
     QWidget::paintEvent(event);
 }
 
@@ -81,9 +80,10 @@ void GreeterMenuItem::paintEvent(QPaintEvent *event)
  *      　设置状态只能通过点击，取消勾选只能点击其他项
  *        调用父类的事件处理函数来产生QMenu的triggered信号
  */
-void GreeterMenuItem::mousePressEvent(QMouseEvent *event)
+void GreeterMenuItem::mousePressEvent (QMouseEvent *event)
 {
-    if( m_checkable && m_checkbox->isChecked() == false ){
+    if (m_checkable && m_checkbox->isChecked() == false)
+    {
         m_checkbox->setChecked(true);
     }
     return QWidget::mousePressEvent(event);

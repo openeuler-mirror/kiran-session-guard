@@ -7,26 +7,27 @@
 class GreeterSetting
 {
 public:
-    enum EnableScalingEnum{
+    enum EnableScalingEnum
+    {
         SCALING_AUTO = 0,
         SCALING_ENABLE,
         SCALING_DISABLE,
         SCALING_LAST,
     };
 public:
-    static GreeterSetting* instance();
-    ~GreeterSetting() = default;
+    static GreeterSetting *instance ();
+    ~GreeterSetting () = default;
 public:
-    void load();
-    QString getBackgroundPath();
-    bool getUserListHiding();
-    bool getEnableManualLogin();
-    EnableScalingEnum getEnableScaling();
-    double getScaleFactor();
-    int messageDisplayInterval();
-    void dumpGreeterSetting();
+    void load ();
+    QString getBackgroundPath ();
+    bool getUserListHiding ();
+    bool getEnableManualLogin ();
+    EnableScalingEnum getEnableScaling ();
+    double getScaleFactor ();
+    int messageDisplayInterval ();
+    void dumpGreeterSetting ();
 private:
-    GreeterSetting();
+    GreeterSetting ();
 private:
     QString m_backgroundPath;
     bool m_userlistHiding;

@@ -16,44 +16,45 @@ class LightdmPrefs : public QObject
     Q_PROPERTY(QString scaleFactor READ scaleFactor WRITE setScaleFactor NOTIFY scaleFactorChanged)
     Q_PROPERTY(QString greeterBackground READ greeterBackground WRITE setGreeterBackground NOTIFY greeterBackgroundChanged)
 public:
-    enum EnableScalingEnum{
+    enum EnableScalingEnum
+    {
         SCALING_AUTO = 0,
         SCALING_ENABLE,
         SCALING_DISABLE,
         SCALING_LAST,
     };
-    static LightdmPrefs* instance();
-    ~LightdmPrefs();
-    QString autoLoginUser() const;
-    QString autoLoginDelay() const;
-    bool enableManualLogin() const;
-    bool hideUserList() const;
-    QString scaleMode() const;
-    QString scaleFactor() const;
-    QString greeterBackground() const;
+    static LightdmPrefs *instance ();
+    ~LightdmPrefs ();
+    QString autoLoginUser () const;
+    QString autoLoginDelay () const;
+    bool enableManualLogin () const;
+    bool hideUserList () const;
+    QString scaleMode () const;
+    QString scaleFactor () const;
+    QString greeterBackground () const;
 private:
-    explicit LightdmPrefs(QObject *parent = nullptr);
-    void load();
-    void save();
-    static  QVariant getLightdmConf(const char* key,QVariant defaultValue);
+    explicit LightdmPrefs (QObject *parent = nullptr);
+    void load ();
+    void save ();
+    static QVariant getLightdmConf (const char *key, QVariant defaultValue);
 signals:
-    void autoLoginUserChanged(QString autoLoginUser);
-    void autoLoginDelayChanged(QString autoLoginDelay);
-    void enableManualLoginChanged(bool enableManualLogin);
-    void hideUserListChanged(bool hideUserList);
-    void scaleModeChanged(QString scaleMode);
-    void scaleFactorChanged(QString scaleFactor);
-    void greeterBackgroundChanged(QString greeterBackground);
+    void autoLoginUserChanged (QString autoLoginUser);
+    void autoLoginDelayChanged (QString autoLoginDelay);
+    void enableManualLoginChanged (bool enableManualLogin);
+    void hideUserListChanged (bool hideUserList);
+    void scaleModeChanged (QString scaleMode);
+    void scaleFactorChanged (QString scaleFactor);
+    void greeterBackgroundChanged (QString greeterBackground);
 public slots:
-    void setAutoLoginUser(QString autoLoginUser);
-    void setAutoLoginDelay(QString autoLoginDelay);
-    void setEnableManualLogin(bool enableManualLogin);
-    void setHideUserList(bool hideUserList);
-    void setScaleMode(QString scaleMode);
-    void setScaleFactor(QString scaleFactor);
-    void setGreeterBackground(QString greeterBackground);
+    void setAutoLoginUser (QString autoLoginUser);
+    void setAutoLoginDelay (QString autoLoginDelay);
+    void setEnableManualLogin (bool enableManualLogin);
+    void setHideUserList (bool hideUserList);
+    void setScaleMode (QString scaleMode);
+    void setScaleFactor (QString scaleFactor);
+    void setGreeterBackground (QString greeterBackground);
 private:
-    GKeyFile* m_lightdmConf;
+    GKeyFile *m_lightdmConf;
     QSettings m_greeterConf;
     QString m_autoLoginUser;
     QString m_autoLoginDelay;
