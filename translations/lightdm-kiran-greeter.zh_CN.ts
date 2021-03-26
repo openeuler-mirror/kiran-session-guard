@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>GreeterLineEdit</name>
     <message>
@@ -75,6 +75,16 @@
         <translation>MM月MM日 dddd HH:mm</translation>
     </message>
     <message>
+        <location filename="../src/greeterloginwindow.cpp" line="722"/>
+        <source>Start face authentication</source>
+        <translation>开始人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../src/greeterloginwindow.cpp" line="730"/>
+        <source>Start fingerprint authentication</source>
+        <translation>开始指纹认证</translation>
+    </message>
+    <message>
         <location filename="../src/greeterloginwindow.cpp" line="128"/>
         <source>suspend</source>
         <translation>待机</translation>
@@ -102,7 +112,7 @@
     </message>
     <message>
         <source>Start session failed</source>
-        <translation type="vanished">开启会话失败</translation>
+        <translation>开启会话失败</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="310"/>
@@ -119,15 +129,15 @@
     <name>GreeterPromptMsgManager</name>
     <message>
         <source>Incorrect password, please try again</source>
-        <translation type="vanished">密码错误，请再次尝试</translation>
+        <translation>密码错误，请再次尝试</translation>
     </message>
     <message>
         <source>Incorrect username or password</source>
-        <translation type="vanished">用户名或密码错误</translation>
+        <translation>用户名或密码错误</translation>
     </message>
     <message>
         <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
+        <translation>认证失败</translation>
     </message>
 </context>
 <context>
