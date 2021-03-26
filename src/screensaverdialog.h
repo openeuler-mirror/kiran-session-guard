@@ -4,42 +4,64 @@
 #include <QWidget>
 #include <QAbstractNativeEventFilter>
 #include <QPropertyAnimation>
+
 #include "pamauthproxy.h"
+
 namespace Ui {
 class ScreenSaverDialog;
 }
 
 class QMenu;
-class ScreenSaverDialog : public QWidget,PamAuthCallback
+class ScreenSaverDialog : public QWidget
 {
     Q_OBJECT
 public:
+    enum AuthType{
+        AUTH_TYPE_PASSWD,
+        AUTH_TYPE_FINGER,
+        AUTH_TYPE_FACE
+    };
     explicit ScreenSaverDialog(QWidget *parent = nullptr);
     virtual ~ScreenSaverDialog();
     void setSwitchUserEnabled(bool enable);
+
 private:
-    void InitUI();
+    void init();
+    void initPamAuthProxy();
+    void initUI();
+
     QString getUser();
     Q_INVOKABLE void startUpdateTimeTimer();
     Q_INVOKABLE void updateTimeLabel();
     QString getCurrentDateTime();
+    void updateCurrentAuthType(ScreenSaverDialog::AuthType type);
+
 private:
-    virtual void requestResponse(const char* msg,bool visiable) Q_DECL_OVERRIDE;
-    Q_INVOKABLE void requestResponse(const QString& msg,bool visiable);
-    virtual void onDisplayError(const char* msg) Q_DECL_OVERRIDE;
-    virtual void onDisplayTextInfo(const char* msg) Q_DECL_OVERRIDE;
-private:
+    ///开始进行PAM认证
+    void startAuth();
+
     ///通过标准输出回复ScreenSaver接口
     void printWindowID();
     void responseOkAndQuit();
     Q_INVOKABLE void responseCancelAndQuit();
     void responseNoticeAuthFailed();
+
+    ///切换输入框到重新认证按钮
+    void switchToReauthentication();
+
+    ///显示输入框
+    void switchToPromptEdit();
+
 private slots:
-    void slotAuthenticateComplete(bool isSuccess);
+    void slotShowMessage(QString text,PamAuthProxy::MessageType type);
+    void slotShowPrompt(QString text,PamAuthProxy::PromptType type);
+    void slotAuthenticationComplete();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     virtual void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     virtual void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+
 private:
     Ui::ScreenSaverDialog *ui;
     PamAuthProxy m_authProxy;
@@ -47,6 +69,7 @@ private:
     QPixmap m_background;
     QPixmap m_scaledBackground;
     QMenu* m_powerMenu;
+    AuthType m_authType = AUTH_TYPE_PASSWD;
 };
 
 #endif // WIDGET_H

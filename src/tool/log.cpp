@@ -99,6 +99,8 @@ void Log::write(QtMsgType type, const QMessageLogContext &context, const QString
             }
         }
     }
+    std::string sLogContent = logContent.toStdString();
+    std::cout << sLogContent << std::endl;
     m_mutex.unlock();
 }
 
@@ -122,7 +124,7 @@ Log::Log()
     :m_savePath(""),
      m_msgType(QtDebugMsg),
      m_initOver(false),
-     m_append2File(false)
+     m_append2File(true)
 {
 
 }
