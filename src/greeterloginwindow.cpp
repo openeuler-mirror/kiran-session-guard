@@ -272,9 +272,11 @@ void GreeterLoginWindow::initLightdmGreeter()
         if( text == ASK_FPINT ){
             setCurrentAuthType(AUTH_TYPE_FINGER);
             m_greeter.respond(REP_FPINT);
+            return;
         }else if( text == ASK_FACE ){
             setCurrentAuthType(AUTH_TYPE_FACE);
             m_greeter.respond(REP_FACE);
+            return;
         }else{
             setCurrentAuthType(AUTH_TYPE_PASSWD);
         }
@@ -515,6 +517,8 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
     m_loginMode = LOGIN_MODE_USER_LIST;
 
+    setCurrentAuthType(AUTH_TYPE_PASSWD);
+
     UserInfo userinfo;
     if( ui->userlist->getCurrentSelected(userinfo) ){
         slotUserActivated(userinfo);
@@ -554,6 +558,8 @@ void GreeterLoginWindow::resetUIForManualLogin()
 
     //tips清空
     ui->label_tips->clear();
+
+    setCurrentAuthType(AUTH_TYPE_PASSWD);
 
     //用户列表隐藏
     ui->userlist->setEnabled(false);
@@ -712,9 +718,16 @@ void GreeterLoginWindow::setCurrentAuthType(AuthType type) {
     ui->loginAvatar->setVisible(type==AUTH_TYPE_PASSWD);
 
     ui->faceAvatar->setVisible(type==AUTH_TYPE_FACE);
+    if( type==AUTH_TYPE_FACE ){
+        slotShowMessage(tr("Start face authentication"),AuthMsgQueue::MESSAGE_TYPE_INFO);
+        ui->faceAvatar->startAnimation();
+    }else{
+        ui->faceAvatar->stopAnimation();
+    }
 
     ui->fingerAvatar->setVisible(type==AUTH_TYPE_FINGER);
     if( type==AUTH_TYPE_FINGER ){
+        slotShowMessage(tr("Start fingerprint authentication"),AuthMsgQueue::MESSAGE_TYPE_INFO);
         ui->fingerAvatar->startAnimation();
     }else{
         ui->fingerAvatar->stopAnimation();
