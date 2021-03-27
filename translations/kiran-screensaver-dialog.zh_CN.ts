@@ -46,5 +46,9 @@
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
+    <message>
+        <source>Failed to authenticate</source>
+        <translation>认证失败</translation>
+    </message>
 </context>
 </TS>

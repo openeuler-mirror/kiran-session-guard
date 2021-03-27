@@ -73,6 +73,8 @@ private:
     QPixmap m_scaledBackground;
     QMenu *m_powerMenu;
     AuthType m_authType = AUTH_TYPE_PASSWD;
+    bool m_havePrompt = false;
+    bool m_haveErr = false;
 };
 
 #endif // WIDGET_H
