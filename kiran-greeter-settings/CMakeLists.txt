@@ -69,8 +69,8 @@ install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/sbin/)
 #翻译文件
 install(FILES ${QML_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
 #polkit提权策略
-install(FILES ./config/com.kiran.kiran-greeter-settings.policy DESTINATION ${SHARE_INSTALL_PREFIX}/polkit-1/actions/)
+install(FILES config/com.kiran.kiran-greeter-settings.policy DESTINATION ${SHARE_INSTALL_PREFIX}/polkit-1/actions/)
 #桌面快捷方式
-install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)
+install(FILES config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)
 #shell
-install(FILES ./config/kiran-greeter-settings DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
+install(FILES config/kiran-greeter-settings DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)

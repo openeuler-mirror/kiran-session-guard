@@ -83,7 +83,7 @@ endif()
 #安装lightdm-kiran-greeter
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
 #安装翻译  /usr/share/lightdm-kiran-greeter/translations/
-install(FILES ${QM_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greetere/translations/)
+install(FILES ${QM_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
 #安装自身配置文件 /etc/lightdm/
 install(FILES config/lightdm-kiran-greeter.conf DESTINATION ${SYSCONF_INSTALL_DIR}/lightdm/)
 #安装lightdm greeter配置文件 /usr/share/lightdm/lightdm.conf.d/
@@ -92,4 +92,4 @@ install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${SHARE_INSTALL_P
 install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/xgreeters/)
 
 
-add_subdirectory(kiran-greeter-setting)
+add_subdirectory(kiran-greeter-settings)

@@ -18,7 +18,7 @@
 int main (int argc, char *argv[])
 {
     ///初始化日志模块
-    Log::instance()->init("/tmp/lightdm-kiran-greeter-setting.log");
+    Log::instance()->init("/tmp/lightdm-kiran-greeter-settings.log");
     qInstallMessageHandler(Log::messageHandler);
 
 #ifndef TEST
