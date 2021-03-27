@@ -399,8 +399,18 @@ void ScreenSaverDialog::slotAuthenticationComplete ()
     bool isSuccess = m_authProxy.isAuthenticated();
     if (!isSuccess)
     {
-        //responseCancelAndQuit();
-        switchToReauthentication();
+        ///没存在过prompt消息，也没有error消息，抽象点的提示给用户
+        if (!m_haveErr)
+        {
+            slotShowMessage(tr("Failed to authenticate"),PamAuthProxy::MessageTypeError);
+        }
+
+        /// 如果不存在过Prompt直接失败，显示重新认证按钮，避免一直认证失败，重新认证的死循环
+        if( !m_havePrompt ){
+            switchToReauthentication();
+        }else{
+            startAuth();
+        }
     }
     else
     {
@@ -426,6 +436,8 @@ void ScreenSaverDialog::slotShowPrompt (QString text, PamAuthProxy::PromptType p
     {
         updateCurrentAuthType(AUTH_TYPE_PASSWD);
     }
+
+    m_havePrompt = true;
     ui->promptEdit->reset();
     ui->promptEdit->setPlaceHolderText(text);
     ui->promptEdit->setEchoMode(
@@ -435,6 +447,9 @@ void ScreenSaverDialog::slotShowPrompt (QString text, PamAuthProxy::PromptType p
 
 void ScreenSaverDialog::slotShowMessage (QString text, PamAuthProxy::MessageType messageType)
 {
+    if( messageType==PamAuthProxy::MessageTypeError ){
+        m_haveErr = true;
+    }
     QString colorText = QString("<font color=%1>%2</font>")
             .arg(messageType == PamAuthProxy::MessageTypeInfo ? "white" : "red")
             .arg(text);
@@ -462,6 +477,8 @@ void ScreenSaverDialog::switchToPromptEdit ()
 void ScreenSaverDialog::startAuth ()
 {
     updateCurrentAuthType(AUTH_TYPE_PASSWD);
+    m_haveErr = false;
+    m_havePrompt = false;
     if (m_authProxy.isRunning())
     {
         m_authProxy.reAuthenticate();
