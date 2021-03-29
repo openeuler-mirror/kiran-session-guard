@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(kiran-screensaver-dialog)
 
+option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -29,6 +31,10 @@ file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h" "src/*.ui")
 file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} )
+
+if(HAVE_BIOMETRICS_AUTH)
+    add_definitions(-DBIOMETRICS_AUTH)
+endif()
 
 include_directories("${CMAKE_BINARY_DIR}")
 add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
