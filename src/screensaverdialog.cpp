@@ -18,7 +18,15 @@
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
+
+#ifdef BIOMETRICS_AUTH
 #include <kiran-pam-msg.h>
+#else
+#define ASK_FPINT       "ReqFingerprint" //请求指纹认证界面
+#define ASK_FACE        "ReqFace"        //请求人脸认证界面
+#define REP_FPINT       "RepFingerprintReady" //指纹认证界面准备完毕
+#define REP_FACE        "RepFaceReady" //人脸认证界面准备完毕
+#endif
 
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
