@@ -83,7 +83,7 @@ if (NOT DEFINED SHARE_INSTALL_PREFIX)
 endif()
 
 if(HAVE_BIOMETRICS_AUTH)
-    add_definitions(BIOMETRICS_AUTH)
+    add_definitions(-DBIOMETRICS_AUTH)
 endif()
 
 #安装lightdm-kiran-greeter
