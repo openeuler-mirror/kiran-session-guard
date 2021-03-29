@@ -8,8 +8,6 @@
 #include <QFileDialog>
 #include <QValidator>
 #include <QMessageBox>
-#include <widget-property-helper.h>
-#include <kiran-switch-button.h>
 
 #define KEY_FONT_NAME "fontName"
 
