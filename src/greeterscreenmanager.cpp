@@ -29,6 +29,10 @@ void GreeterScreenManager::init ()
 {
     for (QScreen *screen:qApp->screens())
     {
+        //fix #36459,避免错误的数据,导致显示的问题
+        if( screen->physicalSize().isEmpty() ){
+            continue;
+        }
         newScreenBackgroundWidget(screen);
     }
     m_greeterWindow = new GreeterLoginWindow();
