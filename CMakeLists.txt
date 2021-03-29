@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lightdm-kiran-greeter)
 
+option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -78,6 +80,10 @@ if (NOT DEFINED SYSCONF_INSTALL_DIR)
 endif()
 if (NOT DEFINED SHARE_INSTALL_PREFIX)
     set(SHARE_INSTALL_PREFIX "/usr/share")
+endif()
+
+if(HAVE_BIOMETRICS_AUTH)
+    add_definitions(BIOMETRICS_AUTH)
 endif()
 
 #安装lightdm-kiran-greeter
