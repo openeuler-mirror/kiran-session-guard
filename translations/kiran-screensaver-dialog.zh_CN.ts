@@ -50,5 +50,13 @@
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
+    <message>
+        <source>ddd MMM HH:mm</source>
+        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
+    </message>
+    <message>
+        <source>ddd MMM dd HH:mm</source>
+        <translation>MM月dd日 dddd HH:mm</translation>
+    </message>
 </context>
 </TS>
