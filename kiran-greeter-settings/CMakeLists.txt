@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+include(GNUInstallDirs)
+
 # Qt依赖
 find_package(Qt5 COMPONENTS
         Widgets
@@ -44,7 +46,8 @@ add_executable(${PROJECT_NAME}
         ${SRC_CPP}
         ${SRC_HEADER}
         ${SRC_FORMS}
-        ${RESOURCES})
+        ${RESOURCES}
+        ${QM_FILES})
 
 include_directories("${CMAKE_BINARY_DIR}")
 
@@ -64,12 +67,18 @@ target_link_libraries(${PROJECT_NAME}
 
 # 安装
 #安装kiran-greeter-settings
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/sbin/)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR}/)
+
 #翻译文件
-install(FILES ${QML_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations/)
+
 #polkit提权策略
-install(FILES config/com.kiran.kiran-greeter-settings.policy DESTINATION ${SHARE_INSTALL_PREFIX}/polkit-1/actions/)
+install(FILES config/com.kiran.kiran-greeter-settings.policy DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/polkit-1/actions/)
+
 #桌面快捷方式
-install(FILES config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)
+install(FILES config/kiran-greeter-settings.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/applications/)
+
 #shell
-install(FILES config/kiran-greeter-settings DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
+install(FILES config/kiran-greeter-settings
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/
+        PERMISSIONS WORLD_EXECUTE WORLD_READ OWNER_WRITE)

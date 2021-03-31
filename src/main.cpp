@@ -13,7 +13,6 @@
 #include "cursorhelper.h"
 #include "synclockstatus.h"
 
-#define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations"
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
 void termSignalHandler (int unused)
@@ -82,12 +81,8 @@ int main (int argc, char *argv[])
 
     ///翻译
     QTranslator tsor;
-    //filename+prefix+language name+suffix
-    qInfo() << "load translation file: " << tsor.load(QLocale(),
-                                                      "lightdm-kiran-greeter"/*filename*/,
-                                                      "."/*prefix*/,
-                                                      TRANSLATION_FILE_DIR/*dir*/,
-                                                      ".qm"/*suffix*/);
+    QString translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
+    tsor.load(QLocale(),qAppName(),".",translationFileDir,".qm");
     qApp->installTranslator(&tsor);
 
     ///加载样式表
