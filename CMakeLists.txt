@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+include(GNUInstallDirs)
+
 # Qt依赖
 find_package(Qt5 COMPONENTS
         Widgets
@@ -72,30 +74,23 @@ target_link_libraries(${PROJECT_NAME}
         ${XCURSOR_LIBRARIES}
         ${XFIXES_LIBRARIES})
 
-# 安装
-# SYSCONF_INSTALL_DIR,SHARE_INSTALL_PREFIX
-# 为rpmbuild中定义的宏,若不经过rpmbuild进行编译,对这些值给默认初始化
-if (NOT DEFINED SYSCONF_INSTALL_DIR)
-    set(SYSCONF_INSTALL_DIR "/etc")
-endif()
-if (NOT DEFINED SHARE_INSTALL_PREFIX)
-    set(SHARE_INSTALL_PREFIX "/usr/share")
-endif()
-
-if(HAVE_BIOMETRICS_AUTH)
+if (HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)
-endif()
+endif ()
 
 #安装lightdm-kiran-greeter
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
-#安装翻译  /usr/share/lightdm-kiran-greeter/translations/
-install(FILES ${QM_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
-#安装自身配置文件 /etc/lightdm/
-install(FILES config/lightdm-kiran-greeter.conf DESTINATION ${SYSCONF_INSTALL_DIR}/lightdm/)
-#安装lightdm greeter配置文件 /usr/share/lightdm/lightdm.conf.d/
-install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm/lightdm.conf.d/)
-#安装xgreeter配置文件 /usr/share/xgreeters/
-install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/xgreeters/)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 
+#安装翻译  /usr/share/lightdm-kiran-greeter/translations/
+install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations)
+
+#安装自身配置文件 /etc/lightdm/lightdm-kiran-greeter.conf
+install(FILES config/lightdm-kiran-greeter.conf DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/lightdm/)
+
+#安装lightdm greeter配置文件 /usr/share/lightdm/lightdm.conf.d/99-lightdm-kiran-greeter.conf
+install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm/lightdm.conf.d/)
+
+#安装xgreeter配置文件 /usr/share/xgreeters/
+install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/xgreeters/)
 
 add_subdirectory(kiran-greeter-settings)

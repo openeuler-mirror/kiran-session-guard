@@ -11,7 +11,6 @@
 #include "lightdmprefs.h"
 #include "dbusapi.h"
 
-#define TRANSLATION_FILE_DIR "/usr/share/lightdm-kiran-greeter/translations/"
 #define ENV_XDG_CURRENT_DESKTOP "XDG_CURRENT_DESKTOP"
 #define DEFAULT_STYLE_FILE   ":/themes/kiran-greeter-settings-normal.qss"
 
@@ -54,12 +53,9 @@ int main (int argc, char *argv[])
 
     ///翻译
     QTranslator tsor;
-    //filename+prefix+language name+suffix
-    qInfo() << "load translation file: " << tsor.load(QLocale(),
-                                                      "kiran-greeter-settings"/*filename*/,
-                                                      "."/*prefix*/,
-                                                      TRANSLATION_FILE_DIR/*dir*/,
-                                                      ".qm"/*suffix*/);
+    QString translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
+    bool loadTsor = tsor.load(QLocale(),qAppName(),".",translationFileDir,".qm");
+    qInfo() << "load translation:" << loadTsor;
     qApp->installTranslator(&tsor);
 
     ///加载样式表
