@@ -13,6 +13,7 @@ include(GNUInstallDirs)
 # Qt依赖
 find_package(Qt5 COMPONENTS
         Widgets
+        DBus
         X11Extras
         LinguistTools)
 
@@ -65,6 +66,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME}
         Qt5::Widgets
+        Qt5::DBus
         Qt5::X11Extras
         pthread
         ${LIGHTDM_QT5_LIBRARIES}
