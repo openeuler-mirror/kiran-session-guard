@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(kiran-greeter-setting)
+project(kiran-greeter-settings)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,8 +68,8 @@ target_link_libraries(${PROJECT_NAME}
 
 # 安装
 #安装kiran-greeter-settings
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 #翻译文件
-install(FILES ${SETTINGS_QM_FILES} DESTINATION ${SHARE_INSTALL_PREFIX}/lightdm-kiran-greeter/translations/)
+install(FILES ${SETTINGS_QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm-kiran-greeter/translations/)
 #桌面快捷方式
-install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${SHARE_INSTALL_PREFIX}/applications/)
+install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/applications/)

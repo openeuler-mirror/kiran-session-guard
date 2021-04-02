@@ -162,7 +162,7 @@ void GreeterLoginWindow::initUI()
     });
     ///重新认证按钮点击
     connect(ui->btn_reAuth,&QPushButton::clicked,[this](){
-        if( m_loginMode==LOGIN_BY_USER_LIST ){
+        if( m_loginMode==LOGIN_MODE_USER_LIST ){
             resetUIForUserListLogin();
         }else{
             resetUIForManualLogin();
@@ -189,7 +189,7 @@ void GreeterLoginWindow::initUI()
 #endif
     ///用户列表请求重置用户选择登录界面
     connect(ui->userlist,&UserListWidget::sigRequestResetUI,[this]{
-        Q_ASSERT(m_loginMode==LOGIN_BY_USER_LIST);
+        Q_ASSERT(m_loginMode==LOGIN_MODE_USER_LIST);
         resetUIForUserListLogin();
     });
     startUpdateTimeTimer();

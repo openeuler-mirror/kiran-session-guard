@@ -1,5 +1,4 @@
 #include "greeter-setting-window.h"
-#include "tabitem.h"
 #include "dbusapi.h"
 #include "kiran-greeter-prefs.h"
 #include "hover-tips.h"
@@ -555,7 +554,6 @@ void GreeterSettingWindow::resetAppearanceSettings()
     m_comboScaleMode->setCurrentIndex(idx);
     idx = m_comboScaleFactor->findData(appearanceSetting.scaleFactor);
     m_comboScaleFactor->setCurrentIndex(idx);
-
     m_origSettingInfo.appearanceInfo = appearanceSetting;
 }
 
