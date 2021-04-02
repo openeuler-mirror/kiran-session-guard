@@ -6,7 +6,7 @@
 #include <QFile>
 #include <kiran-single-application.h>
 
-#include "greetersetting.h"
+#include "greeter-setting-window.h"
 #include "single/singleapplication.h"
 #include "log.h"
 #include "lightdmprefs.h"
@@ -20,14 +20,6 @@ int main(int argc, char *argv[])
     ///初始化日志模块
     Log::instance()->init("/tmp/lightdm-kiran-greeter-settings.log");
     qInstallMessageHandler(Log::messageHandler);
-
-#ifndef TEST
-    ///限制普通用户启动
-    if(getuid()!=0||getgid()!=0){
-        qWarning() << "need run with admin privilege.";
-        return 0;
-    }
-#endif
 
     ///FIXME:为了解决Qt在Root权限下，启动的文件选择框和操作系统文件选择框样式不同
     ///      通过手动设置XDG_CURRENT_DESKTOP环境变量
@@ -65,7 +57,7 @@ int main(int argc, char *argv[])
     }
 
     LightdmPrefs::instance();
-    GreeterSetting w;
+    GreeterSettingWindow w;
     w.show();
 
     return a.exec();

@@ -38,7 +38,7 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 
 # 翻译
 set(TS_FILES "translations/kiran-greeter-settings.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 add_executable(${PROJECT_NAME}
         ${PUBLIC_CPP}
@@ -47,9 +47,9 @@ add_executable(${PROJECT_NAME}
         ${SRC_HEADER}
         ${SRC_FORMS}
         ${RESOURCES}
-        ${QM_FILES})
+        ${GREETER_SETTINS_QM_FILES})
 
-include_directories("${CMAKE_BINARY_DIR}")
+include_directories(${CMAKE_BINARY_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ../public
