@@ -7,16 +7,16 @@
 #ifndef LIGHTDM_KIRAN_GREETER_AUTH_MSG_QUEUE_H
 #define LIGHTDM_KIRAN_GREETER_AUTH_MSG_QUEUE_H
 
-#include <QThread>
-#include <QSemaphore>
-#include <QMutex>
-#include <QWaitCondition>
-#include <QQueue>
 #include <QFutureWatcher>
+#include <QMutex>
+#include <QQueue>
+#include <QSemaphore>
+#include <QThread>
+#include <QWaitCondition>
 
 class AuthMsgQueue : public QThread
 {
-Q_OBJECT
+    Q_OBJECT
     Q_ENUMS(PamMsgType MessageType PromptType)
 public:
     enum PamMsgType
@@ -44,7 +44,7 @@ public:
         union extra
         {
             MessageType msgType;
-            PromptType promptType;
+            PromptType  promptType;
             struct AuthenticationCompleteResult
             {
                 bool isSuccess;
@@ -53,47 +53,46 @@ public:
         } extra;
     };
 
-    AuthMsgQueue (QObject *parent = nullptr);
-    ~AuthMsgQueue ();
+    AuthMsgQueue(QObject *parent = nullptr);
+    ~AuthMsgQueue();
 
-    void setMsgInterval (int seconds);
+    void setMsgInterval(int seconds);
 
-    void startDispatcher ();
-    void stopDispatcher ();
+    void startDispatcher();
+    void stopDispatcher();
 
-    void clean ();
-    void append (const PamMessage &msg);
+    void clean();
+    void append(const PamMessage &msg);
 
 protected:
-    void run () override;
+    void run() override;
 
 signals:
     /* 显示prompt消息信号 */
-    void showPrompt (const QString &prompt, AuthMsgQueue::PromptType type);
+    void showPrompt(const QString &prompt, AuthMsgQueue::PromptType type);
     /* 显示消息 */
-    void showMessage (const QString &message, AuthMsgQueue::MessageType type);
+    void showMessage(const QString &message, AuthMsgQueue::MessageType type);
     /* 认证完成 */
-    void authenticateComplete (bool success, bool reAuth);
+    void authenticateComplete(bool success, bool reAuth);
 
 private:
-    quint64 getUPTime ();
-    bool fetchMessageFromQueue (PamMessage &msg, int ms);
-    void pamMessageDispatcher ();
-    void dumpMsg (const PamMessage &msg);
+    quint64 getUPTime();
+    bool    fetchMessageFromQueue(PamMessage &msg, int ms);
+    void    pamMessageDispatcher();
+    void    dumpMsg(const PamMessage &msg);
 
 private:
     QQueue<PamMessage> m_queue;
-    QSemaphore m_queueSem;
-    QMutex m_queueMutex;
+    QSemaphore         m_queueSem;
+    QMutex             m_queueMutex;
 
     quint64 m_showInterval = 2;
-    quint64 m_msgShowTime = 0;
+    quint64 m_msgShowTime  = 0;
 
-    QMutex m_cancelWaitMutex;
+    QMutex         m_cancelWaitMutex;
     QWaitCondition m_cancelWaitCondition;
 
     bool m_havePrompted = false;
 };
 
-
-#endif //LIGHTDM_KIRAN_GREETER_AUTH_MSG_QUEUE_H
+#endif  //LIGHTDM_KIRAN_GREETER_AUTH_MSG_QUEUE_H

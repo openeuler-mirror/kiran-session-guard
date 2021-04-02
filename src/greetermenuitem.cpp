@@ -1,33 +1,33 @@
 #include "greetermenuitem.h"
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QCheckBox>
 #include <QButtonGroup>
-#include <QStyleOption>
-#include <QPainter>
+#include <QCheckBox>
 #include <QDebug>
 #include <QEvent>
-#include <QSpacerItem>
 #include <QFontMetrics>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPainter>
+#include <QSpacerItem>
+#include <QStyleOption>
 
-GreeterMenuItem::GreeterMenuItem (const QString &text, bool checkable, QWidget *parent)
-        : QWidget(parent), m_checkable(checkable), m_actionName(text), m_label(nullptr), m_checkbox(nullptr)
+GreeterMenuItem::GreeterMenuItem(const QString &text, bool checkable, QWidget *parent)
+    : QWidget(parent), m_checkable(checkable), m_actionName(text), m_label(nullptr), m_checkbox(nullptr)
 {
     setMouseTracking(true);
     initUI();
 }
 
-void GreeterMenuItem::setExclusiveGroup (QButtonGroup *group)
+void GreeterMenuItem::setExclusiveGroup(QButtonGroup *group)
 {
     group->addButton(m_checkbox);
 }
 
-QString GreeterMenuItem::getActionName ()
+QString GreeterMenuItem::getActionName()
 {
     return m_actionName;
 }
 
-void GreeterMenuItem::setChecked (bool isChecked)
+void GreeterMenuItem::setChecked(bool isChecked)
 {
     if (!m_checkable)
     {
@@ -36,7 +36,7 @@ void GreeterMenuItem::setChecked (bool isChecked)
     m_checkbox->setChecked(isChecked);
 }
 
-void GreeterMenuItem::initUI ()
+void GreeterMenuItem::initUI()
 {
     QHBoxLayout *hboxLayout = new QHBoxLayout(this);
     hboxLayout->setSpacing(0);
@@ -54,7 +54,7 @@ void GreeterMenuItem::initUI ()
         m_checkbox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         ///鼠标事件由父窗口处理，不可直接取消勾选
         m_checkbox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-        connect(m_checkbox, &QCheckBox::stateChanged, [this] () {
+        connect(m_checkbox, &QCheckBox::stateChanged, [this]() {
             if (m_checkbox->isChecked())
             {
                 emit sigChecked(m_actionName);
@@ -65,9 +65,9 @@ void GreeterMenuItem::initUI ()
     this->setLayout(hboxLayout);
 }
 
-void GreeterMenuItem::paintEvent (QPaintEvent *event)
+void GreeterMenuItem::paintEvent(QPaintEvent *event)
 {
-    QPainter painter(this);
+    QPainter     painter(this);
     QStyleOption option;
     option.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
@@ -80,7 +80,7 @@ void GreeterMenuItem::paintEvent (QPaintEvent *event)
  *      　设置状态只能通过点击，取消勾选只能点击其他项
  *        调用父类的事件处理函数来产生QMenu的triggered信号
  */
-void GreeterMenuItem::mousePressEvent (QMouseEvent *event)
+void GreeterMenuItem::mousePressEvent(QMouseEvent *event)
 {
     if (m_checkable && m_checkbox->isChecked() == false)
     {

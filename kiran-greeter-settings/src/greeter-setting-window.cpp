@@ -1,45 +1,44 @@
 #include "greeter-setting-window.h"
 #include "dbusapi.h"
-#include "kiran-greeter-prefs.h"
 #include "hover-tips.h"
+#include "kiran-greeter-prefs.h"
 
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QDebug>
-#include <QFileDialog>
-#include <QStackedWidget>
-#include <QPushButton>
-#include <QComboBox>
-#include <QApplication>
-#include <QLineEdit>
-#include <QDir>
-#include <QStandardPaths>
 #include <widget-property-helper.h>
+#include <QApplication>
+#include <QComboBox>
+#include <QDebug>
+#include <QDir>
+#include <QFileDialog>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QStandardPaths>
 
-#include <kiran-switch-button.h>
-#include <kiran-sidebar-widget.h>
-#include <kiran-message-box.h>
 #include <kiran-image-selector.h>
+#include <kiran-message-box.h>
+#include <kiran-sidebar-widget.h>
+#include <kiran-switch-button.h>
 
 #include "kiran-greeter-prefs.h"
 
-#define BACKGROUND_SAVE_LOCATION  "/usr/share/lightdm-kiran-greeter/background"
+#define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 using namespace DBusApi;
 
-enum GreeterSettingsPageEnum {
+enum GreeterSettingsPageEnum
+{
     GreeterSettings_Appearance,
     GreeterSettings_Autologin
 };
 
-GreeterSettingWindow::GreeterSettingWindow() :
-        KiranTitlebarWindow()
+GreeterSettingWindow::GreeterSettingWindow() : KiranTitlebarWindow()
 {
     initUI();
 }
 
 GreeterSettingWindow::~GreeterSettingWindow()
 {
-
 }
 
 void GreeterSettingWindow::initUI()
@@ -50,7 +49,7 @@ void GreeterSettingWindow::initUI()
 
     /* 内容区域主布局 */
     QWidget *contentWidget = getWindowContentWidget();
-    auto mainLayout = new QHBoxLayout(contentWidget);
+    auto     mainLayout    = new QHBoxLayout(contentWidget);
     mainLayout->setContentsMargins(9, 0, 9, 9);
 
     /* 左侧侧边栏 */
@@ -97,16 +96,20 @@ void GreeterSettingWindow::initUI()
     /* 处理相关控件信号和初始化 */
     connect(m_sidebarWidget, &KiranSidebarWidget::itemSelectionChanged, [this] {
         QList<QListWidgetItem *> selecteds = m_sidebarWidget->selectedItems();
-        if (selecteds.size() != 1) {
+        if (selecteds.size() != 1)
+        {
             qFatal("tabList: selecteds size != 1");
         }
         int page = m_sidebarWidget->row(selecteds.at(0));
         m_stackedWidget->setCurrentIndex(page);
 
         /* 重置页面 */
-        if (page == GreeterSettings_Appearance) {
+        if (page == GreeterSettings_Appearance)
+        {
             resetAppearanceSettings();
-        } else if (page == GreeterSettings_Autologin) {
+        }
+        else if (page == GreeterSettings_Autologin)
+        {
             resetAutoLoginSettings();
         }
 
@@ -135,7 +138,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     mainLayout->addWidget(labelAutoLogonAccount);
 
     m_comboAutoLoginAccount = new QComboBox(this);
-    m_comboAutoLoginAccount->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboAutoLoginAccount->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_comboAutoLoginAccount->setFixedHeight(40);
     m_comboAutoLoginAccount->setIconSize(QSize(24, 24));
     initUserComboBox(m_comboAutoLoginAccount);
@@ -150,7 +153,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
 
     m_editAutoLoginDelay = new QLineEdit(this);
     m_editAutoLoginDelay->setFixedHeight(40);
-    m_editAutoLoginDelay->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_editAutoLoginDelay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QValidator *validator = new QIntValidator(0, INT_MAX, this);
     m_editAutoLoginDelay->setValidator(validator);
     mainLayout->addWidget(m_editAutoLoginDelay, 0);
@@ -212,7 +215,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
 QWidget *GreeterSettingWindow::initPageAppearance()
 {
     auto pageAppearance = new QWidget(this);
-    auto mainLayout = new QVBoxLayout(pageAppearance);
+    auto mainLayout     = new QVBoxLayout(pageAppearance);
     mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
 
@@ -221,9 +224,12 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     m_imageSelector = new KiranImageSelector(this);
     m_imageSelector->setFixedHeight(148);
     mainLayout->addWidget(m_imageSelector);
-    QDir dir("/usr/share/backgrounds/kiran/");
-    QFileInfoList fileInfoList = dir.entryInfoList(QStringList()<<"*.jpg"<<"*.png",QDir::Files);
-    for( QFileInfo fileInfo:fileInfoList ){
+    QDir          dir("/usr/share/backgrounds/kiran/");
+    QFileInfoList fileInfoList = dir.entryInfoList(QStringList() << "*.jpg"
+                                                                 << "*.png",
+                                                   QDir::Files);
+    for (const QFileInfo& fileInfo : fileInfoList)
+    {
         m_imageSelector->addImage(fileInfo.absoluteFilePath());
     }
 
@@ -237,7 +243,7 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_comboScaleMode = new QComboBox(this);
     m_comboScaleMode->setObjectName("combo_scaleMode");
-    m_comboScaleMode->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboScaleMode->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_comboScaleMode->setFixedHeight(40);
     m_comboScaleMode->addItem(tr("auto"), KiranGreeterPrefs::ScaleMode_Auto);
     m_comboScaleMode->addItem(tr("manual"), KiranGreeterPrefs::ScaleMode_Manual);
@@ -247,8 +253,8 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int idx) {
         bool enableScaleFactor = false;
 
-        QVariant modeData = m_comboScaleMode->itemData(idx);
-        int itemScaleMode = modeData.toUInt();
+        QVariant modeData      = m_comboScaleMode->itemData(idx);
+        int      itemScaleMode = modeData.toUInt();
 
         m_comboScaleFactor->setEnabled(itemScaleMode == KiranGreeterPrefs::ScaleMode_Manual);
     });
@@ -263,7 +269,7 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_comboScaleFactor = new QComboBox(this);
     m_comboScaleFactor->setObjectName("combo_scaleFactor");
-    m_comboScaleFactor->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    m_comboScaleFactor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_comboScaleFactor->setFixedHeight(40);
     m_comboScaleFactor->addItem("100%", 1);
     m_comboScaleFactor->addItem("200%", 2);
@@ -315,8 +321,8 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     m_hideUserListSwitch = new KiranSwitchButton(this);
     m_hideUserListSwitch->setObjectName("btn_hideUserList");
-    m_hideUserListSwitch->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
-    layoutUserList->addWidget(m_hideUserListSwitch,0,Qt::AlignVCenter|Qt::AlignRight);
+    m_hideUserListSwitch->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    layoutUserList->addWidget(m_hideUserListSwitch, 0, Qt::AlignVCenter | Qt::AlignRight);
 
     /* 占位 */
     auto mainLayoutSpacerItem = new QSpacerItem(10, 20,
@@ -377,7 +383,8 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
 void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
 {
-    struct UserInfo {
+    struct UserInfo
+    {
         QString name;
         QString iconFile;
 
@@ -387,20 +394,23 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
             iconFile.clear();
         }
     };
-    QVector<UserInfo> userInfoVector;
+    QVector<UserInfo>     userInfoVector;
     QDBusObjectPathVector objVector;
 
     ///通过AccountService加载用户信息
-    if (!DBusApi::AccountsService::listCachedUsers(objVector)) {
+    if (!DBusApi::AccountsService::listCachedUsers(objVector))
+    {
         qWarning() << "init user list failed,error: listCachedUsers failed";
         return;
     }
     UserInfo userInfo;
     for (auto iter = objVector.begin();
          iter != objVector.end();
-         iter++) {
+         iter++)
+    {
         if (!AccountsService::getUserObjectUserNameProperty(*iter, userInfo.name) ||
-            !AccountsService::getUserObjectIconFileProperty(*iter, userInfo.iconFile)) {
+            !AccountsService::getUserObjectIconFileProperty(*iter, userInfo.iconFile))
+        {
             qWarning() << "get " << iter->path() << "UserName,IconFile failed";
             continue;
         }
@@ -408,16 +418,17 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     }
     userInfo.clean();
     userInfo.name = "root";
-    if (!AccountsService::getRootIconFileProperty(userInfo.iconFile)) {
+    if (!AccountsService::getRootIconFileProperty(userInfo.iconFile))
+    {
         qWarning() << "init user list failed,error: getRootIconFileProperty failed";
         return;
     }
     userInfoVector.push_back(userInfo);
 
     ///加入ComboBox
-    for (auto iter = userInfoVector.begin();
-         iter != userInfoVector.end(); iter++) {
-        combo->addItem(QIcon(iter->iconFile), iter->name);
+    for (auto & iter : userInfoVector)
+    {
+        combo->addItem(QIcon(iter.iconFile), iter.name);
     }
     combo->addItem("");
 }
@@ -430,7 +441,8 @@ void GreeterSettingWindow::saveAppearanceSettings()
     GreeterSettingInfo::AppearanceSetting origUIInfo = m_origSettingInfo.appearanceInfo;
 
     /* 如果后端不是在界面端所做修改,提示用户,是覆盖还是重新加载 */
-    if (!(backendInfo == origUIInfo)) {
+    if (!(backendInfo == origUIInfo))
+    {
         auto clickedRole = KiranMessageBox::message(this,
                                                     tr("Configuration changed"),
                                                     tr("The external configuration file has changed\n"
@@ -438,7 +450,8 @@ void GreeterSettingWindow::saveAppearanceSettings()
                                                        "Select discard to discard the modification and reload the new configuration"),
                                                     KiranMessageBox::Save | KiranMessageBox::Discard);
         /* 丢弃所有的修改,重新加载 */
-        if (clickedRole == KiranMessageBox::Discard) {
+        if (clickedRole == KiranMessageBox::Discard)
+        {
             resetAppearanceSettings();
             return;
         }
@@ -446,11 +459,12 @@ void GreeterSettingWindow::saveAppearanceSettings()
 
     /* 保存 */
     QDBusPendingReply<> reply;
-    bool hasError = false;
+    bool                hasError = false;
 
     reply = KiranGreeterPrefs::instance()->SetBackgroundFile(m_imageSelector->selectedImage());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetBackgroundFile failed," << reply.error();
         hasError = true;
         goto failed;
@@ -458,14 +472,16 @@ void GreeterSettingWindow::saveAppearanceSettings()
 
     reply = KiranGreeterPrefs::instance()->SetHideUserList(m_hideUserListSwitch->isChecked());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetHideUserList failed," << reply.error();
         hasError = true;
     }
 
     reply = KiranGreeterPrefs::instance()->SetAllowManualLogin(m_enableManualSwitch->isChecked());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetAllowManualLogin failed," << reply.error();
         hasError = true;
     }
@@ -473,15 +489,19 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply = KiranGreeterPrefs::instance()->SetScaleMode(m_comboScaleMode->currentData().toUInt(),
                                                         m_comboScaleFactor->currentData().toUInt());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetScaleMode failed," << reply.error();
         hasError = true;
     }
-    failed:
+failed:
     /* 提示保存相关配置失败 */
-    if (hasError) {
+    if (hasError)
+    {
         m_hoverTips->show(HoverTips::HOVE_TIPS_ERR, tr("Save failed, reload"));
-    } else {
+    }
+    else
+    {
         m_hoverTips->show(HoverTips::HOVE_TIPS_SUC, tr("Saved successfully"));
     }
 
@@ -497,7 +517,8 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     GreeterSettingInfo::AutoLoginSetting origUIInfo = m_origSettingInfo.autoLoginInfo;
 
     /* 如果后端不是在界面端所做修改,提示用户,是覆盖还是重新加载 */
-    if (!(backendInfo == origUIInfo)) {
+    if (!(backendInfo == origUIInfo))
+    {
         auto clickedRole = KiranMessageBox::message(this,
                                                     tr("Configuration changed"),
                                                     tr("The external configuration file has changed\n"
@@ -505,7 +526,8 @@ void GreeterSettingWindow::saveAutoLoginSettings()
                                                        "Select discard to discard the modification and reload the new configuration"),
                                                     KiranMessageBox::Save | KiranMessageBox::Discard);
         /* 丢弃所有的修改,重新加载 */
-        if (clickedRole == KiranMessageBox::Discard) {
+        if (clickedRole == KiranMessageBox::Discard)
+        {
             resetAutoLoginSettings();
             return;
         }
@@ -513,11 +535,12 @@ void GreeterSettingWindow::saveAutoLoginSettings()
 
     /* 保存 */
     QDBusPendingReply<> reply;
-    bool hasError = false;
+    bool                hasError = false;
 
     reply = KiranGreeterPrefs::instance()->SetAutologinUser(m_comboAutoLoginAccount->currentText());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetAutologinUser failed," << reply.error();
         hasError = true;
         goto failed;
@@ -525,16 +548,20 @@ void GreeterSettingWindow::saveAutoLoginSettings()
 
     reply = KiranGreeterPrefs::instance()->SetAutologinTimeout(m_editAutoLoginDelay->text().toUInt());
     reply.waitForFinished();
-    if (reply.isError()) {
+    if (reply.isError())
+    {
         qInfo() << "SetAutologinTimeout" << reply.error();
         hasError = true;
     }
 
-    failed:
+failed:
     /* 提示保存是否成功 */
-    if (hasError) {
+    if (hasError)
+    {
         m_hoverTips->show(HoverTips::HOVE_TIPS_ERR, tr("Save failed, reload"));
-    } else {
+    }
+    else
+    {
         m_hoverTips->show(HoverTips::HOVE_TIPS_SUC, tr("Saved successfully"));
     }
 
@@ -572,16 +599,18 @@ GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSetting
 {
     GreeterSettingInfo::AppearanceSetting appearanceSetting;
 
-    appearanceSetting.background = KiranGreeterPrefs::instance()->backgroundFile();
-    appearanceSetting.hideUserList = KiranGreeterPrefs::instance()->hideUserList();
+    appearanceSetting.background       = KiranGreeterPrefs::instance()->backgroundFile();
+    appearanceSetting.hideUserList     = KiranGreeterPrefs::instance()->hideUserList();
     appearanceSetting.allowManualLogin = KiranGreeterPrefs::instance()->allowManualLogin();
-    appearanceSetting.scaleMode = KiranGreeterPrefs::instance()->scaleMode();
-    if (m_comboScaleMode->findData(appearanceSetting.scaleMode) == -1) {
+    appearanceSetting.scaleMode        = KiranGreeterPrefs::instance()->scaleMode();
+    if (m_comboScaleMode->findData(appearanceSetting.scaleMode) == -1)
+    {
         qWarning() << "no such scale mode" << appearanceSetting.scaleMode;
         appearanceSetting.scaleMode = 0;
     }
     appearanceSetting.scaleFactor = KiranGreeterPrefs::instance()->scaleFactor();
-    if (m_comboScaleFactor->findData(appearanceSetting.scaleFactor) == -1) {
+    if (m_comboScaleFactor->findData(appearanceSetting.scaleFactor) == -1)
+    {
         qWarning() << "no such scale factor" << appearanceSetting.scaleFactor;
         appearanceSetting.scaleFactor = 1;
     }
@@ -594,8 +623,9 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting;
 
     autoLoginSetting.autoLoginTimeout = KiranGreeterPrefs::instance()->autologinTimeout();
-    autoLoginSetting.autoLoginUser = KiranGreeterPrefs::instance()->autologinUser();
-    if (m_comboAutoLoginAccount->findText(autoLoginSetting.autoLoginUser) == -1) {
+    autoLoginSetting.autoLoginUser    = KiranGreeterPrefs::instance()->autologinUser();
+    if (m_comboAutoLoginAccount->findText(autoLoginSetting.autoLoginUser) == -1)
+    {
         qWarning() << "no such user," << autoLoginSetting.autoLoginUser;
         autoLoginSetting.autoLoginUser = "";
     }
@@ -607,11 +637,11 @@ GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSetting
 {
     GreeterSettingInfo::AppearanceSetting appearanceSetting;
 
-    appearanceSetting.background = m_imageSelector->selectedImage();
-    appearanceSetting.scaleFactor = m_comboScaleFactor->currentData().toUInt();
-    appearanceSetting.scaleMode = m_comboScaleMode->currentData().toUInt();
+    appearanceSetting.background       = m_imageSelector->selectedImage();
+    appearanceSetting.scaleFactor      = m_comboScaleFactor->currentData().toUInt();
+    appearanceSetting.scaleMode        = m_comboScaleMode->currentData().toUInt();
     appearanceSetting.allowManualLogin = m_enableManualSwitch->isChecked();
-    appearanceSetting.hideUserList = m_hideUserListSwitch->isChecked();
+    appearanceSetting.hideUserList     = m_hideUserListSwitch->isChecked();
 
     return appearanceSetting;
 }
@@ -620,7 +650,7 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting;
 
-    autoLoginSetting.autoLoginUser = m_comboAutoLoginAccount->currentText();
+    autoLoginSetting.autoLoginUser    = m_comboAutoLoginAccount->currentText();
     autoLoginSetting.autoLoginTimeout = m_editAutoLoginDelay->text().toUInt();
 
     return autoLoginSetting;

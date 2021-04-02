@@ -1,36 +1,35 @@
 #include "loginbutton.h"
-#include "ui_loginbutton.h"
 #include <QPaintEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include "ui_loginbutton.h"
 
 #include <iostream>
 
-LoginButton::LoginButton (QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::LoginButton),
-        m_pressed(false)
+LoginButton::LoginButton(QWidget *parent) : QWidget(parent),
+                                            ui(new Ui::LoginButton),
+                                            m_pressed(false)
 {
     ui->setupUi(this);
     setAttribute(Qt::WA_Hover);
 }
 
-LoginButton::~LoginButton ()
+LoginButton::~LoginButton()
 {
     delete ui;
 }
 
-bool LoginButton::pressed () const
+bool LoginButton::pressed() const
 {
     return m_pressed;
 }
 
-QPixmap LoginButton::icon () const
+QPixmap LoginButton::icon() const
 {
     return m_icon;
 }
 
-void LoginButton::setPressed (bool pressed)
+void LoginButton::setPressed(bool pressed)
 {
     if (m_pressed == pressed)
         return;
@@ -38,16 +37,16 @@ void LoginButton::setPressed (bool pressed)
     m_pressed = pressed;
     style()->polish(this);
     if (m_pressed)
-            emit sigPressed();
+        emit sigPressed();
 }
 
-void LoginButton::setIcon (QPixmap icon)
+void LoginButton::setIcon(QPixmap icon)
 {
     m_icon = icon;
     ui->label_icon->setPixmap(m_icon);
 }
 
-void LoginButton::paintEvent (QPaintEvent *event)
+void LoginButton::paintEvent(QPaintEvent *event)
 {
     QStyleOption opt;
     opt.initFrom(this);
@@ -57,13 +56,13 @@ void LoginButton::paintEvent (QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void LoginButton::mousePressEvent (QMouseEvent *event)
+void LoginButton::mousePressEvent(QMouseEvent *event)
 {
     setPressed(true);
     QWidget::mousePressEvent(event);
 }
 
-void LoginButton::mouseReleaseEvent (QMouseEvent *event)
+void LoginButton::mouseReleaseEvent(QMouseEvent *event)
 {
     if (this->rect().contains(event->pos()))
     {

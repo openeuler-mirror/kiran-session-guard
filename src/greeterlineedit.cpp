@@ -1,18 +1,17 @@
 #include "greeterlineedit.h"
-#include "ui_greeterlineedit.h"
 #include <QDebug>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QStyleOption>
-#include <QKeyEvent>
+#include "ui_greeterlineedit.h"
 
-#define NORMAL_ICON             ":/images/arrow.png"
-#define LOADING_ICON_FORMAT     ":/images/loading_%1.png"
-#define LOADING_ICON_INDEX_MAX  17
+#define NORMAL_ICON ":/images/arrow.png"
+#define LOADING_ICON_FORMAT ":/images/loading_%1.png"
+#define LOADING_ICON_INDEX_MAX 17
 
-GreeterLineEdit::GreeterLineEdit (QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::GreeterLineEdit),
-        m_animationTimerId(0)
+GreeterLineEdit::GreeterLineEdit(QWidget *parent) : QWidget(parent),
+                                                    ui(new Ui::GreeterLineEdit),
+                                                    m_animationTimerId(0)
 {
     ui->setupUi(this);
     ui->edit->setContextMenuPolicy(Qt::NoContextMenu);
@@ -21,7 +20,7 @@ GreeterLineEdit::GreeterLineEdit (QWidget *parent) :
     ui->edit->installEventFilter(this);
 }
 
-GreeterLineEdit::~GreeterLineEdit ()
+GreeterLineEdit::~GreeterLineEdit()
 {
     if (m_animationTimerId)
     {
@@ -31,12 +30,12 @@ GreeterLineEdit::~GreeterLineEdit ()
     delete ui;
 }
 
-void GreeterLineEdit::initUI ()
+void GreeterLineEdit::initUI()
 {
     setDefaultIcon();
 }
 
-void GreeterLineEdit::initConnection ()
+void GreeterLineEdit::initConnection()
 {
     connect(ui->edit, &QLineEdit::returnPressed,
             this, &GreeterLineEdit::slotEditReturnPressed);
@@ -46,26 +45,26 @@ void GreeterLineEdit::initConnection ()
             this, &GreeterLineEdit::slotEditTextChanged);
 }
 
-void GreeterLineEdit::setDefaultIcon ()
+void GreeterLineEdit::setDefaultIcon()
 {
     ui->button->setIcon(QIcon(NORMAL_ICON));
 }
 
-void GreeterLineEdit::setNormalLetterSpacing ()
+void GreeterLineEdit::setNormalLetterSpacing()
 {
     QFont font = ui->edit->font();
     font.setLetterSpacing(QFont::PercentageSpacing, 0);
     ui->edit->setFont(font);
 }
 
-void GreeterLineEdit::setPasswdLetterSpacing ()
+void GreeterLineEdit::setPasswdLetterSpacing()
 {
     QFont font = ui->edit->font();
     font.setLetterSpacing(QFont::AbsoluteSpacing, 4);
     ui->edit->setFont(font);
 }
 
-void GreeterLineEdit::setEchoMode (QLineEdit::EchoMode echoMode)
+void GreeterLineEdit::setEchoMode(QLineEdit::EchoMode echoMode)
 {
     ui->edit->setEchoMode(echoMode);
     if (echoMode == QLineEdit::Normal)
@@ -75,23 +74,23 @@ void GreeterLineEdit::setEchoMode (QLineEdit::EchoMode echoMode)
     }
 }
 
-void GreeterLineEdit::setPlaceHolderText (const QString &text)
+void GreeterLineEdit::setPlaceHolderText(const QString &text)
 {
     ui->edit->setPlaceholderText(text);
 }
 
-void GreeterLineEdit::setFocus ()
+void GreeterLineEdit::setFocus()
 {
     if (!ui->edit->hasFocus())
         ui->edit->setFocus(Qt::OtherFocusReason);
 }
 
-QString GreeterLineEdit::getText ()
+QString GreeterLineEdit::getText()
 {
     return ui->edit->text();
 }
 
-void GreeterLineEdit::setEditFocus (bool editFocus)
+void GreeterLineEdit::setEditFocus(bool editFocus)
 {
     if (m_editFocus == editFocus)
         return;
@@ -101,7 +100,7 @@ void GreeterLineEdit::setEditFocus (bool editFocus)
     emit editFocusChanged(m_editFocus);
 }
 
-void GreeterLineEdit::setShowPasswordModeStyle (bool showPasswordModeStyle)
+void GreeterLineEdit::setShowPasswordModeStyle(bool showPasswordModeStyle)
 {
     if (m_showPasswordModeStyle == showPasswordModeStyle)
     {
@@ -112,7 +111,7 @@ void GreeterLineEdit::setShowPasswordModeStyle (bool showPasswordModeStyle)
     style()->polish(ui->edit);
 }
 
-void GreeterLineEdit::slotEditReturnPressed ()
+void GreeterLineEdit::slotEditReturnPressed()
 {
     if ((ui->edit->echoMode() != QLineEdit::Password) && (ui->edit->text().isEmpty()))
     {
@@ -122,7 +121,7 @@ void GreeterLineEdit::slotEditReturnPressed ()
     startMovieAndEmitSignal();
 }
 
-void GreeterLineEdit::slotButtonPressed ()
+void GreeterLineEdit::slotButtonPressed()
 {
     if ((ui->edit->echoMode() != QLineEdit::Password) && (ui->edit->text().isEmpty()))
     {
@@ -132,7 +131,7 @@ void GreeterLineEdit::slotButtonPressed ()
     startMovieAndEmitSignal();
 }
 
-void GreeterLineEdit::slotEditTextChanged (const QString &text)
+void GreeterLineEdit::slotEditTextChanged(const QString &text)
 {
     ///密码框输入密码不为空的情况下调整字体和字间距
     if (ui->edit->echoMode() == QLineEdit::Password && text.isEmpty())
@@ -147,7 +146,7 @@ void GreeterLineEdit::slotEditTextChanged (const QString &text)
     }
 }
 
-void GreeterLineEdit::timerEvent (QTimerEvent *e)
+void GreeterLineEdit::timerEvent(QTimerEvent *e)
 {
     static int iconIndex = 0;
 
@@ -165,7 +164,7 @@ void GreeterLineEdit::timerEvent (QTimerEvent *e)
     ui->button->setIcon(QIcon(iconPath));
 }
 
-void GreeterLineEdit::paintEvent (QPaintEvent *e)
+void GreeterLineEdit::paintEvent(QPaintEvent *e)
 {
     QStyleOption opt;
     opt.initFrom(this);
@@ -175,7 +174,7 @@ void GreeterLineEdit::paintEvent (QPaintEvent *e)
 }
 
 ///输入框聚焦改变，设置窗口的属性，便于QSS设置不同边框
-bool GreeterLineEdit::eventFilter (QObject *obj, QEvent *event)
+bool GreeterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == ui->edit)
     {
@@ -199,7 +198,7 @@ bool GreeterLineEdit::eventFilter (QObject *obj, QEvent *event)
     return false;
 }
 
-void GreeterLineEdit::startMovieAndEmitSignal ()
+void GreeterLineEdit::startMovieAndEmitSignal()
 {
     this->setEnabled(false);
     if (m_animationTimerId == 0)
@@ -209,7 +208,7 @@ void GreeterLineEdit::startMovieAndEmitSignal ()
     emit textConfirmed(ui->edit->text());
 }
 
-void GreeterLineEdit::reset ()
+void GreeterLineEdit::reset()
 {
     this->setEnabled(true);
     ui->edit->clear();
@@ -223,12 +222,12 @@ void GreeterLineEdit::reset ()
     setDefaultIcon();
 }
 
-bool GreeterLineEdit::editFocus () const
+bool GreeterLineEdit::editFocus() const
 {
     return m_editFocus;
 }
 
-bool GreeterLineEdit::showPasswordModeStyle () const
+bool GreeterLineEdit::showPasswordModeStyle() const
 {
     return m_showPasswordModeStyle;
 }

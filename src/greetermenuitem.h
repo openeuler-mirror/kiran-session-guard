@@ -12,23 +12,25 @@ class GreeterMenuItem : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GreeterMenuItem (const QString &text, bool checkable, QWidget *parent = nullptr);
-    void setExclusiveGroup (QButtonGroup *group);
-    QString getActionName ();
-    void setChecked (bool isChecked);
+    explicit GreeterMenuItem(const QString &text, bool checkable, QWidget *parent = nullptr);
+    void    setExclusiveGroup(QButtonGroup *group);
+    QString getActionName();
+    void    setChecked(bool isChecked);
 signals:
-    void sigChecked (QString action);
+    void sigChecked(QString action);
 public slots:
 private:
-    void initUI ();
+    void initUI();
+
 protected:
-    virtual void paintEvent (QPaintEvent *event) override;
-    virtual void mousePressEvent (QMouseEvent *event) override;
+    virtual void paintEvent(QPaintEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
+
 private:
-    bool m_checkable;
-    QString m_actionName;
-    QLabel *m_label;
+    bool       m_checkable;
+    QString    m_actionName;
+    QLabel *   m_label;
     QCheckBox *m_checkbox;
 };
 
-#endif // GREETERMENUITEM_H
+#endif  // GREETERMENUITEM_H

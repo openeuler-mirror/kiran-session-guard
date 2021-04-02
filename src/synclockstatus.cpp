@@ -1,13 +1,13 @@
 #include "synclockstatus.h"
 
-#include <QX11Info>
-#include <X11/Xlib.h>
 #include <X11/XKBlib.h>
+#include <X11/Xlib.h>
 #include <X11/keysym.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <QX11Info>
 
-unsigned int xkb_mask_modifier (XkbDescPtr xkb, const char *name)
+unsigned int xkb_mask_modifier(XkbDescPtr xkb, const char *name)
 {
     int i;
     if (!xkb || !xkb->names)
@@ -27,7 +27,7 @@ unsigned int xkb_mask_modifier (XkbDescPtr xkb, const char *name)
     return 0;
 }
 
-unsigned int xkb_numlock_mask (Display *dpy)
+unsigned int xkb_numlock_mask(Display *dpy)
 {
     XkbDescPtr xkb;
     if ((xkb = XkbGetKeyboard(dpy, XkbAllComponentsMask, XkbUseCoreKbd)) != NULL)
@@ -39,7 +39,7 @@ unsigned int xkb_numlock_mask (Display *dpy)
     return 0;
 }
 
-unsigned int xkb_capslock_mask (Display *dpy)
+unsigned int xkb_capslock_mask(Display *dpy)
 {
     XkbDescPtr xkb;
     if ((xkb = XkbGetKeyboard(dpy, XkbAllComponentsMask, XkbUseCoreKbd)) != NULL)
@@ -51,9 +51,9 @@ unsigned int xkb_capslock_mask (Display *dpy)
     return 0;
 }
 
-bool initLockStatus ()
+bool initLockStatus()
 {
-    Display *display = QX11Info::display();
+    Display *   display = QX11Info::display();
     XkbStateRec xkbState;
 
     if (!display)

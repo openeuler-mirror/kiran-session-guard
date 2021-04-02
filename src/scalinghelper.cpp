@@ -1,28 +1,28 @@
 #include "scalinghelper.h"
+#include <X11/Xcursor/Xcursor.h>
+#include <X11/Xlib-xcb.h>
+#include <X11/Xlib.h>
+#include <X11/cursorfont.h>
+#include <X11/extensions/Xfixes.h>
+#include <X11/extensions/Xrandr.h>
 #include <stdlib.h>
 #include <QDebug>
 #include <QtMath>
 #include <list>
-#include <X11/Xlib.h>
-#include <X11/extensions/Xrandr.h>
-#include <X11/Xlib-xcb.h>
-#include <X11/cursorfont.h>
-#include <X11/Xcursor/Xcursor.h>
-#include <X11/extensions/Xfixes.h>
 
-void ScalingHelper::set_scale_factor (double factor)
+void ScalingHelper::set_scale_factor(double factor)
 {
     qputenv("QT_SCALE_FACTOR", QString::number(factor).toUtf8());
 }
 
-void ScalingHelper::auto_calculate_screen_scaling (double &scaled_factor)
+void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
 {
-    Display *display = nullptr;
-    XRRScreenResources *resources = nullptr;
-    qreal scale_factor = 1.0;
-    std::list<double> scaleFactors;
+    Display *           display      = nullptr;
+    XRRScreenResources *resources    = nullptr;
+    qreal               scale_factor = 1.0;
+    std::list<double>   scaleFactors;
 
-    display = XOpenDisplay(nullptr);
+    display   = XOpenDisplay(nullptr);
     resources = XRRGetScreenResourcesCurrent(display, DefaultRootWindow(display));
 
     if (!resources)
@@ -62,7 +62,7 @@ void ScalingHelper::auto_calculate_screen_scaling (double &scaled_factor)
 
             //计算ppi
             qreal hypotenusePixel = qSqrt(qPow(crtInfo->width, 2.0) + qPow(crtInfo->height, 2.0));
-            qreal ppi = hypotenusePixel / screenInch;
+            qreal ppi             = hypotenusePixel / screenInch;
 
             qInfo() << "Screen:" << outputInfo->name;
             qInfo() << "    physical size:   " << outputInfo->mm_width << "x" << outputInfo->mm_height;
@@ -102,7 +102,7 @@ void ScalingHelper::auto_calculate_screen_scaling (double &scaled_factor)
         qWarning() << "set scale factor failed.";
     }
     return;
-    failed:
+failed:
     if (display)
     {
         XCloseDisplay(display);

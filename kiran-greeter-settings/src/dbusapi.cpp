@@ -1,30 +1,30 @@
 #include "dbusapi.h"
 
-#include <QDBusMessage>
-#include <QDBusConnection>
 #include <QDBusArgument>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDBusReply>
 #include <QDBusSignature>
 #include <QDebug>
 
-#define DBUS_PROPERTY_INTERFACE     "org.freedesktop.DBus.Properties"
-#define METHOD_GET_PROPERTY         "Get"
+#define DBUS_PROPERTY_INTERFACE "org.freedesktop.DBus.Properties"
+#define METHOD_GET_PROPERTY "Get"
 
-#define ACCOUNT_SERVICE_DBUS        "org.freedesktop.Accounts"
-#define ACCOUNT_SERVICE_PATH        "/org/freedesktop/Accounts"
-#define ACCOUNT_SERVICE_INTERFACE   "org.freedesktop.Accounts"
-#define METHOD_LIST_CACHED_USERS    "ListCachedUsers"
-#define METHOD_FIND_USER_BY_NAME    "FindUserByName"
+#define ACCOUNT_SERVICE_DBUS "org.freedesktop.Accounts"
+#define ACCOUNT_SERVICE_PATH "/org/freedesktop/Accounts"
+#define ACCOUNT_SERVICE_INTERFACE "org.freedesktop.Accounts"
+#define METHOD_LIST_CACHED_USERS "ListCachedUsers"
+#define METHOD_FIND_USER_BY_NAME "FindUserByName"
 
-#define ACCOUNT_SERVICE_USER_INTERFACE          "org.freedesktop.Accounts.User"
+#define ACCOUNT_SERVICE_USER_INTERFACE "org.freedesktop.Accounts.User"
 #define ACCOUNT_SERVICE_USER_PROPERTY_USER_NAME "UserName"
 #define ACCOUNT_SERVICE_USER_PROPERTY_ICON_FILE "IconFile"
 
 #define TIMEOUT_MS 300
 
-template<typename T>
-bool DBusApi::getProperty (const QString &service, const QString &obj,
-                           const QString &propertyName, T &retValue)
+template <typename T>
+bool DBusApi::getProperty(const QString &service, const QString &obj,
+                          const QString &propertyName, T &retValue)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(service,
                                                                 obj,
@@ -47,7 +47,7 @@ bool DBusApi::getProperty (const QString &service, const QString &obj,
             mErr = "arguments size < 1";
             goto failed;
         }
-        QVariant firstArg = args.takeFirst();
+        QVariant     firstArg     = args.takeFirst();
         QDBusVariant firstDBusArg = firstArg.value<QDBusVariant>();
         if (!firstDBusArg.variant().canConvert<T>())
         {
@@ -57,13 +57,13 @@ bool DBusApi::getProperty (const QString &service, const QString &obj,
         retValue = firstDBusArg.variant().value<T>();
         return true;
     }
-    failed:
+failed:
     qWarning() << ACCOUNT_SERVICE_USER_INTERFACE << METHOD_GET_PROPERTY << propertyName
                << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
-bool DBusApi::AccountsService::listCachedUsers (QDBusObjectPathVector &userObjects)
+bool DBusApi::AccountsService::listCachedUsers(QDBusObjectPathVector &userObjects)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(ACCOUNT_SERVICE_DBUS,
                                                                 ACCOUNT_SERVICE_PATH,
@@ -73,7 +73,7 @@ bool DBusApi::AccountsService::listCachedUsers (QDBusObjectPathVector &userObjec
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    QString mErr = "";
+    QString      mErr     = "";
 
     if (msgReply.type() == QDBusMessage::ReplyMessage)
     {
@@ -83,7 +83,7 @@ bool DBusApi::AccountsService::listCachedUsers (QDBusObjectPathVector &userObjec
             mErr = "arguments size < 1";
             goto failed;
         }
-        QVariant firstArg = args.takeFirst();
+        QVariant      firstArg     = args.takeFirst();
         QDBusArgument firstDBusArg = firstArg.value<QDBusArgument>();
         if (firstDBusArg.currentSignature() != "ao")
         {
@@ -94,13 +94,13 @@ bool DBusApi::AccountsService::listCachedUsers (QDBusObjectPathVector &userObjec
         return true;
     }
 
-    failed:
+failed:
     qWarning() << ACCOUNT_SERVICE_DBUS << METHOD_LIST_CACHED_USERS
                << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
-bool DBusApi::AccountsService::findUserByName (const QString &name, QDBusObjectPath &obj)
+bool DBusApi::AccountsService::findUserByName(const QString &name, QDBusObjectPath &obj)
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(ACCOUNT_SERVICE_DBUS,
                                                                 ACCOUNT_SERVICE_PATH,
@@ -112,7 +112,7 @@ bool DBusApi::AccountsService::findUserByName (const QString &name, QDBusObjectP
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    QString mErr;
+    QString      mErr;
     if (msgReply.type() == QDBusMessage::ReplyMessage)
     {
         QList<QVariant> args = msgReply.arguments();
@@ -122,22 +122,22 @@ bool DBusApi::AccountsService::findUserByName (const QString &name, QDBusObjectP
             goto failed;
         }
         QVariant firstArg = args.takeFirst();
-        obj = firstArg.value<QDBusObjectPath>();
+        obj               = firstArg.value<QDBusObjectPath>();
         return true;
     }
-    failed:
+failed:
     qWarning() << ACCOUNT_SERVICE_DBUS << METHOD_FIND_USER_BY_NAME
                << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
-bool DBusApi::AccountsService::getUserObjectUserNameProperty (const QDBusObjectPath &obj, QString &userName)
+bool DBusApi::AccountsService::getUserObjectUserNameProperty(const QDBusObjectPath &obj, QString &userName)
 {
     return getUserObjectUserNameProperty(obj.path(),
                                          userName);
 }
 
-bool DBusApi::AccountsService::getUserObjectUserNameProperty (const QString &obj, QString &userName)
+bool DBusApi::AccountsService::getUserObjectUserNameProperty(const QString &obj, QString &userName)
 {
     return getProperty(ACCOUNT_SERVICE_DBUS,
                        obj,
@@ -145,13 +145,13 @@ bool DBusApi::AccountsService::getUserObjectUserNameProperty (const QString &obj
                        userName);
 }
 
-bool DBusApi::AccountsService::getUserObjectIconFileProperty (const QDBusObjectPath &userObj, QString &iconFile)
+bool DBusApi::AccountsService::getUserObjectIconFileProperty(const QDBusObjectPath &userObj, QString &iconFile)
 {
     return getUserObjectIconFileProperty(userObj.path(),
                                          iconFile);
 }
 
-bool DBusApi::AccountsService::getUserObjectIconFileProperty (const QString &obj, QString &iconFile)
+bool DBusApi::AccountsService::getUserObjectIconFileProperty(const QString &obj, QString &iconFile)
 {
     return getProperty(ACCOUNT_SERVICE_DBUS,
                        obj,
@@ -159,7 +159,7 @@ bool DBusApi::AccountsService::getUserObjectIconFileProperty (const QString &obj
                        iconFile);
 }
 
-bool DBusApi::AccountsService::getRootIconFileProperty (QString &iconFile)
+bool DBusApi::AccountsService::getRootIconFileProperty(QString &iconFile)
 {
     QDBusObjectPath rootObj;
 

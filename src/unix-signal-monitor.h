@@ -17,8 +17,8 @@ public slots:
     void handlerSigTerm();
 
 private:
-    static int sigTermFd[2];
+    static int       sigTermFd[2];
     QSocketNotifier *m_snTerm;
 };
 
-#endif // UNIXSIGNALMONITOR_H
+#endif  // UNIXSIGNALMONITOR_H
