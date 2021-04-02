@@ -1,12 +1,14 @@
-#include "cursorhelper.h"
-#include <X11/Xcursor/Xcursor.h>
-#include <X11/Xlib.h>
-#include <X11/cursorfont.h>
-#include <X11/extensions/Xfixes.h>
 #include <QApplication>
 #include <QDebug>
 #include <QX11Info>
 #include <QtMath>
+
+#include <X11/Xcursor/Xcursor.h>
+#include <X11/Xlib.h>
+#include <X11/cursorfont.h>
+#include <X11/extensions/Xfixes.h>
+
+#include "cursorhelper.h"
 
 static unsigned long loadCursorHandle(Display *dpy, const char *name, int size)
 {

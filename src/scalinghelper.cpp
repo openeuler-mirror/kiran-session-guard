@@ -1,4 +1,6 @@
-#include "scalinghelper.h"
+#include <QDebug>
+#include <QtMath>
+
 #include <X11/Xcursor/Xcursor.h>
 #include <X11/Xlib-xcb.h>
 #include <X11/Xlib.h>
@@ -6,9 +8,8 @@
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/Xrandr.h>
 #include <stdlib.h>
-#include <QDebug>
-#include <QtMath>
 #include <list>
+#include "scalinghelper.h"
 
 void ScalingHelper::set_scale_factor(double factor)
 {
