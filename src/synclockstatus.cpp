@@ -1,11 +1,11 @@
-#include "synclockstatus.h"
-
+#include <QX11Info>
 #include <X11/XKBlib.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <stdio.h>
 #include <string.h>
-#include <QX11Info>
+
+#include "synclockstatus.h"
 
 unsigned int xkb_mask_modifier(XkbDescPtr xkb, const char *name)
 {

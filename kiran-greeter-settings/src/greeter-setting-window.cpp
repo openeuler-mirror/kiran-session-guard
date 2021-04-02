@@ -6,9 +6,7 @@
 #include <widget-property-helper.h>
 #include <QApplication>
 #include <QComboBox>
-#include <QDebug>
 #include <QDir>
-#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
