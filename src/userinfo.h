@@ -7,14 +7,14 @@
 //TODO:暂时这样
 struct UserInfo
 {
-    QString name;
-    QString realName;
-    QString session;
+    QString    name;
+    QString    realName;
+    QString    session;
     qulonglong uid;
-    QString backgroundPath;
-    bool hasMessage;
-    QString imagePath;
-    bool loggedIn;
+    QString    backgroundPath;
+    bool       hasMessage;
+    QString    imagePath;
+    bool       loggedIn;
 };
 
-#endif // USERINFO_H
+#endif  // USERINFO_H

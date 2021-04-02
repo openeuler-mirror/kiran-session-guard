@@ -1,18 +1,17 @@
 #include "unix-signal-monitor.h"
 
+#include <signal.h>
+#include <sys/socket.h>
+#include <unistd.h>
 #include <QApplication>
 #include <QSocketNotifier>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <unistd.h>
 
-int UnixSignalMonitor::sigTermFd[2] = {0,0};
+int UnixSignalMonitor::sigTermFd[2] = {0, 0};
 
 UnixSignalMonitor::UnixSignalMonitor(QObject *parent) : QObject(parent)
 {
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigTermFd))
-       qFatal("Couldn't create TERM socketpair");
+        qFatal("Couldn't create TERM socketpair");
     m_snTerm = new QSocketNotifier(sigTermFd[1], QSocketNotifier::Read, this);
     connect(m_snTerm, &QSocketNotifier::activated, this, &UnixSignalMonitor::handlerSigTerm);
 }
@@ -26,7 +25,7 @@ bool UnixSignalMonitor::setup_unix_signal_handlers()
     term.sa_flags |= SA_RESTART;
 
     if (sigaction(SIGTERM, &term, 0))
-       return false;
+        return false;
 
     return true;
 }

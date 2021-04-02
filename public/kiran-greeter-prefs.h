@@ -9,10 +9,12 @@
 
 #include "greeter-settings-dbus-proxy.h"
 
-class KiranGreeterPrefs : public ComKylinsecKiranSystemDaemonGreeterSettingsInterface{
+class KiranGreeterPrefs : public ComKylinsecKiranSystemDaemonGreeterSettingsInterface
+{
     Q_OBJECT
 public:
-    enum ScaleModeEnum {
+    enum ScaleModeEnum
+    {
         ScaleMode_Auto = 0,
         ScaleMode_Manual,
         ScaleMode_Disable
@@ -24,12 +26,10 @@ private:
     KiranGreeterPrefs();
 
 signals:
-    void propertyChanged(QString propertyName,QVariant property);
+    void propertyChanged(QString propertyName, QVariant property);
 
 private Q_SLOTS:
     void handlePropertiesChanged(QDBusMessage msg);
-
 };
 
-
-#endif //LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H
+#endif  //LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H

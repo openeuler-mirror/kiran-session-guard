@@ -20,12 +20,13 @@ int main(int argc, char *argv[])
     ///翻译
     QTranslator translator;
     QString     translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
-    bool        loadRes           = translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
-    if(!loadRes){
+    bool        loadRes            = translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
+    if (!loadRes)
+    {
         qWarning() << "load translation file faield";
     }
     qApp->installTranslator(&translator);
-    
+
     auto prefs = KiranGreeterPrefs::instance();
     if (!prefs->isValid())
     {

@@ -23,4 +23,3 @@ ComKylinsecKiranSystemDaemonGreeterSettingsInterface::ComKylinsecKiranSystemDaem
 ComKylinsecKiranSystemDaemonGreeterSettingsInterface::~ComKylinsecKiranSystemDaemonGreeterSettingsInterface()
 {
 }
-

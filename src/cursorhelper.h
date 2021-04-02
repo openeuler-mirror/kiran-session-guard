@@ -3,8 +3,8 @@
 
 namespace CursorHelper
 {
-    bool setDefaultCursorSize (double scaleFactor);
-    bool setRootWindowWatchCursor ();
-}
+bool setDefaultCursorSize(double scaleFactor);
+bool setRootWindowWatchCursor();
+}  // namespace CursorHelper
 
-#endif // CURSORHELPER_H
+#endif  // CURSORHELPER_H
