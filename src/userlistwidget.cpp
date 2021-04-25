@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QModelIndex>
 #include <QScrollBar>
+
+#include "log.h"
 #include "ui_userlistwidget.h"
 #include "userinfo.h"
 #include "userlistitem.h"
@@ -37,10 +39,10 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
             {
                 break;
             }
-            UserListItem *         userItem = dynamic_cast<UserListItem *>(qApp->focusWidget());
+            UserListItem *userItem = dynamic_cast<UserListItem *>(qApp->focusWidget());
             const QListWidgetItem *listItem = userItem->getListItem();
-            int                    rowIdx   = ui->userList->row(listItem);
-            int                    rowCount = ui->userList->count();
+            int rowIdx = ui->userList->row(listItem);
+            int rowCount = ui->userList->count();
             if (keyEvent->key() == Qt::Key_Up)
             {
                 if ((rowIdx != 0) && (rowCount > 1))
@@ -74,9 +76,9 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
             QKeyEvent *keyEvent = dynamic_cast<QKeyEvent *>(event);
             if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return)
             {
-                UserListItem *         item     = dynamic_cast<UserListItem *>(qApp->focusWidget());
+                UserListItem *item = dynamic_cast<UserListItem *>(qApp->focusWidget());
                 const QListWidgetItem *listItem = item->getListItem();
-                int                    rowIdx   = ui->userList->row(listItem);
+                int rowIdx = ui->userList->row(listItem);
                 setCurrentRow(rowIdx);
                 return true;
             }
@@ -123,7 +125,7 @@ void UserListWidget::initUI()
         }
         else if (newFocusInList)
         {  ///UserItem->UserItem,滚动到焦点行
-            UserListItem *         userItem = dynamic_cast<UserListItem *>(newWidget);
+            UserListItem *userItem = dynamic_cast<UserListItem *>(newWidget);
             const QListWidgetItem *listItem = userItem->getListItem();
             ui->userList->scrollToItem(listItem);
         }
@@ -142,8 +144,10 @@ void UserListWidget::loadUserList()
         getUserInfoFromModel(i, userInfo);
         appendItem(userInfo);
     }
-    qInfo() << "connect UserModel RowRemoved:  " << connect(&m_usersModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
-    qInfo() << "connect UserModel RowInserted: " << connect(&m_usersModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
+    LOG_INFO_S() << "connect UserModel RowRemoved:  "
+                 << connect(&m_usersModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
+    LOG_INFO_S() << "connect UserModel RowInserted: "
+                 << connect(&m_usersModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
 }
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
@@ -154,8 +158,8 @@ bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
         return false;
     }
     UserListItem *item = dynamic_cast<UserListItem *>(ui->userList->itemWidget(selectedItem.at(0)));
-    UserInfo      info = item->getUserInfo();
-    userInfo           = info;
+    UserInfo info = item->getUserInfo();
+    userInfo = info;
     return true;
 }
 
@@ -173,37 +177,37 @@ bool UserListWidget::getUserInfoFromModel(int row, UserInfo &userInfo)
         return false;
     }
 
-    value         = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::NameRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::NameRole);
     userInfo.name = value.toString();
 
-    value             = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::RealNameRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::RealNameRole);
     userInfo.realName = value.toString();
 
-    value             = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::LoggedInRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::LoggedInRole);
     userInfo.loggedIn = value.toBool();
 
-    value            = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::SessionRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::SessionRole);
     userInfo.session = value.toString();
 
-    value               = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::HasMessagesRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::HasMessagesRole);
     userInfo.hasMessage = value.toBool();
 
-    value              = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::ImagePathRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::ImagePathRole);
     userInfo.imagePath = value.toString();
 
-    value                   = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::BackgroundPathRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::BackgroundPathRole);
     userInfo.backgroundPath = value.toString();
 
-    value        = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::UidRole);
+    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::UidRole);
     userInfo.uid = value.toULongLong();
-    qInfo() << "getUserInfoFromModel: " << userInfo.name;
+    LOG_INFO_S() << "getUserInfoFromModel: " << userInfo.name;
     return true;
 }
 
 void UserListWidget::appendItem(const UserInfo &userInfo)
 {
-    QListWidgetItem *newItem    = nullptr;
-    UserListItem *   customItem = nullptr;
+    QListWidgetItem *newItem = nullptr;
+    UserListItem *customItem = nullptr;
 
     newItem = new QListWidgetItem;
 
@@ -222,8 +226,8 @@ void UserListWidget::appendItem(const UserInfo &userInfo)
 
 void UserListWidget::insertItem(int row, const UserInfo &userInfo)
 {
-    QListWidgetItem *newItem    = nullptr;
-    UserListItem *   customItem = nullptr;
+    QListWidgetItem *newItem = nullptr;
+    UserListItem *customItem = nullptr;
 
     newItem = new QListWidgetItem;
 
@@ -244,7 +248,7 @@ void UserListWidget::JustForTest(int count)
 {
     for (int i = 0; i < count; i++)
     {
-        QString  testUserName = QString("TestUser%1").arg(i);
+        QString testUserName = QString("TestUser%1").arg(i);
         UserInfo userInfo;
         userInfo.name = testUserName;
         appendItem(userInfo);
@@ -282,11 +286,11 @@ void UserListWidget::slotUserItemActivated()
     QList<QListWidgetItem *> selectedItems = ui->userList->selectedItems();
     if (selectedItems.size() == 0)
     {
-        qWarning() << "selected items: 0";
+        LOG_WARNING_S() << "selected items: 0";
         return;
     }
     QListWidgetItem *activatedItem = selectedItems.at(0);
-    UserListItem *   userItem      = dynamic_cast<UserListItem *>(ui->userList->itemWidget(activatedItem));
+    UserListItem *userItem = dynamic_cast<UserListItem *>(ui->userList->itemWidget(activatedItem));
 
     userItem->setFocusPolicy(Qt::TabFocus);
     for (int i = 0; i < ui->userList->count(); i++)
@@ -298,9 +302,9 @@ void UserListWidget::slotUserItemActivated()
             uItem->setFocusPolicy(Qt::NoFocus);
         }
     }
-    qInfo() << userItem->getUserInfo().name << "activate";
+    LOG_INFO_S() << userItem->getUserInfo().name << "activate";
     UserInfo info = userItem->getUserInfo();
-    emit     userActivated(info);
+    emit userActivated(info);
 }
 
 void UserListWidget::slotRowsRemoved(const QModelIndex &parent, int first, int last)
@@ -309,7 +313,7 @@ void UserListWidget::slotRowsRemoved(const QModelIndex &parent, int first, int l
 
     for (int i = last; (i >= first); i--)
     {
-        QListWidgetItem *        item          = ui->userList->item(i);
+        QListWidgetItem *item = ui->userList->item(i);
         QList<QListWidgetItem *> selectedItems = ui->userList->selectedItems();
         if (isEnabled() && (selectedItems.size() > 0) && (selectedItems.at(0) == item))
         {
@@ -350,14 +354,14 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
         setRow0();
     }
 
-    qInfo() << "row inserted: "
-            << "cout[" << ui->userList->count() << "]";
+    LOG_DEBUG_S() << "row inserted: "
+                  << "cout[" << ui->userList->count() << "]";
     updateGeometry();
 }
 
 QSize UserListWidget::sizeHint() const
 {
     QSize size(0, (ui->userList->count() * 62) + 2);
-    qInfo() << "count: " << ui->userList->count() << "size: " << size;
+    LOG_DEBUG_S() << "count: " << ui->userList->count() << "size: " << size;
     return size;
 }

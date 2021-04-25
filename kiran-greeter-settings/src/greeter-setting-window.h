@@ -72,7 +72,7 @@ class GreeterSettingWindow : public KiranTitlebarWindow
 {
     Q_OBJECT
 public:
-    explicit GreeterSettingWindow();
+    explicit GreeterSettingWindow(QWidget* parent = nullptr);
     ~GreeterSettingWindow();
 
 private:

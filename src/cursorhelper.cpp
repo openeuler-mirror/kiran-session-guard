@@ -9,16 +9,17 @@
 #include <X11/extensions/Xfixes.h>
 
 #include "cursorhelper.h"
+#include "log.h"
 
 static unsigned long loadCursorHandle(Display *dpy, const char *name, int size)
 {
     if (size == -1)
     {
         size = XcursorGetDefaultSize(dpy);
-        qInfo() << "loadCursorHandle GetDefaultSize" << size;
+        LOG_DEBUG("load default cursor size(%d)",size);
     }
     XcursorImages *images = nullptr;
-    images                = XcursorLibraryLoadImages(name, "Adwaita", size);
+    images = XcursorLibraryLoadImages(name, "Adwaita", size);
     if (!images)
     {
         return 0;
@@ -30,25 +31,25 @@ static unsigned long loadCursorHandle(Display *dpy, const char *name, int size)
 
 bool CursorHelper::setDefaultCursorSize(double scaleFactor)
 {
-    bool     bRet = false;
-    Display *dpy  = QX11Info::display();
+    bool bRet = false;
+    Display *dpy = QX11Info::display();
     if (dpy == nullptr)
     {
-        qWarning() << "QX11Info::display == nullptr";
+        LOG_ERROR("can't open display!");
         return false;
     }
     ///FIXME:因为特定情况下，获取默认大小会过大,暂时使用默认大小为24进行放大
-    int    defaultCursorSize = 24;
-    double tmpSize           = defaultCursorSize * scaleFactor;
-    int    scaledCursorSize  = floor(tmpSize);
+    int defaultCursorSize = 24;
+    double tmpSize = defaultCursorSize * scaleFactor;
+    int scaledCursorSize = floor(tmpSize);
     if (XcursorSetDefaultSize(dpy, scaledCursorSize) == XcursorTrue)
     {
-        qInfo() << "XcursorSetDefaultSize" << scaledCursorSize << "success";
+        LOG_DEBUG("set default cursor size(%d) success!",scaledCursorSize);
         bRet = true;
     }
     else
     {
-        qWarning() << "XcursorSetDefaultSize" << scaledCursorSize << "failed";
+        LOG_WARNING("set default cursor size(%d) failed!",scaledCursorSize);
     }
     return bRet;
 }
@@ -58,7 +59,7 @@ bool CursorHelper::setRootWindowWatchCursor()
     Display *display = XOpenDisplay(NULL);
     if (!display)
     {
-        qDebug() << "Open display failed";
+        LOG_WARNING("can't open display!");
         return false;
     }
     Cursor cursor = (Cursor)loadCursorHandle(display, "watch", -1);

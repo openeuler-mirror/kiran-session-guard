@@ -7,6 +7,8 @@
 #include <QDBusSignature>
 #include <QDebug>
 
+#include "log.h"
+
 #define DBUS_PROPERTY_INTERFACE "org.freedesktop.DBus.Properties"
 #define METHOD_GET_PROPERTY "Get"
 
@@ -47,7 +49,7 @@ bool DBusApi::getProperty(const QString &service, const QString &obj,
             mErr = "arguments size < 1";
             goto failed;
         }
-        QVariant     firstArg     = args.takeFirst();
+        QVariant firstArg = args.takeFirst();
         QDBusVariant firstDBusArg = firstArg.value<QDBusVariant>();
         if (!firstDBusArg.variant().canConvert<T>())
         {
@@ -58,8 +60,8 @@ bool DBusApi::getProperty(const QString &service, const QString &obj,
         return true;
     }
 failed:
-    qWarning() << ACCOUNT_SERVICE_USER_INTERFACE << METHOD_GET_PROPERTY << propertyName
-               << msgReply.errorName() << msgReply.errorMessage() << mErr;
+    LOG_WARNING_S() << ACCOUNT_SERVICE_USER_INTERFACE << METHOD_GET_PROPERTY << propertyName
+                    << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
@@ -73,7 +75,7 @@ bool DBusApi::AccountsService::listCachedUsers(QDBusObjectPathVector &userObject
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    QString      mErr     = "";
+    QString mErr = "";
 
     if (msgReply.type() == QDBusMessage::ReplyMessage)
     {
@@ -83,7 +85,7 @@ bool DBusApi::AccountsService::listCachedUsers(QDBusObjectPathVector &userObject
             mErr = "arguments size < 1";
             goto failed;
         }
-        QVariant      firstArg     = args.takeFirst();
+        QVariant firstArg = args.takeFirst();
         QDBusArgument firstDBusArg = firstArg.value<QDBusArgument>();
         if (firstDBusArg.currentSignature() != "ao")
         {
@@ -95,8 +97,8 @@ bool DBusApi::AccountsService::listCachedUsers(QDBusObjectPathVector &userObject
     }
 
 failed:
-    qWarning() << ACCOUNT_SERVICE_DBUS << METHOD_LIST_CACHED_USERS
-               << msgReply.errorName() << msgReply.errorMessage() << mErr;
+    LOG_WARNING_S() << ACCOUNT_SERVICE_DBUS << METHOD_LIST_CACHED_USERS
+                    << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
@@ -112,7 +114,7 @@ bool DBusApi::AccountsService::findUserByName(const QString &name, QDBusObjectPa
     QDBusMessage msgReply = QDBusConnection::systemBus().call(msgMethodCall,
                                                               QDBus::Block,
                                                               TIMEOUT_MS);
-    QString      mErr;
+    QString mErr;
     if (msgReply.type() == QDBusMessage::ReplyMessage)
     {
         QList<QVariant> args = msgReply.arguments();
@@ -122,12 +124,12 @@ bool DBusApi::AccountsService::findUserByName(const QString &name, QDBusObjectPa
             goto failed;
         }
         QVariant firstArg = args.takeFirst();
-        obj               = firstArg.value<QDBusObjectPath>();
+        obj = firstArg.value<QDBusObjectPath>();
         return true;
     }
 failed:
-    qWarning() << ACCOUNT_SERVICE_DBUS << METHOD_FIND_USER_BY_NAME
-               << msgReply.errorName() << msgReply.errorMessage() << mErr;
+    LOG_WARNING_S() << ACCOUNT_SERVICE_DBUS << METHOD_FIND_USER_BY_NAME
+                    << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
 
@@ -165,14 +167,14 @@ bool DBusApi::AccountsService::getRootIconFileProperty(QString &iconFile)
 
     if (!findUserByName("root", rootObj))
     {
-        qWarning() << __FUNCTION__ << "findUserByName root failed";
+        LOG_WARNING_S() << __FUNCTION__ << "findUserByName root failed";
         return false;
     }
 
     if (!getUserObjectIconFileProperty(rootObj, iconFile))
     {
-        qWarning() << __FUNCTION__ << "getUserObjectIconFileProperty"
-                   << rootObj.path() << "failed";
+        LOG_WARNING_S() << __FUNCTION__ << "getUserObjectIconFileProperty"
+                        << rootObj.path() << "failed";
         return false;
     }
 

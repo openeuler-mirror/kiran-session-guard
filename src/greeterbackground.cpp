@@ -1,10 +1,11 @@
-#include "greeterbackground.h"
 #include <QDebug>
 #include <QPainter>
 #include <QScreen>
 
 #include "greeterloginwindow.h"
+#include "greeterbackground.h"
 #include "kiran-greeter-prefs.h"
+#include "log.h"
 
 #define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 
@@ -18,9 +19,10 @@ GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
 #ifndef TEST
     setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnBottomHint);
 #endif
-    if (!m_background.load(KiranGreeterPrefs::instance()->backgroundFile()))
+    QString backgroundFile = KiranGreeterPrefs::instance()->backgroundFile();
+    if (!m_background.load(backgroundFile))
     {
-        qWarning() << "background load pixmap <" << KiranGreeterPrefs::instance()->backgroundFile() << "> failed.";
+        LOG_WARNING_S() << "load pixmap" << backgroundFile << "failed!,try load default background!";
         m_background.load(DEFAULT_BACKGROUND);
     }
     setScreen(screen);
@@ -53,21 +55,21 @@ void GreeterBackground::setScreen(QScreen *screen)
 
 void GreeterBackground::slotScreenGeometryChanged(const QRect &geometry)
 {
-    qInfo() << "background screen geometry changed: " << objectName() << " " << geometry;
+    LOG_INFO_S() << "background screen geometry changed, " << objectName() << "geometry:" << geometry;
     this->resize(geometry.size());
     this->move(geometry.x(), geometry.y());
 }
 
 void GreeterBackground::enterEvent(QEvent *event)
 {
-    qInfo() << "background mouse enter in: " << objectName();
+    LOG_INFO_S() << "mouse enter in:" <<  objectName();
     emit mouseEnter(this);
     QWidget::enterEvent(event);
 }
 
 void GreeterBackground::resizeEvent(QResizeEvent *event)
 {
-    qInfo() << "background resize: " << objectName() << ":" << this->size();
+    LOG_INFO_S() << objectName() << "resize" << this->size();
     if (!m_background.isNull())
     {
         m_scaledBackground = m_background.scaled(this->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);

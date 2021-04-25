@@ -76,10 +76,10 @@ signals:
     void authenticateComplete(bool success, bool reAuth);
 
 private:
-    quint64 getUPTime();
+    static quint64 getUPTime();
     bool    fetchMessageFromQueue(PamMessage &msg, int ms);
     void    pamMessageDispatcher();
-    void    dumpMsg(const PamMessage &msg);
+    QString dumpMsg(const PamMessage &msg);
 
 private:
     QQueue<PamMessage> m_queue;

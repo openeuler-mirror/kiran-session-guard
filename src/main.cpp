@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTranslator>
+#include <zlog_ex.h>
 
 #include "cursorhelper.h"
 #include "greeterkeyboard.h"
@@ -29,14 +30,18 @@ void setup_unix_signal_handlers()
     int iRet      = sigaction(SIGTERM, &term, 0);
     if (iRet != 0)
     {
-        qWarning() << "setup_unix_signal_handlers failed," << strerror(iRet);
+        LOG_WARNING_S() << "setup_unix_signal_handlers failed," << strerror(iRet);
     }
 }
 
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
-    Log::instance()->init("/tmp/lightdm-kiran-greeter.log");
+    dzlog_init_ex(NULL,
+                  "kylinsec-nologin",
+                  "lightdm-kiran-greeter",
+                  "lightdm-kiran-greeter");
+    Log::instance()->init();
     qInstallMessageHandler(Log::messageHandler);
 
     setup_unix_signal_handlers();
@@ -60,7 +65,7 @@ int main(int argc, char *argv[])
     case KiranGreeterPrefs::ScaleMode_Disable:
         break;
     default:
-        qWarning() << "enable-scaling: unsupported options";
+        LOG_ERROR("enable-scaling: unsupported options %d",KiranGreeterPrefs::instance()->scaleMode());
         break;
     }
 
@@ -68,11 +73,11 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     if (!CursorHelper::setDefaultCursorSize(scaled_factor))
     {
-        qWarning() << "setDefaultCursorSize" << scaled_factor << "failed";
+        LOG_ERROR("set default cursor size for factor %lf failed!",scaled_factor);
     }
     if (!CursorHelper::setRootWindowWatchCursor())
     {
-        qWarning() << "setRootWindowWatchCursor failed";
+        LOG_ERROR("set root window watch cursor failed!");
     }
 
     //capslock numlock
@@ -92,7 +97,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        qWarning() << "load style sheet failed";
+        LOG_ERROR("load style sheet failed!");
     }
 
 #ifdef VIRTUAL_KEYBOARD

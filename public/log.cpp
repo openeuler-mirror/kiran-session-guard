@@ -7,6 +7,10 @@
 #include <QScopedPointer>
 #include <QTextStream>
 #include <iostream>
+#include <zlog_ex.h>
+
+#define LOG_FILENAME "qt-file"
+#define LOG_FUNCTION "qt-function"
 
 Log::~Log()
 {
@@ -29,29 +33,14 @@ Log *Log::instance()
     return pInst.data();
 }
 
-bool Log::init(QString filePath)
+bool Log::init()
 {
     if (m_initOver)
     {
         return false;
     }
 
-    if (!filePath.isEmpty())
-    {
-        QFile     file(filePath);
-        QFileInfo fileInfo(filePath);
-        if (!fileInfo.dir().exists() && !fileInfo.dir().mkpath(fileInfo.dir().path()))
-        {
-            fprintf(stderr, "make log file failed\n");
-            return false;
-        }
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
-        {
-            return false;
-        }
-        file.close();
-        m_savePath = filePath;
-    }
+    //NOTE: do initialization
 
     m_initOver = true;
     return true;
@@ -64,48 +53,41 @@ void Log::setLogLevel(QtMsgType type)
 
 void Log::write(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QMutexLocker                    locker(&m_mutex);
-    static QMap<QtMsgType, QString> msgDescMap = {
-        {QtDebugMsg, "[DEBUG]"},
-        {QtWarningMsg, "[WARNING]"},
-        {QtCriticalMsg, "[CRITICAL]"},
-        {QtFatalMsg, "[FATAL]"},
-        {QtInfoMsg, "[INFO]"}};
+    static QMap<QtMsgType, zlog_level> msgDescMap = {
+        {QtDebugMsg, ZLOG_LEVEL_DEBUG},
+        {QtWarningMsg, ZLOG_LEVEL_WARN},
+        {QtCriticalMsg, ZLOG_LEVEL_ERROR},
+        {QtFatalMsg, ZLOG_LEVEL_FATAL},
+        {QtInfoMsg, ZLOG_LEVEL_INFO},
+    };
 
-    QString                            curTime    = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
-    QMap<QtMsgType, QString>::Iterator it         = msgDescMap.find(type);
-    QString                            logContent = QString("%1 %2 <%3:%4>: %5")
-                             .arg(curTime)
-                             .arg(it == msgDescMap.end() ? "UNKNOW" : *it, -10)
-                             .arg(context.function)
-                             .arg(context.line)
-                             .arg(msg);
-    if (type > m_msgType)
-    {
-        if (!m_savePath.isEmpty())
-        {
-            QFile file(m_savePath);
-            if (file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
-            {
-                QFlags<QFile::Permission> flags = QFile::ReadOwner | QFile::WriteOwner |
-                                                  QFile::ReadUser | QFile::WriteUser |
-                                                  QFile::ReadGroup | QFile::WriteGroup |
-                                                  QFile::ReadOther | QFile::WriteOther;
-                if (file.permissions() != flags)
-                {
-                    file.setPermissions(flags);
-                }
-                QTextStream ts(&file);
-                ts << logContent << endl;
-                file.close();
-            }
-        }
-        std::string sLogContent = logContent.toStdString();
-        std::cout << sLogContent << std::endl;
+    if( type<m_msgType ){
+        std::cerr<<"ignore:" << std::endl;
+        return;
     }
+
+    std::string fileName = context.file?context.file:"no-file";
+    std::string function = context.function?context.function:"no-func";
+    int line = context.line;
+    std::string strMsg = msg.toStdString();
+
+    auto zlogLevelIter = msgDescMap.find(type);
+    if(zlogLevelIter==msgDescMap.end()){
+        std::cerr<<"can't find zlog level." << std::endl;
+        return;
+    }
+
+    dzlog(fileName.c_str(),
+          fileName.size(),
+          function.c_str(),
+          function.size(),
+          line,
+          zlogLevelIter.value(),
+          "%s",
+          strMsg.c_str());
 }
 
-bool Log::isInited()
+bool Log::isInited() const
 {
     return m_initOver;
 }
@@ -115,13 +97,13 @@ void Log::messageHandler(QtMsgType type, const QMessageLogContext &context, cons
     Log *log = Log::instance();
     if (!log->isInited())
     {
-        qWarning() << "Log not initialized,call Log::init.";
-        qDebug() << msg;
+        std::cerr << "not initialized,call Log::init" << std::endl;
+        std::cerr << msg.toStdString() << std::endl;
         return;
     }
     log->write(type, context, msg);
 }
 
-Log::Log() : m_savePath(""), m_msgType(QtDebugMsg), m_initOver(false)
+Log::Log() : m_msgType(QtDebugMsg), m_initOver(false)
 {
 }

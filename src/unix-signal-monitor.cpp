@@ -6,12 +6,14 @@
 #include <QApplication>
 #include <QSocketNotifier>
 
+#include "log.h"
+
 int UnixSignalMonitor::sigTermFd[2] = {0, 0};
 
 UnixSignalMonitor::UnixSignalMonitor(QObject *parent) : QObject(parent)
 {
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigTermFd))
-        qFatal("Couldn't create TERM socketpair");
+        LOG_FATAL("Couldn't create TERM socketpair");
     m_snTerm = new QSocketNotifier(sigTermFd[1], QSocketNotifier::Read, this);
     connect(m_snTerm, &QSocketNotifier::activated, this, &UnixSignalMonitor::handlerSigTerm);
 }

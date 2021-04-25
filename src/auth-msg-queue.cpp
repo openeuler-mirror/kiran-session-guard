@@ -7,8 +7,9 @@
 #include <sys/sysinfo.h>
 #include <QtConcurrent/QtConcurrent>
 
-Q_DECLARE_METATYPE(AuthMsgQueue::PromptType)
+#include "log.h"
 
+Q_DECLARE_METATYPE(AuthMsgQueue::PromptType)
 Q_DECLARE_METATYPE(AuthMsgQueue::MessageType)
 
 AuthMsgQueue::AuthMsgQueue(QObject *parent) : QThread(parent)
@@ -54,7 +55,7 @@ void AuthMsgQueue::clean()
     m_queueMutex.unlock();
 
     m_cancelWaitCondition.wakeAll();
-    m_msgShowTime  = 0;
+    m_msgShowTime = 0;
     m_havePrompted = false;
 }
 
@@ -66,21 +67,19 @@ void AuthMsgQueue::append(const AuthMsgQueue::PamMessage &msg)
 
     m_queueSem.release();
 
-    qInfo() << "append:";
-    dumpMsg(msg);
-    qInfo() << "------------";
+    LOG_DEBUG_S() << "append auth msg:" << dumpMsg(msg);
 }
 
 quint64 AuthMsgQueue::getUPTime()
 {
-    struct sysinfo sysInfo;
-    int            res    = 0;
-    qint64         uptime = 0;
+    struct sysinfo sysInfo{};
+    int res = 0;
+    qint64 uptime = 0;
 
     res = sysinfo(&sysInfo);
     if (res != 0)
     {
-        qWarning("sysinfo get uptime failed,%s", strerror(res));
+        LOG_WARNING(" get up time failed,%s",strerror(res));
         return uptime;
     }
 
@@ -98,9 +97,7 @@ bool AuthMsgQueue::fetchMessageFromQueue(PamMessage &msg, int ms)
             return false;
         }
         msg = m_queue.dequeue();
-        qInfo() << "got message from queue:";
-        dumpMsg(msg);
-        qInfo() << "------------";
+        LOG_DEBUG_S() << "fetch auth msg:" << dumpMsg(msg);
         return true;
     }
     return false;
@@ -119,7 +116,7 @@ void AuthMsgQueue::pamMessageDispatcher()
         {
             continue;
         }
-        quint64 upTime      = getUPTime();
+        quint64 upTime = getUPTime();
         quint64 msgShowTime = m_msgShowTime + m_showInterval;
         ///第一个prompt消息不等待
         ///其他消息需要排队延时显示
@@ -150,18 +147,18 @@ void AuthMsgQueue::pamMessageDispatcher()
     }
 }
 
-void AuthMsgQueue::dumpMsg(const AuthMsgQueue::PamMessage &msg)
+QString AuthMsgQueue::dumpMsg(const AuthMsgQueue::PamMessage &msg)
 {
-    QString                          ret;
+    QString ret;
     static QMap<PamMsgType, QString> msgTypeDescMap = {
         {PMT_MSG, "Message"},
         {PMT_PROMPT, "Prompt"},
         {PMT_AUTHENTICATION_COMPLETE, "Authentication Complete"}};
     auto iter = msgTypeDescMap.find(msg.type);
-    ret       = QString("[%1] text:%2")
+    ret = QString("[%1] text:%2")
               .arg(iter == msgTypeDescMap.end() ? "none" : iter.value())
               .arg(msg.text);
-    qInfo() << ret;
+    return ret;
 }
 
 void AuthMsgQueue::run()
