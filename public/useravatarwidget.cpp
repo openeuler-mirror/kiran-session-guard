@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QPainter>
+#include "log.h"
 
 #define DEFAULT_USER_AVATAR ":/images/user_180.png"
 
@@ -15,20 +16,20 @@ void UserAvatarWidget::setImage(const QString &path)
     QFile file(path);
     if (!file.exists())
     {
-        qWarning() << "UserAvatar: file path[" << path << "] is no't exist";
+        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] is no't exist";
     }
     if (!file.isReadable())
     {
-        qWarning() << "UserAvatar: file path[" << path << "] can't read";
+        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] can't read";
     }
     if (m_pixmap.load(path))
     {
-        qInfo() << "UserAvatar: load file " << path << "successed";
+        LOG_WARNING_S() << "UserAvatar: load file " << path << "successed";
         m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     else
     {
-        qWarning() << "UserAvatar: file path[" << path << "] load failed.";
+        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] load failed.";
         if (path != DEFAULT_USER_AVATAR)
         {
             setDefaultImage();

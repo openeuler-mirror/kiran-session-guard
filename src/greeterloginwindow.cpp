@@ -12,15 +12,15 @@
 #include <QSessionManager>
 #include <QTimer>
 #include <QWidgetAction>
-#include "greeterkeyboard.h"
-#include "greetermenuitem.h"
 
 #include "greeterkeyboard.h"
 #include "greeterloginwindow.h"
 #include "greetermenuitem.h"
 #include "kiran-greeter-prefs.h"
+#include "log.h"
 #include "ui_greeterloginwindow.h"
 
+///NOTE:如果存在BiometricsAuth后台服务和开发头文件则定义，否则定义相关宏为了编译能通过
 #ifdef BIOMETRICS_AUTH
 #include <kiran-pam-msg.h>
 #else
@@ -43,7 +43,7 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) : QWidget(parent), ui(ne
     std::string error;
     if (!m_snoop.start(capsLockStatusChanged, this, error))
     {
-        qWarning() << "capslock snoop start failed: " << error.c_str();
+        LOG_WARNING_S() << "capslock snoop start failed: " << error.c_str();
     }
     initMenu();
     initUI();
@@ -92,7 +92,7 @@ void GreeterLoginWindow::initUI()
     connect(ui->btn_session, &QToolButton::pressed, [this] {
         QPoint menuLeftTop;
         QPoint btnRightTopPos;
-        QSize  menuSize;
+        QSize menuSize;
 
         if (m_sessionMenu->isVisible())
         {
@@ -101,12 +101,12 @@ void GreeterLoginWindow::initUI()
         }
 
         btnRightTopPos = ui->btn_session->mapTo(this, QPoint(ui->btn_session->width(), 0));
-        menuSize       = m_sessionMenu->sizeHint();
+        menuSize = m_sessionMenu->sizeHint();
 
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());
 
-        qInfo() << "btn_session clicked,popup menu " << menuLeftTop;
+        LOG_DEBUG_S() << "btn_session clicked,popup menu " << menuLeftTop;
         m_sessionMenu->popup(menuLeftTop);
     });
 
@@ -148,7 +148,7 @@ void GreeterLoginWindow::initUI()
         }
         //计算菜单显示坐标
         QPoint btnRightTopPos = ui->btn_power->mapTo(this, QPoint(ui->btn_power->width(), 0));
-        QSize  menuSize       = m_powerMenu->sizeHint();
+        QSize menuSize = m_powerMenu->sizeHint();
 
         QPoint menuLeftTop;
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
@@ -236,19 +236,19 @@ void GreeterLoginWindow::initMenu()
     QLightDM::SessionsModel sessionModel;
     for (int i = 0; i < sessionModel.rowCount(QModelIndex()); i++)
     {
-        QVariant         key, id;
-        QWidgetAction *  widgetAction = nullptr;
-        GreeterMenuItem *itemWidget   = nullptr;
-        key                           = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::KeyRole);
-        id                            = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::IdRole);
-        widgetAction                  = new QWidgetAction(m_sessionMenu);
-        itemWidget                    = new GreeterMenuItem(key.toString(), true);
+        QVariant key, id;
+        QWidgetAction *widgetAction = nullptr;
+        GreeterMenuItem *itemWidget = nullptr;
+        key = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::KeyRole);
+        id = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::IdRole);
+        widgetAction = new QWidgetAction(m_sessionMenu);
+        itemWidget = new GreeterMenuItem(key.toString(), true);
         itemWidget->setFixedHeight(28);
         itemWidget->setMinimumWidth(90);
         itemWidget->setMaximumWidth(120);
         itemWidget->setExclusiveGroup(buttonGroup);
         connect(itemWidget, &GreeterMenuItem::sigChecked, [this](QString action) {
-            qInfo() << "select session:" << action;
+            LOG_DEBUG_S() << "select session:" << action;
             m_session = action;
             m_sessionMenu->hide();
         });
@@ -267,7 +267,7 @@ void GreeterLoginWindow::initLightdmGreeter()
     //连接到Lightdm
     if (!m_greeter.connectSync())
     {
-        qWarning("connect to lightdm greeter failed.");
+        LOG_WARNING("connect to lightdm greeter failed!");
         return;
     }
 
@@ -308,22 +308,22 @@ void GreeterLoginWindow::initLightdmGreeter()
         }
 
         AuthMsgQueue::PamMessage msg;
-        msg.text             = text;
-        msg.type             = AuthMsgQueue::PMT_PROMPT;
+        msg.text = text;
+        msg.type = AuthMsgQueue::PMT_PROMPT;
         msg.extra.promptType = type == Greeter::PromptTypeQuestion ? AuthMsgQueue::PROMPT_TYPE_QUESTION
                                                                    : AuthMsgQueue::PROMPT_TYPE_SECRET;
         m_authQueue.append(msg);
     });
     connect(&m_greeter, &Greeter::authenticationComplete, [this]() {
         AuthMsgQueue::PamMessage authCompleteMsg;
-        authCompleteMsg.type                           = AuthMsgQueue::PMT_AUTHENTICATION_COMPLETE;
+        authCompleteMsg.type = AuthMsgQueue::PMT_AUTHENTICATION_COMPLETE;
         authCompleteMsg.extra.completeResult.isSuccess = m_greeter.isAuthenticated();
-        bool reAuth                                    = false;
+        bool reAuth = false;
 
         if (!m_greeter.isAuthenticated())
         {
             AuthMsgQueue::PamMessage errorMsg;
-            errorMsg.type          = AuthMsgQueue::PMT_MSG;
+            errorMsg.type = AuthMsgQueue::PMT_MSG;
             errorMsg.extra.msgType = AuthMsgQueue::MESSAGE_TYPE_ERROR;
             ///如果存在过prompt消息但是没有error消息，伪造一个错误消息
             ///存在过prompt消息才会开始重新认证，避免没有prompt反复调用pam开始认证，陷入死循环
@@ -362,15 +362,16 @@ void GreeterLoginWindow::initLightdmGreeter()
     m_authQueue.startDispatcher();
 
     ///连接到队列发出的事件，进行处理
-    qInfo() << "connect showMessage:"
-            << connect(&m_authQueue, &AuthMsgQueue::showMessage, this, &GreeterLoginWindow::slotShowMessage);
-    qInfo() << "connect showPrompt:"
-            << connect(&m_authQueue, &AuthMsgQueue::showPrompt, this, &GreeterLoginWindow::slotShowprompt);
-    qInfo() << "connect Authticate Complete:" << connect(&m_authQueue, &AuthMsgQueue::authenticateComplete, this, &GreeterLoginWindow::slotAuthenticationComplete);
+    LOG_DEBUG_S() << "connect showMessage:"
+                  << connect(&m_authQueue, &AuthMsgQueue::showMessage, this, &GreeterLoginWindow::slotShowMessage);
+    LOG_DEBUG_S() << "connect showPrompt:"
+                  << connect(&m_authQueue, &AuthMsgQueue::showPrompt, this, &GreeterLoginWindow::slotShowprompt);
+    LOG_DEBUG_S() << "connect Authticate Complete:"
+                  << connect(&m_authQueue, &AuthMsgQueue::authenticateComplete, this, &GreeterLoginWindow::slotAuthenticationComplete);
 
     ///处理用户个数从0到1个和1到0的情况
-    bool bres;
-    bres = connect(&m_userModel, &QLightDM::UsersModel::rowsInserted,
+    bool bRes;
+    bRes = connect(&m_userModel, &QLightDM::UsersModel::rowsInserted,
                    [this](const QModelIndex &parent, int first, int last) {
                        ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
                        ///显示返回按钮
@@ -381,12 +382,12 @@ void GreeterLoginWindow::initLightdmGreeter()
                            ui->btn_notListAndCancel->setVisible(true);
                        }
                    });
-    if (!bres)
+    if (!bRes)
     {
-        qWarning() << "connect rowsInserted failed!";
+        LOG_WARNING("connect rowsInserted failed!");
     }
 
-    bres = connect(&m_userModel, &QLightDM::UsersModel::rowsRemoved,
+    bRes = connect(&m_userModel, &QLightDM::UsersModel::rowsRemoved,
                    [this](const QModelIndex &parent, int first, int last) {
                        qInfo() << "rowRemoved:" << m_userModel.rowCount(QModelIndex());
                        if ((m_userModel.rowCount(QModelIndex()) == 0))
@@ -395,9 +396,9 @@ void GreeterLoginWindow::initLightdmGreeter()
                            resetUIForManualLogin();
                        }
                    });
-    if (!bres)
+    if (!bRes)
     {
-        qInfo() << "connect rowsRemoved failed!";
+        LOG_INFO("connect rowsRemoved failed!");
     }
 
     ui->userlist->loadUserList();
@@ -452,7 +453,7 @@ void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
  */
 bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    bool         needFilter = false;
+    bool needFilter = false;
     QMouseEvent *mouseEvent = nullptr;
 
     if (event->type() != QEvent::MouseButtonPress)
@@ -465,25 +466,25 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
     QPoint mapedPoint = this->mapFromGlobal(mouseEvent->globalPos());
 
     QRect m_sessionMenuGemometry = m_sessionMenu->geometry();
-    QRect m_powerMenuGeometry    = m_powerMenu->geometry();
+    QRect m_powerMenuGeometry = m_powerMenu->geometry();
 
     if ((!m_sessionMenuGemometry.contains(mapedPoint)) && m_sessionMenu->isVisible())
     {
         m_sessionMenu->hide();
         needFilter = true;
-        qInfo() << " session menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
+        LOG_DEBUG_S() << "session menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",session menu hide!";
     }
     if ((!m_powerMenuGeometry.contains(mapedPoint)) && m_powerMenu->isVisible())
     {
         m_powerMenu->hide();
         needFilter = true;
-        qInfo() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
+        LOG_DEBUG_S() << "power menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",power menu hide";
     }
     if (needFilter)
     {
-        qInfo() << "session: " << m_sessionMenuGemometry;
-        qInfo() << "menu:    " << m_powerMenuGeometry;
-        qInfo() << "pos:     " << mapedPoint;
+        LOG_DEBUG_S() << "session: " << m_sessionMenuGemometry;
+        LOG_DEBUG_S() << "menu:    " << m_powerMenuGeometry;
+        LOG_DEBUG_S() << "pos:     " << mapedPoint;
     }
     return needFilter;
 }
@@ -498,9 +499,9 @@ void GreeterLoginWindow::setTips(AuthMsgQueue::MessageType type, const QString &
 
 void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon)
 {
-    qInfo() << "start auth:";
-    qInfo() << "    name[" << username << "]";
-    qInfo() << "    icon[" << userIcon << "]";
+    LOG_INFO_S() << "start auth:";
+    LOG_INFO_S() << "    name[" << username << "]";
+    LOG_INFO_S() << "    icon[" << userIcon << "]";
 
     if (m_greeter.inAuthentication())
     {
@@ -538,7 +539,7 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
 
 void GreeterLoginWindow::resetUIForUserListLogin()
 {
-    qInfo() << "set ui for user list login";
+    LOG_DEBUG("set ui for user list login");
     if (m_greeter.inAuthentication())
     {
         m_greeter.cancelAuthentication();
@@ -587,7 +588,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
 void GreeterLoginWindow::resetUIForManualLogin()
 {
-    qInfo() << "set ui for manual login";
+    LOG_DEBUG("set ui for manual login");
     if (m_greeter.inAuthentication())
     {
         m_greeter.cancelAuthentication();
@@ -630,8 +631,8 @@ void GreeterLoginWindow::resetUIForManualLogin()
 void GreeterLoginWindow::startUpdateTimeTimer()
 {
     QMetaObject::invokeMethod(this, "updateTimeLabel", Qt::AutoConnection);
-    QTime curTime          = QTime::currentTime();
-    int   nextUpdateSecond = 60 - curTime.second();
+    QTime curTime = QTime::currentTime();
+    int nextUpdateSecond = 60 - curTime.second();
     QTimer::singleShot(nextUpdateSecond * 1000, this, SLOT(startUpdateTimeTimer()));
 }
 
@@ -650,9 +651,9 @@ QString GreeterLoginWindow::getCurrentDateTime()
 
 void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)
 {
-    qInfo() << "caps lock status changed: " << on;
+    LOG_INFO_S() << "caps lock status changed: " << on;
     GreeterLoginWindow *This = static_cast<GreeterLoginWindow *>(user_data);
-    QPixmap             pixmap;
+    QPixmap pixmap;
     if (on)
     {
         pixmap.load(":/images/caps_lock.png");
@@ -709,11 +710,10 @@ void GreeterLoginWindow::slotUserActivated(const UserInfo &userInfo)
 
 void GreeterLoginWindow::slotButtonClicked()
 {
-    qInfo() << "button clicked:";
-    qInfo() << "    button type[" << m_buttonType << "]";
-    qInfo() << "    login  mode[" << m_loginMode << "]";
-    qInfo() << "    intput mode[" << m_inputMode << "]";
-
+    LOG_DEBUG_S() << "button clicked:";
+    LOG_DEBUG_S() << "    button type[" << m_buttonType << "]";
+    LOG_DEBUG_S() << "    login  mode[" << m_loginMode << "]";
+    LOG_DEBUG_S() << "    intput mode[" << m_inputMode << "]";
     if (m_buttonType == BUTTON_SWITCH_TO_MANUAL_LOGIN)
     {
         Q_ASSERT(m_loginMode == LOGIN_MODE_USER_LIST);
@@ -780,7 +780,7 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
     {
         if (!m_greeter.startSessionSync(m_session))
         {
-            qInfo("start session %s failed", m_session.toStdString().c_str());
+            LOG_WARNING_S() << "start session failed,session:" << m_session;
         }
     }
     else

@@ -1,5 +1,6 @@
 #include <kiran-message-box.h>
 #include <kiran-single-application.h>
+#include <zlog_ex.h>
 #include <QCommandLineParser>
 #include <QTranslator>
 
@@ -12,7 +13,11 @@
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
-    Log::instance()->init("/tmp/lightdm-kiran-greeter-setting.log");
+    dzlog_init_ex(NULL,
+                  "kylinsec-session",
+                  "lightdm-kiran-greeter",
+                  "kiran-greeter-settings");
+    Log::instance()->init();
     qInstallMessageHandler(Log::messageHandler);
 
     KiranSingleApplication a(argc, argv);
@@ -23,7 +28,7 @@ int main(int argc, char *argv[])
     bool        loadRes            = translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
     if (!loadRes)
     {
-        qWarning() << "load translation file faield";
+        LOG_WARNING("load translation file failed!");
     }
     qApp->installTranslator(&translator);
 

@@ -10,6 +10,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include(GNUInstallDirs)
 
+# add_definitions(-DTEST)
 # Qt依赖
 find_package(Qt5 COMPONENTS
         Widgets
@@ -26,6 +27,7 @@ pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(XRANDR REQUIRED xrandr)
 pkg_search_module(XCURSOR REQUIRED xcursor)
 pkg_search_module(XFIXES REQUIRED xfixes)
+pkg_search_module(ZLOG REQUIRED zlog)
 
 # Qt编译设置
 set(CMAKE_AUTOMOC ON)
@@ -63,7 +65,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ./public/
         ./src/
         ./src/auth/
-        ${LIGHTDM_QT5_INCLUDE_DIRS})
+        ${LIGHTDM_QT5_INCLUDE_DIRS}
+        ${ZLOG_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}
         Qt5::Widgets
@@ -75,7 +78,8 @@ target_link_libraries(${PROJECT_NAME}
         ${X11_LIBRARIES}
         ${XRANDR_LIBRARIES}
         ${XCURSOR_LIBRARIES}
-        ${XFIXES_LIBRARIES})
+        ${XFIXES_LIBRARIES}
+        ${ZLOG_LIBRARIES})
 
 if (HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)

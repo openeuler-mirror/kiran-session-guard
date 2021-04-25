@@ -3,7 +3,7 @@
 #include "hover-tips.h"
 #include "kiran-greeter-prefs.h"
 
-#include <widget-property-helper.h>
+#include <style-property-helper.h>
 #include <QApplication>
 #include <QComboBox>
 #include <QDir>
@@ -19,7 +19,7 @@
 #include <kiran-sidebar-widget.h>
 #include <kiran-switch-button.h>
 
-#include "kiran-greeter-prefs.h"
+#include "log.h"
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 using namespace DBusApi;
@@ -30,13 +30,14 @@ enum GreeterSettingsPageEnum
     GreeterSettings_Autologin
 };
 
-GreeterSettingWindow::GreeterSettingWindow() : KiranTitlebarWindow()
+GreeterSettingWindow::GreeterSettingWindow(QWidget* parent) : KiranTitlebarWindow(parent)
 {
     initUI();
 }
 
 GreeterSettingWindow::~GreeterSettingWindow()
 {
+
 }
 
 void GreeterSettingWindow::initUI()
@@ -96,7 +97,7 @@ void GreeterSettingWindow::initUI()
         QList<QListWidgetItem *> selecteds = m_sidebarWidget->selectedItems();
         if (selecteds.size() != 1)
         {
-            qFatal("tabList: selecteds size != 1");
+            LOG_FATAL("tabList: selecteds size != 1");
         }
         int page = m_sidebarWidget->row(selecteds.at(0));
         m_stackedWidget->setCurrentIndex(page);
@@ -398,18 +399,16 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     ///通过AccountService加载用户信息
     if (!DBusApi::AccountsService::listCachedUsers(objVector))
     {
-        qWarning() << "init user list failed,error: listCachedUsers failed";
+        LOG_WARNING_S() << "init user list failed,error: listCachedUsers failed";
         return;
     }
     UserInfo userInfo;
-    for (auto iter = objVector.begin();
-         iter != objVector.end();
-         iter++)
+    for (auto & iter : objVector)
     {
-        if (!AccountsService::getUserObjectUserNameProperty(*iter, userInfo.name) ||
-            !AccountsService::getUserObjectIconFileProperty(*iter, userInfo.iconFile))
+        if (!AccountsService::getUserObjectUserNameProperty(iter, userInfo.name) ||
+            !AccountsService::getUserObjectIconFileProperty(iter, userInfo.iconFile))
         {
-            qWarning() << "get " << iter->path() << "UserName,IconFile failed";
+            LOG_WARNING_S() << "get " << iter.path() << "UserName,IconFile failed";
             continue;
         }
         userInfoVector.push_back(userInfo);
@@ -418,7 +417,7 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     userInfo.name = "root";
     if (!AccountsService::getRootIconFileProperty(userInfo.iconFile))
     {
-        qWarning() << "init user list failed,error: getRootIconFileProperty failed";
+        LOG_WARNING_S() << "init user list failed,error: getRootIconFileProperty failed";
         return;
     }
     userInfoVector.push_back(userInfo);
@@ -463,7 +462,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetBackgroundFile failed," << reply.error();
+        LOG_INFO_S() << "SetBackgroundFile failed," << reply.error();
         hasError = true;
         goto failed;
     }
@@ -472,7 +471,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetHideUserList failed," << reply.error();
+        LOG_INFO_S() << "SetHideUserList failed," << reply.error();
         hasError = true;
     }
 
@@ -480,7 +479,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetAllowManualLogin failed," << reply.error();
+        LOG_INFO_S() << "SetAllowManualLogin failed," << reply.error();
         hasError = true;
     }
 
@@ -489,7 +488,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetScaleMode failed," << reply.error();
+        LOG_INFO_S() << "SetScaleMode failed," << reply.error();
         hasError = true;
     }
 failed:
@@ -539,7 +538,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetAutologinUser failed," << reply.error();
+        LOG_INFO_S() << "SetAutologinUser failed," << reply.error();
         hasError = true;
         goto failed;
     }
@@ -548,7 +547,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        qInfo() << "SetAutologinTimeout" << reply.error();
+        LOG_INFO_S() << "SetAutologinTimeout" << reply.error();
         hasError = true;
     }
 
