@@ -126,100 +126,100 @@
 <context>
     <name>GreeterSettingWindow</name>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="48"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="45"/>
         <source>greeter settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="75"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="72"/>
         <source>appearance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="79"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="76"/>
         <source>autologin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="135"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="132"/>
         <source>auto login account(take effect after restart)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="150"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="147"/>
         <source>auto login dealy(seconds)(take effect after restart)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="184"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="354"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="181"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="351"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="199"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="369"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="196"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="366"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="239"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="236"/>
         <source>Scale Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="250"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="247"/>
         <source>auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="251"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="248"/>
         <source>manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="252"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="249"/>
         <source>disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="265"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="262"/>
         <source>Scale Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="290"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="287"/>
         <source>Enable Manual Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="314"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="311"/>
         <source>Hide User List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="447"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="523"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="444"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="520"/>
         <source>Configuration changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="448"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="524"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="445"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="521"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="501"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="561"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="498"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="558"/>
         <source>Save failed, reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="505"/>
-        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="565"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="502"/>
+        <location filename="../kiran-greeter-settings/src/greeter-setting-window.cpp" line="562"/>
         <source>Saved successfully</source>
         <translation type="unfinished"></translation>
     </message>
