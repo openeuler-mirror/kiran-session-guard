@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     ///翻译
     QTranslator translator;
-    QString     translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
+    QString     translationFileDir = QString("/usr/share/lightdm-kiran-greeter/translations/");
     bool        loadRes            = translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
     if (!loadRes)
     {

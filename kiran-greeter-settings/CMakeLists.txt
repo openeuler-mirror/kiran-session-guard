@@ -49,7 +49,7 @@ add_executable(${PROJECT_NAME}
         ${SETTINGS_SRC_HEADER}
         ${SETTINGS_SRC_FORMS}
         ${SETTINGS_RESOURCES}
-        ${SETTINGS_QM_FILES})
+        ${GREETER_SETTINS_QM_FILES})
 
 include_directories("${CMAKE_BINARY_DIR}")
 
@@ -73,6 +73,6 @@ target_link_libraries(${PROJECT_NAME}
 #安装kiran-greeter-settings
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
 #翻译文件
-install(FILES ${SETTINGS_QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm-kiran-greeter/translations/)
+install(FILES ${GREETER_SETTINS_QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm-kiran-greeter/translations/)
 #桌面快捷方式
 install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/applications/)

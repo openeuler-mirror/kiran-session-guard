@@ -2,163 +2,313 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>GreeterLineEdit</name>
+    <message>
+        <location filename="../../src/greeterlineedit.ui" line="32"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GreeterLoginWindow</name>
+    <message>
+        <location filename="../../src/greeterloginwindow.ui" line="23"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.ui" line="390"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.ui" line="568"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
+        <source>Recertification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.ui" line="665"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
+        <source>Not List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="83"/>
+        <source>session menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="84"/>
+        <source>virtual keyboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="85"/>
+        <source>power menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="127"/>
+        <source>hibernate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="133"/>
+        <source>suspend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="139"/>
+        <source>restart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="145"/>
+        <source>shutdown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="337"/>
+        <source>Incorrect password, please try again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="340"/>
+        <source>Incorrect username or password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="351"/>
+        <source>Failed to authenticate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="552"/>
+        <source>Not Listed?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="601"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="764"/>
+        <source>Return</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="613"/>
+        <source>Entry your name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="648"/>
+        <source>dddd MMM HH:mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="808"/>
+        <source>Start face authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/greeterloginwindow.cpp" line="819"/>
+        <source>Start fingerprint authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GreeterSettingWindow</name>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="47"/>
+        <location filename="../src/greeter-setting-window.cpp" line="45"/>
         <source>greeter settings</source>
         <translation>登录设置</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="74"/>
+        <location filename="../src/greeter-setting-window.cpp" line="72"/>
         <source>appearance</source>
         <translation>外观设置</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="78"/>
+        <location filename="../src/greeter-setting-window.cpp" line="76"/>
         <source>autologin</source>
         <translation>自动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="133"/>
         <source>Automatic Logon</source>
-        <translation>自动登录</translation>
+        <translation type="vanished">自动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="142"/>
+        <location filename="../src/greeter-setting-window.cpp" line="132"/>
         <source>auto login account(take effect after restart)</source>
         <translation>自动登录用户名(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="156"/>
+        <location filename="../src/greeter-setting-window.cpp" line="147"/>
         <source>auto login dealy(seconds)(take effect after restart)</source>
         <translation>自动登录延时(秒)(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="189"/>
-        <location filename="../src/greeter-setting-window.cpp" line="396"/>
+        <location filename="../src/greeter-setting-window.cpp" line="181"/>
+        <location filename="../src/greeter-setting-window.cpp" line="351"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="230"/>
         <source>Appearance Settings</source>
-        <translation>外观设置</translation>
+        <translation type="vanished">外观设置</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="245"/>
         <source>Select Image</source>
-        <translation>选择图片</translation>
+        <translation type="vanished">选择图片</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="252"/>
         <source>Browse</source>
-        <translation>浏览</translation>
+        <translation type="vanished">浏览</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="260"/>
         <source>select greeter background</source>
-        <translation>选择登录界面背景</translation>
+        <translation type="vanished">选择登录界面背景</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="262"/>
         <source>image files(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)</source>
-        <translation>图片文件(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)</translation>
+        <translation type="vanished">图片文件(*.bmp *.jpg *.png *.tif *.gif *.pcx *.tga *.exif *.fpx *.svg *.psd *.cdr *.pcd *.dxf *.ufo *.eps *.ai *.raw *.WMF *.webp)</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="270"/>
         <source>Warning</source>
-        <translation>警告</translation>
+        <translation type="vanished">警告</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="271"/>
         <source>The login greeter may not be able to read the file normally. Do you want to continue?</source>
-        <translation>登录界面可能不能正常读取该文件，您是否继续?</translation>
+        <translation type="vanished">登录界面可能不能正常读取该文件，您是否继续?</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="282"/>
+        <location filename="../src/greeter-setting-window.cpp" line="236"/>
         <source>Scale Mode</source>
         <translation>缩放模式</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="292"/>
+        <location filename="../src/greeter-setting-window.cpp" line="247"/>
         <source>auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="293"/>
+        <location filename="../src/greeter-setting-window.cpp" line="248"/>
         <source>manual</source>
         <translation>手动</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="294"/>
+        <location filename="../src/greeter-setting-window.cpp" line="249"/>
         <source>disable</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="307"/>
+        <location filename="../src/greeter-setting-window.cpp" line="262"/>
         <source>Scale Factor</source>
         <translation>缩放比例</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="332"/>
+        <location filename="../src/greeter-setting-window.cpp" line="287"/>
         <source>Enable Manual Login</source>
         <translation>允许手动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="357"/>
+        <location filename="../src/greeter-setting-window.cpp" line="311"/>
         <source>Hide User List</source>
         <translation>隐藏用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="204"/>
-        <location filename="../src/greeter-setting-window.cpp" line="411"/>
+        <location filename="../src/greeter-setting-window.cpp" line="196"/>
+        <location filename="../src/greeter-setting-window.cpp" line="366"/>
         <source>Reset</source>
         <translation>重新加载</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="506"/>
-        <location filename="../src/greeter-setting-window.cpp" line="573"/>
+        <location filename="../src/greeter-setting-window.cpp" line="444"/>
+        <location filename="../src/greeter-setting-window.cpp" line="520"/>
         <source>Configuration changed</source>
         <translation>配置文件已被修改</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="507"/>
-        <location filename="../src/greeter-setting-window.cpp" line="574"/>
+        <location filename="../src/greeter-setting-window.cpp" line="445"/>
+        <location filename="../src/greeter-setting-window.cpp" line="521"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation>外部配置文件已发生变化\n如果选择保存外部改变将会被覆盖\n选择丢弃将放弃所有更改，重新加载配置文件</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="554"/>
-        <location filename="../src/greeter-setting-window.cpp" line="607"/>
+        <location filename="../src/greeter-setting-window.cpp" line="498"/>
+        <location filename="../src/greeter-setting-window.cpp" line="558"/>
         <source>Save failed, reload</source>
         <translation>保存失败，已重新加载</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="556"/>
-        <location filename="../src/greeter-setting-window.cpp" line="609"/>
+        <location filename="../src/greeter-setting-window.cpp" line="502"/>
+        <location filename="../src/greeter-setting-window.cpp" line="562"/>
         <source>Saved successfully</source>
         <translation>保存成功</translation>
     </message>
 </context>
 <context>
+    <name>LoginButton</name>
+    <message>
+        <location filename="../../src/loginbutton.ui" line="14"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/loginbutton.ui" line="51"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="46"/>
+        <location filename="../src/main.cpp" line="38"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="47"/>
+        <location filename="../src/main.cpp" line="39"/>
         <source>failed to connect to the back end of the system,please try again</source>
         <translation>连接到系统服务失败，请再次尝试</translation>
     </message>
 </context>
 <context>
-    <name>TabItem</name>
+    <name>UserListItem</name>
     <message>
-        <location filename="../src/tabitem.ui" line="14"/>
+        <location filename="../../src/userlistitem.ui" line="17"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/userlistitem.ui" line="77"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
+        <source>Tom Hardy</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UserListWidget</name>
+    <message>
+        <location filename="../../src/userlistwidget.ui" line="23"/>
+        <location filename="../../build/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
+        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
