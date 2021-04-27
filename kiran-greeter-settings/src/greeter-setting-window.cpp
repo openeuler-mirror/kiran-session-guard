@@ -3,7 +3,7 @@
 #include "hover-tips.h"
 #include "kiran-greeter-prefs.h"
 
-#include <style-property-helper.h>
+#include <widget-property-helper.h>
 #include <QApplication>
 #include <QComboBox>
 #include <QDir>
