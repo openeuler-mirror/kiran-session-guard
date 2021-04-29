@@ -5,7 +5,7 @@
 #include "finger-auth-avatar.h"
 #include <QPainter>
 
-FingerAuthAvatar::FingerAuthAvatar (QWidget *parent) : QWidget(parent)
+FingerAuthAvatar::FingerAuthAvatar(QWidget *parent) : QWidget(parent)
 {
     m_pixmap.load(":/images/finger_auth.png");
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
@@ -15,21 +15,20 @@ FingerAuthAvatar::FingerAuthAvatar (QWidget *parent) : QWidget(parent)
     m_animation.setEndValue(100);
     m_animation.setDuration(800);
     m_animation.setEasingCurve(QEasingCurve::InSine);
-    connect(&m_animation, &QPropertyAnimation::finished, [this] () {
+    connect(&m_animation, &QPropertyAnimation::finished, [this]() {
         QPropertyAnimation::Direction direction =
-                m_animation.direction() == QAbstractAnimation::Forward ? QAbstractAnimation::Backward
-                                                                       : QAbstractAnimation::Forward;
+            m_animation.direction() == QAbstractAnimation::Forward ? QAbstractAnimation::Backward
+                                                                   : QAbstractAnimation::Forward;
         m_animation.setDirection(direction);
         m_animation.start();
     });
 }
 
-FingerAuthAvatar::~FingerAuthAvatar ()
+FingerAuthAvatar::~FingerAuthAvatar()
 {
-
 }
 
-void FingerAuthAvatar::paintEvent (QPaintEvent *event)
+void FingerAuthAvatar::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
@@ -38,7 +37,7 @@ void FingerAuthAvatar::paintEvent (QPaintEvent *event)
         return;
     }
     painter.setRenderHints(
-            QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing | QPainter::Antialiasing);
+        QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing | QPainter::Antialiasing);
     painter.drawPixmap((this->width() - m_scaledPixmap.width()) / 2, (this->height() - m_scaledPixmap.height()) / 2,
                        m_scaledPixmap);
     if (m_animation.state() != QPropertyAnimation::Running)
@@ -59,7 +58,7 @@ void FingerAuthAvatar::paintEvent (QPaintEvent *event)
     painter.drawLine(QLine(0, drawY, width(), drawY));
 }
 
-void FingerAuthAvatar::resizeEvent (QResizeEvent *event)
+void FingerAuthAvatar::resizeEvent(QResizeEvent *event)
 {
     if ((!m_pixmap.isNull()) && (!m_scaledPixmap.isNull()) && (m_scaledPixmap.size() != this->size()))
     {
@@ -68,7 +67,7 @@ void FingerAuthAvatar::resizeEvent (QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-QPixmap FingerAuthAvatar::scalePixmapAdjustSize (const QPixmap &pixmap)
+QPixmap FingerAuthAvatar::scalePixmapAdjustSize(const QPixmap &pixmap)
 {
     double radius = (this->width() < this->height() ? this->width() : this->height()) / 2;
     //NOTE:拉升保持长宽比，尽可能放大，不留白
@@ -76,12 +75,12 @@ QPixmap FingerAuthAvatar::scalePixmapAdjustSize (const QPixmap &pixmap)
     return temp;
 }
 
-uint FingerAuthAvatar::progress ()
+uint FingerAuthAvatar::progress()
 {
     return m_progress;
 }
 
-void FingerAuthAvatar::setProgress (uint progress)
+void FingerAuthAvatar::setProgress(uint progress)
 {
     if (m_progress == progress)
     {
@@ -91,12 +90,12 @@ void FingerAuthAvatar::setProgress (uint progress)
     update();
 }
 
-void FingerAuthAvatar::startAnimation ()
+void FingerAuthAvatar::startAnimation()
 {
     m_animation.start();
 }
 
-void FingerAuthAvatar::stopAnimation ()
+void FingerAuthAvatar::stopAnimation()
 {
     m_animation.stop();
 }
