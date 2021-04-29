@@ -1,13 +1,13 @@
 #ifndef GREETERLINEEDIT_H
 #define GREETERLINEEDIT_H
 
-#include <QWidget>
 #include <QLineEdit>
 #include <QTimerEvent>
+#include <QWidget>
 
 namespace Ui
 {
-    class GreeterLineEdit;
+class GreeterLineEdit;
 }
 
 class GreeterLineEdit : public QWidget
@@ -28,49 +28,54 @@ public:
         INPUT_PROMPT,
         INPUT_USERNAME
     };
+
 public:
-    explicit GreeterLineEdit (QWidget *parent = nullptr);
-    ~GreeterLineEdit ();
+    explicit GreeterLineEdit(QWidget *parent = nullptr);
+    ~GreeterLineEdit();
 Q_SIGNALS:
     /**
      * @brief 当输入框中输入回车会或按钮被点击时发出该信号
      *        同时启动Loading动画，若需停止动画，需调用reset
      * @param 确认的文本内容
      */
-    void textConfirmed (const QString &data);
-    void editFocusChanged (bool editFocus);
-    void hasErrorChanged (bool hasError);
-    void showPasswordModeStyleChanged (bool showPasswordModeStyle);
+    void textConfirmed(const QString &data);
+    void editFocusChanged(bool editFocus);
+    void hasErrorChanged(bool hasError);
+    void showPasswordModeStyleChanged(bool showPasswordModeStyle);
+
 public:
-    void startMovieAndEmitSignal ();
-    void reset ();
-    void setEchoMode (QLineEdit::EchoMode echoMode);
-    void setPlaceHolderText (const QString &text);
-    void setFocus ();
-    QString getText ();
-    InputMode inputMode () const;
-    bool editFocus () const;
-    bool hasError () const;
-    bool showPasswordModeStyle () const;
+    void startMovieAndEmitSignal();
+    void reset();
+    void setEchoMode(QLineEdit::EchoMode echoMode);
+    void setPlaceHolderText(const QString &text);
+    void setFocus();
+    QString getText();
+    InputMode inputMode() const;
+    bool editFocus() const;
+    bool hasError() const;
+    bool showPasswordModeStyle() const;
 public slots:
-    void setInputMode (InputMode inputMode);
-    void setEditFocus (bool editFocus);
-    void setHasError (bool hasError);
-    void setShowPasswordModeStyle (bool showPasswordModeStyle);
+    void setInputMode(InputMode inputMode);
+    void setEditFocus(bool editFocus);
+    void setHasError(bool hasError);
+    void setShowPasswordModeStyle(bool showPasswordModeStyle);
+
 private:
-    void initUI ();
-    void initConnection ();
-    void setDefaultIcon ();
-    void setNormalLetterSpacing ();
-    void setPasswdLetterSpacing ();
+    void initUI();
+    void initConnection();
+    void setDefaultIcon();
+    void setNormalLetterSpacing();
+    void setPasswdLetterSpacing();
 private slots:
-    void slotEditReturnPressed ();
-    void slotButtonPressed ();
-    void slotEditTextChanged (const QString &text);
+    void slotEditReturnPressed();
+    void slotButtonPressed();
+    void slotEditTextChanged(const QString &text);
+
 protected:
-    void timerEvent (QTimerEvent *e) override;
-    void paintEvent (QPaintEvent *e) override;
-    bool eventFilter (QObject *obj, QEvent *event) override;
+    void timerEvent(QTimerEvent *e) override;
+    void paintEvent(QPaintEvent *e) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
     Ui::GreeterLineEdit *ui;
     int m_animationTimerId;
@@ -80,4 +85,4 @@ private:
     bool m_showPasswordModeStyle;
 };
 
-#endif // GREETERLINEEDIT_H
+#endif  // GREETERLINEEDIT_H

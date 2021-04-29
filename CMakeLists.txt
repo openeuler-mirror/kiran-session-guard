@@ -20,6 +20,7 @@ pkg_search_module(GLIB_2 REQUIRED glib-2.0)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(XCB REQUIRED xcb)
 pkg_search_module(XRANDR REQUIRED xrandr)
+pkg_search_module(ZLOG REQUIRED zlog)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -46,6 +47,7 @@ target_link_libraries(${PROJECT_NAME}
         ${GLIB_2_LIBRARIES}
         ${X11_LIBRARIES}
         ${XRANDR_LIBRARIES}
+        ${ZLOG_LIBRARIES}
         pam)
 target_include_directories(${PROJECT_NAME} PRIVATE
         "src"
@@ -54,7 +56,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         "src/tool"
         "src/tool/single"
         ${GIO_2_INCLUDE_DIRS}
-        ${GLIB_2_INCLUDE_DIRS})
+        ${GLIB_2_INCLUDE_DIRS}
+        ${ZLOG_INCLUDE_DIRS})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 install(FILES ${QM_FILES} DESTINATION ${SCREENSAVER_QM_INSTALL})

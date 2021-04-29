@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QFile>
 #include <signal.h>
+#include <zlog_ex.h>
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
@@ -30,7 +31,7 @@ void setupUnixSignalHandlers ()
     int iRet = sigaction(SIGTERM, &term, nullptr);
     if (iRet != 0)
     {
-        qWarning() << "setupUnixSignalHandlers failed," << strerror(iRet);
+        LOG_WARNING_S() << "setupUnixSignalHandlers failed," << strerror(iRet);
     }
 }
 
@@ -38,7 +39,7 @@ void handleWindowScaleFactor ()
 {
     ///scaling
     int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
-    qInfo() << "screensaver-dialog scale-factor: " << windowScalingFactor;
+    LOG_INFO_S() << "screensaver-dialog scale-factor: " << windowScalingFactor;
     switch (windowScalingFactor)
     {
         case 0:ScalingHelper::auto_calculate_screen_scaling();
@@ -46,7 +47,8 @@ void handleWindowScaleFactor ()
         case 1:break;
         case 2:ScalingHelper::set_scale_factor(2);
             break;
-        default:qWarning() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
+        default:
+            LOG_WARNING_S() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
             break;
     }
 }
@@ -55,7 +57,11 @@ void handleWindowScaleFactor ()
 int main (int argc, char *argv[])
 {
     ///初始化日志模块,需提供verbose启动参数日志才会写入文件
-    Log::instance()->init("/tmp/kiran-screensaver-dialog.log");
+    dzlog_init_ex(NULL,
+                  "kylinsec-session",
+                  "kiran-screensaver-dialog",
+                  "kiran-screensaver-dialog");
+    Log::instance()->init();
     qInstallMessageHandler(Log::messageHandler);
 #ifdef TEST
     Log::instance()->setAppend2File(true);
@@ -70,11 +76,11 @@ int main (int argc, char *argv[])
 
     ///安装翻译
     QTranslator tsor;
-    qInfo() << "load translation file: " << tsor.load(QLocale(),
-                                                      "kiran-screensaver-dialog"/*filename*/,
-                                                      "."/*prefix*/,
-                                                      TRANSLATION_FILE_DIR/*dir*/,
-                                                      ".qm"/*suffix*/);
+    LOG_INFO_S() << "load translation file: "
+                 << tsor.load(QLocale(),
+                              "kiran-screensaver-dialog" /*filename*/,
+                              "." /*prefix*/, TRANSLATION_FILE_DIR /*dir*/,
+                              ".qm" /*suffix*/);
     qApp->installTranslator(&tsor);
 
     ///参数解析
@@ -83,8 +89,7 @@ int main (int argc, char *argv[])
     QCommandLineOption logoutCommandOption("logout-command", "logout command");
     QCommandLineOption statusMsgOption("status-message", "status message", "status message", "");
     QCommandLineOption enableSwitchOption("enable-switch", "whether to allow switching users");
-    QCommandLineOption verboseOption("verbose", "debug mode output log");
-    parser.addOptions({logoutEnableOption, logoutCommandOption, statusMsgOption, enableSwitchOption, verboseOption});
+    parser.addOptions({logoutEnableOption, logoutCommandOption, statusMsgOption, enableSwitchOption});
     parser.addHelpOption();
     parser.process(app);
 
@@ -103,7 +108,7 @@ int main (int argc, char *argv[])
     }
     else
     {
-        qWarning() << "load style sheet failed";
+        LOG_WARNING_S() << "load style sheet failed";
     }
 
     ScreenSaverDialog w;
@@ -122,10 +127,6 @@ int main (int argc, char *argv[])
     if (parser.isSet(enableSwitchOption))
     {
         w.setSwitchUserEnabled(true);
-    }
-    if (parser.isSet(verboseOption))
-    {
-        Log::instance()->setAppend2File(true);
     }
     w.show();
     return app.exec();

@@ -18,6 +18,7 @@
 #include "gsettingshelper.h"
 #include "greeterkeyboard.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
+#include "log.h"
 
 #ifdef BIOMETRICS_AUTH
 #include <kiran-pam-msg.h>
@@ -107,7 +108,7 @@ void ScreenSaverDialog::initUI ()
         QTimer::singleShot(2000, this, SLOT(responseCancelAndQuit()));
         if (!DBusApi::DisplayManager::switchToGreeter())
         {
-            qWarning() << "call SwitchToGreeter failed.";
+            LOG_WARNING_S() << "call SwitchToGreeter failed.";
         }
     });
 
@@ -120,16 +121,16 @@ void ScreenSaverDialog::initUI ()
 
     ///背景图
     QString backgroundPath = GSettingsHelper::getBackgrountPath();
-    qDebug() << "screensaver-dialog background: " << backgroundPath;
+    LOG_DEBUG_S() << "screensaver-dialog background: " << backgroundPath;
     if (!m_background.load(backgroundPath))
     {
-        qWarning() << "load background" << backgroundPath << "failed";
+        LOG_WARNING_S() << "load background" << backgroundPath << "failed";
         m_background.load(DEFAULT_BACKGROUND);
     }
 
     ///用户
     m_userName = getUser();
-    qDebug() << "screensaver-dialog login user: " << m_userName;
+    LOG_DEBUG_S() << "screensaver-dialog login user: " << m_userName;
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
@@ -143,19 +144,19 @@ void ScreenSaverDialog::initUI ()
     m_powerMenu->addAction(tr("reboot"), this, [=] {
         if (!DBusApi::SessionManager::reboot())
         {
-            qWarning() << "call reboot failed";
+            LOG_WARNING_S() << "call reboot failed";
         }
     });
     m_powerMenu->addAction(tr("shutdown"), this, [=] {
         if (!DBusApi::SessionManager::shutdown())
         {
-            qWarning() << "call shutdown failed";
+            LOG_WARNING_S() << "call shutdown failed";
         }
     });
     m_powerMenu->addAction(tr("suspend"), this, [=] {
         if (!DBusApi::SessionManager::suspend())
         {
-            qWarning() << "call suspend failed";
+            LOG_WARNING_S() << "call suspend failed";
         }
     });
     connect(m_powerMenu, &QMenu::triggered, this, [=] {
@@ -196,12 +197,12 @@ QString ScreenSaverDialog::getUser ()
 {
 
     uid_t uid = getuid();
-    qInfo() << "current uid:" << uid;
+    LOG_INFO_S() << "current uid:" << uid;
 
     long bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
     if (bufSize == -1)
     {
-        qWarning() << "autodetect getpw_r bufsize failed.";
+        LOG_WARNING_S() << "autodetect getpw_r bufsize failed.";
         return QString("");
     }
 
@@ -222,17 +223,17 @@ QString ScreenSaverDialog::getUser ()
 
     if (iRet != 0)
     {
-        qWarning() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
+        LOG_WARNING_S() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
         return QString("");
     }
 
     if (pResult == nullptr)
     {
-        qWarning() << "getpwuid_r no matching password record was found";
+        LOG_WARNING_S() << "getpwuid_r no matching password record was found";
         return QString("");
     }
 
-    qInfo() << "getpwuid_r: " << pResult->pw_name;
+    LOG_INFO_S() << "getpwuid_r: " << pResult->pw_name;
     return pResult->pw_name;
 }
 
@@ -297,7 +298,7 @@ void ScreenSaverDialog::responseOkAndQuit ()
 {
     static const char *response = "RESPONSE=OK";
     std::cout << response << std::endl;
-    qInfo() << response;
+    LOG_INFO_S() << response;
     this->close();
 }
 
@@ -306,7 +307,7 @@ void ScreenSaverDialog::responseCancelAndQuit ()
     static const char *response = "RESPONSE=CANCEL";
     this->hide();
     std::cout << response << std::endl;
-    qInfo() << response;
+    LOG_DEBUG_S() << response;
     this->close();
 }
 
@@ -314,7 +315,7 @@ void ScreenSaverDialog::responseNoticeAuthFailed ()
 {
     static const char *response = "NOTICE=AUTH FAILED";
     std::cout << response << std::endl;
-    qInfo() << response;
+    LOG_DEBUG_S() << response;
 }
 
 bool ScreenSaverDialog::eventFilter (QObject *obj, QEvent *event)
@@ -335,7 +336,7 @@ bool ScreenSaverDialog::eventFilter (QObject *obj, QEvent *event)
     {
         m_powerMenu->hide();
         needFilter = true;
-        qInfo() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
+        LOG_INFO_S() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
     }
 
     return needFilter;
