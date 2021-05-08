@@ -18,109 +18,109 @@
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="390"/>
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>账户名</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="568"/>
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
         <source>Recertification</source>
-        <translation type="unfinished"></translation>
+        <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="665"/>
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <source>Not List</source>
-        <translation type="unfinished"></translation>
+        <translation>未列出</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="83"/>
         <source>session menu</source>
-        <translation type="unfinished"></translation>
+        <translation>会话菜单</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="84"/>
         <source>virtual keyboard</source>
-        <translation type="unfinished"></translation>
+        <translation>虚拟键盘</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="85"/>
         <source>power menu</source>
-        <translation type="unfinished"></translation>
+        <translation>电源菜单</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="127"/>
         <source>hibernate</source>
-        <translation type="unfinished"></translation>
+        <translation>休眠</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="133"/>
         <source>suspend</source>
-        <translation type="unfinished"></translation>
+        <translation>待机</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="139"/>
         <source>restart</source>
-        <translation type="unfinished"></translation>
+        <translation>重启</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="145"/>
         <source>shutdown</source>
-        <translation type="unfinished"></translation>
+        <translation>关机</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="337"/>
         <source>Incorrect password, please try again</source>
-        <translation type="unfinished"></translation>
+        <translation>密码错误，请再次输入</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="340"/>
         <source>Incorrect username or password</source>
-        <translation type="unfinished"></translation>
+        <translation>用户名或密码错误</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="351"/>
         <source>Failed to authenticate</source>
-        <translation type="unfinished"></translation>
+        <translation>认证失败</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="552"/>
         <source>Not Listed?</source>
-        <translation type="unfinished"></translation>
+        <translation>未列出</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="601"/>
         <location filename="../src/greeterloginwindow.cpp" line="764"/>
         <source>Return</source>
-        <translation type="unfinished"></translation>
+        <translation>返回</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="613"/>
         <source>Entry your name</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入账户名</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="648"/>
         <source>dddd MMM HH:mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="808"/>
         <source>Start face authentication</source>
-        <translation type="unfinished"></translation>
+        <translation>开始人脸认证</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="819"/>
         <source>Start fingerprint authentication</source>
-        <translation type="unfinished"></translation>
+        <translation>开始指纹认证</translation>
     </message>
 </context>
 <context>
