@@ -110,7 +110,7 @@
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="648"/>
         <source>dddd MMM HH:mm</source>
-        <translation></translation>
+        <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="808"/>
