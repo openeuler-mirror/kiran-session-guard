@@ -124,6 +124,64 @@
     </message>
 </context>
 <context>
+    <name>GreeterSetting</name>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="357"/>
+        <source>GreeterSetting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="358"/>
+        <source>Appearance Setting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="359"/>
+        <source>Select Image</source>
+        <translation type="unfinished">选择图片</translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="360"/>
+        <source>Browse</source>
+        <translation type="unfinished">浏览</translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="361"/>
+        <source>Scale Mode</source>
+        <translation type="unfinished">缩放模式</translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="362"/>
+        <source>Scale Factor</source>
+        <translation type="unfinished">缩放比例</translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="363"/>
+        <source>User Login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="364"/>
+        <source>enable manual login</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="366"/>
+        <source>hide user list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="368"/>
+        <source>auto login account(take effect after restart)</source>
+        <translation type="unfinished">自动登录用户名(重启后生效)</translation>
+    </message>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_greetersetting.h" line="369"/>
+        <source>auto login delay(seconds)(take effect after restart)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GreeterSettingWindow</name>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="45"/>
@@ -221,7 +279,7 @@
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="311"/>
         <source>Hide User List</source>
-        <translation>隐藏用户名</translation>
+        <translation>隐藏用户列表</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="196"/>
@@ -284,6 +342,14 @@ Select discard to discard the modification and reload the new configuration</sou
         <location filename="../src/main.cpp" line="39"/>
         <source>failed to connect to the back end of the system,please try again</source>
         <translation>连接到系统服务失败，请再次尝试</translation>
+    </message>
+</context>
+<context>
+    <name>TabItem</name>
+    <message>
+        <location filename="../../cmake-build-debug/kiran-greeter-settings/kiran-greeter-settings_autogen/include/ui_tabitem.h" line="63"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
