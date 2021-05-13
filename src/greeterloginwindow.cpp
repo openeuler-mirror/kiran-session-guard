@@ -406,7 +406,7 @@ void GreeterLoginWindow::initLightdmGreeter()
 
 void GreeterLoginWindow::initSettings()
 {
-    m_noListButotnVisiable = KiranGreeterPrefs::instance()->allowManualLogin();
+    m_noListButotnVisiable = KiranGreeterPrefs::instance()->allow_manual_login();
     if (!m_noListButotnVisiable)
     {
         //不允许输入用户名,必须显示用户列表
@@ -414,7 +414,7 @@ void GreeterLoginWindow::initSettings()
     }
     else
     {
-        m_showUserList = !KiranGreeterPrefs::instance()->hideUserList();
+        m_showUserList = !KiranGreeterPrefs::instance()->hide_user_list();
     }
 
     m_authQueue.setMsgInterval(MESSAGE_DISPLAY_INTERVAL);

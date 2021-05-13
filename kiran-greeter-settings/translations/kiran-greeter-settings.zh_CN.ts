@@ -184,17 +184,17 @@
 <context>
     <name>GreeterSettingWindow</name>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="45"/>
+        <location filename="../src/greeter-setting-window.cpp" line="46"/>
         <source>greeter settings</source>
         <translation>登录设置</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="72"/>
+        <location filename="../src/greeter-setting-window.cpp" line="73"/>
         <source>appearance</source>
         <translation>外观设置</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="76"/>
+        <location filename="../src/greeter-setting-window.cpp" line="77"/>
         <source>autologin</source>
         <translation>自动登录</translation>
     </message>
@@ -203,18 +203,18 @@
         <translation type="vanished">自动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="132"/>
+        <location filename="../src/greeter-setting-window.cpp" line="133"/>
         <source>auto login account(take effect after restart)</source>
         <translation>自动登录用户名(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="147"/>
+        <location filename="../src/greeter-setting-window.cpp" line="148"/>
         <source>auto login dealy(seconds)(take effect after restart)</source>
         <translation>自动登录延时(秒)(重启后生效)</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="181"/>
-        <location filename="../src/greeter-setting-window.cpp" line="351"/>
+        <location filename="../src/greeter-setting-window.cpp" line="182"/>
+        <location filename="../src/greeter-setting-window.cpp" line="352"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -247,69 +247,69 @@
         <translation type="vanished">登录界面可能不能正常读取该文件，您是否继续?</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="236"/>
+        <location filename="../src/greeter-setting-window.cpp" line="237"/>
         <source>Scale Mode</source>
         <translation>缩放模式</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="247"/>
+        <location filename="../src/greeter-setting-window.cpp" line="248"/>
         <source>auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="248"/>
+        <location filename="../src/greeter-setting-window.cpp" line="249"/>
         <source>manual</source>
         <translation>手动</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="249"/>
+        <location filename="../src/greeter-setting-window.cpp" line="250"/>
         <source>disable</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="262"/>
+        <location filename="../src/greeter-setting-window.cpp" line="263"/>
         <source>Scale Factor</source>
         <translation>缩放比例</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="287"/>
+        <location filename="../src/greeter-setting-window.cpp" line="288"/>
         <source>Enable Manual Login</source>
         <translation>允许手动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="311"/>
+        <location filename="../src/greeter-setting-window.cpp" line="312"/>
         <source>Hide User List</source>
         <translation>隐藏用户列表</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="196"/>
-        <location filename="../src/greeter-setting-window.cpp" line="366"/>
+        <location filename="../src/greeter-setting-window.cpp" line="197"/>
+        <location filename="../src/greeter-setting-window.cpp" line="367"/>
         <source>Reset</source>
         <translation>重新加载</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="444"/>
-        <location filename="../src/greeter-setting-window.cpp" line="520"/>
+        <location filename="../src/greeter-setting-window.cpp" line="445"/>
+        <location filename="../src/greeter-setting-window.cpp" line="521"/>
         <source>Configuration changed</source>
         <translation>配置文件已被修改</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="445"/>
-        <location filename="../src/greeter-setting-window.cpp" line="521"/>
+        <location filename="../src/greeter-setting-window.cpp" line="446"/>
+        <location filename="../src/greeter-setting-window.cpp" line="522"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation>外部配置文件已发生变化\n如果选择保存外部改变将会被覆盖\n选择丢弃将放弃所有更改，重新加载配置文件</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="498"/>
-        <location filename="../src/greeter-setting-window.cpp" line="558"/>
+        <location filename="../src/greeter-setting-window.cpp" line="499"/>
+        <location filename="../src/greeter-setting-window.cpp" line="559"/>
         <source>Save failed, reload</source>
         <translation>保存失败，已重新加载</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="502"/>
-        <location filename="../src/greeter-setting-window.cpp" line="562"/>
+        <location filename="../src/greeter-setting-window.cpp" line="503"/>
+        <location filename="../src/greeter-setting-window.cpp" line="563"/>
         <source>Saved successfully</source>
         <translation>保存成功</translation>
     </message>

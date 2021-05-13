@@ -6,8 +6,7 @@
 #include "greeterbackground.h"
 #include "kiran-greeter-prefs.h"
 #include "log.h"
-
-#define DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
+#include "define.h"
 
 QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
@@ -19,7 +18,7 @@ GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
 #ifndef TEST
     setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnBottomHint);
 #endif
-    QString backgroundFile = KiranGreeterPrefs::instance()->backgroundFile();
+    QString backgroundFile = KiranGreeterPrefs::instance()->background();
     if (!m_background.load(backgroundFile))
     {
         LOG_WARNING_S() << "load pixmap" << backgroundFile << "failed!,try load default background!";

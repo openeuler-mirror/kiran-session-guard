@@ -28,7 +28,7 @@ pkg_search_module(XRANDR REQUIRED xrandr)
 pkg_search_module(XCURSOR REQUIRED xcursor)
 pkg_search_module(XFIXES REQUIRED xfixes)
 pkg_search_module(ZLOG REQUIRED zlog)
-
+pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
 # Qt编译设置
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -66,7 +66,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ./src/
         ./src/auth/
         ${LIGHTDM_QT5_INCLUDE_DIRS}
-        ${ZLOG_INCLUDE_DIRS})
+        ${ZLOG_INCLUDE_DIRS}
+        ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}
         Qt5::Widgets
@@ -79,7 +80,8 @@ target_link_libraries(${PROJECT_NAME}
         ${XRANDR_LIBRARIES}
         ${XCURSOR_LIBRARIES}
         ${XFIXES_LIBRARIES}
-        ${ZLOG_LIBRARIES})
+        ${ZLOG_LIBRARIES}
+        ${KIRAN_CC_DAEMON_LIBRARIES})
 
 if (HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)
@@ -90,9 +92,6 @@ install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INST
 
 #安装翻译  /usr/share/lightdm-kiran-greeter/translations/
 install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations)
-
-#安装自身配置文件 /etc/lightdm/lightdm-kiran-greeter.conf
-install(FILES config/lightdm-kiran-greeter.conf DESTINATION /${CMAKE_INSTALL_SYSCONFDIR}/lightdm/)
 
 #安装lightdm greeter配置文件 /usr/share/lightdm/lightdm.conf.d/99-lightdm-kiran-greeter.conf
 install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm/lightdm.conf.d/)

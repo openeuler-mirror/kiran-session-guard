@@ -8,7 +8,7 @@
 
 KiranGreeterPrefs *KiranGreeterPrefs::instance()
 {
-    static QMutex                            mutex;
+    static QMutex mutex;
     static QScopedPointer<KiranGreeterPrefs> pInst;
 
     if (Q_UNLIKELY(!pInst))
@@ -24,12 +24,12 @@ KiranGreeterPrefs *KiranGreeterPrefs::instance()
 }
 
 KiranGreeterPrefs::KiranGreeterPrefs()
-    : ComKylinsecKiranSystemDaemonGreeterSettingsInterface(ComKylinsecKiranSystemDaemonGreeterSettingsInterface::staticInterfaceName(),
-                                                           "/com/kylinsec/Kiran/SystemDaemon/GreeterSettings",
-                                                           QDBusConnection::systemBus())
+    : GreeterDBusInterface(GreeterDBusInterface::staticInterfaceName(),
+                           GreeterDBusInterface::staticInterfacePath(),
+                           QDBusConnection::systemBus())
 {
-    QDBusConnection::systemBus().connect("com.kylinsec.Kiran.SystemDaemon",
-                                         "/com/kylinsec/Kiran/SystemDaemon/GreeterSettings",
+    QDBusConnection::systemBus().connect(GreeterDBusInterface::staticInterfaceName(),
+                                         GreeterDBusInterface::staticInterfacePath(),
                                          "org.freedesktop.DBus.Properties",
                                          "PropertiesChanged",
                                          this, SLOT(handlePropertiesChanged(QDBusMessage)));
@@ -41,8 +41,8 @@ KiranGreeterPrefs::~KiranGreeterPrefs()
 
 void KiranGreeterPrefs::handlePropertiesChanged(QDBusMessage msg)
 {
-    QList<QVariant> arguments    = msg.arguments();
-    QVariantMap     changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
+    QList<QVariant> arguments = msg.arguments();
+    QVariantMap changedProps = qdbus_cast<QVariantMap>(arguments.at(1).value<QDBusArgument>());
     for (auto iter = changedProps.begin(); iter != changedProps.end(); iter++)
     {
         emit propertyChanged(iter.key(), iter.value());
