@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QTranslator>
 #include <zlog_ex.h>
+#include <kiran-system-daemon/greeter_i.h>
 
 #include "cursorhelper.h"
 #include "greeterkeyboard.h"
@@ -48,24 +49,24 @@ int main(int argc, char *argv[])
 
     ///设置缩放比
     double scaled_factor = 0.0;
-    switch (KiranGreeterPrefs::instance()->scaleMode())
+    switch (KiranGreeterPrefs::instance()->scale_mode())
     {
-    case KiranGreeterPrefs::ScaleMode_Auto:
+    case GREETER_SCALING_MODE_AUTO:
     {
         ScalingHelper::auto_calculate_screen_scaling(scaled_factor);
         break;
     }
-    case KiranGreeterPrefs::ScaleMode_Manual:
+    case GREETER_SCALING_MODE_MANUAL:
     {
-        double scaleFcator = KiranGreeterPrefs::instance()->scaleFactor();
+        double scaleFcator = KiranGreeterPrefs::instance()->scale_factor();
         scaled_factor      = scaleFcator;
         ScalingHelper::set_scale_factor(scaleFcator);
         break;
     }
-    case KiranGreeterPrefs::ScaleMode_Disable:
+    case GREETER_SCALING_MODE_DISABLE:
         break;
     default:
-        LOG_ERROR("enable-scaling: unsupported options %d",KiranGreeterPrefs::instance()->scaleMode());
+        LOG_ERROR("enable-scaling: unsupported options %d",KiranGreeterPrefs::instance()->scale_mode());
         break;
     }
 

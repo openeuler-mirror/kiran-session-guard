@@ -7,18 +7,12 @@
 #ifndef LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H
 #define LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H
 
-#include "greeter-settings-dbus-proxy.h"
+#include "greeter-dbus-interface.h"
 
-class KiranGreeterPrefs : public ComKylinsecKiranSystemDaemonGreeterSettingsInterface
+class KiranGreeterPrefs : public GreeterDBusInterface
 {
     Q_OBJECT
 public:
-    enum ScaleModeEnum
-    {
-        ScaleMode_Auto = 0,
-        ScaleMode_Manual,
-        ScaleMode_Disable
-    };
     static KiranGreeterPrefs* instance();
     ~KiranGreeterPrefs();
 
