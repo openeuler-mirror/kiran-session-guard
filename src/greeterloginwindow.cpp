@@ -55,9 +55,6 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) : QWidget(parent), ui(ne
 GreeterLoginWindow::~GreeterLoginWindow()
 {
     m_snoop.stop();
-#ifdef VIRTUAL_KEYBOARD
-    GreeterKeyboard::instance()->keyboardProcessExit();
-#endif
     delete ui;
 }
 
@@ -778,6 +775,16 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
 {
     if (success)
     {
+#ifdef VIRTUAL_KEYBOARD
+        //在关闭时若虚拟键盘的副窗口设置为当前窗口的话，则更改父窗口,避免释放相关X资源导致onboard释放出错，导致onboard崩溃
+        if (GreeterKeyboard::instance()->getKeyboard())
+        {
+            if (GreeterKeyboard::instance()->getKeyboard()->parentWidget() == this)
+            {
+                GreeterKeyboard::instance()->getKeyboard()->setParent(nullptr);
+            }
+        }
+#endif
         if (!m_greeter.startSessionSync(m_session))
         {
             LOG_WARNING_S() << "start session failed,session:" << m_session;
