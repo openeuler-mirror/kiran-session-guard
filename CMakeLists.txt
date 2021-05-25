@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(lightdm-kiran-greeter)
 
 option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
+option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -86,6 +87,10 @@ target_link_libraries(${PROJECT_NAME}
 if (HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)
 endif ()
+
+if (SHOW_VIRTUAL_KEYBOARD)
+    add_definitions(-DVIRTUAL_KEYBOARD)
+endif()
 
 #安装lightdm-kiran-greeter
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR})

@@ -19,6 +19,9 @@
 
 void termSignalHandler(int unused)
 {
+#ifdef VIRTUAL_KEYBOARD
+    GreeterKeyboard::instance()->keyboardProcessExit();
+#endif
     qApp->quit();
 }
 
@@ -28,6 +31,7 @@ void setup_unix_signal_handlers()
     term.sa_handler = termSignalHandler;
     sigemptyset(&term.sa_mask);
     term.sa_flags = 0;
+    term.sa_flags |= SA_RESETHAND;
     int iRet      = sigaction(SIGTERM, &term, 0);
     if (iRet != 0)
     {

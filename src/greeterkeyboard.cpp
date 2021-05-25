@@ -9,7 +9,7 @@
 
 #include "log.h"
 
-#define ONBOARD_LAYOUT "Phone"
+#define ONBOARD_LAYOUT "Compact"
 #define ONBOARD_THEME "Blackboard"
 
 #define ONBOARD_FIXED_WIDTH 800
