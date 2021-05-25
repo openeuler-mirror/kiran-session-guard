@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(kiran-screensaver-dialog)
 
 option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
+option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,6 +35,10 @@ qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} )
 
 if(HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)
+endif()
+
+if(SHOW_VIRTUAL_KEYBOARD)
+    add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
 
 include_directories("${CMAKE_BINARY_DIR}")
