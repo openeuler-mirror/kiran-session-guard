@@ -75,7 +75,8 @@ void ScreenSaverDialog::initPamAuthProxy ()
 {
     connect(&m_authProxy, &PamAuthProxy::showMessage, this, &ScreenSaverDialog::slotShowMessage);
     connect(&m_authProxy, &PamAuthProxy::showPrompt, this, &ScreenSaverDialog::slotShowPrompt);
-    connect(&m_authProxy, &PamAuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete);
+    ///NOTE:使用阻塞队列连接，认证线程发送信号时阻塞等待槽函数返回,线程再进行退出（会重置标志位）
+    connect(&m_authProxy, &PamAuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete,Qt::BlockingQueuedConnection);
 }
 
 void ScreenSaverDialog::initUI ()
