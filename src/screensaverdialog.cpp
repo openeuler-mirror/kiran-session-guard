@@ -48,9 +48,6 @@ ScreenSaverDialog::ScreenSaverDialog (QWidget *parent) :
 
 ScreenSaverDialog::~ScreenSaverDialog ()
 {
-#ifdef VIRTUAL_KEYBOARD
-    GreeterKeyboard::instance()->keyboardProcessExit();
-#endif
     delete ui;
 }
 
@@ -75,8 +72,7 @@ void ScreenSaverDialog::initPamAuthProxy ()
 {
     connect(&m_authProxy, &PamAuthProxy::showMessage, this, &ScreenSaverDialog::slotShowMessage);
     connect(&m_authProxy, &PamAuthProxy::showPrompt, this, &ScreenSaverDialog::slotShowPrompt);
-    ///NOTE:使用阻塞队列连接，认证线程发送信号时阻塞等待槽函数返回,线程再进行退出（会重置标志位）
-    connect(&m_authProxy, &PamAuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete,Qt::BlockingQueuedConnection);
+    connect(&m_authProxy, &PamAuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete);
 }
 
 void ScreenSaverDialog::initUI ()
@@ -479,4 +475,19 @@ void ScreenSaverDialog::startAuth ()
         m_authProxy.startAuthenticate(m_userName);
     }
     switchToPromptEdit();
+}
+
+void ScreenSaverDialog::closeEvent(QCloseEvent *event)
+{
+#ifdef VIRTUAL_KEYBOARD
+    //在关闭时若虚拟键盘的副窗口设置为当前窗口的话，则更改父窗口,避免释放相关X资源导致onboard释放出错，导致onboard崩溃
+    if(GreeterKeyboard::instance()->getKeyboard())
+    {
+       if( GreeterKeyboard::instance()->getKeyboard()->parentWidget()==this )
+       {
+           GreeterKeyboard::instance()->getKeyboard()->setParent(nullptr);
+       }
+    }
+#endif
+    QWidget::closeEvent(event);
 }

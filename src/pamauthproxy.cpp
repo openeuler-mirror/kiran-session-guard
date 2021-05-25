@@ -47,6 +47,7 @@ void PamAuthProxy::startAuthenticate(const QString &userName)
     }
     m_authUserName = userName;
     m_state = AUTH_STATE_RUNNING;
+    m_authRes = false;
     start();
 }
 
@@ -238,6 +239,5 @@ void PamAuthProxy::resetFlag()
     m_waitCondition.wakeAll();
     m_reAuthMutex.unlock();
     m_reAuthCOndition.wakeAll();
-    m_authRes = false;
     m_conversationRep = {false, ""};
 }
