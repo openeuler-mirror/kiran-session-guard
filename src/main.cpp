@@ -18,6 +18,10 @@
 
 void termSignalHandler (int unused)
 {
+#ifdef VIRTUAL_KEYBOARD
+    ///初始化虚拟键盘
+    GreeterKeyboard::instance()->keyboardProcessExit();
+#endif
     qApp->quit();
 }
 
