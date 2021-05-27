@@ -29,11 +29,11 @@
 #define REP_FACE        "RepFaceReady" //人脸认证界面准备完毕
 #endif
 
+#define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
 QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage (QImage &blurImage, qreal radius, bool quality, int transposed = 0);
-
 QT_END_NAMESPACE
 
 ScreenSaverDialog::ScreenSaverDialog (QWidget *parent) :
@@ -119,10 +119,17 @@ void ScreenSaverDialog::initUI ()
     ///背景图
     QString backgroundPath = GSettingsHelper::getBackgrountPath();
     LOG_DEBUG_S() << "screensaver-dialog background: " << backgroundPath;
-    if (!m_background.load(backgroundPath))
+
+    QStringList backgrounds = {backgroundPath,SYSTEM_DEFAULT_BACKGROUND,DEFAULT_BACKGROUND};
+    foreach(const QString &background,backgrounds)
     {
-        LOG_WARNING_S() << "load background" << backgroundPath << "failed";
-        m_background.load(DEFAULT_BACKGROUND);
+        if( !m_background.load(background) )
+        {
+            LOG_WARNING_S() << "load background:" << background << "failed!";
+            continue;
+        }
+        LOG_DEBUG_S() << "load background:" << background;
+        break;
     }
 
     ///用户
