@@ -113,12 +113,12 @@
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="805"/>
+        <location filename="../src/greeterloginwindow.cpp" line="815"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="816"/>
+        <location filename="../src/greeterloginwindow.cpp" line="826"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
