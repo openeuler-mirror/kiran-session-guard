@@ -309,9 +309,8 @@ void ScreenSaverDialog::responseOkAndQuit ()
 void ScreenSaverDialog::responseCancelAndQuit ()
 {
     static const char *response = "RESPONSE=CANCEL";
-    this->hide();
     std::cout << response << std::endl;
-    LOG_DEBUG_S() << response;
+    LOG_INFO_S() << response;
     this->close();
 }
 
