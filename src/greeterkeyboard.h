@@ -11,12 +11,12 @@ public:
     static GreeterKeyboard *instance();
     ~GreeterKeyboard();
 
-    bool init(QWidget *parent = nullptr);
-    void hide();
-    bool isVisible();
-    void showAdjustSize(QWidget *parent = nullptr);
+    bool     init(QWidget *parent = nullptr);
+    void     hide();
+    bool     isVisible();
+    void     showAdjustSize(QWidget *parent = nullptr);
     QWidget *getKeyboard();
-    void keyboardProcessExit();
+    void     keyboardProcessExit();
 
 public slots:
     void slot_finished(int exitCode, QProcess::ExitStatus exitStatus);
@@ -28,7 +28,7 @@ private slots:
     void slotReadyReadStandardOutput();
 
 private:
-    QWidget *m_keyboardWidget;
+    QWidget * m_keyboardWidget;
     QProcess *m_process;
 };
 

@@ -29,7 +29,7 @@ PamAuthProxy::~PamAuthProxy()
         m_reAuthCOndition.wakeAll();
         if (!QThread::wait(1000))
         {
-            qWarning() << "pam auth thread can't stop,terminate it.";
+            qWarning() << "pam auth thread can't stop,terminate it." << m_state;
             QThread::terminate();
             QThread::wait();
         }
@@ -188,12 +188,13 @@ void PamAuthProxy::run()
         LOG_WARNING_S() << "pam_start failed," << pam_strerror(pamh, iRet);
         goto end;
     }
+    pam_set_item(pamh,PAM_FAIL_DELAY,(void*)no_fail_delay);
 
     while (!QThread::isInterruptionRequested())
     {
         m_state = AUTH_STATE_RUNNING;
         iRet = pam_authenticate(pamh, 0);
-        if (iRet != PAM_SUCCESS)
+        if (iRet != PAM_SUCCESS && !QThread::isInterruptionRequested())
         {
             LOG_WARNING_S() << "pam_authenticate failed," << pam_strerror(pamh, iRet);
             emit authenticationComplete();
