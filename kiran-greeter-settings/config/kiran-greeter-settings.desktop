@@ -2,7 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Greeter Settings
-Name[zh_CN]=登陆设置
+Name[zh_CN]=登录设置
 Comment=kiran greeter settings
 Comment=Kiran登录界面设置
 Exec=/usr/bin/kiran-greeter-settings
