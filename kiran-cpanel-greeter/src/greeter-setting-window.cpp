@@ -32,7 +32,7 @@ enum GreeterSettingsPageEnum
     GreeterSettings_Autologin
 };
 
-GreeterSettingWindow::GreeterSettingWindow(QWidget *parent) : KiranTitlebarWindow(parent)
+GreeterSettingWindow::GreeterSettingWindow(QWidget *parent) : QWidget(parent)
 {
     initUI();
 }
@@ -43,13 +43,8 @@ GreeterSettingWindow::~GreeterSettingWindow()
 
 void GreeterSettingWindow::initUI()
 {
-    setTitle(tr("greeter settings"));
-    setIcon(QIcon::fromTheme("preferences-system-login"));
-    resize(840, 770);
-
     /* 内容区域主布局 */
-    QWidget *contentWidget = getWindowContentWidget();
-    auto mainLayout = new QHBoxLayout(contentWidget);
+    auto mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(9, 0, 9, 9);
 
     /* 左侧侧边栏 */
@@ -64,22 +59,22 @@ void GreeterSettingWindow::initUI()
     layoutSideWidget->setSpacing(0);
     layoutSideWidget->setMargin(0);
 
-    m_sidebarWidget = new KiranSidebarWidget(contentWidget);
+    m_sidebarWidget = new KiranSidebarWidget(this);
     m_sidebarWidget->setObjectName("SidebarTabListWidget");
     m_sidebarWidget->setIconSize(QSize(16, 16));
     layoutSideWidget->addWidget(m_sidebarWidget);
 
     QListWidgetItem *item;
     item = new QListWidgetItem(tr("appearance"), m_sidebarWidget);
-    item->setIcon(QIcon(":/images/appearance_setting.png"));
+    item->setIcon(QIcon(":/kcp-greeter-images/appearance_setting.png"));
     m_sidebarWidget->addItem(item);
 
     item = new QListWidgetItem(tr("autologin"), m_sidebarWidget);
-    item->setIcon(QIcon(":/images/user_login_setting.png"));
+    item->setIcon(QIcon(":/kcp-greeter-images/user_login_setting.png"));
     m_sidebarWidget->addItem(item);
 
     /* 堆叠区域控件 */
-    m_stackedWidget = new QStackedWidget(contentWidget);
+    m_stackedWidget = new QStackedWidget(this);
     m_stackedWidget->setObjectName("GreeterSettingsStacked");
     mainLayout->addWidget(m_stackedWidget);
 
@@ -674,4 +669,9 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
     autoLoginSetting.autoLoginTimeout = m_editAutoLoginDelay->text().toUInt();
 
     return autoLoginSetting;
+}
+
+QSize GreeterSettingWindow::sizeHint() const
+{
+    return QSize(940,653);
 }

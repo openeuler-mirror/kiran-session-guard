@@ -653,7 +653,7 @@ void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)
     QPixmap pixmap;
     if (on)
     {
-        pixmap.load(":/images/caps_lock.png");
+        pixmap.load(":/kcp-greeter-images/caps_lock.png");
         pixmap = pixmap.scaledToWidth(This->ui->label_capsLock->width());
         pixmap = pixmap.scaledToHeight(This->ui->label_capsLock->height());
         This->ui->label_capsLock->setPixmap(pixmap);

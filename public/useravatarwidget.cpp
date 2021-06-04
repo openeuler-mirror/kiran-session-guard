@@ -4,7 +4,7 @@
 #include <QPainter>
 #include "log.h"
 
-#define DEFAULT_USER_AVATAR ":/images/user_180.png"
+#define DEFAULT_USER_AVATAR ":/kcp-greeter-images/user_180.png"
 
 UserAvatarWidget::UserAvatarWidget(QWidget *parent) : QWidget(parent)
 {

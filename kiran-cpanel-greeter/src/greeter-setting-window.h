@@ -1,7 +1,6 @@
 #ifndef GREETERSETTING_H
 #define GREETERSETTING_H
 
-#include <kiranwidgets-qt5/kiran-titlebar-window.h>
 #include <QGSettings>
 #include <QVariant>
 #include <QWidget>
@@ -68,12 +67,14 @@ class QLineEdit;
 class QPushButton;
 class HoverTips;
 class KiranImageSelector;
-class GreeterSettingWindow : public KiranTitlebarWindow
+class GreeterSettingWindow : public QWidget
 {
     Q_OBJECT
 public:
     explicit GreeterSettingWindow(QWidget* parent = nullptr);
     ~GreeterSettingWindow();
+
+    QSize sizeHint() const override;
 
 private:
     void initUI();

@@ -104,4 +104,4 @@ install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${CMAKE_INSTALL_P
 #安装xgreeter配置文件 /usr/share/xgreeters/
 install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/xgreeters/)
 
-add_subdirectory(kiran-greeter-settings)
+add_subdirectory(kiran-cpanel-greeter)
