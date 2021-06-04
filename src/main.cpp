@@ -15,7 +15,7 @@
 #include "scalinghelper.h"
 #include "synclockstatus.h"
 
-#define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
+#define DEFAULT_STYLE_FILE ":/kcp-greeter-themes/lightdm-kiran-greeter-normal.qss"
 
 void termSignalHandler(int unused)
 {

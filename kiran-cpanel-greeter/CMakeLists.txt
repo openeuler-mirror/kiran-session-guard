@@ -22,6 +22,10 @@ pkg_search_module(KIRANWIDGETS_QT5 REQUIRED kiranwidgets-qt5)
 pkg_search_module(ZLOG REQUIRED zlog)
 pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
 
+pkg_search_module(KIRAN_CONTROL_PANEL REQUIRED kiran-control-panel)
+pkg_get_variable(CPANEL_PLUGIN_DIR kiran-control-panel plugin_location)
+pkg_get_variable(CPANEL_DESKTOP_DIR kiran-control-panel plugin_desktop_location)
+
 # Qt编译设置
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -40,10 +44,10 @@ file(GLOB_RECURSE SETTINGS_SRC_FORMS "src/*.ui")
 file(GLOB_RECURSE SETTINGS_RESOURCES "resources/*.qrc")
 
 # 翻译
-set(TS_FILES "translations/kiran-greeter-settings.zh_CN.ts")
-qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+set(GREETER_SETTINGS_TS_FILES "translations/kiran-cpanel-greeter.zh_CN.ts")
+qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_SOURCE_DIR} ${GREETER_SETTINGS_TS_FILES})
 
-add_executable(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
         ${PUBLIC_CPP}
         ${PUBLIC_HEADER}
         ${SETTINGS_SRC_CPP}
@@ -61,7 +65,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${GLIB_2_INCLUDE_DIRS}
         ${KIRANWIDGETS_QT5_INCLUDE_DIRS}
         ${ZLOG_INCLUDE_DIRS}
-        ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
+        ${KIRAN_CC_DAEMON_INCLUDE_DIRS}
+        ${KIRAN_CONTROL_PANEL_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}
         Qt5::Widgets
@@ -73,9 +78,15 @@ target_link_libraries(${PROJECT_NAME}
         ${KIRAN_CC_DAEMON_LIBRARIES})
 
 # 安装
-#安装kiran-greeter-settings
-install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})
+#安装插件desktop文件
+configure_file(data/kiran-cpanel-greeter.desktop.in ${CMAKE_BINARY_DIR}/kiran-cpanel-greeter.desktop @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/kiran-cpanel-greeter.desktop DESTINATION ${CPANEL_DESKTOP_DIR}/ )
+#安装插件
+install(TARGETS ${PROJECT_NAME} DESTINATION ${CPANEL_PLUGIN_DIR}/)
 #翻译文件
 install(FILES ${GREETER_SETTINS_QM_FILES} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/lightdm-kiran-greeter/translations/)
-#桌面快捷方式
-install(FILES ./config/kiran-greeter-settings.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/applications/)
+#插件图标
+set(KCP_ICON_INSTALL_PATH ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor)
+install(FILES data/kcp-greeter-48.png DESTINATION ${KCP_ICON_INSTALL_PATH}/48x48/apps RENAME kcp-greeter.png)
+install(FILES data/kcp-greeter-64.png DESTINATION ${KCP_ICON_INSTALL_PATH}/64x64/apps RENAME kcp-greeter.png)
+install(FILES data/kcp-greeter-96.png DESTINATION ${KCP_ICON_INSTALL_PATH}/96x96/apps RENAME kcp-greeter.png)
