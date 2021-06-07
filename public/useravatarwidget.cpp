@@ -1,10 +1,9 @@
 #include "useravatarwidget.h"
-#include <QDebug>
 #include <QFile>
 #include <QPainter>
-#include "log.h"
+#include <qt5-log-i.h>
 
-#define DEFAULT_USER_AVATAR ":/kcp-greeter-images/user_180.png"
+#define DEFAULT_USER_AVATAR ":/images/user_180.png"
 
 UserAvatarWidget::UserAvatarWidget(QWidget *parent) : QWidget(parent)
 {
@@ -16,20 +15,20 @@ void UserAvatarWidget::setImage(const QString &path)
     QFile file(path);
     if (!file.exists())
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] is no't exist";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] is no't exist";
     }
     if (!file.isReadable())
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] can't read";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] can't read";
     }
     if (m_pixmap.load(path))
     {
-        LOG_WARNING_S() << "UserAvatar: load file " << path << "successed";
+        KLOG_WARNING() << "UserAvatar: load file " << path << "successed";
         m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     else
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] load failed.";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] load failed.";
         if (path != DEFAULT_USER_AVATAR)
         {
             setDefaultImage();

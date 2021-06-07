@@ -4,8 +4,8 @@
 #include <QMap>
 #include <QModelIndex>
 #include <QScrollBar>
+#include <qt5-log-i.h>
 
-#include "log.h"
 #include "ui_userlistwidget.h"
 #include "userinfo.h"
 #include "userlistitem.h"
@@ -144,9 +144,9 @@ void UserListWidget::loadUserList()
         getUserInfoFromModel(i, userInfo);
         appendItem(userInfo);
     }
-    LOG_INFO_S() << "connect UserModel RowRemoved:  "
+    KLOG_INFO() << "connect UserModel RowRemoved:  "
                  << connect(&m_usersModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
-    LOG_INFO_S() << "connect UserModel RowInserted: "
+    KLOG_INFO() << "connect UserModel RowInserted: "
                  << connect(&m_usersModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
 }
 
@@ -200,7 +200,7 @@ bool UserListWidget::getUserInfoFromModel(int row, UserInfo &userInfo)
 
     value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::UidRole);
     userInfo.uid = value.toULongLong();
-    LOG_INFO_S() << "getUserInfoFromModel: " << userInfo.name;
+    KLOG_INFO() << "getUserInfoFromModel: " << userInfo.name;
     return true;
 }
 
@@ -286,7 +286,7 @@ void UserListWidget::slotUserItemActivated()
     QList<QListWidgetItem *> selectedItems = ui->userList->selectedItems();
     if (selectedItems.size() == 0)
     {
-        LOG_WARNING_S() << "selected items: 0";
+        KLOG_WARNING() << "selected items: 0";
         return;
     }
     QListWidgetItem *activatedItem = selectedItems.at(0);
@@ -302,7 +302,7 @@ void UserListWidget::slotUserItemActivated()
             uItem->setFocusPolicy(Qt::NoFocus);
         }
     }
-    LOG_INFO_S() << userItem->getUserInfo().name << "activate";
+    KLOG_INFO() << userItem->getUserInfo().name << "activate";
     UserInfo info = userItem->getUserInfo();
     emit userActivated(info);
 }
@@ -354,7 +354,7 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
         setRow0();
     }
 
-    LOG_DEBUG_S() << "row inserted: "
+    KLOG_DEBUG() << "row inserted: "
                   << "cout[" << ui->userList->count() << "]";
     updateGeometry();
 }
@@ -362,6 +362,6 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
 QSize UserListWidget::sizeHint() const
 {
     QSize size(0, (ui->userList->count() * 62) + 2);
-    LOG_DEBUG_S() << "count: " << ui->userList->count() << "size: " << size;
+    KLOG_DEBUG() << "count: " << ui->userList->count() << "size: " << size;
     return size;
 }

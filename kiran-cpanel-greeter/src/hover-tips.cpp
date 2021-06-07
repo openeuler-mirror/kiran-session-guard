@@ -10,8 +10,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QStyleOption>
-
-#include "log.h"
+#include <qt5-log-i.h>
 
 //TODO: 需改成不使用样式表,可以加入到kiranwidgets-qt5自定义控件，调用KiranStyle进行绘制
 #define HOVERTIPS_STYLESHEET "HoverTips {"                             \
@@ -67,7 +66,7 @@ void HoverTips::updatePostion()
 {
     if (parentWidget() == nullptr)
     {
-        LOG_WARNING_S() << "hover tips parnetwidget is null";
+        KLOG_WARNING() << "hover tips parent widget is null";
         return;
     }
     this->move((parentWidget()->width() - width()) / 2,
@@ -98,7 +97,7 @@ void HoverTips::setIcon(HoverTips::HoverTipsTypeEnum typeEnum, const QString &ic
     QPixmap pixmap;
     if (!pixmap.load(icon) || pixmap.isNull())
     {
-        LOG_WARNING_S() << "load icon failed.";
+        KLOG_WARNING() << "load icon failed.";
         return;
     }
     m_tipsTypeIconMap[typeEnum] = icon;

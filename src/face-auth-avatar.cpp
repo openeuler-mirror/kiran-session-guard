@@ -23,7 +23,7 @@ void FaceAuthAvatar::stopAnimation()
 
 void FaceAuthAvatar::init()
 {
-    m_pixmap.load(":/kcp-greeter-images/face_auth.png");
+    m_pixmap.load(":/images/face_auth.png");
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     m_animation.setTargetObject(this);
     m_animation.setPropertyName("progress");

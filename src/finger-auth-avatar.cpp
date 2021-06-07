@@ -7,7 +7,7 @@
 
 FingerAuthAvatar::FingerAuthAvatar(QWidget *parent) : QWidget(parent)
 {
-    m_pixmap.load(":/kcp-greeter-images/finger_auth.png");
+    m_pixmap.load(":/images/finger_auth.png");
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     m_animation.setTargetObject(this);
     m_animation.setPropertyName("progress");

@@ -23,7 +23,7 @@ void UserListItem::setUserInfo(const UserInfo &userInfo)
     ui->label_username->setText(userInfo.name);
     if (userInfo.loggedIn)
     {
-        ui->label_logined->setPixmap(QPixmap(":/kcp-greeter-images/checked.png"));
+        ui->label_logined->setPixmap(QPixmap(":/images/checked.png"));
     }
 }
 

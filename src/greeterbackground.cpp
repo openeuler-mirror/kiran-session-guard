@@ -1,11 +1,12 @@
 #include <QDebug>
 #include <QPainter>
 #include <QScreen>
+#include <QResizeEvent>
+#include <qt5-log-i.h>
 
 #include "greeterloginwindow.h"
 #include "greeterbackground.h"
 #include "kiran-greeter-prefs.h"
-#include "log.h"
 #include "define.h"
 
 QT_BEGIN_NAMESPACE
@@ -18,12 +19,22 @@ GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
 #ifndef TEST
     setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnBottomHint);
 #endif
-    QString backgroundFile = KiranGreeterPrefs::instance()->background();
-    if (!m_background.load(backgroundFile))
+
+    QStringList backgrounds = {KiranGreeterPrefs::instance()->background(),DEFAULT_BACKGROUND};
+    foreach(const QString background,backgrounds)
     {
-        LOG_WARNING_S() << "load pixmap" << backgroundFile << "failed!,try load default background!";
-        m_background.load(DEFAULT_BACKGROUND);
+        if(!m_background.load(background))
+        {
+            KLOG_WARNING() << "load background <" << background << "> failed!";
+        }
+        break;
     }
+
+    if(m_background.isNull())
+    {
+        KLOG_ERROR() << "load greeter background failed!";
+    }
+
     setScreen(screen);
 }
 
@@ -54,21 +65,22 @@ void GreeterBackground::setScreen(QScreen *screen)
 
 void GreeterBackground::slotScreenGeometryChanged(const QRect &geometry)
 {
-    LOG_INFO_S() << "background screen geometry changed, " << objectName() << "geometry:" << geometry;
+    KLOG_DEBUG() << objectName() << "screen geometry changed:" << geometry;
     this->resize(geometry.size());
     this->move(geometry.x(), geometry.y());
 }
 
 void GreeterBackground::enterEvent(QEvent *event)
 {
-    LOG_INFO_S() << "mouse enter in:" <<  objectName();
+    KLOG_DEBUG() << objectName() << "mouse enter";
     emit mouseEnter(this);
     QWidget::enterEvent(event);
 }
 
 void GreeterBackground::resizeEvent(QResizeEvent *event)
 {
-    LOG_INFO_S() << objectName() << "resize" << this->size();
+    KLOG_DEBUG() << objectName() << "resize " << event->oldSize() << "->" << event->size();
+
     if (!m_background.isNull())
     {
         m_scaledBackground = m_background.scaled(this->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
@@ -76,12 +88,15 @@ void GreeterBackground::resizeEvent(QResizeEvent *event)
         qt_blurImage(tmp, 10, true);
         m_scaledBackground = QPixmap::fromImage(tmp);
     }
+
     //NOTE:子窗体因未加入布局，需要手动Resize
     GreeterLoginWindow *greeterWindow = findChild<GreeterLoginWindow *>("GreeterLoginWindow");
     if (greeterWindow != nullptr)
     {
+        KLOG_DEBUG() << "greeter login window resize:" << this->size();
         greeterWindow->resize(this->size());
     }
+
     QWidget::resizeEvent(event);
 }
 

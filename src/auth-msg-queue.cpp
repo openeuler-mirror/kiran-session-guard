@@ -6,8 +6,7 @@
 
 #include <sys/sysinfo.h>
 #include <QtConcurrent/QtConcurrent>
-
-#include "log.h"
+#include <qt5-log-i.h>
 
 Q_DECLARE_METATYPE(AuthMsgQueue::PromptType)
 Q_DECLARE_METATYPE(AuthMsgQueue::MessageType)
@@ -67,7 +66,7 @@ void AuthMsgQueue::append(const AuthMsgQueue::PamMessage &msg)
 
     m_queueSem.release();
 
-    LOG_DEBUG_S() << "append auth msg:" << dumpMsg(msg);
+    KLOG_DEBUG() << "append auth msg:" << dumpMsg(msg);
 }
 
 quint64 AuthMsgQueue::getUPTime()
@@ -79,7 +78,7 @@ quint64 AuthMsgQueue::getUPTime()
     res = sysinfo(&sysInfo);
     if (res != 0)
     {
-        LOG_WARNING(" get up time failed,%s",strerror(res));
+        KLOG_WARNING(" get up time failed,%s",strerror(res));
         return uptime;
     }
 
@@ -97,7 +96,7 @@ bool AuthMsgQueue::fetchMessageFromQueue(PamMessage &msg, int ms)
             return false;
         }
         msg = m_queue.dequeue();
-        LOG_DEBUG_S() << "fetch auth msg:" << dumpMsg(msg);
+        KLOG_DEBUG() << "fetch auth msg:" << dumpMsg(msg);
         return true;
     }
     return false;

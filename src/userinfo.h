@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QVariant>
 
-//TODO:暂时这样
 struct UserInfo
 {
     QString    name;

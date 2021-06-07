@@ -5,8 +5,8 @@
 #include <QStyleOption>
 #include "ui_greeterlineedit.h"
 
-#define NORMAL_ICON ":/kcp-greeter-images/arrow.png"
-#define LOADING_ICON_FORMAT ":/kcp-greeter-images/loading_%1.png"
+#define NORMAL_ICON ":/images/arrow.png"
+#define LOADING_ICON_FORMAT ":/images/loading_%1.png"
 #define LOADING_ICON_INDEX_MAX 17
 
 GreeterLineEdit::GreeterLineEdit(QWidget *parent) : QWidget(parent),

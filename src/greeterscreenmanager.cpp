@@ -1,7 +1,9 @@
-#include "greeterscreenmanager.h"
 #include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <qt5-log-i.h>
+
+#include "greeterscreenmanager.h"
 #include "greeterbackground.h"
 #include "greeterloginwindow.h"
 
@@ -32,15 +34,23 @@ void GreeterScreenManager::init()
         //fix #36459,避免错误的数据,导致显示的问题
         if (screen->physicalSize().isEmpty())
         {
+            KLOG_DEBUG() << screen << "physical size is invalid,ignore it!";
             continue;
         }
+        KLOG_DEBUG() << "create background window for" << screen;
         newScreenBackgroundWidget(screen);
     }
+
     m_greeterWindow     = new GreeterLoginWindow();
     auto backgroundIter = m_BackgroundWidgetMap.find(qApp->primaryScreen());
     if (backgroundIter != m_BackgroundWidgetMap.end())
     {
+        KLOG_DEBUG() << "move login window on background" << backgroundIter.value()->objectName();
         setGreeterOnBackground(backgroundIter.value());
+    }
+    else
+    {
+        KLOG_WARNING() << "can't find primary screen!";
     }
 }
 
@@ -49,6 +59,8 @@ void GreeterScreenManager::init()
 ///     如果登录窗口还未显示，则显示到新背景窗口上
 void GreeterScreenManager::slotScreenAdded(QScreen *screen)
 {
+    KLOG_DEBUG() << "screen added:" << screen;
+
     newScreenBackgroundWidget(screen);
     if (m_greeterWindow->parent() == nullptr)
     {
@@ -67,6 +79,8 @@ void GreeterScreenManager::slotScreenAdded(QScreen *screen)
 ///     若主屏幕不存在不显示
 void GreeterScreenManager::slotScreenRemoved(QScreen *screen)
 {
+    KLOG_DEBUG() << "screen removed:" << screen;
+
     auto iter = m_BackgroundWidgetMap.find(screen);
     if (iter != m_BackgroundWidgetMap.end())
     {
@@ -97,6 +111,7 @@ void GreeterScreenManager::mouseEnterInWindow(GreeterBackground *background)
 {
     if (m_greeterWindow->parent() != background)
     {
+        KLOG_DEBUG() << "move login content to" << background->objectName();
         setGreeterOnBackground(background);
     }
 }

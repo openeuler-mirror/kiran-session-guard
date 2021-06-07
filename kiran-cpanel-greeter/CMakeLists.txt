@@ -19,7 +19,7 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 pkg_search_module(GLIB_2 REQUIRED glib-2.0)
 pkg_search_module(KIRANWIDGETS_QT5 REQUIRED kiranwidgets-qt5)
-pkg_search_module(ZLOG REQUIRED zlog)
+pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
 
 pkg_search_module(KIRAN_CONTROL_PANEL REQUIRED kiran-control-panel)
@@ -64,7 +64,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${GSETTINGS_QT_INCLUDE_DIRS}
         ${GLIB_2_INCLUDE_DIRS}
         ${KIRANWIDGETS_QT5_INCLUDE_DIRS}
-        ${ZLOG_INCLUDE_DIRS}
+        ${KLOG_QT5_INCLUDE_DIRS}
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS}
         ${KIRAN_CONTROL_PANEL_INCLUDE_DIRS})
 
@@ -74,7 +74,7 @@ target_link_libraries(${PROJECT_NAME}
         ${GSETTINGS_QT_LIBRARIES}
         ${GLIB_2_LIBRARIES}
         ${KIRANWIDGETS_QT5_LIBRARIES}
-        ${ZLOG_LIBRARIES}
+        ${KLOG_QT5_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
 
 # 安装

@@ -19,9 +19,8 @@
 #include <kiran-message-box.h>
 #include <kiran-sidebar-widget.h>
 #include <kiran-switch-button.h>
-#include <kiran-system-daemon/greeter_i.h>
-
-#include "log.h"
+#include <kiran-system-daemon/greeter-i.h>
+#include <qt5-log-i.h>
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 using namespace DBusApi;
@@ -93,7 +92,7 @@ void GreeterSettingWindow::initUI()
         QList<QListWidgetItem *> selecteds = m_sidebarWidget->selectedItems();
         if (selecteds.size() != 1)
         {
-            LOG_FATAL("tabList: selecteds size != 1");
+            KLOG_FATAL("tabList: selecteds size != 1");
         }
         int page = m_sidebarWidget->row(selecteds.at(0));
         m_stackedWidget->setCurrentIndex(page);
@@ -246,8 +245,6 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     mainLayout->addWidget(m_comboScaleMode, 0);
 
     connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int idx) {
-        bool enableScaleFactor = false;
-
         QVariant modeData = m_comboScaleMode->itemData(idx);
         int itemScaleMode = modeData.toUInt();
 
@@ -395,7 +392,7 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     ///通过AccountService加载用户信息
     if (!DBusApi::AccountsService::listCachedUsers(objVector))
     {
-        LOG_WARNING_S() << "init user list failed,error: listCachedUsers failed";
+        KLOG_WARNING() << "init user list failed,error: listCachedUsers failed";
         return;
     }
     UserInfo userInfo;
@@ -404,7 +401,7 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
         if (!AccountsService::getUserObjectUserNameProperty(iter, userInfo.name) ||
             !AccountsService::getUserObjectIconFileProperty(iter, userInfo.iconFile))
         {
-            LOG_WARNING_S() << "get " << iter.path() << "UserName,IconFile failed";
+            KLOG_WARNING() << "get " << iter.path() << "UserName,IconFile failed";
             continue;
         }
         userInfoVector.push_back(userInfo);
@@ -413,7 +410,7 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     userInfo.name = "root";
     if (!AccountsService::getRootIconFileProperty(userInfo.iconFile))
     {
-        LOG_WARNING_S() << "init user list failed,error: getRootIconFileProperty failed";
+        KLOG_WARNING() << "init user list failed,error: getRootIconFileProperty failed";
         return;
     }
     userInfoVector.push_back(userInfo);
@@ -458,7 +455,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetBackgroundFile failed," << reply.error();
+        KLOG_ERROR() << "SetBackgroundFile failed," << reply.error();
         hasError = true;
         goto failed;
     }
@@ -467,7 +464,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetHideUserList failed," << reply.error();
+        KLOG_ERROR() << "SetHideUserList failed," << reply.error();
         hasError = true;
     }
 
@@ -475,7 +472,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetAllowManualLogin failed," << reply.error();
+        KLOG_ERROR() << "SetAllowManualLogin failed," << reply.error();
         hasError = true;
     }
 
@@ -484,7 +481,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetScaleMode failed," << reply.error();
+        KLOG_ERROR() << "SetScaleMode failed," << reply.error();
         hasError = true;
     }
 failed:
@@ -534,7 +531,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetAutologinUser failed," << reply.error();
+        KLOG_ERROR() << "SetAutologinUser failed," << reply.error();
         hasError = true;
         goto failed;
     }
@@ -543,7 +540,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     reply.waitForFinished();
     if (reply.isError())
     {
-        LOG_INFO_S() << "SetAutologinTimeout" << reply.error();
+        KLOG_ERROR() << "SetAutologinTimeout" << reply.error();
         hasError = true;
     }
 
@@ -618,15 +615,17 @@ GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSetting
     appearanceSetting.hideUserList = KiranGreeterPrefs::instance()->hide_user_list();
     appearanceSetting.allowManualLogin = KiranGreeterPrefs::instance()->allow_manual_login();
     appearanceSetting.scaleMode = KiranGreeterPrefs::instance()->scale_mode();
+
     if (m_comboScaleMode->findData(appearanceSetting.scaleMode) == -1)
     {
-        qWarning() << "no such scale mode" << appearanceSetting.scaleMode;
+        KLOG_WARNING() << "no such scale mode <" << appearanceSetting.scaleMode << ">,using default scale mode:auto";
         appearanceSetting.scaleMode = 0;
     }
+
     appearanceSetting.scaleFactor = KiranGreeterPrefs::instance()->scale_factor();
     if (m_comboScaleFactor->findData(appearanceSetting.scaleFactor) == -1)
     {
-        qWarning() << "no such scale factor" << appearanceSetting.scaleFactor;
+        KLOG_WARNING() << "no such scale factor <" << appearanceSetting.scaleFactor << ">,using default scale factor:1";
         appearanceSetting.scaleFactor = 1;
     }
 
@@ -641,7 +640,7 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
     autoLoginSetting.autoLoginUser = KiranGreeterPrefs::instance()->autologin_user();
     if (m_comboAutoLoginAccount->findText(autoLoginSetting.autoLoginUser) == -1)
     {
-        qWarning() << "no such user," << autoLoginSetting.autoLoginUser;
+        KLOG_WARNING() << "no such user," << autoLoginSetting.autoLoginUser;
         autoLoginSetting.autoLoginUser = "";
     }
 
@@ -673,5 +672,5 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
 
 QSize GreeterSettingWindow::sizeHint() const
 {
-    return QSize(940,653);
+    return {940,653};
 }
