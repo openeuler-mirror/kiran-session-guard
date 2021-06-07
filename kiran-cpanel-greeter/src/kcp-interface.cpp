@@ -7,7 +7,7 @@
 
 #include <QApplication>
 #include <QTranslator>
-#include <log.h>
+#include <qt5-log-i.h>
 
 #define KCP_SUBITEM_GREETER_ID "Greeter"
 
@@ -35,7 +35,7 @@ int KcpInterface::init()
                             "/usr/share/lightdm-kiran-greeter/translations",
                             ".qm"))
     {
-        LOG_ERROR_S() << "load translator failed!";
+        KLOG_ERROR() << "load translator failed!";
         return -1;
     }
     QCoreApplication::installTranslator(m_translator);

@@ -1,21 +1,20 @@
+#include <kiran-system-daemon/greeter_i.h>
 #include <signal.h>
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
 #include <QTranslator>
-#include <zlog_ex.h>
-#include <kiran-system-daemon/greeter_i.h>
+#include <qt5-log-i.h>
 
 #include "cursorhelper.h"
 #include "greeterkeyboard.h"
 #include "greeterloginwindow.h"
 #include "greeterscreenmanager.h"
 #include "kiran-greeter-prefs.h"
-#include "log.h"
 #include "scalinghelper.h"
 #include "synclockstatus.h"
 
-#define DEFAULT_STYLE_FILE ":/kcp-greeter-themes/lightdm-kiran-greeter-normal.qss"
+#define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
 void termSignalHandler(int unused)
 {
@@ -32,23 +31,23 @@ void setup_unix_signal_handlers()
     sigemptyset(&term.sa_mask);
     term.sa_flags = 0;
     term.sa_flags |= SA_RESETHAND;
-    int iRet      = sigaction(SIGTERM, &term, 0);
+    int iRet = sigaction(SIGTERM, &term, 0);
     if (iRet != 0)
     {
-        LOG_WARNING_S() << "setup_unix_signal_handlers failed," << strerror(iRet);
+        KLOG_WARNING("set sigaction failed,%s", strerror(iRet));
     }
 }
 
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
-    dzlog_init_ex(NULL,
-                  "kylinsec-nologin",
-                  "lightdm-kiran-greeter",
-                  "lightdm-kiran-greeter");
-    Log::instance()->init();
-    qInstallMessageHandler(Log::messageHandler);
+    int iRet = klog_qt5_init("","kylinsec-nologin","lightdm-kiran-greeter","lightdm-kiran-greeter");
+    if (iRet!=0)
+    {
+        qWarning() << "klog_qt5_init error:" << iRet;
+    }
 
+    ///安装信号处理
     setup_unix_signal_handlers();
 
     ///设置缩放比
@@ -63,36 +62,40 @@ int main(int argc, char *argv[])
     case GREETER_SCALING_MODE_MANUAL:
     {
         double scaleFcator = KiranGreeterPrefs::instance()->scale_factor();
-        scaled_factor      = scaleFcator;
+        scaled_factor = scaleFcator;
         ScalingHelper::set_scale_factor(scaleFcator);
         break;
     }
     case GREETER_SCALING_MODE_DISABLE:
         break;
     default:
-        LOG_ERROR("enable-scaling: unsupported options %d",KiranGreeterPrefs::instance()->scale_mode());
+        KLOG_ERROR("enable-scaling: unsupported options %d", KiranGreeterPrefs::instance()->scale_mode());
         break;
     }
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    ///依据登陆器整体缩放比例，设置默认光标大小
     if (!CursorHelper::setDefaultCursorSize(scaled_factor))
     {
-        LOG_ERROR("set default cursor size for factor %lf failed!",scaled_factor);
-    }
-    if (!CursorHelper::setRootWindowWatchCursor())
-    {
-        LOG_ERROR("set root window watch cursor failed!");
+        KLOG_ERROR("set default cursor size for factor %lf failed!", scaled_factor);
     }
 
-    //capslock numlock
+    ///登录成功和进入桌面的间隔会显示根窗口，为了避免显示根窗口时光标显示为"X",需设置ROOT窗口光标
+    if (!CursorHelper::setRootWindowWatchCursor())
+    {
+        KLOG_ERROR("set root window watch cursor failed!");
+    }
+
+    ///为了解决键盘NumLock灯亮起，但实际不可用的情况，手动同步键盘NumLock灯状态和实际状态
     initLockStatus();
 
     ///翻译
-    QTranslator tsor;
-    QString     translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
-    tsor.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
-    qApp->installTranslator(&tsor);
+    QTranslator translator;
+    QString translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
+    translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm");
+    QApplication::installTranslator(&translator);
 
     ///加载样式表
     QFile file(DEFAULT_STYLE_FILE);
@@ -102,7 +105,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        LOG_ERROR("load style sheet failed!");
+        KLOG_ERROR("load style sheet failed!");
     }
 
 #ifdef VIRTUAL_KEYBOARD

@@ -9,8 +9,8 @@
 #include <X11/extensions/Xrandr.h>
 #include <stdlib.h>
 #include <list>
+#include <qt5-log-i.h>
 
-#include "log.h"
 #include "scalinghelper.h"
 
 void ScalingHelper::set_scale_factor(double factor)
@@ -30,13 +30,13 @@ void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
 
     if (!resources)
     {
-        LOG_WARNING("XRRGetScreenResourcesCurrent failed,try XRRGetScreenResources");
+        KLOG_WARNING("XRRGetScreenResourcesCurrent failed,try XRRGetScreenResources");
         resources = XRRGetScreenResources(display, DefaultRootWindow(display));
     }
 
     if (!resources)
     {
-        LOG_WARNING("get screen resources failed");
+        KLOG_ERROR("get screen resources failed");
         goto failed;
     }
 
@@ -65,11 +65,11 @@ void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
         qreal hypotenusePixel = qSqrt(qPow(crtInfo->width, 2.0) + qPow(crtInfo->height, 2.0));
         qreal ppi = hypotenusePixel / screenInch;
 
-        LOG_INFO_S() << "Screen:" << outputInfo->name;
-        LOG_INFO_S() << "    physical size:   " << outputInfo->mm_width << "x" << outputInfo->mm_height;
-        LOG_INFO_S() << "    virtual size:    " << crtInfo->width << crtInfo->height;
-        LOG_INFO_S() << "    inch:            " << screenInch;
-        LOG_INFO_S() << "    ppi:             " << ppi;
+        KLOG_DEBUG() << "Screen:" << outputInfo->name;
+        KLOG_DEBUG() << "    physical size:   " << outputInfo->mm_width << "x" << outputInfo->mm_height;
+        KLOG_DEBUG() << "    virtual size:    " << crtInfo->width << crtInfo->height;
+        KLOG_DEBUG() << "    inch:            " << screenInch;
+        KLOG_DEBUG() << "    ppi:             " << ppi;
 
         double screen_scale_factor = 1.0;
         if (ppi >= 150 && ppi < 196)
@@ -96,10 +96,10 @@ void ScalingHelper::auto_calculate_screen_scaling(double &scaled_factor)
         scale_factor = *scaleFactors.begin();
     }
     scaled_factor = scale_factor;
-    LOG_INFO_S() << "QT_SCALE_FACTOR:" << scale_factor;
+    KLOG_DEBUG() << "QT_SCALE_FACTOR:" << scale_factor;
     if (!qputenv("QT_SCALE_FACTOR", QString::number(scale_factor).toUtf8()))
     {
-        LOG_WARNING_S() << "set scale factor failed.";
+        KLOG_ERROR() << "set scale factor failed.";
     }
     return;
 failed:
@@ -107,6 +107,6 @@ failed:
     {
         XCloseDisplay(display);
     }
-    LOG_INFO_S("auto_calculate_screen_scaling failed,set QT_AUTO_SCREEN_SCALE_FACTOR=1");
+    KLOG_INFO("auto_calculate_screen_scaling failed,set QT_AUTO_SCREEN_SCALE_FACTOR=1");
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 }

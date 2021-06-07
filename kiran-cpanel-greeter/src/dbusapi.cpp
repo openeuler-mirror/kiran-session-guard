@@ -5,9 +5,7 @@
 #include <QDBusMessage>
 #include <QDBusReply>
 #include <QDBusSignature>
-#include <QDebug>
-
-#include "log.h"
+#include <qt5-log-i.h>
 
 #define DBUS_PROPERTY_INTERFACE "org.freedesktop.DBus.Properties"
 #define METHOD_GET_PROPERTY "Get"
@@ -42,7 +40,7 @@ bool DBusApi::getProperty(const QString &service, const QString &obj,
     QString mErr;
     if (msgReply.type() == QDBusMessage::ReplyMessage)
     {
-        qInfo() << msgReply;
+        KLOG_DEBUG() << "reply:" << msgReply;
         QList<QVariant> args = msgReply.arguments();
         if (args.size() < 1)
         {
@@ -60,7 +58,7 @@ bool DBusApi::getProperty(const QString &service, const QString &obj,
         return true;
     }
 failed:
-    LOG_WARNING_S() << ACCOUNT_SERVICE_USER_INTERFACE << METHOD_GET_PROPERTY << propertyName
+    KLOG_WARNING() << ACCOUNT_SERVICE_USER_INTERFACE << METHOD_GET_PROPERTY << propertyName
                     << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
@@ -97,7 +95,7 @@ bool DBusApi::AccountsService::listCachedUsers(QDBusObjectPathVector &userObject
     }
 
 failed:
-    LOG_WARNING_S() << ACCOUNT_SERVICE_DBUS << METHOD_LIST_CACHED_USERS
+    KLOG_WARNING() << ACCOUNT_SERVICE_DBUS << METHOD_LIST_CACHED_USERS
                     << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
@@ -128,7 +126,7 @@ bool DBusApi::AccountsService::findUserByName(const QString &name, QDBusObjectPa
         return true;
     }
 failed:
-    LOG_WARNING_S() << ACCOUNT_SERVICE_DBUS << METHOD_FIND_USER_BY_NAME
+    KLOG_WARNING() << ACCOUNT_SERVICE_DBUS << METHOD_FIND_USER_BY_NAME
                     << msgReply.errorName() << msgReply.errorMessage() << mErr;
     return false;
 }
@@ -167,13 +165,13 @@ bool DBusApi::AccountsService::getRootIconFileProperty(QString &iconFile)
 
     if (!findUserByName("root", rootObj))
     {
-        LOG_WARNING_S() << __FUNCTION__ << "findUserByName root failed";
+        KLOG_WARNING() << __FUNCTION__ << "findUserByName root failed";
         return false;
     }
 
     if (!getUserObjectIconFileProperty(rootObj, iconFile))
     {
-        LOG_WARNING_S() << __FUNCTION__ << "getUserObjectIconFileProperty"
+        KLOG_WARNING() << __FUNCTION__ << "getUserObjectIconFileProperty"
                         << rootObj.path() << "failed";
         return false;
     }

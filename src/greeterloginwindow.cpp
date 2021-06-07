@@ -1,4 +1,5 @@
 
+#include <qt5-log-i.h>
 #include <QButtonGroup>
 #include <QDateTime>
 #include <QDebug>
@@ -17,7 +18,6 @@
 #include "greeterloginwindow.h"
 #include "greetermenuitem.h"
 #include "kiran-greeter-prefs.h"
-#include "log.h"
 #include "ui_greeterloginwindow.h"
 
 ///NOTE:如果存在BiometricsAuth后台服务和开发头文件则定义，否则定义相关宏为了编译能通过
@@ -43,8 +43,9 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent) : QWidget(parent), ui(ne
     std::string error;
     if (!m_snoop.start(capsLockStatusChanged, this, error))
     {
-        LOG_WARNING_S() << "capslock snoop start failed: " << error.c_str();
+        KLOG_WARNING() << "capslock snoop start failed: " << error.c_str();
     }
+
     initMenu();
     initUI();
     initLightdmGreeter();
@@ -103,7 +104,7 @@ void GreeterLoginWindow::initUI()
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());
 
-        LOG_DEBUG_S() << "btn_session clicked,popup menu " << menuLeftTop;
+        KLOG_DEBUG() << "btn_session clicked,popup menu " << menuLeftTop;
         m_sessionMenu->popup(menuLeftTop);
     });
 
@@ -245,7 +246,7 @@ void GreeterLoginWindow::initMenu()
         itemWidget->setMaximumWidth(120);
         itemWidget->setExclusiveGroup(buttonGroup);
         connect(itemWidget, &GreeterMenuItem::sigChecked, [this](QString action) {
-            LOG_DEBUG_S() << "select session:" << action;
+            KLOG_DEBUG() << "select session:" << action;
             m_session = action;
             m_sessionMenu->hide();
         });
@@ -264,7 +265,7 @@ void GreeterLoginWindow::initLightdmGreeter()
     //连接到Lightdm
     if (!m_greeter.connectSync())
     {
-        LOG_WARNING("connect to lightdm greeter failed!");
+        KLOG_WARNING("connect to lightdm greeter failed!");
         return;
     }
 
@@ -359,12 +360,12 @@ void GreeterLoginWindow::initLightdmGreeter()
     m_authQueue.startDispatcher();
 
     ///连接到队列发出的事件，进行处理
-    LOG_DEBUG_S() << "connect showMessage:"
-                  << connect(&m_authQueue, &AuthMsgQueue::showMessage, this, &GreeterLoginWindow::slotShowMessage);
-    LOG_DEBUG_S() << "connect showPrompt:"
-                  << connect(&m_authQueue, &AuthMsgQueue::showPrompt, this, &GreeterLoginWindow::slotShowprompt);
-    LOG_DEBUG_S() << "connect Authticate Complete:"
-                  << connect(&m_authQueue, &AuthMsgQueue::authenticateComplete, this, &GreeterLoginWindow::slotAuthenticationComplete);
+    KLOG_DEBUG() << "connect showMessage:"
+                 << connect(&m_authQueue, &AuthMsgQueue::showMessage, this, &GreeterLoginWindow::slotShowMessage);
+    KLOG_DEBUG() << "connect showPrompt:"
+                 << connect(&m_authQueue, &AuthMsgQueue::showPrompt, this, &GreeterLoginWindow::slotShowprompt);
+    KLOG_DEBUG() << "connect Authticate Complete:"
+                 << connect(&m_authQueue, &AuthMsgQueue::authenticateComplete, this, &GreeterLoginWindow::slotAuthenticationComplete);
 
     ///处理用户个数从0到1个和1到0的情况
     bool bRes;
@@ -381,7 +382,7 @@ void GreeterLoginWindow::initLightdmGreeter()
                    });
     if (!bRes)
     {
-        LOG_WARNING("connect rowsInserted failed!");
+        KLOG_WARNING("connect rowsInserted failed!");
     }
 
     bRes = connect(&m_userModel, &QLightDM::UsersModel::rowsRemoved,
@@ -395,7 +396,7 @@ void GreeterLoginWindow::initLightdmGreeter()
                    });
     if (!bRes)
     {
-        LOG_INFO("connect rowsRemoved failed!");
+        KLOG_INFO("connect rowsRemoved failed!");
     }
 
     ui->userlist->loadUserList();
@@ -403,18 +404,33 @@ void GreeterLoginWindow::initLightdmGreeter()
 
 void GreeterLoginWindow::initSettings()
 {
-    m_noListButotnVisiable = KiranGreeterPrefs::instance()->allow_manual_login();
-    if (!m_noListButotnVisiable)
+    if (KiranGreeterPrefs::instance()->isValid())
     {
-        //不允许输入用户名,必须显示用户列表
-        m_showUserList = true;
+        m_noListButotnVisiable = KiranGreeterPrefs::instance()->allow_manual_login();
+        //不允许手动输入用户名，必须显示用户列表
+        if (!m_noListButotnVisiable)
+        {
+            m_showUserList = true;
+        }
+        else
+        {
+            m_showUserList = !KiranGreeterPrefs::instance()->hide_user_list();
+        }
     }
     else
     {
-        m_showUserList = !KiranGreeterPrefs::instance()->hide_user_list();
+        KLOG_ERROR() << "can't connect greeter settings backend!";
+        m_noListButotnVisiable = true;
+        m_showUserList = true;
     }
-
     m_authQueue.setMsgInterval(MESSAGE_DISPLAY_INTERVAL);
+
+    ///输出所有的配置项
+    KLOG_DEBUG() << "greeter settings:"
+                 << "\n"
+                 << "\tmanual login:            " << m_noListButotnVisiable << "\n"
+                 << "\tshow user list:          " << m_showUserList << "\n"
+                 << "\tmessage display interval:" << MESSAGE_DISPLAY_INTERVAL;
 
     if (m_showUserList && m_userModel.rowCount(QModelIndex()) > 0)
     {
@@ -469,19 +485,19 @@ bool GreeterLoginWindow::eventFilter(QObject *obj, QEvent *event)
     {
         m_sessionMenu->hide();
         needFilter = true;
-        LOG_DEBUG_S() << "session menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",session menu hide!";
+        KLOG_DEBUG() << "session menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",session menu hide!";
     }
     if ((!m_powerMenuGeometry.contains(mapedPoint)) && m_powerMenu->isVisible())
     {
         m_powerMenu->hide();
         needFilter = true;
-        LOG_DEBUG_S() << "power menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",power menu hide";
+        KLOG_DEBUG() << "power menu filter: " << obj->objectName() << event->type() << mouseEvent->buttons() << ",power menu hide";
     }
     if (needFilter)
     {
-        LOG_DEBUG_S() << "session: " << m_sessionMenuGemometry;
-        LOG_DEBUG_S() << "menu:    " << m_powerMenuGeometry;
-        LOG_DEBUG_S() << "pos:     " << mapedPoint;
+        KLOG_DEBUG() << "session: " << m_sessionMenuGemometry;
+        KLOG_DEBUG() << "menu:    " << m_powerMenuGeometry;
+        KLOG_DEBUG() << "pos:     " << mapedPoint;
     }
     return needFilter;
 }
@@ -496,9 +512,9 @@ void GreeterLoginWindow::setTips(AuthMsgQueue::MessageType type, const QString &
 
 void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon)
 {
-    LOG_INFO_S() << "start auth:";
-    LOG_INFO_S() << "    name[" << username << "]";
-    LOG_INFO_S() << "    icon[" << userIcon << "]";
+    KLOG_DEBUG() << "start auth:" << "\n"
+                 << "\tname:" << username << "\n"
+                 << "\ticon:" << userIcon;
 
     if (m_greeter.inAuthentication())
     {
@@ -514,6 +530,7 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
     ui->loginAvatar->setImage(userIcon);
     if (username == m_greeter.autologinUserHint())
     {
+        KLOG_DEBUG() << "auth user" << username << "is auto login user,switch to auto login";
         switchToAutoLogin();
         return;
     }
@@ -536,7 +553,7 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
 
 void GreeterLoginWindow::resetUIForUserListLogin()
 {
-    LOG_DEBUG("set ui for user list login");
+    KLOG_DEBUG("set ui for user list login");
     if (m_greeter.inAuthentication())
     {
         m_greeter.cancelAuthentication();
@@ -585,7 +602,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
 void GreeterLoginWindow::resetUIForManualLogin()
 {
-    LOG_DEBUG("set ui for manual login");
+    KLOG_DEBUG("set ui for manual login");
     if (m_greeter.inAuthentication())
     {
         m_greeter.cancelAuthentication();
@@ -648,12 +665,12 @@ QString GreeterLoginWindow::getCurrentDateTime()
 
 void GreeterLoginWindow::capsLockStatusChanged(bool on, void *user_data)
 {
-    LOG_INFO_S() << "caps lock status changed: " << on;
+    KLOG_INFO() << "caps lock status changed: " << on;
     GreeterLoginWindow *This = static_cast<GreeterLoginWindow *>(user_data);
     QPixmap pixmap;
     if (on)
     {
-        pixmap.load(":/kcp-greeter-images/caps_lock.png");
+        pixmap.load(":/images/caps_lock.png");
         pixmap = pixmap.scaledToWidth(This->ui->label_capsLock->width());
         pixmap = pixmap.scaledToHeight(This->ui->label_capsLock->height());
         This->ui->label_capsLock->setPixmap(pixmap);
@@ -707,10 +724,10 @@ void GreeterLoginWindow::slotUserActivated(const UserInfo &userInfo)
 
 void GreeterLoginWindow::slotButtonClicked()
 {
-    LOG_DEBUG_S() << "button clicked:";
-    LOG_DEBUG_S() << "    button type[" << m_buttonType << "]";
-    LOG_DEBUG_S() << "    login  mode[" << m_loginMode << "]";
-    LOG_DEBUG_S() << "    intput mode[" << m_inputMode << "]";
+    KLOG_DEBUG() << "button clicked:";
+    KLOG_DEBUG() << "    button type[" << m_buttonType << "]";
+    KLOG_DEBUG() << "    login  mode[" << m_loginMode << "]";
+    KLOG_DEBUG() << "    intput mode[" << m_inputMode << "]";
     if (m_buttonType == BUTTON_SWITCH_TO_MANUAL_LOGIN)
     {
         Q_ASSERT(m_loginMode == LOGIN_MODE_USER_LIST);
@@ -787,7 +804,7 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
 #endif
         if (!m_greeter.startSessionSync(m_session))
         {
-            LOG_WARNING_S() << "start session failed,session:" << m_session;
+            KLOG_WARNING() << "start session failed,session:" << m_session;
         }
     }
     else
