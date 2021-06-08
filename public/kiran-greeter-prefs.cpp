@@ -5,6 +5,7 @@
 #include "kiran-greeter-prefs.h"
 
 #include <QDBusConnection>
+#include <QSettings>
 
 KiranGreeterPrefs *KiranGreeterPrefs::instance()
 {
@@ -33,6 +34,11 @@ KiranGreeterPrefs::KiranGreeterPrefs()
                                          "org.freedesktop.DBus.Properties",
                                          "PropertiesChanged",
                                          this, SLOT(handlePropertiesChanged(QDBusMessage)));
+
+    QSettings settings("/usr/share/lightdm-kiran-greeter/greeter.ini",QSettings::IniFormat);
+    settings.beginGroup("Common");
+    auto hiddenSesion = settings.value("hidden-sessions");
+    m_hiddenSessions = hiddenSesion.toStringList();
 }
 
 KiranGreeterPrefs::~KiranGreeterPrefs()
@@ -47,4 +53,9 @@ void KiranGreeterPrefs::handlePropertiesChanged(QDBusMessage msg)
     {
         emit propertyChanged(iter.key(), iter.value());
     }
+}
+
+QStringList KiranGreeterPrefs::hiddenSessions()
+{
+    return m_hiddenSessions;
 }
