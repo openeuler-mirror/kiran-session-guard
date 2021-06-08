@@ -1,6 +1,6 @@
 /*
  * @file   kiran-greeter-prefs.h
- * @brief  对DBus后端GreeterSettings设置的一层封装
+ * @brief  获取登录相关配置项的信息
  * @author liuxinhao <liuxinhao@kylinos.com.cn>
  * @copyright (c) 2020 KylinSec. All rights reserved.
  */
@@ -16,6 +16,8 @@ public:
     static KiranGreeterPrefs* instance();
     ~KiranGreeterPrefs();
 
+    QStringList hiddenSessions();
+
 private:
     KiranGreeterPrefs();
 
@@ -24,6 +26,9 @@ signals:
 
 private Q_SLOTS:
     void handlePropertiesChanged(QDBusMessage msg);
+
+private:
+    QStringList m_hiddenSessions;
 };
 
 #endif  //LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H

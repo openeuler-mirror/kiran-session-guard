@@ -99,7 +99,14 @@ void GreeterLoginWindow::initUI()
         }
 
         btnRightTopPos = ui->btn_session->mapTo(this, QPoint(ui->btn_session->width(), 0));
-        menuSize = m_sessionMenu->sizeHint();
+        if(m_sessionMenu->actions().count()==0)
+        {
+            menuSize = QSize(92,10);
+        }
+        else
+        {
+            menuSize = m_sessionMenu->sizeHint();
+        }
 
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());
@@ -232,6 +239,7 @@ void GreeterLoginWindow::initMenu()
     QButtonGroup *buttonGroup = new QButtonGroup(m_sessionMenu);
     buttonGroup->setExclusive(true);
     QLightDM::SessionsModel sessionModel;
+    QStringList hiddenSessions = KiranGreeterPrefs::instance()->hiddenSessions();
     for (int i = 0; i < sessionModel.rowCount(QModelIndex()); i++)
     {
         QVariant key, id;
@@ -239,6 +247,10 @@ void GreeterLoginWindow::initMenu()
         GreeterMenuItem *itemWidget = nullptr;
         key = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::KeyRole);
         id = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::IdRole);
+        if(hiddenSessions.contains(key.toString()))
+        {
+            continue;
+        }
         widgetAction = new QWidgetAction(m_sessionMenu);
         itemWidget = new GreeterMenuItem(key.toString(), true);
         itemWidget->setFixedHeight(28);
