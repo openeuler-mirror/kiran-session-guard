@@ -1,4 +1,4 @@
-#include <kiran-system-daemon/greeter_i.h>
+#include <kiran-system-daemon/greeter-i.h>
 #include <signal.h>
 #include <QApplication>
 #include <QDebug>
@@ -41,7 +41,7 @@ void setup_unix_signal_handlers()
 int main(int argc, char *argv[])
 {
     ///初始化日志模块
-    int iRet = klog_qt5_init("","kylinsec-nologin","lightdm-kiran-greeter","lightdm-kiran-greeter");
+    int iRet = klog_qt5_init("/usr/share/lightdm-kiran-greeter/zlog.conf","kylinsec-nologin","lightdm-kiran-greeter","lightdm-kiran-greeter");
     if (iRet!=0)
     {
         qWarning() << "klog_qt5_init error:" << iRet;
