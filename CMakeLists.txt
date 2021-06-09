@@ -108,4 +108,9 @@ install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_P
 #安装greeter的私有的内置配置文件
 install(FILES config/greeter.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)
 
+#安装greeter zlog配置文件
+install(FILES config/zlog.conf
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/
+        PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ GROUP_WRITE WORLD_READ WORLD_WRITE)
+
 add_subdirectory(kiran-cpanel-greeter)
