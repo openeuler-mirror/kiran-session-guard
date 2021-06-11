@@ -88,11 +88,13 @@ int main (int argc, char *argv[])
     qApp->installTranslator(&tsor);
 
     ///参数解析
+    //部分没使用到的,只是为了添加兼容mate-screensaver启动dialog的参数
     QCommandLineParser parser;
     QCommandLineOption logoutEnableOption("enable-logout", "whether to allow logout");
     QCommandLineOption logoutCommandOption("logout-command", "logout command");
     QCommandLineOption statusMsgOption("status-message", "status message", "status message", "");
     QCommandLineOption enableSwitchOption("enable-switch", "whether to allow switching users");
+    QCommandLineOption verboseOption("verbose","verbose");
     parser.addOptions({logoutEnableOption, logoutCommandOption, statusMsgOption, enableSwitchOption});
     parser.addHelpOption();
     parser.process(app);
@@ -116,18 +118,6 @@ int main (int argc, char *argv[])
     }
 
     ScreenSaverDialog w;
-    if (parser.isSet(logoutEnableOption))
-    {
-        //
-    }
-    if (parser.isSet(logoutCommandOption))
-    {
-        //
-    }
-    if (parser.isSet(statusMsgOption))
-    {
-        //
-    }
     if (parser.isSet(enableSwitchOption))
     {
         w.setSwitchUserEnabled(true);
