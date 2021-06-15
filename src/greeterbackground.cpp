@@ -26,8 +26,13 @@ GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
         if(!m_background.load(background))
         {
             KLOG_WARNING() << "load background <" << background << "> failed!";
+            continue;
         }
-        break;
+        else
+        {
+            KLOG_DEBUG() << "load background <" << background << "> successes!";
+            break;
+        }
     }
 
     if(m_background.isNull())
