@@ -19,6 +19,7 @@
 #include "greetermenuitem.h"
 #include "kiran-greeter-prefs.h"
 #include "ui_greeterloginwindow.h"
+#include "accounts-tool.h"
 
 ///NOTE:如果存在BiometricsAuth后台服务和开发头文件则定义，否则定义相关宏为了编译能通过
 #ifdef BIOMETRICS_AUTH
@@ -335,22 +336,30 @@ void GreeterLoginWindow::initLightdmGreeter()
             AuthMsgQueue::PamMessage errorMsg;
             errorMsg.type = AuthMsgQueue::PMT_MSG;
             errorMsg.extra.msgType = AuthMsgQueue::MESSAGE_TYPE_ERROR;
-            ///如果存在过prompt消息但是没有error消息，伪造一个错误消息
-            ///存在过prompt消息才会开始重新认证，避免没有prompt反复调用pam开始认证，陷入死循环
+            ///NOTE:如果存在过prompt消息但是没有error消息，伪造一个错误消息
             if (m_havePrompted)
             {
                 if (!m_havePAMError)
                 {
-                    switch (m_loginMode)
+                    ///NOTE:存在prompt消息，不存在认证错误消息，用户被锁定，显示特殊的信息
+                    if(!AccountsTool::isUserEnabled(m_greeter.authenticationUser()))
                     {
-                    case LOGIN_MODE_USER_LIST:
-                        errorMsg.text = tr("Incorrect password, please try again");
-                        break;
-                    case LOGIN_MODE_MANUAL:
-                        errorMsg.text = tr("Incorrect username or password");
-                        break;
+                        errorMsg.text = tr("Account has been disabled");
+                    }
+                    else
+                    {
+                        switch (m_loginMode)
+                        {
+                        case LOGIN_MODE_USER_LIST:
+                            errorMsg.text = tr("Incorrect password, please try again");
+                            break;
+                        case LOGIN_MODE_MANUAL:
+                            errorMsg.text = tr("Incorrect username or password");
+                            break;
+                        }
                     }
                 }
+                ///NOTE:存在过prompt消息才会开始重新认证，避免没有prompt反复调用pam开始认证，陷入死循环
                 reAuth = true;
             }
             else
