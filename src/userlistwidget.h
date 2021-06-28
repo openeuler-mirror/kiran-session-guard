@@ -22,7 +22,7 @@ public:
     bool    getCurrentSelected(UserInfo &userInfo);
     void    setRow0();
     void    JustForTest(int count);
-    QString getIconByAccount(const QString &account);
+    QString getIconByUserName(const QString &userName);
     bool    eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     int     userCount();
 

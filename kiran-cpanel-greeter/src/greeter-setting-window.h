@@ -111,7 +111,7 @@ private:
     SwitchButton *m_enableManualSwitch; /** < 启用手动登录开关 */
     SwitchButton *m_hideUserListSwitch; /** < 隐藏用户列表开关 */
 
-    QComboBox *m_comboAutoLoginAccount; /** < 自动登录账户下拉框 */
+    QComboBox *m_comboAutoLoginUser; /** < 自动登录用户下拉框 */
     QLineEdit *m_editAutoLoginDelay;    /** < 自动登录延时输入框 */
 };
 

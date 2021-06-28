@@ -255,7 +255,7 @@ void UserListWidget::JustForTest(int count)
     }
 }
 
-QString UserListWidget::getIconByAccount(const QString &account)
+QString UserListWidget::getIconByUserName(const QString &userName)
 {
     QString iconPath = "";
 
@@ -263,7 +263,7 @@ QString UserListWidget::getIconByAccount(const QString &account)
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);
-        if (userInfo.name == account)
+        if (userInfo.name == userName)
         {
             iconPath = userInfo.imagePath;
             break;

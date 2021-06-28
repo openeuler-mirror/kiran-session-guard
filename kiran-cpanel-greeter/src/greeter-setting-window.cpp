@@ -123,27 +123,27 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
 
-    /* 自动登录账户 */
-    auto labelAutoLogonAccount = new QLabel(tr("auto login account(take effect after restart)"), this);
-    labelAutoLogonAccount->setObjectName("label_autoLogonAccount");
-    labelAutoLogonAccount->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    labelAutoLogonAccount->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelAutoLogonAccount->setStyleSheet("QLabel{margin-bottom:8px;}");
-    mainLayout->addWidget(labelAutoLogonAccount);
+    /* 自动登录用户 */
+    auto labelAutoLogonUser = new QLabel(tr("auto login user(take effect after restart)"), this);
+    labelAutoLogonUser->setObjectName("label_autoLogonUser");
+    labelAutoLogonUser->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    labelAutoLogonUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    labelAutoLogonUser->setStyleSheet("QLabel{margin-bottom:8px;}");
+    mainLayout->addWidget(labelAutoLogonUser);
 
-    m_comboAutoLoginAccount = new QComboBox(this);
-    m_comboAutoLoginAccount->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_comboAutoLoginAccount->setFixedHeight(40);
-    m_comboAutoLoginAccount->setIconSize(QSize(24, 24));
-    initUserComboBox(m_comboAutoLoginAccount);
-    mainLayout->addWidget(m_comboAutoLoginAccount, 0);
+    m_comboAutoLoginUser = new QComboBox(this);
+    m_comboAutoLoginUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_comboAutoLoginUser->setFixedHeight(40);
+    m_comboAutoLoginUser->setIconSize(QSize(24, 24));
+    initUserComboBox(m_comboAutoLoginUser);
+    mainLayout->addWidget(m_comboAutoLoginUser, 0);
 
     /* 自动登录延时 */
-    auto labelAutoLogonDealy = new QLabel(tr("auto login dealy(seconds)(take effect after restart)"), this);
-    labelAutoLogonDealy->setObjectName("label_autoLogonDealy");
-    labelAutoLogonDealy->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    labelAutoLogonDealy->setStyleSheet("QLabel{margin-bottom:8px; margin-top:15px;}");
-    mainLayout->addWidget(labelAutoLogonDealy);
+    auto labelAutoLogonDelay = new QLabel(tr("auto login delay(seconds)(take effect after restart)"), this);
+    labelAutoLogonDelay->setObjectName("label_autoLogonDealy");
+    labelAutoLogonDelay->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    labelAutoLogonDelay->setStyleSheet("QLabel{margin-bottom:8px; margin-top:15px;}");
+    mainLayout->addWidget(labelAutoLogonDelay);
 
     m_editAutoLoginDelay = new QLineEdit(this);
     m_editAutoLoginDelay->setFixedHeight(40);
@@ -527,7 +527,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     QDBusPendingReply<> reply;
     bool hasError = false;
 
-    reply = KiranGreeterPrefs::instance()->SetAutologinUser(m_comboAutoLoginAccount->currentText());
+    reply = KiranGreeterPrefs::instance()->SetAutologinUser(m_comboAutoLoginUser->currentText());
     reply.waitForFinished();
     if (reply.isError())
     {
@@ -601,7 +601,7 @@ void GreeterSettingWindow::resetAutoLoginSettings()
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting = getAutologinSettingInfoFromBackend();
 
-    m_comboAutoLoginAccount->setCurrentText(autoLoginSetting.autoLoginUser);
+    m_comboAutoLoginUser->setCurrentText(autoLoginSetting.autoLoginUser);
     m_editAutoLoginDelay->setText(QString::number(autoLoginSetting.autoLoginTimeout));
 
     m_origSettingInfo.autoLoginInfo = autoLoginSetting;
@@ -638,7 +638,7 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
 
     autoLoginSetting.autoLoginTimeout = KiranGreeterPrefs::instance()->autologin_timeout();
     autoLoginSetting.autoLoginUser = KiranGreeterPrefs::instance()->autologin_user();
-    if (m_comboAutoLoginAccount->findText(autoLoginSetting.autoLoginUser) == -1)
+    if (m_comboAutoLoginUser->findText(autoLoginSetting.autoLoginUser) == -1)
     {
         KLOG_WARNING() << "no such user," << autoLoginSetting.autoLoginUser;
         autoLoginSetting.autoLoginUser = "";
@@ -664,7 +664,7 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting;
 
-    autoLoginSetting.autoLoginUser = m_comboAutoLoginAccount->currentText();
+    autoLoginSetting.autoLoginUser = m_comboAutoLoginUser->currentText();
     autoLoginSetting.autoLoginTimeout = m_editAutoLoginDelay->text().toUInt();
 
     return autoLoginSetting;
