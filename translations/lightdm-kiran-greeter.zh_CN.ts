@@ -25,7 +25,7 @@
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <source>Name</source>
-        <translation>账户名</translation>
+        <translation>用户名</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="568"/>
@@ -77,9 +77,13 @@
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="347"/>
         <source>Account has been disabled</source>
-        <translation>帐户已被禁用</translation>
+        <translation type="vanished">用户已被禁用</translation>
+    </message>
+    <message>
+        <location filename="../src/greeterloginwindow.cpp" line="347"/>
+        <source>User has been disabled</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="354"/>
@@ -110,7 +114,7 @@
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="648"/>
         <source>Entry your name</source>
-        <translation>请输入账户名</translation>
+        <translation>请输入用户名</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="683"/>
@@ -142,12 +146,12 @@
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="127"/>
-        <source>auto login account(take effect after restart)</source>
+        <source>auto login user(take effect after restart)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="142"/>
-        <source>auto login dealy(seconds)(take effect after restart)</source>
+        <source>auto login delay(seconds)(take effect after restart)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

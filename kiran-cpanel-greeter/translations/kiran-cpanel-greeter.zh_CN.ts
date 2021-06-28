@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>GreeterLineEdit</name>
     <message>
@@ -78,7 +78,7 @@
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.cpp" line="347"/>
-        <source>Account has been disabled</source>
+        <source>User has been disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -132,47 +132,47 @@
     <name>GreeterSetting</name>
     <message>
         <source>GreeterSetting</source>
-        <translation type="vanished">登录设置</translation>
+        <translation>登录设置</translation>
     </message>
     <message>
         <source>Appearance Setting</source>
-        <translation type="vanished">外观设置</translation>
+        <translation>外观设置</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="vanished">选择图片</translation>
+        <translation>选择图片</translation>
     </message>
     <message>
         <source>Browse</source>
-        <translation type="vanished">浏览</translation>
+        <translation>浏览</translation>
     </message>
     <message>
         <source>Scale Mode</source>
-        <translation type="vanished">缩放模式</translation>
+        <translation>缩放模式</translation>
     </message>
     <message>
         <source>Scale Factor</source>
-        <translation type="vanished">缩放比例</translation>
+        <translation>缩放比例</translation>
     </message>
     <message>
         <source>User Login</source>
-        <translation type="vanished">用户登录</translation>
+        <translation>用户登录</translation>
     </message>
     <message>
         <source>enable manual login</source>
-        <translation type="vanished">允许手动登录</translation>
+        <translation>允许手动登录</translation>
     </message>
     <message>
         <source>hide user list</source>
-        <translation type="vanished">隐藏用户列表</translation>
+        <translation>隐藏用户列表</translation>
     </message>
     <message>
         <source>auto login account(take effect after restart)</source>
-        <translation type="vanished">自动登录账户(重启后生效)</translation>
+        <translation type="unfinished">自动登录用户(重启后生效)</translation>
     </message>
     <message>
         <source>auto login delay(seconds)(take effect after restart)</source>
-        <translation type="vanished">自动登录延时(秒)(重启后生效)</translation>
+        <translation>自动登录延时(秒)(重启后生效)</translation>
     </message>
 </context>
 <context>
@@ -188,14 +188,22 @@
         <translation>自动登录</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="127"/>
         <source>auto login account(take effect after restart)</source>
-        <translation>自动登录账户(重启后生效)</translation>
+        <translation>自动登录用户(重启后生效)</translation>
+    </message>
+    <message>
+        <source>auto login dealy(seconds)(take effect after restart)</source>
+        <translation>自动登录延时(重启后生效)</translation>
+    </message>
+    <message>
+        <location filename="../src/greeter-setting-window.cpp" line="127"/>
+        <source>auto login user(take effect after restart)</source>
+        <translation>自动登录用户(重启后生效)</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="142"/>
-        <source>auto login dealy(seconds)(take effect after restart)</source>
-        <translation>自动登录延时(重启后生效)</translation>
+        <source>auto login delay(seconds)(take effect after restart)</source>
+        <translation>自动登录延时(秒)(重启后生效)</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="176"/>

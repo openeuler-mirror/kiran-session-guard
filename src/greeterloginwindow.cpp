@@ -344,7 +344,7 @@ void GreeterLoginWindow::initLightdmGreeter()
                     ///NOTE:存在prompt消息，不存在认证错误消息，用户被锁定，显示特殊的信息
                     if(!AccountsTool::isUserEnabled(m_greeter.authenticationUser()))
                     {
-                        errorMsg.text = tr("Account has been disabled");
+                        errorMsg.text = tr("User has been disabled");
                     }
                     else
                     {
@@ -733,7 +733,7 @@ void GreeterLoginWindow::slotTextConfirmed(const QString &text)
     else
     {
         startAuthUser(ui->promptEdit->getText(),
-                      ui->userlist->getIconByAccount(ui->promptEdit->getText()));
+                      ui->userlist->getIconByUserName(ui->promptEdit->getText()));
     }
 }
 
@@ -833,7 +833,7 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success, bool reAuthent
         if (reAuthentication)
         {
             startAuthUser(m_greeter.authenticationUser(),
-                          ui->userlist->getIconByAccount(m_greeter.authenticationUser()));
+                          ui->userlist->getIconByUserName(m_greeter.authenticationUser()));
         }
         else
         {
