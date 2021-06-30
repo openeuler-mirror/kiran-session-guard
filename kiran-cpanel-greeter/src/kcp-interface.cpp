@@ -36,9 +36,13 @@ int KcpInterface::init()
                             ".qm"))
     {
         KLOG_ERROR() << "load translator failed!";
-        return -1;
+        m_translator->deleteLater();
+        m_translator = nullptr;
     }
-    QCoreApplication::installTranslator(m_translator);
+    else
+    {
+        QCoreApplication::installTranslator(m_translator);
+    }
 
     return 0;
 }
