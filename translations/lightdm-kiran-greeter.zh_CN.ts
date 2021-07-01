@@ -86,48 +86,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="354"/>
         <source>Incorrect password, please try again</source>
-        <translation>密码错误，请再次输入</translation>
+        <translation type="vanished">密码错误，请再次输入</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="357"/>
         <source>Incorrect username or password</source>
-        <translation>用户名或密码错误</translation>
+        <translation type="vanished">用户名或密码错误</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="370"/>
+        <location filename="../src/greeterloginwindow.cpp" line="351"/>
+        <location filename="../src/greeterloginwindow.cpp" line="362"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="587"/>
+        <location filename="../src/greeterloginwindow.cpp" line="579"/>
         <source>Not Listed?</source>
         <translation>未列出</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="636"/>
-        <location filename="../src/greeterloginwindow.cpp" line="799"/>
+        <location filename="../src/greeterloginwindow.cpp" line="628"/>
+        <location filename="../src/greeterloginwindow.cpp" line="791"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="648"/>
+        <location filename="../src/greeterloginwindow.cpp" line="640"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="683"/>
+        <location filename="../src/greeterloginwindow.cpp" line="675"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="853"/>
+        <location filename="../src/greeterloginwindow.cpp" line="845"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="864"/>
+        <location filename="../src/greeterloginwindow.cpp" line="856"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>

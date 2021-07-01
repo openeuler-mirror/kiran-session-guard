@@ -339,24 +339,16 @@ void GreeterLoginWindow::initLightdmGreeter()
             ///NOTE:如果存在过prompt消息但是没有error消息，伪造一个错误消息
             if (m_havePrompted)
             {
+                ///NOTE:存在prompt消息，不存在认证错误消息，用户被锁定，显示特殊的信息
                 if (!m_havePAMError)
                 {
-                    ///NOTE:存在prompt消息，不存在认证错误消息，用户被锁定，显示特殊的信息
                     if(!AccountsTool::isUserEnabled(m_greeter.authenticationUser()))
                     {
                         errorMsg.text = tr("User has been disabled");
                     }
                     else
                     {
-                        switch (m_loginMode)
-                        {
-                        case LOGIN_MODE_USER_LIST:
-                            errorMsg.text = tr("Incorrect password, please try again");
-                            break;
-                        case LOGIN_MODE_MANUAL:
-                            errorMsg.text = tr("Incorrect username or password");
-                            break;
-                        }
+                        errorMsg.text = tr("Failed to authenticate");
                     }
                 }
                 ///NOTE:存在过prompt消息才会开始重新认证，避免没有prompt反复调用pam开始认证，陷入死循环
