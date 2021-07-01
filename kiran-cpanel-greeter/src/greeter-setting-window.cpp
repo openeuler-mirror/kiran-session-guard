@@ -277,7 +277,7 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutManualLogin->setObjectName("layout_manualLogin");
     layoutManualLogin->setContentsMargins(0, 15, 0, 0);
 
-    auto labelManualLogin = new QLabel(tr("Enable Manual Login"), this);
+    auto labelManualLogin = new QLabel(tr("Enable manual input user login"), this);
     labelManualLogin->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelManualLogin->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     layoutManualLogin->addWidget(labelManualLogin);

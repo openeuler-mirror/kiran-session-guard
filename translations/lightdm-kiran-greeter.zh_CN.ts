@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>GreeterLineEdit</name>
     <message>
@@ -38,8 +38,9 @@
         <location filename="../src/greeterloginwindow.ui" line="665"/>
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <source>Not List</source>
-        <translation>未列出</translation>
+        <location filename="../src/greeterloginwindow.cpp" line="579"/>
+        <source>login other user</source>
+        <translation>登录其他用户</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="82"/>
@@ -77,32 +78,23 @@
         <translation>关机</translation>
     </message>
     <message>
-        <source>Account has been disabled</source>
-        <translation type="vanished">用户已被禁用</translation>
-    </message>
-    <message>
         <location filename="../src/greeterloginwindow.cpp" line="347"/>
         <source>User has been disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>用户已被禁用</translation>
     </message>
     <message>
         <source>Incorrect password, please try again</source>
-        <translation type="vanished">密码错误，请再次输入</translation>
+        <translation>密码错误，请再次输入</translation>
     </message>
     <message>
         <source>Incorrect username or password</source>
-        <translation type="vanished">用户名或密码错误</translation>
+        <translation>用户名或密码错误</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="351"/>
         <location filename="../src/greeterloginwindow.cpp" line="362"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
-    </message>
-    <message>
-        <location filename="../src/greeterloginwindow.cpp" line="579"/>
-        <source>Not Listed?</source>
-        <translation>未列出</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.cpp" line="628"/>
@@ -192,7 +184,7 @@
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="280"/>
-        <source>Enable Manual Login</source>
+        <source>Enable manual input user login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
