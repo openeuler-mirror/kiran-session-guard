@@ -33,7 +33,8 @@
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="665"/>
         <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <source>Not List</source>
+        <location filename="../../src/greeterloginwindow.cpp" line="579"/>
+        <source>login other user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -80,11 +81,6 @@
         <location filename="../../src/greeterloginwindow.cpp" line="351"/>
         <location filename="../../src/greeterloginwindow.cpp" line="362"/>
         <source>Failed to authenticate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="579"/>
-        <source>Not Listed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -230,8 +226,12 @@
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="280"/>
+        <source>Enable manual input user login</source>
+        <translation>允许手动输入用户名登录</translation>
+    </message>
+    <message>
         <source>Enable Manual Login</source>
-        <translation>允许手动登录</translation>
+        <translation type="vanished">允许手动登录</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="304"/>

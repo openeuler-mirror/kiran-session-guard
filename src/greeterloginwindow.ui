@@ -662,7 +662,7 @@
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>Not List</string>
+               <string>login other user</string>
               </property>
              </widget>
             </item>

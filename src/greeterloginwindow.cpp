@@ -576,7 +576,7 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
     //NotList按钮
     m_buttonType = BUTTON_SWITCH_TO_MANUAL_LOGIN;
-    ui->btn_notListAndCancel->setText(tr("Not Listed?"));
+    ui->btn_notListAndCancel->setText(tr("login other user"));
     ui->btn_notListAndCancel->setVisible(m_noListButotnVisiable);
     ui->btn_notListAndCancel->setEnabled(true);
 
