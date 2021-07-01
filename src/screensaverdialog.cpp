@@ -444,7 +444,8 @@ void ScreenSaverDialog::slotShowMessage (QString text, PamAuthProxy::MessageType
         m_haveErr = true;
     }
     QString colorText = QString("<font color=%1>%2</font>")
-            .arg(messageType == PamAuthProxy::MessageTypeInfo ? "white" : "red")
+//            .arg(messageType == PamAuthProxy::MessageTypeInfo ? "white" : "red")
+            .arg("white")
             .arg(text);
     ui->label_tips->setText(colorText);
 }
