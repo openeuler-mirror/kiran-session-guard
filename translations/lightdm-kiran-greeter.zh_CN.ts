@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>GreeterLineEdit</name>
     <message>
@@ -38,7 +38,7 @@
         <location filename="../src/greeterloginwindow.ui" line="665"/>
         <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <location filename="../src/greeterloginwindow.cpp" line="579"/>
+        <location filename="../src/greeterloginwindow.cpp" line="586"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
@@ -78,47 +78,47 @@
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="347"/>
+        <location filename="../src/greeterloginwindow.cpp" line="354"/>
         <source>User has been disabled</source>
         <translation>用户已被禁用</translation>
     </message>
     <message>
         <source>Incorrect password, please try again</source>
-        <translation>密码错误，请再次输入</translation>
+        <translation type="vanished">密码错误，请再次输入</translation>
     </message>
     <message>
         <source>Incorrect username or password</source>
-        <translation>用户名或密码错误</translation>
+        <translation type="vanished">用户名或密码错误</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="351"/>
-        <location filename="../src/greeterloginwindow.cpp" line="362"/>
+        <location filename="../src/greeterloginwindow.cpp" line="358"/>
+        <location filename="../src/greeterloginwindow.cpp" line="369"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="628"/>
-        <location filename="../src/greeterloginwindow.cpp" line="791"/>
+        <location filename="../src/greeterloginwindow.cpp" line="635"/>
+        <location filename="../src/greeterloginwindow.cpp" line="798"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="640"/>
+        <location filename="../src/greeterloginwindow.cpp" line="647"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="675"/>
+        <location filename="../src/greeterloginwindow.cpp" line="682"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="845"/>
+        <location filename="../src/greeterloginwindow.cpp" line="852"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeterloginwindow.cpp" line="856"/>
+        <location filename="../src/greeterloginwindow.cpp" line="863"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>

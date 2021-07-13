@@ -36,9 +36,32 @@ KiranGreeterPrefs::KiranGreeterPrefs()
                                          this, SLOT(handlePropertiesChanged(QDBusMessage)));
 
     QSettings settings("/usr/share/lightdm-kiran-greeter/greeter.ini",QSettings::IniFormat);
+
+    ///common
     settings.beginGroup("Common");
-    auto hiddenSesion = settings.value("hidden-sessions");
-    m_hiddenSessions = hiddenSesion.toStringList();
+
+    auto hiddenSession = settings.value("hidden-sessions");
+    m_hiddenSessions = hiddenSession.toStringList();
+
+    auto hiddenUsers = settings.value("hide-users");
+    m_hiddenUsers = hiddenUsers.toStringList();
+
+    settings.endGroup();
+
+    ///power
+    settings.beginGroup("Power");
+
+    auto canPowerOff = settings.value("can-poweroff");
+    m_canPowerOff = canPowerOff.toBool();
+
+    auto canReboot = settings.value("can-reboot");
+    m_canReboot = canReboot.toBool();
+
+    auto canSuspend = settings.value("can-suspend");
+    m_canSuspend = canSuspend.toBool();
+
+    auto canHibernate = settings.value("can-hibernate");
+    m_canHibernate = canHibernate.toBool();
 }
 
 KiranGreeterPrefs::~KiranGreeterPrefs()
@@ -58,4 +81,29 @@ void KiranGreeterPrefs::handlePropertiesChanged(QDBusMessage msg)
 QStringList KiranGreeterPrefs::hiddenSessions()
 {
     return m_hiddenSessions;
+}
+
+QStringList KiranGreeterPrefs::hiddenUsers()
+{
+    return m_hiddenUsers;
+}
+
+bool KiranGreeterPrefs::canPowerOff()
+{
+    return m_canPowerOff;
+}
+
+bool KiranGreeterPrefs::canReboot()
+{
+    return m_canReboot;
+}
+
+bool KiranGreeterPrefs::canSuspend()
+{
+    return m_canSuspend;
+}
+
+bool KiranGreeterPrefs::canHibernate()
+{
+    return m_canHibernate;
 }
