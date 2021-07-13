@@ -17,6 +17,11 @@ public:
     ~KiranGreeterPrefs();
 
     QStringList hiddenSessions();
+    QStringList hiddenUsers();
+    bool canPowerOff();
+    bool canReboot();
+    bool canSuspend();
+    bool canHibernate();
 
 private:
     KiranGreeterPrefs();
@@ -29,6 +34,11 @@ private Q_SLOTS:
 
 private:
     QStringList m_hiddenSessions;
+    QStringList m_hiddenUsers;
+    bool m_canPowerOff = true;
+    bool m_canReboot = true;
+    bool m_canSuspend = true;
+    bool m_canHibernate = true;
 };
 
 #endif  //LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H

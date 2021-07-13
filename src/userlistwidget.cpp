@@ -9,6 +9,7 @@
 #include "ui_userlistwidget.h"
 #include "userinfo.h"
 #include "userlistitem.h"
+#include "kiran-greeter-prefs.h"
 
 using namespace QLightDM;
 
@@ -138,16 +139,25 @@ void UserListWidget::initUI()
 
 void UserListWidget::loadUserList()
 {
+    QStringList hiddenUsers = KiranGreeterPrefs::instance()->hiddenUsers();
+    m_filterModel.setSourceModel(&m_usersModel);
+    m_filterModel.setFilterRole(UsersModel::NameRole);
+    m_filterModel.setFilterUsers(hiddenUsers);
+
     for (int i = 0; i < m_usersModel.rowCount(QModelIndex()); i++)
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);
+        if( hiddenUsers.contains(userInfo.name) ){
+            continue;
+        }
         appendItem(userInfo);
     }
+
     KLOG_INFO() << "connect UserModel RowRemoved:  "
-                 << connect(&m_usersModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
+                 << connect(&m_filterModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
     KLOG_INFO() << "connect UserModel RowInserted: "
-                 << connect(&m_usersModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
+                 << connect(&m_filterModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
 }
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
@@ -172,33 +182,33 @@ bool UserListWidget::getUserInfoFromModel(int row, UserInfo &userInfo)
 {
     QVariant value;
 
-    if (m_usersModel.rowCount(QModelIndex()) < row)
+    if (m_filterModel.rowCount(QModelIndex()) < row)
     {
         return false;
     }
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::NameRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::NameRole);
     userInfo.name = value.toString();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::RealNameRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::RealNameRole);
     userInfo.realName = value.toString();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::LoggedInRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::LoggedInRole);
     userInfo.loggedIn = value.toBool();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::SessionRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::SessionRole);
     userInfo.session = value.toString();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::HasMessagesRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::HasMessagesRole);
     userInfo.hasMessage = value.toBool();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::ImagePathRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::ImagePathRole);
     userInfo.imagePath = value.toString();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::BackgroundPathRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::BackgroundPathRole);
     userInfo.backgroundPath = value.toString();
 
-    value = m_usersModel.data(m_usersModel.index(row, 0), UsersModel::UidRole);
+    value = m_filterModel.data(m_filterModel.index(row, 0), UsersModel::UidRole);
     userInfo.uid = value.toULongLong();
     KLOG_INFO() << "getUserInfoFromModel: " << userInfo.name;
     return true;
@@ -259,7 +269,7 @@ QString UserListWidget::getIconByUserName(const QString &userName)
 {
     QString iconPath = "";
 
-    for (int i = 0; i < m_usersModel.rowCount(QModelIndex()); i++)
+    for (int i = 0; i < m_filterModel.rowCount(QModelIndex()); i++)
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);

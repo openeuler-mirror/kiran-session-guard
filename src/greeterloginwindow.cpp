@@ -128,25 +128,25 @@ void GreeterLoginWindow::initUI()
         }
         //重新设置选项
         m_powerMenu->clear();
-        if (m_powerIface.canHibernate())
+        if (m_powerIface.canHibernate()&&KiranGreeterPrefs::instance()->canHibernate())
         {
             m_powerMenu->addAction(tr("hibernate"), [this] {
                 this->m_powerIface.hibernate();
             });
         }
-        if (m_powerIface.canSuspend())
+        if (m_powerIface.canSuspend()&&KiranGreeterPrefs::instance()->canSuspend())
         {
             m_powerMenu->addAction(tr("suspend"), [this] {
                 this->m_powerIface.suspend();
             });
         }
-        if (m_powerIface.canRestart())
+        if (m_powerIface.canRestart()&&KiranGreeterPrefs::instance()->canReboot())
         {
             m_powerMenu->addAction(tr("restart"), [this] {
                 this->m_powerIface.restart();
             });
         }
-        if (m_powerIface.canShutdown())
+        if (m_powerIface.canShutdown()&&KiranGreeterPrefs::instance()->canPowerOff())
         {
             m_powerMenu->addAction(tr("shutdown"), [this] {
                 this->m_powerIface.shutdown();
@@ -154,8 +154,15 @@ void GreeterLoginWindow::initUI()
         }
         //计算菜单显示坐标
         QPoint btnRightTopPos = ui->btn_power->mapTo(this, QPoint(ui->btn_power->width(), 0));
-        QSize menuSize = m_powerMenu->sizeHint();
-
+        QSize menuSize;
+        if(m_powerMenu->actions().count()==0)
+        {
+            menuSize = QSize(92,10);
+        }
+        else
+        {
+            menuSize = m_powerMenu->sizeHint();
+        }
         QPoint menuLeftTop;
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());

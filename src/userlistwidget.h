@@ -4,6 +4,7 @@
 #include <QLightDM/UsersModel>
 #include <QWidget>
 #include "userinfo.h"
+#include "filter-user-proxy-model.h"
 
 class QListWidgetItem;
 
@@ -49,6 +50,7 @@ protected:
 private:
     Ui::UserListWidget * ui;
     QLightDM::UsersModel m_usersModel;
+    FilterUserProxyModel m_filterModel;
 };
 
 #endif  // USERLISTWIDGET_H

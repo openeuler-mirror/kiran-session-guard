@@ -5,7 +5,6 @@
     <name>GreeterLineEdit</name>
     <message>
         <location filename="../../src/greeterlineedit.ui" line="32"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14,25 +13,21 @@
     <name>GreeterLoginWindow</name>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="23"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="390"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="568"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
         <source>Recertification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../../src/greeterloginwindow.cpp" line="579"/>
         <source>login other user</source>
         <translation type="unfinished"></translation>
@@ -269,13 +264,11 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>LoginButton</name>
     <message>
         <location filename="../../src/loginbutton.ui" line="14"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/loginbutton.ui" line="51"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -284,13 +277,11 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>UserListItem</name>
     <message>
         <location filename="../../src/userlistitem.ui" line="17"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/userlistitem.ui" line="77"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
         <source>Tom Hardy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -299,7 +290,6 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>UserListWidget</name>
     <message>
         <location filename="../../src/userlistwidget.ui" line="23"/>
-        <location filename="../../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>

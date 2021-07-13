@@ -2,8 +2,26 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lightdm-kiran-greeter)
 
+#是否开启生物认证
 option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
+
+#是否开启虚拟键盘
 option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
+
+#登录中隐藏的用户列表，以‘，’分割
+set(HIDDEN_USER "" CACHE STRING "hidden user list,separated by commas")
+
+#是否显示关机选项
+set(CAN_POWER_OFF true CACHE BOOL "shutdown button display")
+
+#是否显示重启选项
+set(CAN_REBOOT true CACHE BOOL "reboot button display")
+
+#是否显示挂起选项
+set(CAN_SUSPEND true CACHE BOOL "suspend button display")
+
+#是否显示休眠选项
+set(CAN_HIBERNATE true CACHE BOOL "hibernate button display")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -105,8 +123,11 @@ install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${CMAKE_INSTALL_P
 #安装xgreeter配置文件 /usr/share/xgreeters/
 install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/xgreeters/)
 
+#通过编译选项生成greeter.ini
+configure_file(${CMAKE_SOURCE_DIR}/config/greeter.ini.in ${CMAKE_BINARY_DIR}/greeter.ini @ONLY)
 #安装greeter的私有的内置配置文件
-install(FILES config/greeter.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)
+install(FILES ${CMAKE_BINARY_DIR}/greeter.ini
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)
 
 #安装greeter zlog配置文件
 install(FILES config/zlog.conf
