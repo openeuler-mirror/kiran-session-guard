@@ -80,7 +80,10 @@ target_link_libraries(${PROJECT_NAME}
 # 安装
 #安装插件desktop文件
 configure_file(data/kiran-cpanel-greeter.desktop.in ${CMAKE_BINARY_DIR}/kiran-cpanel-greeter.desktop @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/kiran-cpanel-greeter.desktop DESTINATION ${CPANEL_DESKTOP_DIR}/ )
+install(FILES ${CMAKE_BINARY_DIR}/kiran-cpanel-greeter.desktop DESTINATION ${CPANEL_DESKTOP_DIR}/)
+install(CODE "execute_process( COMMAND ${CMAKE_COMMAND} -E create_symlink \
+                               ${CPANEL_DESKTOP_DIR}/kiran-cpanel-greeter.desktop \
+                               ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/applications/kiran-cpanel-greeter.desktop )")
 #安装插件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CPANEL_PLUGIN_DIR}/)
 #翻译文件
