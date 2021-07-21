@@ -103,10 +103,12 @@ target_link_libraries(${PROJECT_NAME}
         ${KLOG_QT5_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
 
+#是否加入生物识别相关代码
 if (HAVE_BIOMETRICS_AUTH)
     add_definitions(-DBIOMETRICS_AUTH)
 endif ()
 
+#是否添加虚拟键盘
 if (SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
@@ -125,6 +127,7 @@ install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_P
 
 #通过编译选项生成greeter.ini
 configure_file(${CMAKE_SOURCE_DIR}/config/greeter.ini.in ${CMAKE_BINARY_DIR}/greeter.ini @ONLY)
+
 #安装greeter的私有的内置配置文件
 install(FILES ${CMAKE_BINARY_DIR}/greeter.ini
         DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)
@@ -134,4 +137,5 @@ install(FILES config/zlog.conf
         DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/
         PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ GROUP_WRITE WORLD_READ WORLD_WRITE)
 
+#登录设置
 add_subdirectory(kiran-cpanel-greeter)
