@@ -1,0 +1,47 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrow.png</file>
+        <file>images/btn_enter.png</file>
+        <file>images/caps_lock.png</file>
+        <file>images/checked.png</file>
+        <file>images/default_background.jpg</file>
+        <file>images/info_normal.png</file>
+        <file>images/info_selected.png</file>
+        <file>images/keyboard_normal.png</file>
+        <file>images/loading_0.png</file>
+        <file>images/loading_1.png</file>
+        <file>images/loading_2.png</file>
+        <file>images/loading_3.png</file>
+        <file>images/loading_4.png</file>
+        <file>images/loading_5.png</file>
+        <file>images/loading_6.png</file>
+        <file>images/loading_7.png</file>
+        <file>images/loading_8.png</file>
+        <file>images/loading_9.png</file>
+        <file>images/loading_10.png</file>
+        <file>images/loading_11.png</file>
+        <file>images/loading_12.png</file>
+        <file>images/loading_13.png</file>
+        <file>images/loading_14.png</file>
+        <file>images/loading_15.png</file>
+        <file>images/loading_16.png</file>
+        <file>images/loading_17.png</file>
+        <file>images/moshi.png</file>
+        <file>images/session_hover.png</file>
+        <file>images/session_normal.png</file>
+        <file>images/shutdown_hover.png</file>
+        <file>images/shutdown_normal.png</file>
+        <file>images/user_48.png</file>
+        <file>images/user_180.png</file>
+        <file>images/unlock.png</file>
+        <file>images/keyboard_pressed.png</file>
+        <file>images/keyboard_select.png</file>
+        <file>images/shutdown_pressed.png</file>
+        <file>images/shutdown_select.png</file>
+        <file>images/switch_users_normal.png</file>
+        <file>images/switch_users_pressed.png</file>
+        <file>images/switch_users_select.png</file>
+        <file>images/finger_auth.png</file>
+        <file>images/face_auth.png</file>
+    </qresource>
+</RCC>
