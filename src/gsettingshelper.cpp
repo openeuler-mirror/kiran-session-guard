@@ -2,7 +2,7 @@
 #include <gio/gio.h>
 #include <glib-object.h>
 #include <QDebug>
-#include "log.h"
+#include <qt5-log-i.h>
 
 GSettingsHelper::GSettingsHelper ()
 {
@@ -35,21 +35,21 @@ int GSettingsHelper::getMateScalingFactor ()
     GSettings *settings = g_settings_new("org.mate.interface");
     if (!settings)
     {
-        LOG_WARNING_S() << "g_settings_new org.mate.interface failed";
+        KLOG_WARNING() << "g_settings_new org.mate.interface failed";
         return 0;
     }
 
     GSettingsSchemaSource *schemaSource = g_settings_schema_source_get_default();
     if (schemaSource == nullptr)
     {
-        LOG_WARNING_S() << "g_settings_schema_source_get_default failed";
+        KLOG_WARNING() << "g_settings_schema_source_get_default failed";
         return 0;
     }
 
     GSettingsSchema *mateSchema = g_settings_schema_source_lookup(schemaSource, "org.mate.interface", TRUE);
     if (mateSchema == nullptr)
     {
-        LOG_WARNING_S() << "g_settings_schema_source_lookup org.mate.interface failed";
+        KLOG_WARNING() << "g_settings_schema_source_lookup org.mate.interface failed";
         return 0;
     }
 

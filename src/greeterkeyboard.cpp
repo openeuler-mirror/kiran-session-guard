@@ -7,8 +7,7 @@
 #include <QMutex>
 #include <QScopedPointer>
 #include <QScreen>
-
-#include "log.h"
+#include <qt5-log-i.h>
 
 #define ONBOARD_LAYOUT "Compact"
 #define ONBOARD_THEME "Blackboard"
@@ -60,7 +59,7 @@ bool GreeterKeyboard::init(QWidget *parent)
         stdoutput = stdoutput.trimmed();
         if (stdoutput.isEmpty())
         {
-            LOG_WARNING("can't get onboard xid!");
+            KLOG_WARNING("can't get onboard xid!");
             return;
         }
 
@@ -72,7 +71,7 @@ bool GreeterKeyboard::init(QWidget *parent)
         m_keyboardWidget->setParent(parent);
         m_keyboardWidget->setFocusPolicy(Qt::NoFocus);
         m_keyboardWidget->raise();
-        LOG_INFO("greeter keyboard init finish.");
+        KLOG_INFO("greeter keyboard init finish.");
     });
     m_process->start("onboard", QStringList() << "--xid"
                                               << "-t" ONBOARD_THEME << "-l" ONBOARD_LAYOUT << "-d"
@@ -93,16 +92,16 @@ void GreeterKeyboard::showAdjustSize(QWidget *parent)
 {
     if (m_keyboardWidget == nullptr)
     {
-        LOG_WARNING(" greeter keyboard show adjust size must call after init!");
+        KLOG_WARNING(" greeter keyboard show adjust size must call after init!");
         return;
     }
 
     if (parent == nullptr)
     {
-        LOG_WARNING_S() << "GreeterKeyboard::showAdjustSize parent can't be nullptr";
+        KLOG_WARNING() << "GreeterKeyboard::showAdjustSize parent can't be nullptr";
     }
 
-    LOG_DEBUG_S() << "GreeterKeyboard::showAdjustSize" << parent->objectName();
+    KLOG_DEBUG() << "GreeterKeyboard::showAdjustSize" << parent->objectName();
     m_keyboardWidget->hide();
     QRect parentRect = parent->geometry();
     m_keyboardWidget->setParent(parent);
@@ -119,7 +118,7 @@ void GreeterKeyboard::hide()
 {
     if (m_keyboardWidget == nullptr)
     {
-        LOG_WARNING_S() << "GreeterKeyboard::hide must call after init";
+        KLOG_WARNING() << "GreeterKeyboard::hide must call after init";
         return;
     }
     m_keyboardWidget->hide();
@@ -129,7 +128,7 @@ QWidget *GreeterKeyboard::getKeyboard()
 {
     if (m_keyboardWidget == nullptr)
     {
-        LOG_WARNING_S() << "GreeterKeyboard::getKeyboard must call after GreeterKeyboard::init";
+        KLOG_WARNING() << "GreeterKeyboard::getKeyboard must call after GreeterKeyboard::init";
         return nullptr;
     }
     return m_keyboardWidget;
@@ -139,7 +138,7 @@ void GreeterKeyboard::keyboardProcessExit()
 {
     if (m_process->state() != QProcess::NotRunning)
     {
-        LOG_DEBUG_S() << "terminate keyboard process and wait exit.";
+        KLOG_WARNING() << "terminate keyboard process and wait exit.";
         m_process->terminate();
         m_process->waitForFinished(300);
     }
@@ -147,7 +146,7 @@ void GreeterKeyboard::keyboardProcessExit()
 
 void GreeterKeyboard::slot_finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    LOG_DEBUG_S() << "onboard process finished : "
+    KLOG_DEBUG() << "onboard process finished : "
                   << "exitCode" << exitCode << "exitStaus" << exitStatus;
 }
 

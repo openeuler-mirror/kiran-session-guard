@@ -4,8 +4,7 @@
 #include <QAbstractNativeEventFilter>
 #include <QPropertyAnimation>
 #include <QWidget>
-
-#include "pamauthproxy.h"
+#include "auth-base.h"
 
 namespace Ui
 {
@@ -13,17 +12,11 @@ class ScreenSaverDialog;
 }
 
 class QMenu;
-
+class AuthProxy;
 class ScreenSaverDialog : public QWidget
 {
     Q_OBJECT
 public:
-    enum AuthType
-    {
-        AUTH_TYPE_PASSWD,
-        AUTH_TYPE_FINGER,
-        AUTH_TYPE_FACE
-    };
     explicit ScreenSaverDialog(QWidget *parent = nullptr);
     virtual ~ScreenSaverDialog();
     void setSwitchUserEnabled(bool enable);
@@ -37,7 +30,7 @@ private:
     Q_INVOKABLE void startUpdateTimeTimer();
     Q_INVOKABLE void updateTimeLabel();
     QString getCurrentDateTime();
-    void updateCurrentAuthType(ScreenSaverDialog::AuthType type);
+    void updateCurrentAuthType(Kiran::AuthType type);
 
 private:
     ///开始进行PAM认证
@@ -56,9 +49,9 @@ private:
     void switchToPromptEdit();
 
 private slots:
-    void slotShowMessage(QString text, PamAuthProxy::MessageType type);
-    void slotShowPrompt(QString text, PamAuthProxy::PromptType type);
-    void slotAuthenticationComplete();
+    void slotShowMessage(QString text, Kiran::MessageType messageType);
+    void slotShowPrompt(QString text, Kiran::PromptType promptType);
+    void slotAuthenticationComplete(bool authRes, QString text);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
@@ -68,14 +61,13 @@ protected:
 
 private:
     Ui::ScreenSaverDialog *ui;
-    PamAuthProxy m_authProxy;
+    AuthProxy* m_authProxy;
     QString m_userName;
     QPixmap m_background;
     QPixmap m_scaledBackground;
     QMenu *m_powerMenu;
-    AuthType m_authType = AUTH_TYPE_PASSWD;
+    Kiran::AuthType m_authType = Kiran::AUTH_TYPE_PASSWD;
     bool m_havePrompt = false;
-    bool m_haveErr = false;
 };
 
 #endif  // WIDGET_H

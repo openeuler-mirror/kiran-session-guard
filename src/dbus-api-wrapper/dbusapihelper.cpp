@@ -2,7 +2,7 @@
 #include <QDBusInterface>
 #include <QDebug>
 #include <QtDBus>
-#include "log.h"
+#include <qt5-log-i.h>
 
 #define SESSION_MANAGER_DBUS "org.gnome.SessionManager"
 #define SESSION_MANAGER_PATH "/org/gnome/SessionManager"
@@ -33,7 +33,7 @@ bool DBusApi::SessionManager::suspend()
         return true;
     }
 
-    LOG_WARNING_S() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
+    KLOG_WARNING() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
                     << reply.errorName() << reply.errorMessage();
     return false;
 }
@@ -52,7 +52,7 @@ bool DBusApi::SessionManager::hibernate()
         return true;
     }
 
-    LOG_WARNING_S() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
+    KLOG_WARNING() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
                     << reply.errorName() << reply.errorMessage();
     return false;
 }
@@ -71,7 +71,7 @@ bool DBusApi::SessionManager::shutdown()
         return true;
     }
 
-    LOG_WARNING_S() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
+    KLOG_WARNING() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
                     << reply.errorName() << reply.errorMessage();
     return false;
 }
@@ -90,7 +90,7 @@ bool DBusApi::SessionManager::reboot()
         return true;
     }
 
-    LOG_WARNING_S() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
+    KLOG_WARNING() << SESSION_MANAGER_DBUS << METHOD_SUSPEND
                     << reply.errorName() << reply.errorMessage();
     return false;
 }
@@ -109,7 +109,7 @@ bool DBusApi::DisplayManager::switchToGreeter()
         return true;
     }
 
-    LOG_WARNING_S() << methodSwitchToGreeter.path() << methodSwitchToGreeter.member()
+    KLOG_WARNING() << methodSwitchToGreeter.path() << methodSwitchToGreeter.member()
                     << reply.errorName() << reply.errorMessage();
 
     return false;
@@ -138,13 +138,13 @@ QString DBusApi::AccountService::findUserObjectByName(const QString &user)
                                                            QDBus::Block, TIMEOUT_MS);
     if (reply.type() != QDBusMessage::ReplyMessage)
     {
-        LOG_WARNING_S() << reply.errorMessage();
+        KLOG_WARNING() << "accountsService FindUserByName error:" << reply.errorMessage();
         return QString("");
     }
     QList<QVariant> args = reply.arguments();
     if (args.size() == 0)
     {
-        LOG_WARNING_S() << "no arguments";
+        KLOG_WARNING() << "no arguments";
         return "";
     }
     QVariant        firstArg = args.takeFirst();
@@ -163,13 +163,13 @@ QString DBusApi::AccountService::getUserObjectIconFileProperty(const QString &us
                                                            QDBus::Block, TIMEOUT_MS);
     if (reply.type() != QDBusMessage::ReplyMessage)
     {
-        LOG_WARNING_S() << reply.errorMessage();
+        KLOG_WARNING() << reply.errorMessage();
         return QString("");
     }
     QList<QVariant> argList = reply.arguments();
     if (argList.size() == 0)
     {
-        LOG_WARNING_S() << "no arguments";
+        KLOG_WARNING() << "no arguments";
         return "";
     }
     QVariant     firstArg    = argList.takeFirst();
