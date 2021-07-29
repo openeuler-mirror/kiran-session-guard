@@ -4,7 +4,9 @@
 <context>
     <name>GreeterLineEdit</name>
     <message>
+        <location filename="../../../kiran-screensaver-dialog/src/widgets/greeterlineedit.ui" line="32"/>
         <location filename="../../src/greeterlineedit.ui" line="32"/>
+        <location filename="../../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_greeterlineedit.h" line="92"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
@@ -28,7 +30,7 @@
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../../src/greeterloginwindow.cpp" line="579"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="586"/>
         <source>login other user</source>
         <translation type="unfinished"></translation>
     </message>
@@ -68,39 +70,39 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="347"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="354"/>
         <source>User has been disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="351"/>
-        <location filename="../../src/greeterloginwindow.cpp" line="362"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="358"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="369"/>
         <source>Failed to authenticate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="628"/>
-        <location filename="../../src/greeterloginwindow.cpp" line="791"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="635"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="798"/>
         <source>Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="640"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="647"/>
         <source>Entry your name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="675"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="682"/>
         <source>dddd MMM HH:mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="845"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="852"/>
         <source>Start face authentication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeterloginwindow.cpp" line="856"/>
+        <location filename="../../src/greeterloginwindow.cpp" line="863"/>
         <source>Start fingerprint authentication</source>
         <translation type="unfinished"></translation>
     </message>
@@ -270,6 +272,63 @@ Select discard to discard the modification and reload the new configuration</sou
     <message>
         <location filename="../../src/loginbutton.ui" line="51"/>
         <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScreenSaverDialog</name>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="20"/>
+        <location filename="../../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="497"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="359"/>
+        <location filename="../../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="498"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="537"/>
+        <location filename="../../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="501"/>
+        <source>Recertification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="597"/>
+        <location filename="../../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="502"/>
+        <source>cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="142"/>
+        <source>reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="148"/>
+        <source>shutdown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="154"/>
+        <source>suspend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="256"/>
+        <source>ddd MMM dd HH:mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="267"/>
+        <source>Start fingerprint authentication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="278"/>
+        <source>Start face authentication</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
