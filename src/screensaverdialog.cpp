@@ -1,62 +1,53 @@
 #include "screensaverdialog.h"
-#include "ui_screensaverdialog.h"
-#include <iostream>
-#include <QDebug>
-#include <QPainter>
-#include <QMenu>
-#include <QFile>
-#include <QMouseEvent>
-#include <QWindow>
-#include <QGraphicsDropShadowEffect>
-#include <QtDBus>
-#include <QMetaObject>
-#include <unistd.h>
-#include <sys/types.h>
-#include <pwd.h>
 #include <error.h>
+#include <pwd.h>
+#include <qt5-log-i.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <QDebug>
+#include <QFile>
+#include <QGraphicsDropShadowEffect>
+#include <QMenu>
+#include <QMetaObject>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QWindow>
+#include <QtDBus>
+#include <iostream>
 
-#include "gsettingshelper.h"
-#include "greeterkeyboard.h"
+#include "auth-proxy.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
-#include "log.h"
-
-#ifdef BIOMETRICS_AUTH
-#include <kiran-pam-msg.h>
-#else
-#define ASK_FPINT       "ReqFingerprint" //请求指纹认证界面
-#define ASK_FACE        "ReqFace"        //请求人脸认证界面
-#define REP_FPINT       "RepFingerprintReady" //指纹认证界面准备完毕
-#define REP_FACE        "RepFaceReady" //人脸认证界面准备完毕
-#endif
+#include "greeterkeyboard.h"
+#include "gsettingshelper.h"
+#include "ui_screensaverdialog.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
 QT_BEGIN_NAMESPACE
-Q_WIDGETS_EXPORT void qt_blurImage (QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
 QT_END_NAMESPACE
 
-ScreenSaverDialog::ScreenSaverDialog (QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::ScreenSaverDialog),
-        m_authProxy(this)
+ScreenSaverDialog::ScreenSaverDialog(QWidget *parent) : QWidget(parent),
+                                                        ui(new Ui::ScreenSaverDialog),
+                                                        m_authProxy(new AuthProxy(this))
 {
     ui->setupUi(this);
     printWindowID();
     init();
 }
 
-ScreenSaverDialog::~ScreenSaverDialog ()
+ScreenSaverDialog::~ScreenSaverDialog()
 {
     delete ui;
 }
 
-void ScreenSaverDialog::setSwitchUserEnabled (bool enable)
+void ScreenSaverDialog::setSwitchUserEnabled(bool enable)
 {
     ui->btn_switchuser->setVisible(enable);
 }
 
-void ScreenSaverDialog::init ()
+void ScreenSaverDialog::init()
 {
     ///初始化PAM认证代理
     initPamAuthProxy();
@@ -68,14 +59,14 @@ void ScreenSaverDialog::init ()
     startAuth();
 }
 
-void ScreenSaverDialog::initPamAuthProxy ()
+void ScreenSaverDialog::initPamAuthProxy()
 {
-    connect(&m_authProxy, &PamAuthProxy::showMessage, this, &ScreenSaverDialog::slotShowMessage);
-    connect(&m_authProxy, &PamAuthProxy::showPrompt, this, &ScreenSaverDialog::slotShowPrompt);
-    connect(&m_authProxy, &PamAuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete);
+    KLOG_DEBUG() << "connect show message:" << connect(m_authProxy, &AuthProxy::showMessage, this, &ScreenSaverDialog::slotShowMessage);
+    KLOG_DEBUG() << "connect show prompt:" << connect(m_authProxy, &AuthProxy::showPrompt, this, &ScreenSaverDialog::slotShowPrompt);
+    KLOG_DEBUG() << "connect auth complete:" << connect(m_authProxy, &AuthProxy::authenticationComplete, this, &ScreenSaverDialog::slotAuthenticationComplete);
 }
 
-void ScreenSaverDialog::initUI ()
+void ScreenSaverDialog::initUI()
 {
     ///取消按钮
     connect(ui->btn_cancel, &QToolButton::pressed, this, [=] {
@@ -84,15 +75,18 @@ void ScreenSaverDialog::initUI ()
 
     ///输入框封装
     connect(ui->promptEdit, &GreeterLineEdit::textConfirmed, this, [=] {
-        m_authProxy.response(ui->promptEdit->getText());
+        m_authProxy->respond(ui->promptEdit->getText());
     });
 
 #ifdef VIRTUAL_KEYBOARD
-    connect(ui->btn_keyboard,&QToolButton::pressed,this,[this]{
-        GreeterKeyboard* keyboard = GreeterKeyboard::instance();
-        if( keyboard->isVisible() ){
+    connect(ui->btn_keyboard, &QToolButton::pressed, this, [this] {
+        GreeterKeyboard *keyboard = GreeterKeyboard::instance();
+        if (keyboard->isVisible())
+        {
             keyboard->hide();
-        } else {
+        }
+        else
+        {
             keyboard->showAdjustSize(this);
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
@@ -105,7 +99,7 @@ void ScreenSaverDialog::initUI ()
         QTimer::singleShot(2000, this, SLOT(responseCancelAndQuit()));
         if (!DBusApi::DisplayManager::switchToGreeter())
         {
-            LOG_WARNING_S() << "call SwitchToGreeter failed.";
+            KLOG_WARNING() << "call SwitchToGreeter failed.";
         }
     });
 
@@ -118,49 +112,49 @@ void ScreenSaverDialog::initUI ()
 
     ///背景图
     QString backgroundPath = GSettingsHelper::getBackgrountPath();
-    LOG_DEBUG_S() << "screensaver-dialog background: " << backgroundPath;
+    KLOG_DEBUG() << "screensaver-dialog background: " << backgroundPath;
 
-    QStringList backgrounds = {backgroundPath,SYSTEM_DEFAULT_BACKGROUND,DEFAULT_BACKGROUND};
-    foreach(const QString &background,backgrounds)
+    QStringList backgrounds = {backgroundPath, SYSTEM_DEFAULT_BACKGROUND, DEFAULT_BACKGROUND};
+    foreach (const QString &background, backgrounds)
     {
-        if( !m_background.load(background) )
+        if (!m_background.load(background))
         {
-            LOG_WARNING_S() << "load background:" << background << "failed!";
+            KLOG_WARNING() << "load background:" << background << "failed!";
             continue;
         }
-        LOG_DEBUG_S() << "load background:" << background;
+        KLOG_DEBUG() << "load background:" << background;
         break;
     }
 
     ///用户
     m_userName = getUser();
-    LOG_DEBUG_S() << "screensaver-dialog login user: " << m_userName;
+    KLOG_DEBUG() << "screensaver-dialog login user: " << m_userName;
     ui->label_userName->setText(m_userName);
 
     ///电源菜单
     m_powerMenu = new QMenu(this);
-    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);///透明必需
+    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);  ///透明必需
     ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
-    m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);///透明必需
+    m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  ///透明必需
     m_powerMenu->setFixedWidth(92);
     m_powerMenu->hide();
     m_powerMenu->addAction(tr("reboot"), this, [=] {
         if (!DBusApi::SessionManager::reboot())
         {
-            LOG_WARNING_S() << "call reboot failed";
+            KLOG_WARNING() << "call reboot failed";
         }
     });
     m_powerMenu->addAction(tr("shutdown"), this, [=] {
         if (!DBusApi::SessionManager::shutdown())
         {
-            LOG_WARNING_S() << "call shutdown failed";
+            KLOG_WARNING() << "call shutdown failed";
         }
     });
     m_powerMenu->addAction(tr("suspend"), this, [=] {
         if (!DBusApi::SessionManager::suspend())
         {
-            LOG_WARNING_S() << "call suspend failed";
+            KLOG_WARNING() << "call suspend failed";
         }
     });
     connect(m_powerMenu, &QMenu::triggered, this, [=] {
@@ -197,16 +191,15 @@ void ScreenSaverDialog::initUI ()
     qApp->installEventFilter(this);
 }
 
-QString ScreenSaverDialog::getUser ()
+QString ScreenSaverDialog::getUser()
 {
-
     uid_t uid = getuid();
-    LOG_INFO_S() << "current uid:" << uid;
+    KLOG_INFO() << "current uid:" << uid;
 
     long bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
     if (bufSize == -1)
     {
-        LOG_WARNING_S() << "autodetect getpw_r bufsize failed.";
+        KLOG_WARNING() << "autodetect getpw_r bufsize failed.";
         return QString("");
     }
 
@@ -227,21 +220,21 @@ QString ScreenSaverDialog::getUser ()
 
     if (iRet != 0)
     {
-        LOG_WARNING_S() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
+        KLOG_WARNING() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
         return QString("");
     }
 
     if (pResult == nullptr)
     {
-        LOG_WARNING_S() << "getpwuid_r no matching password record was found";
+        KLOG_WARNING() << "getpwuid_r no matching password record was found";
         return QString("");
     }
 
-    LOG_INFO_S() << "getpwuid_r: " << pResult->pw_name;
+    KLOG_INFO() << "getpwuid_r: " << pResult->pw_name;
     return pResult->pw_name;
 }
 
-void ScreenSaverDialog::startUpdateTimeTimer ()
+void ScreenSaverDialog::startUpdateTimeTimer()
 {
     QMetaObject::invokeMethod(this, "updateTimeLabel", Qt::AutoConnection);
     QTime curTime = QTime::currentTime();
@@ -249,12 +242,12 @@ void ScreenSaverDialog::startUpdateTimeTimer ()
     QTimer::singleShot(nextUpdateSecond * 1000, this, SLOT(startUpdateTimeTimer()));
 }
 
-void ScreenSaverDialog::updateTimeLabel ()
+void ScreenSaverDialog::updateTimeLabel()
 {
     ui->label_dataAndTime->setText(getCurrentDateTime());
 }
 
-QString ScreenSaverDialog::getCurrentDateTime ()
+QString ScreenSaverDialog::getCurrentDateTime()
 {
     QDateTime dateTime = QDateTime::currentDateTime();
     QLocale locale;
@@ -263,15 +256,15 @@ QString ScreenSaverDialog::getCurrentDateTime ()
     return dateTime.toString(tr("ddd MMM dd HH:mm"));
 }
 
-void ScreenSaverDialog::updateCurrentAuthType (ScreenSaverDialog::AuthType type)
+void ScreenSaverDialog::updateCurrentAuthType(Kiran::AuthType type)
 {
-    ui->loginAvatar->setVisible(type == AUTH_TYPE_PASSWD);
-    ui->promptEdit->setVisible(type == AUTH_TYPE_PASSWD);
+    ui->loginAvatar->setVisible(type == Kiran::AUTH_TYPE_PASSWD);
+    ui->promptEdit->setVisible(type == Kiran::AUTH_TYPE_PASSWD);
 
-    ui->fingerAvatar->setVisible(type == AUTH_TYPE_FINGER);
-    if (type == AUTH_TYPE_FINGER)
+    ui->fingerAvatar->setVisible(type == Kiran::AUTH_TYPE_FINGER);
+    if (type == Kiran::AUTH_TYPE_FINGER)
     {
-        slotShowMessage(tr("Start fingerprint authentication"), PamAuthProxy::MessageTypeInfo);
+        slotShowMessage(tr("Start fingerprint authentication"), Kiran::MessageTypeInfo);
         ui->fingerAvatar->startAnimation();
     }
     else
@@ -279,10 +272,10 @@ void ScreenSaverDialog::updateCurrentAuthType (ScreenSaverDialog::AuthType type)
         ui->fingerAvatar->stopAnimation();
     }
 
-    ui->faceAvatar->setVisible(type == AUTH_TYPE_FACE);
-    if (type == AUTH_TYPE_FACE)
+    ui->faceAvatar->setVisible(type == Kiran::AUTH_TYPE_FACE);
+    if (type == Kiran::AUTH_TYPE_FACE)
     {
-        slotShowMessage(tr("Start face authentication"), PamAuthProxy::MessageTypeInfo);
+        slotShowMessage(tr("Start face authentication"), Kiran::MessageTypeInfo);
         ui->faceAvatar->startAnimation();
     }
     else
@@ -293,35 +286,35 @@ void ScreenSaverDialog::updateCurrentAuthType (ScreenSaverDialog::AuthType type)
     m_authType = type;
 }
 
-void ScreenSaverDialog::printWindowID ()
+void ScreenSaverDialog::printWindowID()
 {
     std::cout << "WINDOW ID=" << winId() << std::endl;
 }
 
-void ScreenSaverDialog::responseOkAndQuit ()
+void ScreenSaverDialog::responseOkAndQuit()
 {
     static const char *response = "RESPONSE=OK";
     std::cout << response << std::endl;
-    LOG_INFO_S() << response;
+    KLOG_INFO() << response;
     this->close();
 }
 
-void ScreenSaverDialog::responseCancelAndQuit ()
+void ScreenSaverDialog::responseCancelAndQuit()
 {
     static const char *response = "RESPONSE=CANCEL";
     std::cout << response << std::endl;
-    LOG_INFO_S() << response;
+    KLOG_INFO() << response;
     this->close();
 }
 
-void ScreenSaverDialog::responseNoticeAuthFailed ()
+void ScreenSaverDialog::responseNoticeAuthFailed()
 {
     static const char *response = "NOTICE=AUTH FAILED";
     std::cout << response << std::endl;
-    LOG_DEBUG_S() << response;
+    KLOG_DEBUG() << response;
 }
 
-bool ScreenSaverDialog::eventFilter (QObject *obj, QEvent *event)
+bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
 {
     bool needFilter = false;
     QMouseEvent *mouseEvent = nullptr;
@@ -339,13 +332,13 @@ bool ScreenSaverDialog::eventFilter (QObject *obj, QEvent *event)
     {
         m_powerMenu->hide();
         needFilter = true;
-        LOG_INFO_S() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
+        KLOG_INFO() << "power menu filter : " << obj->objectName() << event->type() << mouseEvent->buttons();
     }
 
     return needFilter;
 }
 
-void ScreenSaverDialog::paintEvent (QPaintEvent *event)
+void ScreenSaverDialog::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -362,7 +355,7 @@ void ScreenSaverDialog::paintEvent (QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void ScreenSaverDialog::resizeEvent (QResizeEvent *event)
+void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
 {
     if (!m_background.isNull())
     {
@@ -373,8 +366,8 @@ void ScreenSaverDialog::resizeEvent (QResizeEvent *event)
         QSize pixbufSize = m_background.size();
         double factor;
         QSize newPixbufSize;
-        factor = qMax(minSize.width() / (double) pixbufSize.width(),
-                      minSize.height() / (double) pixbufSize.height());
+        factor = qMax(minSize.width() / (double)pixbufSize.width(),
+                      minSize.height() / (double)pixbufSize.height());
 
         newPixbufSize.setWidth(floor(pixbufSize.width() * factor + 0.5));
         newPixbufSize.setHeight(floor(pixbufSize.height() * factor + 0.5));
@@ -387,21 +380,20 @@ void ScreenSaverDialog::resizeEvent (QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void ScreenSaverDialog::slotAuthenticationComplete ()
+void ScreenSaverDialog::slotAuthenticationComplete(bool authRes, QString text)
 {
-    bool isSuccess = m_authProxy.isAuthenticated();
-    if (!isSuccess)
-    {
-        ///没存在过prompt消息，也没有error消息，抽象点的提示给用户
-        if (!m_haveErr)
-        {
-            slotShowMessage(tr("Failed to authenticate"),PamAuthProxy::MessageTypeError);
-        }
+    KLOG_DEBUG() << "slot authentication complete!";
 
-        /// 如果不存在过Prompt直接失败，显示重新认证按钮，避免一直认证失败，重新认证的死循环
-        if( !m_havePrompt ){
+    if (!authRes)
+    {
+        slotShowMessage(text, Kiran::MessageTypeError);
+        if (!m_havePrompt)
+        {
+            /// 如果不存在过Prompt直接失败，显示重新认证按钮，避免一直认证失败，重新认证的死循环
             switchToReauthentication();
-        }else{
+        }
+        else
+        {
             startAuth();
         }
     }
@@ -413,44 +405,26 @@ void ScreenSaverDialog::slotAuthenticationComplete ()
     }
 }
 
-void ScreenSaverDialog::slotShowPrompt (QString text, PamAuthProxy::PromptType promptType)
+void ScreenSaverDialog::slotShowPrompt(QString text, Kiran::PromptType promptType)
 {
-    if (text == ASK_FPINT)
-    {
-        updateCurrentAuthType(AUTH_TYPE_FINGER);
-        m_authProxy.response(REP_FPINT);
-    }
-    else if (text == ASK_FACE)
-    {
-        updateCurrentAuthType(AUTH_TYPE_FACE);
-        m_authProxy.response(REP_FACE);
-    }
-    else
-    {
-        updateCurrentAuthType(AUTH_TYPE_PASSWD);
-    }
-
     m_havePrompt = true;
     ui->promptEdit->reset();
     ui->promptEdit->setPlaceHolderText(text);
     ui->promptEdit->setEchoMode(
-            promptType == PamAuthProxy::PromptTypeQuestion ? QLineEdit::Normal : QLineEdit::Password);
+        promptType == Kiran::PromptTypeQuestion ? QLineEdit::Normal : QLineEdit::Password);
     ui->promptEdit->setFocus();
 }
 
-void ScreenSaverDialog::slotShowMessage (QString text, PamAuthProxy::MessageType messageType)
+void ScreenSaverDialog::slotShowMessage(QString text, Kiran::MessageType messageType)
 {
-    if( messageType==PamAuthProxy::MessageTypeError ){
-        m_haveErr = true;
-    }
     QString colorText = QString("<font color=%1>%2</font>")
-//            .arg(messageType == PamAuthProxy::MessageTypeInfo ? "white" : "red")
-            .arg("white")
-            .arg(text);
+                            //            .arg(messageType == AuthPam::MessageTypeInfo ? "white" : "red")
+                            .arg("white")
+                            .arg(text);
     ui->label_tips->setText(colorText);
 }
 
-void ScreenSaverDialog::switchToReauthentication ()
+void ScreenSaverDialog::switchToReauthentication()
 {
     ui->promptEdit->setVisible(false);
     ui->label_capsLock->setVisible(false);
@@ -459,7 +433,7 @@ void ScreenSaverDialog::switchToReauthentication ()
     ui->btn_reAuth->setVisible(true);
 }
 
-void ScreenSaverDialog::switchToPromptEdit ()
+void ScreenSaverDialog::switchToPromptEdit()
 {
     ui->btn_reAuth->setVisible(false);
 
@@ -468,19 +442,17 @@ void ScreenSaverDialog::switchToPromptEdit ()
     ui->label_JustForSpace->setVisible(true);
 }
 
-void ScreenSaverDialog::startAuth ()
+void ScreenSaverDialog::startAuth()
 {
-    updateCurrentAuthType(AUTH_TYPE_PASSWD);
-    m_haveErr = false;
+    updateCurrentAuthType(Kiran::AUTH_TYPE_PASSWD);
+
     m_havePrompt = false;
-    if (m_authProxy.isRunning())
+    if (m_authProxy->inAuthentication())
     {
-        m_authProxy.reAuthenticate();
+        m_authProxy->cancelAuthentication();
     }
-    else
-    {
-        m_authProxy.startAuthenticate(m_userName);
-    }
+
+    m_authProxy->authenticate(m_userName);
     switchToPromptEdit();
 }
 
@@ -488,12 +460,12 @@ void ScreenSaverDialog::closeEvent(QCloseEvent *event)
 {
 #ifdef VIRTUAL_KEYBOARD
     //在关闭时若虚拟键盘的副窗口设置为当前窗口的话，则更改父窗口,避免释放相关X资源导致onboard释放出错，导致onboard崩溃
-    if(GreeterKeyboard::instance()->getKeyboard())
+    if (GreeterKeyboard::instance()->getKeyboard())
     {
-       if( GreeterKeyboard::instance()->getKeyboard()->parentWidget()==this )
-       {
-           GreeterKeyboard::instance()->getKeyboard()->setParent(nullptr);
-       }
+        if (GreeterKeyboard::instance()->getKeyboard()->parentWidget() == this)
+        {
+            GreeterKeyboard::instance()->getKeyboard()->setParent(nullptr);
+        }
     }
 #endif
     QWidget::closeEvent(event);

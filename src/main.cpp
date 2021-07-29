@@ -1,9 +1,7 @@
 #include "screensaverdialog.h"
-#include "log.h"
 #include "greeterkeyboard.h"
 #include "gsettingshelper.h"
 #include "scalinghelper.h"
-#include "singleapplication.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -11,7 +9,8 @@
 #include <QDebug>
 #include <QFile>
 #include <signal.h>
-#include <zlog_ex.h>
+#include <qt5-log-i.h>
+#include <kiran-single-application.h>
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
@@ -35,7 +34,7 @@ void setupUnixSignalHandlers ()
     int iRet = sigaction(SIGTERM, &term, nullptr);
     if (iRet != 0)
     {
-        LOG_WARNING_S() << "setupUnixSignalHandlers failed," << strerror(iRet);
+        KLOG_WARNING() << "setupUnixSignalHandlers failed," << strerror(iRet);
     }
 }
 
@@ -43,7 +42,7 @@ void handleWindowScaleFactor ()
 {
     ///scaling
     int windowScalingFactor = GSettingsHelper::getMateScalingFactor();
-    LOG_INFO_S() << "screensaver-dialog scale-factor: " << windowScalingFactor;
+    KLOG_INFO() << "screensaver-dialog scale-factor: " << windowScalingFactor;
     switch (windowScalingFactor)
     {
         case 0:ScalingHelper::auto_calculate_screen_scaling();
@@ -52,21 +51,17 @@ void handleWindowScaleFactor ()
         case 2:ScalingHelper::set_scale_factor(2);
             break;
         default:
-            LOG_WARNING_S() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
+            KLOG_WARNING() << "Unsupported option" << "window-scaling-factor" << windowScalingFactor;
             break;
     }
 }
 
-
 int main (int argc, char *argv[])
 {
-    ///初始化日志模块,需提供verbose启动参数日志才会写入文件
-    dzlog_init_ex(NULL,
+    klog_qt5_init("",
                   "kylinsec-session",
                   "kiran-screensaver-dialog",
                   "kiran-screensaver-dialog");
-    Log::instance()->init();
-    qInstallMessageHandler(Log::messageHandler);
 #ifdef TEST
     Log::instance()->setAppend2File(true);
 #endif
@@ -76,11 +71,11 @@ int main (int argc, char *argv[])
     handleWindowScaleFactor();
 
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
-    SingleApplication app(argc, argv);
+    KiranSingleApplication app(argc, argv);
 
     ///安装翻译
     QTranslator tsor;
-    LOG_INFO_S() << "load translation file: "
+    KLOG_INFO() << "load translation file: "
                  << tsor.load(QLocale(),
                               "kiran-screensaver-dialog" /*filename*/,
                               "." /*prefix*/, TRANSLATION_FILE_DIR /*dir*/,
@@ -114,7 +109,7 @@ int main (int argc, char *argv[])
     }
     else
     {
-        LOG_WARNING_S() << "load style sheet failed";
+        KLOG_WARNING() << "load style sheet failed";
     }
 
     ScreenSaverDialog w;

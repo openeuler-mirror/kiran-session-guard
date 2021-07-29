@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QFile>
-#include "log.h"
+#include <qt5-log-i.h>
 
 #define DEFAULT_USER_AVATAR ":/images/user_180.png"
 
@@ -17,22 +17,22 @@ void UserAvatarWidget::setImage (const QString &path)
     QFile file(path);
     if (!file.exists())
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] is no't exist";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] is no't exist";
     }
     if (!file.isReadable())
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] can't read";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] can't read";
     }
     if (m_pixmap.load(path))
     {
-        LOG_WARNING_S() << "UserAvatar: load file " << path << "successed";
+        KLOG_WARNING() << "UserAvatar: load file " << path << "successed";
         int radius = this->width() < this->height() ? this->width() / 2 : this->height();
         m_scaledPixmap = m_pixmap.scaled(2 * radius, 2 * radius,
                                          Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     else
     {
-        LOG_WARNING_S() << "UserAvatar: file path[" << path << "] load failed.";
+        KLOG_WARNING() << "UserAvatar: file path[" << path << "] load failed.";
         setDefaultImage();
     }
     update();
@@ -82,7 +82,7 @@ void UserAvatarWidget::setDefaultImage ()
 {
     if (!m_pixmap.load(DEFAULT_USER_AVATAR))
     {
-        LOG_WARNING_S() << "UserAvatar: " << "load default avatar failed.";
+        KLOG_WARNING() << "UserAvatar: " << "load default avatar failed.";
         return;
     }
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
