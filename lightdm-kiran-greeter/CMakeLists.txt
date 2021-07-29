@@ -126,7 +126,7 @@ install(FILES config/99-lightdm-kiran-greeter.conf DESTINATION ${CMAKE_INSTALL_P
 install(FILES config/lightdm-kiran-greeter.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/xgreeters/)
 
 #通过编译选项生成greeter.ini
-configure_file(${CMAKE_SOURCE_DIR}/config/greeter.ini.in ${CMAKE_BINARY_DIR}/greeter.ini @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/greeter.ini.in ${CMAKE_BINARY_DIR}/greeter.ini @ONLY)
 
 #安装greeter的私有的内置配置文件
 install(FILES ${CMAKE_BINARY_DIR}/greeter.ini

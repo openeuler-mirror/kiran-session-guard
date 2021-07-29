@@ -4,9 +4,10 @@
 <context>
     <name>GreeterLineEdit</name>
     <message>
+        <location filename="../../kiran-screensaver-dialog/src/widgets/greeterlineedit.ui" line="32"/>
         <location filename="../src/greeterlineedit.ui" line="32"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
+        <location filename="../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_greeterlineedit.h" line="92"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterlineedit.h" line="90"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15,29 +16,25 @@
     <name>GreeterLoginWindow</name>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="23"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="390"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <source>Name</source>
         <translation>用户名</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="568"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../src/greeterloginwindow.cpp" line="586"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
@@ -223,32 +220,85 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>LoginButton</name>
     <message>
         <location filename="../src/loginbutton.ui" line="14"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/loginbutton.ui" line="51"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_loginbutton.h" line="72"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScreenSaverDialog</name>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="20"/>
+        <location filename="../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="497"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="359"/>
+        <location filename="../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="498"/>
+        <source>Name</source>
+        <translation type="unfinished">用户名</translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="537"/>
+        <location filename="../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="501"/>
+        <source>Recertification</source>
+        <translation type="unfinished">重新认证</translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.ui" line="597"/>
+        <location filename="../../build/kiran-screensaver-dialog/kiran-screensaver-dialog_autogen/include/ui_screensaverdialog.h" line="502"/>
+        <source>cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="142"/>
+        <source>reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="148"/>
+        <source>shutdown</source>
+        <translation type="unfinished">关机</translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="154"/>
+        <source>suspend</source>
+        <translation type="unfinished">待机</translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="256"/>
+        <source>ddd MMM dd HH:mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="267"/>
+        <source>Start fingerprint authentication</source>
+        <translation type="unfinished">开始指纹认证</translation>
+    </message>
+    <message>
+        <location filename="../../kiran-screensaver-dialog/src/screensaverdialog.cpp" line="278"/>
+        <source>Start face authentication</source>
+        <translation type="unfinished">开始人脸认证</translation>
     </message>
 </context>
 <context>
     <name>UserListItem</name>
     <message>
         <location filename="../src/userlistitem.ui" line="17"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="90"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/userlistitem.ui" line="77"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_userlistitem.h" line="91"/>
         <source>Tom Hardy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -257,8 +307,7 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>UserListWidget</name>
     <message>
         <location filename="../src/userlistwidget.ui" line="23"/>
-        <location filename="../build/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
-        <location filename="../cmake-build-debug/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
+        <location filename="../../build/lightdm-kiran-greeter/lightdm-kiran-greeter_autogen/include/ui_userlistwidget.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
