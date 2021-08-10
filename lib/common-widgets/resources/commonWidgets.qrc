@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>common-widgets-images/loading_0.png</file>
+        <file>common-widgets-images/loading_1.png</file>
+        <file>common-widgets-images/loading_2.png</file>
+        <file>common-widgets-images/loading_3.png</file>
+        <file>common-widgets-images/loading_4.png</file>
+        <file>common-widgets-images/loading_5.png</file>
+        <file>common-widgets-images/loading_6.png</file>
+        <file>common-widgets-images/loading_7.png</file>
+        <file>common-widgets-images/loading_8.png</file>
+        <file>common-widgets-images/loading_9.png</file>
+        <file>common-widgets-images/loading_10.png</file>
+        <file>common-widgets-images/loading_11.png</file>
+        <file>common-widgets-images/loading_12.png</file>
+        <file>common-widgets-images/loading_13.png</file>
+        <file>common-widgets-images/loading_14.png</file>
+        <file>common-widgets-images/loading_15.png</file>
+        <file>common-widgets-images/loading_16.png</file>
+        <file>common-widgets-images/loading_17.png</file>
+        <file>common-widgets-images/user_48.png</file>
+        <file>common-widgets-images/user_180.png</file>
+        <file>common-widgets-images/unlock.png</file>
+        <file>common-widgets-images/finger_auth.png</file>
+        <file>common-widgets-images/face_auth.png</file>
+    </qresource>
+</RCC>
