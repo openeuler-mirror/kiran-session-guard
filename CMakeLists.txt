@@ -2,5 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(kiran-session-guard)
 
-add_subdirectory(./kiran-screensaver-dialog)
-add_subdirectory(./lightdm-kiran-greeter)
+include(GNUInstallDirs)
+
+add_subdirectory(./lib)
+add_subdirectory(./libexec)
+add_subdirectory(./lightdm-greeter)
+add_subdirectory(./screensaver-dialog)
