@@ -3,9 +3,9 @@
 #include <QDesktopWidget>
 #include <qt5-log-i.h>
 
-#include "greeterbackground.h"
-#include "greeterloginwindow.h"
-#include "greeterscreenmanager.h"
+#include "greeter-background.h"
+#include "greeter-login-window.h"
+#include "greeter-screen-manager.h"
 
 ///析构:
 ///     清理登录窗口和背景窗口

@@ -1,18 +1,17 @@
-#include "useravatarwidget.h"
-#include <QDebug>
-#include <QPainter>
-#include <QFile>
+#include "user-avatar.h"
 #include <qt5-log-i.h>
+#include <QDebug>
+#include <QFile>
+#include <QPainter>
 
 #define DEFAULT_USER_AVATAR ":/common-widgets-images/user_180.png"
 
-
-UserAvatarWidget::UserAvatarWidget (QWidget *parent) : QWidget(parent)
+UserAvatar::UserAvatar(QWidget *parent) : QWidget(parent)
 {
     setDefaultImage();
 }
 
-void UserAvatarWidget::setImage (const QString &path)
+void UserAvatar::setImage (const QString &path)
 {
     QFile file(path);
     if (!file.exists())
@@ -38,7 +37,7 @@ void UserAvatarWidget::setImage (const QString &path)
     update();
 }
 
-void UserAvatarWidget::paintEvent (QPaintEvent *event)
+void UserAvatar::paintEvent (QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
@@ -61,7 +60,7 @@ void UserAvatarWidget::paintEvent (QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
-void UserAvatarWidget::resizeEvent (QResizeEvent *event)
+void UserAvatar::resizeEvent (QResizeEvent *event)
 {
     if ((!m_pixmap.isNull()) && (!m_scaledPixmap.isNull()) && (m_scaledPixmap.size() != this->size()))
     {
@@ -70,7 +69,7 @@ void UserAvatarWidget::resizeEvent (QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-QPixmap UserAvatarWidget::scalePixmapAdjustSize (const QPixmap &pixmap)
+QPixmap UserAvatar::scalePixmapAdjustSize (const QPixmap &pixmap)
 {
     double radius = (this->width() < this->height() ? this->width() : this->height()) / 2;
     //NOTE:拉升保持长宽比，尽可能放大，不留白
@@ -78,7 +77,7 @@ QPixmap UserAvatarWidget::scalePixmapAdjustSize (const QPixmap &pixmap)
     return temp;
 }
 #include <QApplication>
-void UserAvatarWidget::setDefaultImage ()
+void UserAvatar::setDefaultImage ()
 {
     if (!m_pixmap.load(DEFAULT_USER_AVATAR))
     {

@@ -1,4 +1,4 @@
-#include "greetermenuitem.h"
+#include "greeter-menu-item.h"
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QDebug>

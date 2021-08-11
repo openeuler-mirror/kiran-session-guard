@@ -3,8 +3,8 @@
 
 #include <QLightDM/UsersModel>
 #include <QWidget>
-#include "userinfo.h"
 #include "filter-user-proxy-model.h"
+#include "user-info.h"
 
 class QListWidgetItem;
 

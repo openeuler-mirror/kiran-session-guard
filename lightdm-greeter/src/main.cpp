@@ -7,12 +7,12 @@
 #include <qt5-log-i.h>
 
 #include "../../lib/common-widgets/virtual-keyboard.h"
-#include "cursorhelper.h"
-#include "greeterloginwindow.h"
-#include "greeterscreenmanager.h"
+#include "cursor-helper.h"
+#include "greeter-login-window.h"
+#include "greeter-screen-manager.h"
 #include "kiran-greeter-prefs.h"
-#include "scalinghelper.h"
-#include "synclockstatus.h"
+#include "scaling-helper.h"
+#include "sync-lock-status.h"
 
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 

@@ -1,8 +1,8 @@
-#include "loginbutton.h"
+#include "login-button.h"
 #include <QPaintEvent>
 #include <QPainter>
 #include <QStyleOption>
-#include "ui_loginbutton.h"
+#include "ui_login-button.h"
 
 #include <iostream>
 

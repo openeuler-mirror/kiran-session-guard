@@ -7,16 +7,16 @@
 
 namespace Ui
 {
-class GreeterLineEdit;
+class PromptEdit;
 }
 
-class GreeterLineEdit : public QWidget
+class PromptEdit : public QWidget
 {
     Q_OBJECT
     Q_ENUMS(InputMode)
     Q_PROPERTY(InputMode inputMode READ inputMode WRITE setInputMode)
     ///提供给QSS状态值，通过该状态值设置聚焦边框
-    Q_PROPERTY(bool editFocus READ editFocus WRITE setEditFocus NOTIFY editFocusChanged)
+    Q_PROPERTY(bool editFocused READ editFocused WRITE setEditFocused NOTIFY editFocusedChanged)
     ///提供给QSS状态值，通过该状态设置设置错误红色边框
     Q_PROPERTY(bool hasError READ hasError WRITE setHasError NOTIFY hasErrorChanged)
     ///因Passwd模式字体需比普通模式小,但是需要Passwd模式PlaceHoldText字体和普通模式一样,
@@ -30,16 +30,17 @@ public:
     };
 
 public:
-    explicit GreeterLineEdit(QWidget *parent = nullptr);
-    ~GreeterLineEdit();
-Q_SIGNALS:
+    explicit PromptEdit(QWidget *parent = nullptr);
+    ~PromptEdit();
+
+signals:
     /**
      * @brief 当输入框中输入回车会或按钮被点击时发出该信号
      *        同时启动Loading动画，若需停止动画，需调用reset
      * @param 确认的文本内容
      */
     void textConfirmed(const QString &data);
-    void editFocusChanged(bool editFocus);
+    void editFocusedChanged(bool editFocus);
     void hasErrorChanged(bool hasError);
     void showPasswordModeStyleChanged(bool showPasswordModeStyle);
 
@@ -50,13 +51,13 @@ public:
     void setPlaceHolderText(const QString &text);
     QString getText();
     InputMode inputMode() const;
-    bool editFocus() const;
+    bool editFocused() const;
     bool hasError() const;
     bool showPasswordModeStyle() const;
 public slots:
     void setFocus();
     void setInputMode(InputMode inputMode);
-    void setEditFocus(bool editFocus);
+    void setEditFocused(bool editFocused);
     void setHasError(bool hasError);
     void setShowPasswordModeStyle(bool showPasswordModeStyle);
 
@@ -78,10 +79,10 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
-    Ui::GreeterLineEdit *ui;
+    Ui::PromptEdit *ui;
     int m_animationTimerId;
     InputMode m_inputMode;
-    bool m_editFocus;
+    bool m_editFocused;
     bool m_hasError;
     bool m_showPasswordModeStyle;
 };

@@ -26,8 +26,6 @@
 #include <QDBusConnection>
 //kiran-biometrics头文件
 #include <kiran-pam-msg.h>
-//kiran-authentication-service头文件
-#include <kiran-authentication-service/authentication_i.h>
 
 AuthProxy::AuthProxy(AuthBase* authInterface, QObject *parent)
     : QObject(parent),
@@ -71,6 +69,11 @@ bool AuthProxy::init()
     }
 
     return true;
+}
+
+void AuthProxy::setSessionAuthType(SessionAuthType authType)
+{
+    m_sessionAuthType = authType;
 }
 
 bool AuthProxy::setMsgQueue(AuthMsgQueueBase *msgQueue)
@@ -243,7 +246,6 @@ void AuthProxy::handlePamAuthShowPrompt(QString text, Kiran::PromptType type)
         if (!startAuthSession(m_authInterface->authenticationUser(), m_authSessionID))
         {
             KLOG_ERROR() << "can't start authproxy session:" << m_authSessionID;
-            //TODO:认证服务开启认证会话失败，应中止PAM、停止认证服务认证会话
         }
         return;
     }
@@ -366,17 +368,21 @@ void AuthProxy::handleAuthQueueComplete(bool authRes)
     emit authenticationComplete(authRes);
 }
 
-void AuthProxy::handleAuthServiceAuthMethodChanged(int method, QString sid)
+void AuthProxy::handleAuthServiceAuthMethodChanged(int method, const QString& sid)
 {
     if (sid != m_authSessionID)
     {
         return;
     }
 
-    static const std::map<int, std::tuple<Kiran::AuthType, QString>> AuthTypeTransMap = {
-        {SESSION_AUTH_METHOD_PASSWORD, {Kiran::AUTH_TYPE_PASSWD, "Password"}},
+    // clang-format off
+    //map<SessionAuthMethod,tuple<AuthType,AuthTypeDesc>>
+    const std::map<int, std::tuple<Kiran::AuthType, QString>> AuthTypeTransMap = {
+        {SESSION_AUTH_METHOD_PASSWORD, {Kiran::AUTH_TYPE_PASSWD, "Password",}},
         {SESSION_AUTH_METHOD_FINGERPRINT, {Kiran::AUTH_TYPE_FINGER, "Fingerprint"}},
-        {SESSION_AUTH_METHOD_FACE, {Kiran::AUTH_TYPE_FACE, "Face"}}};
+        {SESSION_AUTH_METHOD_FACE, {Kiran::AUTH_TYPE_FACE, "Face"}}
+    };
+    // clang-format on
 
     ///不处理认证类型为空的情况
     if (method == SESSION_AUTH_METHOD_NONE)
@@ -423,7 +429,7 @@ bool AuthProxy::startAuthSession(const QString &userName, const QString &authSes
     KLOG_DEBUG() << "start authproxy session" << userName << authSessionID;
     auto startAuthReply = m_authServiceInterface->StartAuth(userName,
                                                             m_authSessionID,
-                                                            SESSION_AUTH_TYPE_TOGETHER_WITH_USER,
+                                                            m_sessionAuthType,
                                                             true);
     startAuthReply.waitForFinished();
     if (startAuthReply.isError())

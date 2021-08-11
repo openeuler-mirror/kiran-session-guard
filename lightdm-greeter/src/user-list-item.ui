@@ -36,7 +36,7 @@
     <number>1</number>
    </property>
    <item>
-    <widget class="UserAvatarWidget" name="avatar" native="true">
+    <widget class="UserAvatar" name="avatar" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -120,15 +120,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>UserAvatarWidget</class>
+   <class>UserAvatar</class>
    <extends>QWidget</extends>
-   <header location="global">useravatarwidget.h</header>
+   <header location="global">user-avatar.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ShadowLabel</class>
    <extends>QLabel</extends>
-   <header location="global">shadowlabel.h</header>
+   <header location="global">shadow-label.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

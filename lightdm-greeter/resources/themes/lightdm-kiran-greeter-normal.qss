@@ -114,16 +114,16 @@ QPushButton#btn_reAuth:focus{
 
 /*******************LineEdit******************/
 /*输入框自定义控件*/
-GreeterLineEdit#promptEdit{
+PromptEdit#promptEdit{
     border:1px solid rgba(255,255,255,0.1);
     border-radius:8px;
     background-color:rgba(0,0,0,0.2);
 }
-GreeterLineEdit#promptEdit:enabled[editFocus=true]{
+PromptEdit#promptEdit:enabled[editFocused=true]{
     border:1px solid rgba(46,179,255,0.4);
     border-radius:8px;
 }
-GreeterLineEdit[showPasswordModeStyle=false] > QLineEdit#edit{
+PromptEdit[showPasswordModeStyle=false] > QLineEdit#edit{
     border:0px;
     background-color:transparent;
     color:white;
@@ -132,7 +132,7 @@ GreeterLineEdit[showPasswordModeStyle=false] > QLineEdit#edit{
     color:white;
     lineedit-password-character: 9679;
 }
-GreeterLineEdit[showPasswordModeStyle=true] > QLineEdit#edit{
+PromptEdit[showPasswordModeStyle=true] > QLineEdit#edit{
     border:0px;
     background-color:transparent;
     color:white;
@@ -141,12 +141,12 @@ GreeterLineEdit[showPasswordModeStyle=true] > QLineEdit#edit{
     color:white;
     lineedit-password-character: 9679;
 }
-GreeterLineEdit > QToolButton#button{
+PromptEdit > QToolButton#button{
     border:0px;
     background-color:transparent;
     background-repeat:false;
 }
-GreeterLineEdit > QWidget#separator{
+PromptEdit > QWidget#separator{
     border:0px;
     background-color:rgba(255,255,255,0.3);
 }

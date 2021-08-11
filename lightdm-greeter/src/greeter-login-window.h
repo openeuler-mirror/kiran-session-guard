@@ -12,8 +12,8 @@
 
 #include "auth-define.h"
 #include "auth-msg-queue.h"
-#include "capslocksnoop.h"
-#include "userinfo.h"
+#include "capslock-snoop.h"
+#include "user-info.h"
 
 namespace Ui
 {

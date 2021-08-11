@@ -1,4 +1,4 @@
-set(TARGET_NAME "kiran-screensaver-checkpass")
+set(TARGET_NAME "kiran-session-guard-checkpass")
 
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core)

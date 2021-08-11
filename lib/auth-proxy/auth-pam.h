@@ -25,6 +25,11 @@
 
 class QProcess;
 class QSocketNotifier;
+
+
+/**
+ * 封装使用fork出子进程进行PAM认证的相关接口
+ */
 class AuthPam : public AuthBase
 {
     Q_OBJECT
@@ -52,6 +57,8 @@ private:
 
     bool m_isAuthenticated = false;
     bool m_inAuthenticating = false;
+
+    //标志是否该次认证是否收到过认证完成信号，避免认证子进程异常退出，外部未收认证完成的信号
     bool m_hasSendCompleteSignal = false;
 
     pid_t m_authPid = 0;

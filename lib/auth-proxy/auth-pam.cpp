@@ -21,17 +21,18 @@
 #include "pam-message.h"
 
 #include <qt5-log-i.h>
-#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <QJsonObject>
 #include <QSocketNotifier>
 #include <fcntl.h>
 
-#define CHECKPASS_PATH "/usr/libexec/kiran-screensaver-checkpass"
+#define CHECKPASS_PATH "/usr/libexec/kiran-session-guard-checkpass"
 
-#define READ_CHANNEL 0
-#define WRITE_CHANNEL 1
+enum PipeChannelEnum{
+    CHANNEL_READ = 0,
+    CHANNEL_WRITE
+};
 
 AuthPam::AuthPam(QObject *parent)
     : AuthBase(parent)
@@ -61,8 +62,8 @@ bool AuthPam::authenticate(const QString &userName)
     }
 
     /* Don't allow the daemon end of the pipes to be accessed in child processes */
-    fcntl(m_toParentPipe[READ_CHANNEL],F_SETFD,FD_CLOEXEC);
-    fcntl(m_toChildPipe[WRITE_CHANNEL],F_SETFD,FD_CLOEXEC);
+    fcntl(m_toParentPipe[CHANNEL_READ],F_SETFD,FD_CLOEXEC);
+    fcntl(m_toChildPipe[CHANNEL_WRITE],F_SETFD,FD_CLOEXEC);
 
     m_userName = userName;
 
@@ -72,10 +73,10 @@ bool AuthPam::authenticate(const QString &userName)
     if (forkPid == -1)
     {
         KLOG_ERROR() << "fork error," << strerror(errno);
-        close(m_toParentPipe[WRITE_CHANNEL]);
-        close(m_toParentPipe[READ_CHANNEL]);
-        close(m_toChildPipe[WRITE_CHANNEL]);
-        close(m_toChildPipe[READ_CHANNEL]);
+        close(m_toParentPipe[CHANNEL_WRITE]);
+        close(m_toParentPipe[CHANNEL_READ]);
+        close(m_toChildPipe[CHANNEL_WRITE]);
+        close(m_toChildPipe[CHANNEL_READ]);
         m_userName = "";
         return false;
     }
@@ -84,8 +85,8 @@ bool AuthPam::authenticate(const QString &userName)
     if (forkPid == 0)
     {
         if (execlp(CHECKPASS_PATH,
-                   QString::number(m_toChildPipe[READ_CHANNEL]).toStdString().c_str(),
-                   QString::number(m_toParentPipe[WRITE_CHANNEL]).toStdString().c_str(),
+                   QString::number(m_toChildPipe[CHANNEL_READ]).toStdString().c_str(),
+                   QString::number(m_toParentPipe[CHANNEL_WRITE]).toStdString().c_str(),
                    m_userName.toStdString().c_str(), nullptr) == -1)
         {
             KLOG_ERROR() << "execl failed," << strerror(errno);
@@ -99,14 +100,14 @@ bool AuthPam::authenticate(const QString &userName)
     m_authPid = forkPid;
 
     //关闭主进程不需要用到的管道文件描述符
-    close(m_toParentPipe[WRITE_CHANNEL]);
-    m_toParentPipe[WRITE_CHANNEL] = 0;
+    close(m_toParentPipe[CHANNEL_WRITE]);
+    m_toParentPipe[CHANNEL_WRITE] = 0;
 
-    close(m_toChildPipe[READ_CHANNEL]);
-    m_toChildPipe[READ_CHANNEL] = 0;
+    close(m_toChildPipe[CHANNEL_READ]);
+    m_toChildPipe[CHANNEL_READ] = 0;
 
     //监听管道可读消息
-    m_socketNotifier = new QSocketNotifier(m_toParentPipe[READ_CHANNEL], QSocketNotifier::Read);
+    m_socketNotifier = new QSocketNotifier(m_toParentPipe[CHANNEL_READ], QSocketNotifier::Read);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &AuthPam::handlePipeActivated);
 
     return true;
@@ -119,7 +120,7 @@ void AuthPam::respond(const QString &response)
         return;
     }
     PromptReplyEvent promptReplyEvent(true, response);
-    kiran_pam_message_send_event(m_toChildPipe[WRITE_CHANNEL], &promptReplyEvent);
+    kiran_pam_message_send_event(m_toChildPipe[CHANNEL_WRITE], &promptReplyEvent);
 }
 
 bool AuthPam::inAuthentication() const
@@ -146,14 +147,14 @@ void AuthPam::cancelAuthentication()
         m_authPid = 0;
     }
 
-    if (m_toChildPipe[WRITE_CHANNEL] != 0)
+    if (m_toChildPipe[CHANNEL_WRITE] != 0)
     {
-        close(m_toChildPipe[WRITE_CHANNEL]);
+        close(m_toChildPipe[CHANNEL_WRITE]);
     }
 
-    if (m_toParentPipe[READ_CHANNEL] != 0)
+    if (m_toParentPipe[CHANNEL_READ] != 0)
     {
-        close(m_toParentPipe[READ_CHANNEL]);
+        close(m_toParentPipe[CHANNEL_READ]);
     }
 
     m_isAuthenticated = false;
@@ -175,7 +176,7 @@ void AuthPam::handlePipeActivated()
     QJsonDocument doc;
 
     PamEvent *pamEvent = nullptr;
-    if (!kiran_pam_message_recv_event(m_toParentPipe[READ_CHANNEL], &pamEvent))
+    if (!kiran_pam_message_recv_event(m_toParentPipe[CHANNEL_READ], &pamEvent))
     {
         handleChildExit();
         return;
@@ -236,14 +237,14 @@ void AuthPam::handleChildExit()
 
     m_inAuthenticating = false;
 
-    if (m_toParentPipe[READ_CHANNEL])
+    if (m_toParentPipe[CHANNEL_READ])
     {
-        close(m_toParentPipe[READ_CHANNEL]);
+        close(m_toParentPipe[CHANNEL_READ]);
     }
 
-    if (m_toChildPipe[WRITE_CHANNEL])
+    if (m_toChildPipe[CHANNEL_WRITE])
     {
-        close(m_toChildPipe[WRITE_CHANNEL]);
+        close(m_toChildPipe[CHANNEL_WRITE]);
     }
 
     if (m_socketNotifier != nullptr)
