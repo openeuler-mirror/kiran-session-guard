@@ -48,13 +48,13 @@ public:
     void reset();
     void setEchoMode(QLineEdit::EchoMode echoMode);
     void setPlaceHolderText(const QString &text);
-    void setFocus();
     QString getText();
     InputMode inputMode() const;
     bool editFocus() const;
     bool hasError() const;
     bool showPasswordModeStyle() const;
 public slots:
+    void setFocus();
     void setInputMode(InputMode inputMode);
     void setEditFocus(bool editFocus);
     void setHasError(bool hasError);
