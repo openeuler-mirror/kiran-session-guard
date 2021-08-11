@@ -86,6 +86,7 @@ void GreeterLineEdit::setPlaceHolderText(const QString &text)
 
 void GreeterLineEdit::setFocus()
 {
+  if (!ui->edit->hasFocus())
     ui->edit->setFocus(Qt::OtherFocusReason);
 }
 
