@@ -4,9 +4,9 @@
 #include <QResizeEvent>
 #include <qt5-log-i.h>
 
-#include "greeterbackground.h"
 #include "define.h"
-#include "greeterloginwindow.h"
+#include "greeter-background.h"
+#include "greeter-login-window.h"
 #include "kiran-greeter-prefs.h"
 
 QT_BEGIN_NAMESPACE

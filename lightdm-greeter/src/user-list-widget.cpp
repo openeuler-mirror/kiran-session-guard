@@ -1,15 +1,15 @@
-#include "userlistwidget.h"
+#include "user-list-widget.h"
+#include <qt5-log-i.h>
 #include <QDebug>
 #include <QList>
 #include <QMap>
 #include <QModelIndex>
 #include <QScrollBar>
-#include <qt5-log-i.h>
 
-#include "ui_userlistwidget.h"
-#include "userinfo.h"
-#include "userlistitem.h"
 #include "kiran-greeter-prefs.h"
+#include "ui_user-list-widget.h"
+#include "user-info.h"
+#include "user-list-item.h"
 
 using namespace QLightDM;
 

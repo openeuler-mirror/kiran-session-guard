@@ -4,7 +4,7 @@
 #include <QListWidgetItem>
 #include <QPaintEvent>
 #include <QWidget>
-#include "userinfo.h"
+#include "user-info.h"
 
 #define USERITEM_OBJ_NAME "UserItem"
 namespace Ui

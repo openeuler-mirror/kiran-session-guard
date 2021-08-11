@@ -18,18 +18,18 @@ ShadowLabel{
     qproperty-shadowOffsetY:2;
 }
 /*****************LineEdit************************/
-GreeterLineEdit#promptEdit{
+PromptEdit#promptEdit{
     border:1px solid rgba(255,255,255,0.1);
     border-radius:8px;
     background-color:rgba(0,0,0,0.2);
 }
-GreeterLineEdit#promptEdit[editFocus=true]{
+PromptEdit#promptEdit[editFocused=true]{
     border:1px solid rgba(46,179,255,0.4);
 }
-GreeterLineEdit#promptEdit[hasError=true]{
+PromptEdit#promptEdit[hasError=true]{
     border:1px solid rgba(255, 46, 46,0.4);
 }
-GreeterLineEdit[showPasswordModeStyle=false] > QLineEdit{
+PromptEdit[showPasswordModeStyle=false] > QLineEdit{
     border:0px;
     background-color:transparent;
     color:white;
@@ -38,7 +38,7 @@ GreeterLineEdit[showPasswordModeStyle=false] > QLineEdit{
     color:white;
     lineedit-password-character: 9679;
 }
-GreeterLineEdit[showPasswordModeStyle=true] > QLineEdit{
+PromptEdit[showPasswordModeStyle=true] > QLineEdit{
     border:0px;
     background-color:transparent;
     color:white;
@@ -47,12 +47,12 @@ GreeterLineEdit[showPasswordModeStyle=true] > QLineEdit{
     color:white;
     lineedit-password-character: 9679;
 }
-GreeterLineEdit#promptEdit > QToolButton#button{
+PromptEdit#promptEdit > QToolButton#button{
     border:0px;
     background-color:transparent;
     background-repeat:false;
 }
-GreeterLineEdit#promptEdit > QWidget#separator{
+PromptEdit#promptEdit > QWidget#separator{
     border:0px;
     background-color:rgba(255,255,255,0.3);
 }

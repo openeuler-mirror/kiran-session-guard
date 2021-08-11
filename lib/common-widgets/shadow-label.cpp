@@ -1,4 +1,4 @@
-#include "shadowlabel.h"
+#include "shadow-label.h"
 #include <QDebug>
 #include <QPaintEvent>
 

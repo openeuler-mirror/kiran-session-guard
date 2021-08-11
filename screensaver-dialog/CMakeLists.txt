@@ -21,7 +21,6 @@ pkg_search_module(GLIB_2 REQUIRED glib-2.0)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(XCB REQUIRED xcb)
 pkg_search_module(XRANDR REQUIRED xrandr)
-pkg_search_module(ZLOG REQUIRED zlog)
 pkg_search_module(KIRAN_LOG REQUIRED klog-qt5)
 pkg_search_module(KIRAN_WIDGETS REQUIRED kiranwidgets-qt5)
 

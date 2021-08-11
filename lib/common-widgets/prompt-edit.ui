@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GreeterLineEdit</class>
- <widget class="QWidget" name="GreeterLineEdit">
+ <class>PromptEdit</class>
+ <widget class="QWidget" name="PromptEdit">
   <property name="geometry">
    <rect>
     <x>0</x>

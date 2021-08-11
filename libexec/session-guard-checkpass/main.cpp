@@ -2,15 +2,14 @@
 #include <qt5-log-i.h>
 #include <security/pam_appl.h>
 #include <sys/mman.h>
-#include <unistd.h>
 #include <iostream>
 #include "pam-message.h"
 
 #define PAM_SERVICE_NAME "mate-screensaver"
 
 pam_handle_t *pamh = nullptr;
-int read_channel = 0;
-int write_channel = 0;
+int CHANNEL_READ = 0;
+int CHANNEL_WRITE = 0;
 
 int conversation(int num_msg, const pam_message **msgs, pam_response **resp, void *appdata_ptr)
 {
@@ -38,7 +37,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
         {
             PromptRequestEvent event(msg->msg_style == PAM_PROMPT_ECHO_OFF, msg->msg);
 
-            if (!kiran_pam_message_send_event(write_channel, &event))
+            if (!kiran_pam_message_send_event(CHANNEL_WRITE, &event))
             {
                 //发送消息失败
                 KLOG_DEBUG() << "send pam message to parent process failed!";
@@ -48,7 +47,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
             {
                 PamEvent *recvReply = nullptr;
                 //接收消息失败
-                if (!kiran_pam_message_recv_event(read_channel, &recvReply))
+                if (!kiran_pam_message_recv_event(CHANNEL_READ, &recvReply))
                 {
                     KLOG_ERROR() << "recv pam prompt reply failed";
                     replyRet = PAM_CONV_ERR;
@@ -85,7 +84,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
         case PAM_TEXT_INFO:
         {
             MessageEvent messageEvent(msg->msg_style == PAM_ERROR_MSG, msg->msg);
-            if (!kiran_pam_message_send_event(write_channel, &messageEvent))
+            if (!kiran_pam_message_send_event(CHANNEL_WRITE, &messageEvent))
             {
                 //发送消息失败
                 KLOG_DEBUG() << "send pam message to parent process failed!";
@@ -123,7 +122,7 @@ int main(int argc, char *argv[])
     klog_qt5_init("",
                   "kylinsec-session",
                   "kiran-screensaver-dialog",
-                  "kiran-screensaver-checkpass");
+                  "kiran-session-guard-checkpass");
 
     ///判断参数合法性
     if (argc != 3)
@@ -136,13 +135,13 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    read_channel = atoi(argv[0]);
-    write_channel = atoi(argv[1]);
+    CHANNEL_READ = atoi(argv[0]);
+    CHANNEL_WRITE = atoi(argv[1]);
     QString userName = argv[2];
 
-    if (read_channel == 0 || write_channel == 0)
+    if (CHANNEL_READ == 0 || CHANNEL_WRITE == 0)
     {
-        KLOG_ERROR("invalid file descriptors: read %d write %d", read_channel, write_channel);
+        KLOG_ERROR("invalid file descriptors: read %d write %d", CHANNEL_READ, CHANNEL_WRITE);
         return EXIT_FAILURE;
     }
 
@@ -152,13 +151,13 @@ int main(int argc, char *argv[])
     mlockall(MCL_CURRENT | MCL_FUTURE);
 
     /* Don't let these pipes leak to the command we will run */
-    fcntl(read_channel, F_SETFD, FD_CLOEXEC);
-    fcntl(write_channel, F_SETFD, FD_CLOEXEC);
+    fcntl(CHANNEL_READ, F_SETFD, FD_CLOEXEC);
+    fcntl(CHANNEL_WRITE, F_SETFD, FD_CLOEXEC);
 
-    KLOG_DEBUG() << "start checkpass:"
+    KLOG_DEBUG() << "start checkpass child process:"
                  << "\n"
-                 << "\t read fd:       " << read_channel << "\n"
-                 << "\t write fd:      " << write_channel << "\n"
+                 << "\t read fd:       " << CHANNEL_READ << "\n"
+                 << "\t write fd:      " << CHANNEL_WRITE << "\n"
                  << "\t authproxy user name:" << userName;
 
     ///开始pam认证
@@ -190,8 +189,8 @@ int main(int argc, char *argv[])
 
     const char *authResultString = pam_strerror(pamh, authRes);
     CompleteEvent event(true, authRes == PAM_SUCCESS, QString(authResultString));
-    kiran_pam_message_send_event(write_channel, &event);
+    kiran_pam_message_send_event(CHANNEL_WRITE, &event);
 
-    KLOG_DEBUG() << "end checkpass";
+    KLOG_DEBUG() << "checkpass child process exit.";
     return EXIT_SUCCESS;
 }

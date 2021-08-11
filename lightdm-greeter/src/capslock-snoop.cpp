@@ -1,4 +1,4 @@
-#include "capslocksnoop.h"
+#include "capslock-snoop.h"
 #include <X11/XKBlib.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>

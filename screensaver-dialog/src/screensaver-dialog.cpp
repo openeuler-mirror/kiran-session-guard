@@ -1,4 +1,4 @@
-#include "screensaverdialog.h"
+#include "screensaver-dialog.h"
 
 #include <pwd.h>
 #include <qt5-log-i.h>
@@ -18,8 +18,8 @@
 #include "auth-pam.h"
 #include "auth-proxy.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
-#include "gsettingshelper.h"
-#include "ui_screensaverdialog.h"
+#include "gsettings-helper.h"
+#include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
@@ -107,6 +107,7 @@ void ScreenSaverDialog::initAuth()
     {
         KLOG_ERROR() << "auth proxy can't init";
     }
+    m_authProxy->setSessionAuthType(SESSION_AUTH_TYPE_TOGETHER_WITH_USER);
     m_authProxy->setMsgQueue(msgQueue);
 
     if (!connect(m_authProxy, &AuthProxy::showMessage,
@@ -127,7 +128,7 @@ void ScreenSaverDialog::initUI()
     });
 
     ///输入框回车或点击解锁按钮时，回复给认证接口
-    connect(ui->promptEdit, &GreeterLineEdit::textConfirmed, this, [=] {
+    connect(ui->promptEdit, &PromptEdit::textConfirmed, this, [=] {
         m_authProxy->respond(ui->promptEdit->getText());
     });
 
@@ -188,7 +189,7 @@ void ScreenSaverDialog::initUI()
     ///电源菜单
     m_powerMenu = new QMenu(this);
     m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);  ///透明必需
-    ///FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
+    ///NOTE:QMenu不能为窗口，只能为子控件，不然透明效果依赖于窗口管理器混成特效与显卡
     ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
     m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  ///透明必需
     m_powerMenu->setFixedWidth(92);

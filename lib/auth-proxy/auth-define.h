@@ -25,6 +25,7 @@ enum AuthType
     AUTH_TYPE_FINGER = (1 << 1),
     AUTH_TYPE_FACE = (1 << 2)
 };
+
 inline AuthType operator|(AuthType type1,AuthType type2)
 {
     return static_cast<AuthType>(static_cast<int>(type1)|static_cast<int>(type2));

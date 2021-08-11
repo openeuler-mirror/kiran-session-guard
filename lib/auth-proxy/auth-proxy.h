@@ -20,6 +20,7 @@
 #define KIRAN_SCREENSAVER_DIALOG_SRC_KIRAN_AUTH_PROXY_H_
 
 #include <QObject>
+#include <kiran-authentication-service/authentication_i.h>
 #include "auth-base.h"
 #include "auth-msg-queue-base.h"
 
@@ -40,6 +41,8 @@ public:
     bool init();
 
 public:
+    /// 设置认证服务的认证类型，此认证类型只在走认证服务流程时生效，直接通过PAM进行认证时不会生效
+    void setSessionAuthType(SessionAuthType authType);
     /// 设置认证消息队列，可将消息排队处理或过滤
     bool setMsgQueue(AuthMsgQueueBase* msgQueue);
     /// 是否在认证中
@@ -76,12 +79,13 @@ private slots:
     //处理认证服务信号
     void handleAuthServiceAuthStatusChanged(QString userName, int state, QString sid);
     void handleAuthServiceAuthMessages(QString msg, int type, QString sid);
+    void handleAuthServiceAuthMethodChanged(int method, const QString& sid);
 
     //处理认证消息队列发来的信号
     void handleAuthQueueShowMessage(QString text, Kiran::MessageType type);
     void handleAuthQueueShowPrompt(QString text, Kiran::PromptType type, Kiran::PromptFromEnum promptFrom);
     void handleAuthQueueComplete(bool authRes);
-    void handleAuthServiceAuthMethodChanged(int method, QString sid);
+
 
 private:
     bool createAuthSession(QString& authSessionID);
@@ -97,6 +101,7 @@ private:
 
     ComKylinsecKiranSystemDaemonAuthenticationInterface* m_authServiceInterface = nullptr;
     QString m_authSessionID = "";
+    SessionAuthType m_sessionAuthType = SESSION_AUTH_TYPE_TOGETHER_WITH_USER;
 };
 
 #endif  //KIRAN_SCREENSAVER_DIALOG_SRC_KIRAN_AUTH_PROXY_H_

@@ -1,8 +1,8 @@
-#include "gsettingshelper.h"
+#include "gsettings-helper.h"
 #include <gio/gio.h>
 #include <glib-object.h>
-#include <QDebug>
 #include <qt5-log-i.h>
+#include <QDebug>
 
 GSettingsHelper::GSettingsHelper ()
 {

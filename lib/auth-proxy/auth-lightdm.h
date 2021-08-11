@@ -8,6 +8,9 @@
 #include "auth-base.h"
 #include <QLightDM/Greeter>
 
+/**
+ * 简单的对QLightDM::Greeter进行了一层包装，只是为了给上层认证代理AuthProxy提供统一的接口
+ */
 class AuthLightdm : public AuthBase
 {
     Q_OBJECT

@@ -1,7 +1,7 @@
-#include "userlistitem.h"
+#include "user-list-item.h"
 #include <QPainter>
-#include "ui_userlistitem.h"
-#include "userinfo.h"
+#include "ui_user-list-item.h"
+#include "user-info.h"
 
 UserListItem::UserListItem(QWidget *parent) : QWidget(parent),
                                               ui(new Ui::UserListItem)

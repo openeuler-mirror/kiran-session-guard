@@ -3,20 +3,17 @@
 
 #include <QWidget>
 
-class UserAvatarWidget : public QWidget
+class UserAvatar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit UserAvatarWidget(QWidget *parent = nullptr);
+    explicit UserAvatar(QWidget *parent = nullptr);
     void setImage(const QString &path);
     void setDefaultImage();
 
 protected:
     virtual void paintEvent(QPaintEvent *event) override final;
     virtual void resizeEvent(QResizeEvent *event) override final;
-
-protected:
-    QPixmap generateUserIconFitWidgetSize(const QPixmap &pixmap);
 
 private:
     QPixmap scalePixmapAdjustSize(const QPixmap &pixmap);

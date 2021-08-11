@@ -1,3 +1,3 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_subdirectory(screensaver-checkpass)
+add_subdirectory(session-guard-checkpass)

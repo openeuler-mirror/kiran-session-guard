@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "synclockstatus.h"
+#include "sync-lock-status.h"
 
 unsigned int xkb_mask_modifier(XkbDescPtr xkb, const char *name)
 {

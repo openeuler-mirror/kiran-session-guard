@@ -9,13 +9,6 @@
     </message>
 </context>
 <context>
-    <name>GreeterLineEdit</name>
-    <message>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GreeterLoginWindow</name>
     <message>
         <source>Form</source>
@@ -167,6 +160,13 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PromptEdit</name>
+    <message>
+        <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1,6 +1,6 @@
-#include "gsettingshelper.h"
-#include "scalinghelper.h"
-#include "screensaverdialog.h"
+#include "gsettings-helper.h"
+#include "scaling-helper.h"
+#include "screensaver-dialog.h"
 #include "virtual-keyboard.h"
 
 #include <kiran-single-application.h>

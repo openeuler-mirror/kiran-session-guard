@@ -243,7 +243,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="UserAvatarWidget" name="loginAvatar" native="true">
+             <widget class="UserAvatar" name="loginAvatar" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
@@ -498,7 +498,7 @@
              </widget>
             </item>
             <item>
-             <widget class="GreeterLineEdit" name="promptEdit" native="true">
+             <widget class="PromptEdit" name="promptEdit" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -991,33 +991,33 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>UserAvatarWidget</class>
+   <class>UserAvatar</class>
    <extends>QWidget</extends>
-   <header location="global">useravatarwidget.h</header>
+   <header location="global">user-avatar.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>UserListWidget</class>
    <extends>QWidget</extends>
-   <header location="global">userlistwidget.h</header>
+   <header location="global">user-list-widget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>GreeterLineEdit</class>
+   <class>PromptEdit</class>
    <extends>QWidget</extends>
-   <header location="global">greeterlineedit.h</header>
+   <header location="global">prompt-edit.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>LoginButton</class>
    <extends>QWidget</extends>
-   <header location="global">loginbutton.h</header>
+   <header location="global">login-button.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ShadowLabel</class>
    <extends>QLabel</extends>
-   <header location="global">shadowlabel.h</header>
+   <header location="global">shadow-label.h</header>
   </customwidget>
   <customwidget>
    <class>FingerAuthAvatar</class>

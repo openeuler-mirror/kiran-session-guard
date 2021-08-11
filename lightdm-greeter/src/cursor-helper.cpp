@@ -9,7 +9,7 @@
 #include <X11/cursorfont.h>
 #include <X11/extensions/Xfixes.h>
 
-#include "cursorhelper.h"
+#include "cursor-helper.h"
 
 static const char* const CURSOR_THEME = "Adwaita";
 ///FIXME:因为特定情况下，登陆器获取默认光标大小会过大,暂时使用默认大小为24进行放大

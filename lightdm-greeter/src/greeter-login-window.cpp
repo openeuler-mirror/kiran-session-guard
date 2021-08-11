@@ -13,15 +13,14 @@
 #include <QTimer>
 #include <QWidgetAction>
 
-#include "virtual-keyboard.h"
-#include "accounts-tool.h"
-#include "greeterloginwindow.h"
-#include "greetermenuitem.h"
-#include "kiran-greeter-prefs.h"
-#include "ui_greeterloginwindow.h"
-#include "auth-proxy.h"
 #include "auth-lightdm.h"
 #include "auth-msg-queue.h"
+#include "auth-proxy.h"
+#include "greeter-login-window.h"
+#include "greeter-menu-item.h"
+#include "kiran-greeter-prefs.h"
+#include "ui_greeterloginwindow.h"
+#include "virtual-keyboard.h"
 
 ///NOTE:如果存在BiometricsAuth后台服务和开发头文件则定义，否则定义相关宏为了编译能通过
 #ifdef BIOMETRICS_AUTH
@@ -56,7 +55,6 @@ GreeterLoginWindow::GreeterLoginWindow(QWidget *parent)
     {
         KLOG_WARNING() << "capslock snoop start failed: " << error.c_str();
     }
-
     initMenu();
     initUI();
     initLightdmGreeter();
@@ -110,9 +108,9 @@ void GreeterLoginWindow::initUI()
         }
 
         btnRightTopPos = ui->btn_session->mapTo(this, QPoint(ui->btn_session->width(), 0));
-        if(m_sessionMenu->actions().count()==0)
+        if (m_sessionMenu->actions().count() == 0)
         {
-            menuSize = QSize(92,10);
+            menuSize = QSize(92, 10);
         }
         else
         {
@@ -138,25 +136,25 @@ void GreeterLoginWindow::initUI()
         }
         //重新设置选项
         m_powerMenu->clear();
-        if (m_powerIface.canHibernate()&&KiranGreeterPrefs::instance()->canHibernate())
+        if (m_powerIface.canHibernate() && KiranGreeterPrefs::instance()->canHibernate())
         {
             m_powerMenu->addAction(tr("hibernate"), [this] {
                 this->m_powerIface.hibernate();
             });
         }
-        if (m_powerIface.canSuspend()&&KiranGreeterPrefs::instance()->canSuspend())
+        if (m_powerIface.canSuspend() && KiranGreeterPrefs::instance()->canSuspend())
         {
             m_powerMenu->addAction(tr("suspend"), [this] {
                 this->m_powerIface.suspend();
             });
         }
-        if (m_powerIface.canRestart()&&KiranGreeterPrefs::instance()->canReboot())
+        if (m_powerIface.canRestart() && KiranGreeterPrefs::instance()->canReboot())
         {
             m_powerMenu->addAction(tr("restart"), [this] {
                 this->m_powerIface.restart();
             });
         }
-        if (m_powerIface.canShutdown()&&KiranGreeterPrefs::instance()->canPowerOff())
+        if (m_powerIface.canShutdown() && KiranGreeterPrefs::instance()->canPowerOff())
         {
             m_powerMenu->addAction(tr("shutdown"), [this] {
                 this->m_powerIface.shutdown();
@@ -165,9 +163,9 @@ void GreeterLoginWindow::initUI()
         //计算菜单显示坐标
         QPoint btnRightTopPos = ui->btn_power->mapTo(this, QPoint(ui->btn_power->width(), 0));
         QSize menuSize;
-        if(m_powerMenu->actions().count()==0)
+        if (m_powerMenu->actions().count() == 0)
         {
-            menuSize = QSize(92,10);
+            menuSize = QSize(92, 10);
         }
         else
         {
@@ -202,7 +200,7 @@ void GreeterLoginWindow::initUI()
         }
     });
     ///连接输入框回车和按钮点击信号
-    connect(ui->promptEdit, &GreeterLineEdit::textConfirmed,
+    connect(ui->promptEdit, &PromptEdit::textConfirmed,
             this, &GreeterLoginWindow::slotTextConfirmed);
     ///切换模式按钮和返回按钮
     connect(ui->btn_notListAndCancel, &QToolButton::pressed,
@@ -265,7 +263,7 @@ void GreeterLoginWindow::initMenu()
         GreeterMenuItem *itemWidget = nullptr;
         key = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::KeyRole);
         id = sessionModel.data(sessionModel.index(i, 0), QLightDM::SessionsModel::IdRole);
-        if(hiddenSessions.contains(key.toString()))
+        if (hiddenSessions.contains(key.toString()))
         {
             continue;
         }
@@ -292,20 +290,20 @@ void GreeterLoginWindow::initMenu()
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
-    AuthBase* authInterface = new AuthLightdm(&m_greeter,this);
-    AuthMsgQueue* msgQueue = new AuthMsgQueue(m_authProxy);
-    m_authProxy = new AuthProxy(authInterface,this);
+    AuthBase *authInterface = new AuthLightdm(&m_greeter, this);
+    AuthMsgQueue *msgQueue = new AuthMsgQueue(m_authProxy);
+    m_authProxy = new AuthProxy(authInterface, this);
     m_authProxy->setMsgQueue(msgQueue);
-
+    m_authProxy->setSessionAuthType(SESSION_AUTH_TYPE_TOGETHER);
     if (!m_authProxy->init())
     {
         KLOG_ERROR("can not init auth proxy!");
         return;
     }
 
-    if( !connect(m_authProxy,&AuthProxy::showMessage,this,&GreeterLoginWindow::slotShowMessage) ||
-        !connect(m_authProxy,&AuthProxy::showPrompt,this,&GreeterLoginWindow::slotShowprompt) ||
-        !connect(m_authProxy,&AuthProxy::authenticationComplete,this,&GreeterLoginWindow::slotAuthenticationComplete))
+    if (!connect(m_authProxy, &AuthProxy::showMessage, this, &GreeterLoginWindow::slotShowMessage) ||
+        !connect(m_authProxy, &AuthProxy::showPrompt, this, &GreeterLoginWindow::slotShowprompt) ||
+        !connect(m_authProxy, &AuthProxy::authenticationComplete, this, &GreeterLoginWindow::slotAuthenticationComplete))
     {
         KLOG_FATAL("can not connect to auth proxy signals");
     }
@@ -454,7 +452,8 @@ void GreeterLoginWindow::setTips(Kiran::MessageType type, const QString &text)
 
 void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon)
 {
-    KLOG_DEBUG() << "start authproxy:" << "\n"
+    KLOG_DEBUG() << "start authproxy:"
+                 << "\n"
                  << "\tname:" << username << "\n"
                  << "\ticon:" << userIcon;
 
