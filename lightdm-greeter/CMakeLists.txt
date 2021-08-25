@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lightdm-kiran-greeter)
 
-#是否开启生物认证
-option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
-
 #是否开启虚拟键盘
 option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
@@ -104,11 +101,6 @@ target_link_libraries(${PROJECT_NAME}
         ${XFIXES_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
-
-#是否加入生物识别相关代码
-if (HAVE_BIOMETRICS_AUTH)
-    add_definitions(-DBIOMETRICS_AUTH)
-endif ()
 
 #是否添加虚拟键盘
 if (SHOW_VIRTUAL_KEYBOARD)

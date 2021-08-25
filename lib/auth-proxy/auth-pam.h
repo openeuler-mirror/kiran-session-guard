@@ -26,7 +26,6 @@
 class QProcess;
 class QSocketNotifier;
 
-
 /**
  * 封装使用fork出子进程进行PAM认证的相关接口
  */
