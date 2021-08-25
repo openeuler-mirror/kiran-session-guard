@@ -4,7 +4,7 @@
 <context>
     <name>AuthProxy</name>
     <message>
-        <location filename="../../../lib/auth-proxy/auth-proxy.cpp" line="198"/>
+        <location filename="../../../lib/auth-proxy/auth-proxy.cpp" line="200"/>
         <source>Failed to authenticate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13,83 +13,87 @@
     <name>GreeterLoginWindow</name>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="23"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="511"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="390"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="512"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="568"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="514"/>
         <source>Recertification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../../src/greeter-login-window.cpp" line="529"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
+        <location filename="../../src/greeter-login-window.cpp" line="502"/>
         <source>login other user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="117"/>
+        <location filename="../../src/greeter-login-window.cpp" line="90"/>
         <source>session menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="118"/>
+        <location filename="../../src/greeter-login-window.cpp" line="91"/>
         <source>virtual keyboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="119"/>
+        <location filename="../../src/greeter-login-window.cpp" line="92"/>
         <source>power menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="168"/>
+        <location filename="../../src/greeter-login-window.cpp" line="141"/>
         <source>hibernate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="174"/>
+        <location filename="../../src/greeter-login-window.cpp" line="147"/>
         <source>suspend</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="180"/>
+        <location filename="../../src/greeter-login-window.cpp" line="153"/>
         <source>restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="186"/>
+        <location filename="../../src/greeter-login-window.cpp" line="159"/>
         <source>shutdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="576"/>
-        <location filename="../../src/greeter-login-window.cpp" line="739"/>
+        <location filename="../../src/greeter-login-window.cpp" line="549"/>
+        <location filename="../../src/greeter-login-window.cpp" line="712"/>
         <source>Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="588"/>
+        <location filename="../../src/greeter-login-window.cpp" line="561"/>
         <source>Entry your name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="623"/>
+        <location filename="../../src/greeter-login-window.cpp" line="596"/>
         <source>dddd MMM HH:mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="794"/>
+        <location filename="../../src/greeter-login-window.cpp" line="767"/>
         <source>Start face authentication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/greeter-login-window.cpp" line="805"/>
+        <location filename="../../src/greeter-login-window.cpp" line="778"/>
         <source>Start fingerprint authentication</source>
         <translation type="unfinished"></translation>
     </message>
@@ -253,11 +257,13 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>LoginButton</name>
     <message>
         <location filename="../../src/login-button.ui" line="14"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_login-button.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/login-button.ui" line="51"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_login-button.h" line="72"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -333,11 +339,13 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>UserListItem</name>
     <message>
         <location filename="../../src/user-list-item.ui" line="17"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_user-list-item.h" line="90"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/user-list-item.ui" line="77"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_user-list-item.h" line="91"/>
         <source>Tom Hardy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -346,6 +354,7 @@ Select discard to discard the modification and reload the new configuration</sou
     <name>UserListWidget</name>
     <message>
         <location filename="../../src/user-list-widget.ui" line="23"/>
+        <location filename="../../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_user-list-widget.h" line="71"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>

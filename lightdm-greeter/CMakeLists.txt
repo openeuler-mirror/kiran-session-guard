@@ -70,12 +70,6 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 set(TS_FILES "translations/lightdm-kiran-greeter.zh_CN.ts")
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ../lib/auth-proxy
-        ../lib/common-widgets
-        ../lib/scaling-helper)
-
 add_executable(${PROJECT_NAME}
         ${PUBLIC_CPP}
         ${PUBLIC_HEADER}
@@ -86,6 +80,7 @@ add_executable(${PROJECT_NAME}
         ${RESOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
         ./public/
         ./src/
         ./src/auth/

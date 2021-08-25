@@ -88,9 +88,9 @@ private slots:
 
 
 private:
-    bool createAuthSession(QString& authSessionID);
+    bool createAuthSession(QString& authSessionID, QByteArray& authPKey);
     bool startAuthSession(const QString& userName, const QString& authSessionID);
-    bool stopAuthSession(const QString& authSessionID);
+    bool stopAuthSession(QString& authSessionID);
 
 private:
     AuthBase* m_authInterface = nullptr;
@@ -101,6 +101,7 @@ private:
 
     ComKylinsecKiranSystemDaemonAuthenticationInterface* m_authServiceInterface = nullptr;
     QString m_authSessionID = "";
+    QByteArray m_authPublicKey;
     SessionAuthType m_sessionAuthType = SESSION_AUTH_TYPE_TOGETHER_WITH_USER;
 };
 

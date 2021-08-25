@@ -17,9 +17,9 @@
   * along with this program; If not, see <http: //www.gnu.org/licenses/>. 
   */
 #include "auth-proxy.h"
+#include "auth-lightdm.h"
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
-#include "auth-lightdm.h"
 #include "kiran_authentication.h"
 
 #include <qt5-log-i.h>
@@ -27,11 +27,10 @@
 //kiran-biometrics头文件
 #include <kiran-pam-msg.h>
 
-AuthProxy::AuthProxy(AuthBase* authInterface, QObject *parent)
+AuthProxy::AuthProxy(AuthBase *authInterface, QObject *parent)
     : QObject(parent),
       m_authInterface(authInterface)
 {
-
 }
 
 AuthProxy::~AuthProxy()
@@ -41,7 +40,7 @@ AuthProxy::~AuthProxy()
 
 bool AuthProxy::init()
 {
-    if(m_authInterface== nullptr || !m_authInterface->init())
+    if (m_authInterface == nullptr || !m_authInterface->init())
     {
         KLOG_DEBUG() << "auth interface init failed";
         return false;
@@ -148,7 +147,17 @@ void AuthProxy::respond(const QString &response)
     if (m_promptFrom == Kiran::PROMPT_FROM_AUTH_SERVICE)
     {
         KLOG_DEBUG() << "respond to authproxy service";
-        m_authServiceInterface->ResponseMessage(response, m_authSessionID);
+        unsigned char *encrypted = nullptr;
+
+        int length = kiran_authentication_rsa_public_encrypt((char *)response.toStdString().c_str(),
+                                                             response.length(),
+                                                             (unsigned char *)m_authPublicKey.data(),
+                                                             &encrypted);
+        QByteArray encryptedArray((char *)encrypted, length);
+        free(encrypted);
+
+        QString base64temp = encryptedArray.toBase64();
+        m_authServiceInterface->ResponseMessage(base64temp, m_authSessionID);
     }
     else
     {
@@ -163,29 +172,22 @@ void AuthProxy::cancelAuthentication()
     m_authInterface->cancelAuthentication();
     if (m_authMessageQueue)
         m_authMessageQueue->stopDispatcher();
-    if(!m_authSessionID.isEmpty())
-    {
-        auto stopAuthReply = m_authServiceInterface->StopAuth(m_authSessionID);
-        stopAuthReply.waitForFinished();
-        if(stopAuthReply.isError())
-        {
-            KLOG_ERROR() << "stop auth service session:" << stopAuthReply.error();
-        }
-    }
+    stopAuthSession(m_authSessionID);
 }
 
 void AuthProxy::handlePamAuthComplete()
 {
     KLOG_DEBUG() << "handle auth interface complete";
     //关闭认证服务，认证session
-    if(!m_authSessionID.isEmpty())
+    if (!m_authSessionID.isEmpty())
     {
         auto stopAuthReply = m_authServiceInterface->StopAuth(m_authSessionID);
         stopAuthReply.waitForFinished();
-        if(stopAuthReply.isError())
+        if (stopAuthReply.isError())
         {
             KLOG_ERROR() << "stop auth service session failed," << stopAuthReply.error();
         }
+        m_authSessionID.clear();
     }
 
     //认证完成并且失败时，检查认证过程中是否存在过错误消息
@@ -214,7 +216,7 @@ void AuthProxy::handlePamAuthComplete()
         stopAuthSession(m_authSessionID);
         if (!authResultDesc.isEmpty())
         {
-            emit showMessage(authResultDesc,Kiran::MessageTypeError);
+            emit showMessage(authResultDesc, Kiran::MessageTypeError);
         }
         emit authenticationComplete(m_authInterface->isAuthenticated());
     }
@@ -229,7 +231,8 @@ void AuthProxy::handlePamAuthShowPrompt(QString text, Kiran::PromptType type)
         KLOG_DEBUG() << "handle authproxy ask authproxy sid";
         //create authproxy
         QString authSessionID;
-        if (!createAuthSession(authSessionID))
+        QByteArray authPublicKey;
+        if (!createAuthSession(authSessionID, authPublicKey))
         {
             KLOG_ERROR() << "can't create authproxy session for" << m_authInterface->authenticationUser();
             m_authInterface->respond("");
@@ -240,6 +243,7 @@ void AuthProxy::handlePamAuthShowPrompt(QString text, Kiran::PromptType type)
 
         //respond to pam
         m_authSessionID = authSessionID;
+        m_authPublicKey = authPublicKey;
         m_authInterface->respond(m_authSessionID);
 
         //start authproxy
@@ -368,7 +372,7 @@ void AuthProxy::handleAuthQueueComplete(bool authRes)
     emit authenticationComplete(authRes);
 }
 
-void AuthProxy::handleAuthServiceAuthMethodChanged(int method, const QString& sid)
+void AuthProxy::handleAuthServiceAuthMethodChanged(int method, const QString &sid)
 {
     if (sid != m_authSessionID)
     {
@@ -409,7 +413,7 @@ void AuthProxy::handleAuthServiceAuthMethodChanged(int method, const QString& si
     emit authTypeChanged(authType);
 }
 
-bool AuthProxy::createAuthSession(QString &authSessionID)
+bool AuthProxy::createAuthSession(QString &authSessionID, QByteArray &authPKey)
 {
     KLOG_DEBUG() << "create authproxy session";
     auto createAuthReply = m_authServiceInterface->CreateAuth();
@@ -419,8 +423,15 @@ bool AuthProxy::createAuthSession(QString &authSessionID)
         KLOG_ERROR() << "create authproxy failed," << createAuthReply.error();
         return false;
     }
-    authSessionID = createAuthReply.value();
-    KLOG_DEBUG() << "create authproxy session finished" << authSessionID;
+
+    authSessionID = createAuthReply.argumentAt(0).toString();
+
+    QString tempStr = createAuthReply.argumentAt(1).toString();
+    authPKey = QByteArray::fromBase64(tempStr.toUtf8());
+
+    KLOG_DEBUG() << "create authproxy session finished"
+                 << "\n\tauth session id:" << authSessionID
+                 << "\n\tauth public key:" << authPKey;
     return true;
 }
 
@@ -441,8 +452,10 @@ bool AuthProxy::startAuthSession(const QString &userName, const QString &authSes
     return true;
 }
 
-bool AuthProxy::stopAuthSession(const QString &authSessionID)
+bool AuthProxy::stopAuthSession(QString &authSessionID)
 {
+    bool bRet = true;
+
     KLOG_DEBUG() << "cancelAndStop authproxy session" << authSessionID;
 
     if (authSessionID.isEmpty())
@@ -452,13 +465,13 @@ bool AuthProxy::stopAuthSession(const QString &authSessionID)
 
     auto stopAuthReply = m_authServiceInterface->StopAuth(authSessionID);
     stopAuthReply.waitForFinished();
-
     if (stopAuthReply.isError())
     {
+        bRet = false;
         KLOG_ERROR() << "cancelAndStop authproxy" << authSessionID << "failed," << stopAuthReply.error();
-        return false;
     }
 
     KLOG_DEBUG() << "cancelAndStop authproxy session finished";
-    return true;
+    authSessionID.clear();
+    return bRet;
 }

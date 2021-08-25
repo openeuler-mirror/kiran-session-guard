@@ -4,7 +4,7 @@
 <context>
     <name>AuthProxy</name>
     <message>
-        <location filename="../../lib/auth-proxy/auth-proxy.cpp" line="198"/>
+        <location filename="../../lib/auth-proxy/auth-proxy.cpp" line="200"/>
         <source>Failed to authenticate</source>
         <translation type="unfinished">认证失败</translation>
     </message>
@@ -36,42 +36,42 @@
         <location filename="../src/greeterloginwindow.ui" line="665"/>
         <location filename="../../build/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <location filename="../src/greeter-login-window.cpp" line="529"/>
+        <location filename="../src/greeter-login-window.cpp" line="502"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="117"/>
+        <location filename="../src/greeter-login-window.cpp" line="90"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="118"/>
+        <location filename="../src/greeter-login-window.cpp" line="91"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="119"/>
+        <location filename="../src/greeter-login-window.cpp" line="92"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="168"/>
+        <location filename="../src/greeter-login-window.cpp" line="141"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="174"/>
+        <location filename="../src/greeter-login-window.cpp" line="147"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="180"/>
+        <location filename="../src/greeter-login-window.cpp" line="153"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="186"/>
+        <location filename="../src/greeter-login-window.cpp" line="159"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
@@ -92,28 +92,28 @@
         <translation type="vanished">认证失败</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="576"/>
-        <location filename="../src/greeter-login-window.cpp" line="739"/>
+        <location filename="../src/greeter-login-window.cpp" line="549"/>
+        <location filename="../src/greeter-login-window.cpp" line="712"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="588"/>
+        <location filename="../src/greeter-login-window.cpp" line="561"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="623"/>
+        <location filename="../src/greeter-login-window.cpp" line="596"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="794"/>
+        <location filename="../src/greeter-login-window.cpp" line="767"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="805"/>
+        <location filename="../src/greeter-login-window.cpp" line="778"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
