@@ -14,11 +14,13 @@
 #include <QWindow>
 #include <QtDBus>
 #include <iostream>
+
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
 #include "auth-proxy.h"
 #include "dbus-api-wrapper/dbusapihelper.h"
 #include "gsettings-helper.h"
+#include "prefs.h"
 #include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
 
@@ -100,10 +102,10 @@ void ScreenSaverDialog::init()
 
 void ScreenSaverDialog::initAuth()
 {
-    AuthBase* authPam = new AuthPam(this);
-    AuthMsgQueueBase* msgQueue = new AuthMsgQueue(this);
-    m_authProxy = new AuthProxy(authPam,this);
-    if( !m_authProxy->init() )
+    AuthBase *authPam = new AuthPam(this);
+    AuthMsgQueueBase *msgQueue = new AuthMsgQueue(this);
+    m_authProxy = new AuthProxy(authPam, this);
+    if (!m_authProxy->init())
     {
         KLOG_ERROR() << "auth proxy can't init";
     }
@@ -194,24 +196,37 @@ void ScreenSaverDialog::initUI()
     m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  ///透明必需
     m_powerMenu->setFixedWidth(92);
     m_powerMenu->hide();
-    m_powerMenu->addAction(tr("reboot"), this, [=] {
-        if (!DBusApi::SessionManager::reboot())
-        {
-            KLOG_WARNING() << "call reboot failed";
-        }
-    });
-    m_powerMenu->addAction(tr("shutdown"), this, [=] {
-        if (!DBusApi::SessionManager::shutdown())
-        {
-            KLOG_WARNING() << "call shutdown failed";
-        }
-    });
-    m_powerMenu->addAction(tr("suspend"), this, [=] {
-        if (!DBusApi::SessionManager::suspend())
-        {
-            KLOG_WARNING() << "call suspend failed";
-        }
-    });
+
+    if (Prefs::instance()->canReboot())
+    {
+        m_powerMenu->addAction(tr("reboot"), this, [=] {
+            if (!DBusApi::SessionManager::reboot())
+            {
+                KLOG_WARNING() << "call reboot failed";
+            }
+        });
+    }
+
+    if (Prefs::instance()->canPowerOff())
+    {
+        m_powerMenu->addAction(tr("shutdown"), this, [=] {
+            if (!DBusApi::SessionManager::shutdown())
+            {
+                KLOG_WARNING() << "call shutdown failed";
+            }
+        });
+    }
+
+    if (Prefs::instance()->canSuspend())
+    {
+        m_powerMenu->addAction(tr("suspend"), this, [=] {
+            if (!DBusApi::SessionManager::suspend())
+            {
+                KLOG_WARNING() << "call suspend failed";
+            }
+        });
+    }
+
     connect(m_powerMenu, &QMenu::triggered, this, [=] {
         m_powerMenu->hide();
     });
@@ -225,12 +240,21 @@ void ScreenSaverDialog::initUI()
         }
         QPoint btnRightTopPos = ui->btn_power->mapTo(this, QPoint(ui->btn_power->width(), 0));
         QSize menuSize = m_powerMenu->sizeHint();
+        if (m_powerMenu->actions().count() == 0)
+        {
+            menuSize = QSize(92, 10);
+        }
+
         QPoint menuLeftTop;
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());
 
         m_powerMenu->popup(menuLeftTop);
     });
+    if(m_powerMenu->isEmpty())
+    {
+        ui->btn_power->setVisible(false);
+    }
 
     ///重新认证按钮
     connect(ui->btn_reAuth, &QPushButton::clicked, this, [=] {

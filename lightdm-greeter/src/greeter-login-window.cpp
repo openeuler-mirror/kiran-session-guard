@@ -178,6 +178,14 @@ void GreeterLoginWindow::initUI()
         m_powerMenu->popup(menuLeftTop);
     });
 
+    if( !KiranGreeterPrefs::instance()->canHibernate() &&
+        !KiranGreeterPrefs::instance()->canSuspend() &&
+        !KiranGreeterPrefs::instance()->canPowerOff() &&
+        !KiranGreeterPrefs::instance()->canReboot())
+    {
+        ui->btn_power->setVisible(false);
+    }
+
     ///用户列表点击
     connect(ui->userlist, &UserListWidget::userActivated,
             this, &GreeterLoginWindow::slotUserActivated);

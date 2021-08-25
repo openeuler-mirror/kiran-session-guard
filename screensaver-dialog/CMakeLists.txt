@@ -5,6 +5,13 @@ set(TARGET_NAME "kiran-screensaver-dialog")
 option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
 option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
+#是否显示关机选项
+set(CAN_POWER_OFF true CACHE BOOL "shutdown button display")
+#是否显示重启选项
+set(CAN_REBOOT true CACHE BOOL "reboot button display")
+#是否显示挂起选项
+set(CAN_SUSPEND true CACHE BOOL "suspend button display")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -73,6 +80,14 @@ target_include_directories(${TARGET_NAME} PRIVATE
         ${KIRAN_LOG_INCLUDE_DIRS}
         ${KIRAN_WIDGETS_INCLUDE_DIRS})
 
+# 安装锁屏框执行文件
 install(TARGETS ${TARGET_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 
+# 安装翻译文件
 install(FILES ${QM_FILES} DESTINATION ${SCREENSAVER_QM_INSTALL})
+
+# 安装kiran-screensaver-dialog私有配置文件
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/screensaver.ini.in
+        ${CMAKE_BINARY_DIR}/screensaver.ini @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/screensaver.ini
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)

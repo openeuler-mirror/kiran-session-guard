@@ -1,0 +1,9 @@
+[Power]
+#是否提供关机选项
+can-poweroff=@CAN_POWER_OFF@
+
+#是否提供重启选项
+can-reboot=@CAN_REBOOT@
+
+#是否提供挂起选项
+can-suspend=@CAN_SUSPEND@
