@@ -28,20 +28,10 @@ UserAvatar::UserAvatar(QWidget *parent) : QWidget(parent)
 void UserAvatar::setImage (const QString &path)
 {
     QFile file(path);
-    if (!file.exists())
-    {
-        KLOG_WARNING() << "UserAvatar: file path[" << path << "] is no't exist";
-    }
-    if (!file.isReadable())
-    {
-        KLOG_WARNING() << "UserAvatar: file path[" << path << "] can't read";
-    }
     if (m_pixmap.load(path))
     {
         KLOG_WARNING() << "UserAvatar: load file " << path << "successed";
-        int radius = this->width() < this->height() ? this->width() / 2 : this->height();
-        m_scaledPixmap = m_pixmap.scaled(2 * radius, 2 * radius,
-                                         Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     else
     {
