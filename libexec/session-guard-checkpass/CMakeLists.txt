@@ -13,16 +13,14 @@ file(GLOB_RECURSE CHECKPASS_COMMON "../../checkpass-common/*.cpp" "../../checkpa
 
 add_executable(${TARGET_NAME} ${SRC} ${CHECKPASS_COMMON})
 
-target_include_directories(${TARGET_NAME} PRIVATE
-        ../../checkpass-common)
-
-target_link_libraries(${TARGET_NAME}
+target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::Core
         ${KIRAN_LOG_LIBRARIES}
         pam)
 
 target_include_directories(${TARGET_NAME} PRIVATE
         src
+        ../../checkpass-common
         ${KIRAN_LOG_INCLUDE_DIRS})
 
 install(TARGETS ${TARGET_NAME}

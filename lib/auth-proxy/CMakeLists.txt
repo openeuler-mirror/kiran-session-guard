@@ -20,20 +20,24 @@ endforeach()
 file(GLOB_RECURSE ALL_FILES ./*.h ./*.cpp)
 file(GLOB_RECURSE CHECK_PASS_COMMON_SRC ../../checkpass-common/*.cpp ../../checkpass-common/*.h)
 
-include_directories(../../checkpass-common ${CMAKE_CURRENT_BINARY_DIR})
-
 add_library(${TARGET_NAME}
         ${ALL_FILES}
         ${CHECK_PASS_COMMON_SRC}
         ${DBUS_INTERFACE_SRC})
 
-target_include_directories(${TARGET_NAME} PUBLIC
+target_include_directories(${TARGET_NAME} PRIVATE
+        ../../checkpass-common
+        ${CMAKE_CURRENT_BINARY_DIR}
         ${KIRANLOG_INCLUDE_DIRS}
         ${LIGHTDM_QT5_INCLUDE_DIRS})
+
+target_include_directories(${TARGET_NAME} INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::Core
         Qt5::DBus
         ${KIRANLOG_LIBRARIES}
-        ${LIGHTDM_QT5_LIBRARIES})
+        ${LIGHTDM_QT5_LIBRARIES}
+        kiran-authentication-service)
 

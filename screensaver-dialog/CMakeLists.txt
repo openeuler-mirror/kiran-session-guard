@@ -43,15 +43,9 @@ if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ../lib/auth-proxy
-        ../lib/common-widgets
-        ../lib/scaling-helper)
-
 add_executable(${TARGET_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
 
-target_link_libraries(${TARGET_NAME} PRIVATE
+target_link_libraries(${TARGET_NAME} PUBLIC
         common-widgets
         scaling-helper
         auth-proxy
@@ -68,7 +62,8 @@ target_link_libraries(${TARGET_NAME} PRIVATE
         ${KIRAN_WIDGETS_LIBRARIES}
         pam)
 
-target_include_directories(${TARGET_NAME} PUBLIC
+target_include_directories(${TARGET_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
         src
         src/dbus-api-wrapper
         src/widgets

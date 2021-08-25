@@ -12,14 +12,16 @@ set(CMAKE_AUTORCC ON)
 file(GLOB_RECURSE ALL_FILES ./*.h ./*.cpp)
 file(GLOB_RECURSE QRC resources/commonWidgets.qrc)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 add_library(${TARGET_NAME}
         ${ALL_FILES}
         ${QRC})
 
-target_include_directories(${TARGET_NAME} PUBLIC
-        ${KIRANLOG_INCLUDE_DIRS})
+target_include_directories(${TARGET_NAME} PRIVATE
+        ${KIRANLOG_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_BINARY_DIR})
+
+target_include_directories(${TARGET_NAME} INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::Core

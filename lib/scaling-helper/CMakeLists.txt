@@ -23,8 +23,11 @@ target_link_libraries(${TARGET_NAME} PUBLIC
         ${X11_LIBRARIES}
         ${XRANDR_LIBRARIES})
 
-target_include_directories(${TARGET_NAME} PUBLIC
+target_include_directories(${TARGET_NAME} PRIVATE
         ${KIRANLOG_INCLUDE_DIRS}
         ${XTST_INCLUDE_DIRS}
         ${X11_INCLUDE_DIRS}
         ${XRANDR_INCLUDE_DIRS})
+
+target_include_directories(${TARGET_NAME} INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR})
