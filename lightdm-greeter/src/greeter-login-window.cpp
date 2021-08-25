@@ -22,16 +22,6 @@
 #include "ui_greeterloginwindow.h"
 #include "virtual-keyboard.h"
 
-///NOTE:如果存在BiometricsAuth后台服务和开发头文件则定义，否则定义相关宏为了编译能通过
-#ifdef BIOMETRICS_AUTH
-#include <kiran-pam-msg.h>
-#else
-#define ASK_FPINT "ReqFingerprint"       //请求指纹认证界面
-#define ASK_FACE "ReqFace"               //请求人脸认证界面
-#define REP_FPINT "RepFingerprintReady"  //指纹认证界面准备完毕
-#define REP_FACE "RepFaceReady"          //人脸认证界面准备完毕
-#endif
-
 Q_DECLARE_METATYPE(UserInfo);
 using namespace QLightDM;
 

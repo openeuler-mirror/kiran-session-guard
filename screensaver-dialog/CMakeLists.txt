@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 set(TARGET_NAME "kiran-screensaver-dialog")
 
-option(HAVE_BIOMETRICS_AUTH "have biometrics auth" OFF)
 option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
 #是否显示关机选项
@@ -41,10 +40,6 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} )
-
-if(HAVE_BIOMETRICS_AUTH)
-    add_definitions(-DBIOMETRICS_AUTH)
-endif()
 
 if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
