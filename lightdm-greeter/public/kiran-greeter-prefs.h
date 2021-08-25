@@ -1,9 +1,17 @@
-/*
- * @file   kiran-greeter-prefs.h
- * @brief  获取登录相关配置项的信息
- * @author liuxinhao <liuxinhao@kylinos.com.cn>
- * @copyright (c) 2020 KylinSec. All rights reserved.
+/**
+ * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
+
 #ifndef LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H
 #define LIGHTDM_KIRAN_GREETER_KIRAN_GREETER_PREFS_H
 

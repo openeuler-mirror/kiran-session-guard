@@ -36,42 +36,42 @@
         <location filename="../src/greeterloginwindow.ui" line="665"/>
         <location filename="../../build/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
         <location filename="../../cmake-build-debug/lightdm-greeter/lightdm-kiran-greeter_autogen/include/ui_greeterloginwindow.h" line="516"/>
-        <location filename="../src/greeter-login-window.cpp" line="502"/>
+        <location filename="../src/greeter-login-window.cpp" line="500"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="90"/>
+        <location filename="../src/greeter-login-window.cpp" line="80"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="91"/>
+        <location filename="../src/greeter-login-window.cpp" line="81"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="92"/>
+        <location filename="../src/greeter-login-window.cpp" line="82"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="141"/>
+        <location filename="../src/greeter-login-window.cpp" line="131"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="147"/>
+        <location filename="../src/greeter-login-window.cpp" line="137"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="153"/>
+        <location filename="../src/greeter-login-window.cpp" line="143"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="159"/>
+        <location filename="../src/greeter-login-window.cpp" line="149"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
@@ -92,28 +92,28 @@
         <translation type="vanished">认证失败</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="549"/>
-        <location filename="../src/greeter-login-window.cpp" line="712"/>
+        <location filename="../src/greeter-login-window.cpp" line="547"/>
+        <location filename="../src/greeter-login-window.cpp" line="710"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="561"/>
+        <location filename="../src/greeter-login-window.cpp" line="559"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="596"/>
+        <location filename="../src/greeter-login-window.cpp" line="594"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="767"/>
+        <location filename="../src/greeter-login-window.cpp" line="765"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="778"/>
+        <location filename="../src/greeter-login-window.cpp" line="776"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
@@ -272,32 +272,32 @@ Select discard to discard the modification and reload the new configuration</sou
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="197"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="202"/>
         <source>reboot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="203"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="212"/>
         <source>shutdown</source>
         <translation type="unfinished">关机</translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="209"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="222"/>
         <source>suspend</source>
         <translation type="unfinished">待机</translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="268"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="292"/>
         <source>ddd MMM dd HH:mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="279"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="303"/>
         <source>Start fingerprint authentication</source>
         <translation type="unfinished">开始指纹认证</translation>
     </message>
     <message>
-        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="290"/>
+        <location filename="../../screensaver-dialog/src/screensaver-dialog.cpp" line="314"/>
         <source>Start face authentication</source>
         <translation type="unfinished">开始人脸认证</translation>
     </message>
