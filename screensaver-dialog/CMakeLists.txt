@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(TARGET_NAME "kiran-screensaver-dialog")
+
+project(kiran-screensaver-dialog)
 
 option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
 
@@ -45,9 +46,9 @@ if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
 
-add_executable(${TARGET_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
+add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
 
-target_link_libraries(${TARGET_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
         common-widgets
         scaling-helper
         auth-proxy
@@ -64,7 +65,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC
         ${KIRAN_WIDGETS_LIBRARIES}
         pam)
 
-target_include_directories(${TARGET_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         src
         src/dbus-api-wrapper
@@ -76,7 +77,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
         ${KIRAN_WIDGETS_INCLUDE_DIRS})
 
 # 安装锁屏框执行文件
-install(TARGETS ${TARGET_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
+install(TARGETS ${PROJECT_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 
 # 安装翻译文件
 install(FILES ${QM_FILES} DESTINATION ${SCREENSAVER_QM_INSTALL})
