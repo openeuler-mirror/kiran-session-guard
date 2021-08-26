@@ -9,7 +9,7 @@
 - 安装依赖
 
   ```bash
-  sudo yum install qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel kiranwidgets-qt5-devel kiran-log-qt5-devel kiran-cc-daemon-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-control-panel-devel libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel
+  sudo yum install qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel kiranwidgets-qt5-devel kiran-log-qt5-devel kiran-cc-daemon-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-control-panel-devel libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel pam-devel
   ```
 
 - 源码根目录下创建**build**目录
