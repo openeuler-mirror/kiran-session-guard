@@ -24,6 +24,10 @@ ShadowLabel::ShadowLabel(QWidget *parent, Qt::WindowFlags f)
       m_shadowOffsetX(0),
       m_shadowOffsetY(0)
 {
+    m_shadowEffect = new QGraphicsDropShadowEffect(this);
+    m_shadowEffect->setEnabled(false);
+    ///FIXME: screensaver plugin crash
+//    this->setGraphicsEffect(m_shadowEffect);
     updateShadow();
 }
 
@@ -99,13 +103,13 @@ void ShadowLabel::updateShadow()
 {
     if (m_shadowEnable)
     {
-        m_shadowEffect.setOffset(m_shadowOffsetX, m_shadowOffsetY);
-        m_shadowEffect.setColor(m_shadowColor);
-        m_shadowEffect.setBlurRadius(m_shadowBlurRadius);
-        this->setGraphicsEffect(&m_shadowEffect);
+        m_shadowEffect->setEnabled(true);
+        m_shadowEffect->setOffset(m_shadowOffsetX, m_shadowOffsetY);
+        m_shadowEffect->setColor(m_shadowColor);
+        m_shadowEffect->setBlurRadius(m_shadowBlurRadius);
     }
     else
     {
-        this->setGraphicsEffect(nullptr);
+        m_shadowEffect->setEnabled(false);
     }
 }

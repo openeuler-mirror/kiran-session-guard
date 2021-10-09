@@ -14,20 +14,22 @@
 
 #include "screensaver-dialog.h"
 
-#include <pwd.h>
 #include <qt5-log-i.h>
+#include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <iostream>
+
 #include <QDebug>
 #include <QFile>
-#include <QGraphicsDropShadowEffect>
+//#include <QGraphicsDropShadowEffect>
 #include <QMenu>
 #include <QMetaObject>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QWindow>
 #include <QtDBus>
-#include <iostream>
+
 
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
@@ -37,6 +39,7 @@
 #include "prefs.h"
 #include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
+#include "ks-plugin.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
@@ -87,12 +90,12 @@ QString get_current_user()
     return pResult->pw_name;
 }
 
-ScreenSaverDialog::ScreenSaverDialog(QWidget *parent)
+ScreenSaverDialog::ScreenSaverDialog(KSInterface* ksInterface,QWidget *parent)
     : QWidget(parent),
+      m_ksInterface(ksInterface),
       ui(new Ui::ScreenSaverDialog)
 {
     ui->setupUi(this);
-    printWindowID();
     init();
 }
 
@@ -101,15 +104,141 @@ ScreenSaverDialog::~ScreenSaverDialog()
     delete ui;
 }
 
-void ScreenSaverDialog::setSwitchUserEnabled(bool enable)
+QWidget *ScreenSaverDialog::get_widget_ptr()
 {
-    ui->btn_switchuser->setVisible(enable);
+    return this;
 }
 
+void ScreenSaverDialog::setAnimationEnabled(bool enabled)
+{
+    if (enabled == m_animationEnabled)
+    {
+        return;
+    }
+
+    if (!enabled)
+    {
+        if (m_animation.state() == QPropertyAnimation::Running)
+        {
+            QVariant var = m_animation.endValue();
+            m_animation.stop();
+            qreal opacity = var.toReal();
+            m_opacityEffect->setOpacity(opacity);
+        }
+    }
+
+    m_animationEnabled = enabled;
+}
+
+void ScreenSaverDialog::setAnimationDelay(int fadeInDelay, int fadeOutDelay)
+{
+    m_fadeInDelayMs = fadeInDelay;
+    m_fadeOutDelayMs = fadeOutDelay;
+}
+
+void ScreenSaverDialog::setAnimationDuration(int fadeInMs, int fadeOutMs)
+{
+    if (m_fadeInDurationMs != fadeInMs)
+    {
+        if (m_animation.state() == QPropertyAnimation::Running &&
+            m_animation.direction() == QPropertyAnimation::Forward)
+        {
+            //QVariantAnimation会自动计算更新当前剩余时间
+            m_animation.setDuration(fadeInMs);
+        }
+        m_fadeInDurationMs = fadeInMs;
+    }
+
+    if (m_fadeOutDurationMs != fadeOutMs)
+    {
+        if ((m_animation.state() == QPropertyAnimation::Running) &&
+            (m_animation.direction() == QPropertyAnimation::Backward))
+        {
+            m_animation.setDuration(fadeOutMs);
+        }
+        m_fadeOutDurationMs = fadeOutMs;
+    }
+}
+
+bool ScreenSaverDialog::fadeVisible()
+{
+    return m_fadeVisible;
+}
+
+bool ScreenSaverDialog::fadeIn()
+{
+    if(m_fadeVisible)
+    {
+        return true;
+    }
+
+    m_fadeVisible = true;
+
+    if(m_fadeDelayTimer!=0)
+    {
+        killTimer(m_fadeDelayTimer);
+        m_fadeDelayTimer = 0;
+    }
+
+
+    if(m_animationEnabled)
+    {
+        m_fadeDelayTimer = startTimer(m_fadeInDelayMs);
+    }
+    else
+    {
+        m_opacityEffect->setOpacity(1);
+    }
+
+    return true;
+}
+
+bool ScreenSaverDialog::fadeOut()
+{
+    if(!m_fadeVisible)
+    {
+        return true;
+    }
+
+    m_fadeVisible = false;
+
+    if(m_fadeDelayTimer!=0)
+    {
+        killTimer(m_fadeDelayTimer);
+        m_fadeDelayTimer = 0;
+    }
+
+    if(m_animationEnabled)
+    {
+        m_fadeDelayTimer = startTimer(m_fadeOutDelayMs);
+    }
+    else
+    {
+        m_opacityEffect->setOpacity(0);
+    }
+
+    return true;
+}
+#define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 void ScreenSaverDialog::init()
 {
     initAuth();
     initUI();
+    initAnimation();
+
+    QString stylesheet;
+
+    QFile file(DEFAULT_STYLE_PATH);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        stylesheet = file.readAll();
+    }
+    else
+    {
+        KLOG_WARNING() << "load style sheet failed";
+    }
+    this->setStyleSheet(stylesheet);
+
     startUpdateTimeTimer();
     startAuth();
 }
@@ -119,6 +248,7 @@ void ScreenSaverDialog::initAuth()
     AuthBase *authPam = new AuthPam(this);
     AuthMsgQueueBase *msgQueue = new AuthMsgQueue(this);
     m_authProxy = new AuthProxy(authPam, this);
+
     if (!m_authProxy->init())
     {
         KLOG_ERROR() << "auth proxy can't init";
@@ -139,11 +269,7 @@ void ScreenSaverDialog::initAuth()
 
 void ScreenSaverDialog::initUI()
 {
-    connect(ui->btn_cancel, &QToolButton::pressed, this, [=] {
-        responseCancelAndQuit();
-    });
-
-    ///输入框回车或点击解锁按钮时，回复给认证接口
+    // 输入框回车或点击解锁按钮时，回复给认证接口
     connect(ui->promptEdit, &PromptEdit::textConfirmed, this, [=] {
         m_authProxy->respond(ui->promptEdit->getText());
     });
@@ -166,7 +292,7 @@ void ScreenSaverDialog::initUI()
     ui->btn_keyboard->setVisible(false);
 #endif
 
-    ///切换用户按钮
+    // 切换用户按钮
     connect(ui->btn_switchuser, &QToolButton::pressed, this, [=] {
         QTimer::singleShot(2000, this, SLOT(responseCancelAndQuit()));
         if (!DBusApi::DisplayManager::switchToGreeter())
@@ -175,39 +301,23 @@ void ScreenSaverDialog::initUI()
         }
     });
 
-    ///设置阴影
-    QGraphicsDropShadowEffect *labelTextShadowEffect2 = new QGraphicsDropShadowEffect(this);
-    labelTextShadowEffect2->setColor(QColor(0, 0, 0, 255 * 0.1));
-    labelTextShadowEffect2->setBlurRadius(0);
-    labelTextShadowEffect2->setOffset(2, 2);
-    ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
+    // 设置阴影
+//    QGraphicsDropShadowEffect *labelTextShadowEffect2 = new QGraphicsDropShadowEffect(ui->btn_cancel);
+//    labelTextShadowEffect2->setColor(QColor(0, 0, 0, 255 * 0.1));
+//    labelTextShadowEffect2->setBlurRadius(0);
+//    labelTextShadowEffect2->setOffset(2, 2);
+//    ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
 
-    ///背景图
-    QString backgroundPath = GSettingsHelper::getBackgrountPath();
-    KLOG_DEBUG() << "screensaver-dialog background: " << backgroundPath;
-
-    QStringList backgrounds = {backgroundPath, SYSTEM_DEFAULT_BACKGROUND, DEFAULT_BACKGROUND};
-    foreach (const QString &background, backgrounds)
-    {
-        if (!m_background.load(background))
-        {
-            KLOG_WARNING() << "load background:" << background << "failed!";
-            continue;
-        }
-        KLOG_DEBUG() << "load background:" << background;
-        break;
-    }
-
-    ///用户
+    // 用户
     m_userName = get_current_user();
     ui->label_userName->setText(m_userName);
 
-    ///电源菜单
+    // 电源菜单
     m_powerMenu = new QMenu(this);
-    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);  ///透明必需
-    ///NOTE:QMenu不能为窗口，只能为子控件，不然透明效果依赖于窗口管理器混成特效与显卡
-    ///控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
-    m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  ///透明必需
+    m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);  // 透明必需
+    //NOTE:QMenu不能为窗口，只能为子控件，不然透明效果依赖于窗口管理器混成特效与显卡
+    //控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
+    m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  // 透明必需
     m_powerMenu->setFixedWidth(92);
     m_powerMenu->hide();
 
@@ -245,7 +355,7 @@ void ScreenSaverDialog::initUI()
         m_powerMenu->hide();
     });
 
-    ///电源按钮
+    // 电源按钮
     connect(ui->btn_power, &QToolButton::pressed, this, [=] {
         if (m_powerMenu->isVisible())
         {
@@ -265,23 +375,36 @@ void ScreenSaverDialog::initUI()
 
         m_powerMenu->popup(menuLeftTop);
     });
-    if(m_powerMenu->isEmpty())
+    if (m_powerMenu->isEmpty())
     {
         ui->btn_power->setVisible(false);
     }
 
-    ///重新认证按钮
+    // 重新认证按钮
     connect(ui->btn_reAuth, &QPushButton::clicked, this, [=] {
         startAuth();
     });
 
-    //NOTE:暂时解决方案单独禁用输入框，等待pam的prompt消息会启用输入框
+    //　默认禁用输入框，等待prompt消息再启用
     ui->promptEdit->setEnabled(false);
     ui->btn_switchuser->setVisible(false);
     ui->loginAvatar->setImage(DBusApi::AccountService::getUserIconFilePath(m_userName));
 
-    ///安装事件过滤器，来实现菜单的自动隐藏
+    // 安装事件过滤器，来实现菜单的自动隐藏
     qApp->installEventFilter(this);
+}
+
+void ScreenSaverDialog::initAnimation()
+{
+    m_opacityEffect = new QGraphicsOpacityEffect(this);
+    setGraphicsEffect(m_opacityEffect);
+    m_opacityEffect->setOpacity(0);
+
+    m_animation.setTargetObject(m_opacityEffect);
+    m_animation.setPropertyName("opacity");
+    m_animation.setStartValue(0);
+    m_animation.setEndValue(1);
+    m_animation.setDuration(m_fadeInDurationMs);
 }
 
 void ScreenSaverDialog::startUpdateTimeTimer()
@@ -336,34 +459,6 @@ void ScreenSaverDialog::updateCurrentAuthType(Kiran::AuthType type)
     m_authType = type;
 }
 
-void ScreenSaverDialog::printWindowID()
-{
-    std::cout << "WINDOW ID=" << winId() << std::endl;
-}
-
-void ScreenSaverDialog::responseOkAndQuit()
-{
-    static const char *response = "RESPONSE=OK";
-    std::cout << response << std::endl;
-    KLOG_INFO() << response;
-    this->close();
-}
-
-void ScreenSaverDialog::responseCancelAndQuit()
-{
-    static const char *response = "RESPONSE=CANCEL";
-    std::cout << response << std::endl;
-    KLOG_INFO() << response;
-    this->close();
-}
-
-void ScreenSaverDialog::responseNoticeAuthFailed()
-{
-    static const char *response = "NOTICE=AUTH FAILED";
-    std::cout << response << std::endl;
-    KLOG_DEBUG() << response;
-}
-
 bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
 {
     bool needFilter = false;
@@ -388,48 +483,6 @@ bool ScreenSaverDialog::eventFilter(QObject *obj, QEvent *event)
     return needFilter;
 }
 
-void ScreenSaverDialog::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    if (!m_scaledBackground.isNull())
-    {
-        QSize pixbufSize = m_scaledBackground.size();
-        QSize windowSize = size();
-        QRect drawTargetRect((pixbufSize.width() - windowSize.width()) / -2,
-                             (pixbufSize.height() - windowSize.height()) / -2,
-                             pixbufSize.width(),
-                             pixbufSize.height());
-        painter.drawPixmap(drawTargetRect, m_scaledBackground, m_scaledBackground.rect());
-    }
-    QWidget::paintEvent(event);
-}
-
-void ScreenSaverDialog::resizeEvent(QResizeEvent *event)
-{
-    if (!m_background.isNull())
-    {
-        QRect rect(0, 0, event->size().width(), event->size().height());
-        QPixmap dest(event->size());
-
-        QSize minSize = rect.size();
-        QSize pixbufSize = m_background.size();
-        double factor;
-        QSize newPixbufSize;
-        factor = qMax(minSize.width() / (double)pixbufSize.width(),
-                      minSize.height() / (double)pixbufSize.height());
-
-        newPixbufSize.setWidth(floor(pixbufSize.width() * factor + 0.5));
-        newPixbufSize.setHeight(floor(pixbufSize.height() * factor + 0.5));
-
-        QPixmap scaledPixmap = m_background.scaled(newPixbufSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-        QImage tmp = scaledPixmap.toImage();
-        qt_blurImage(tmp, 10, true);
-        m_scaledBackground = QPixmap::fromImage(tmp);
-    }
-    QWidget::resizeEvent(event);
-}
-
 void ScreenSaverDialog::slotAuthenticationComplete(bool authRes)
 {
     KLOG_DEBUG() << "slot authentication complete!";
@@ -450,7 +503,7 @@ void ScreenSaverDialog::slotAuthenticationComplete(bool authRes)
     {
         ui->promptEdit->reset();
         ui->promptEdit->setHasError(false);
-        responseOkAndQuit();
+        m_ksInterface->authenticationPassed();
     }
 }
 
@@ -519,4 +572,29 @@ void ScreenSaverDialog::closeEvent(QCloseEvent *event)
     }
 #endif
     QWidget::closeEvent(event);
+}
+
+void ScreenSaverDialog::setEnableSwitch(bool enable)
+{
+    ui->btn_switchuser->setVisible(enable);
+}
+
+bool ScreenSaverDialog::enableSwitch()
+{
+    return ui->btn_switchuser->isVisible();
+}
+
+void ScreenSaverDialog::timerEvent(QTimerEvent *event)
+{
+    if(event->timerId() == m_fadeDelayTimer)
+    {
+        m_animation.setDirection(m_fadeVisible?QPropertyAnimation::Forward:QPropertyAnimation::Backward);
+        m_animation.setDuration(m_fadeVisible?m_fadeInDurationMs:m_fadeOutDurationMs);
+        m_animation.start();
+    }
+
+    killTimer(m_fadeDelayTimer);
+    m_fadeDelayTimer = 0;
+
+    QObject::timerEvent(event);
 }

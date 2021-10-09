@@ -14,6 +14,7 @@
 
 #include "face-auth-avatar.h"
 #include <QPainter>
+#include <qt5-log-i.h>
 
 FaceAuthAvatar::FaceAuthAvatar(QWidget *parent)
     : QWidget(parent)
@@ -37,7 +38,10 @@ void FaceAuthAvatar::stopAnimation()
 
 void FaceAuthAvatar::init()
 {
-    m_pixmap.load(":/common-widgets-images/face_auth.png");
+    if( !m_pixmap.load(":/common-widgets-images/face_auth.png") )
+    {
+        KLOG_ERROR() << "can't load face auth image!";
+    }
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     m_animation.setTargetObject(this);
     m_animation.setPropertyName("progress");
