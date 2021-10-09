@@ -20,11 +20,11 @@ ShadowLabel{
 /*****************LineEdit************************/
 PromptEdit#promptEdit{
     border:1px solid rgba(255,255,255,0.1);
-    border-radius:8px;
+    border-radius:4px;
     background-color:rgba(0,0,0,0.2);
 }
 PromptEdit#promptEdit[editFocused=true]{
-    border:1px solid rgba(46,179,255,0.4);
+    border:1px solid rgba(46,179,255,0.8);
 }
 PromptEdit#promptEdit[hasError=true]{
     border:1px solid rgba(255, 46, 46,0.4);

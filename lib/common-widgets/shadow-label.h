@@ -51,7 +51,7 @@ private:
     void updateShadow();
 
 private:
-    QGraphicsDropShadowEffect m_shadowEffect;
+    QGraphicsDropShadowEffect* m_shadowEffect = nullptr;
     QColor m_shadowColor;
     bool m_shadowEnable;
     qreal m_shadowBlurRadius;

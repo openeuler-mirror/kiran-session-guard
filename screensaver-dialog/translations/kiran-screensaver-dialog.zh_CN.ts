@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AuthProxy</name>
     <message>
@@ -194,7 +194,7 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <source>cancel</source>
-        <translation>取消</translation>
+        <translation type="vanished">取消</translation>
     </message>
     <message>
         <source>Recertification</source>
@@ -210,11 +210,11 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <source>Failed to authenticate</source>
-        <translation>认证失败</translation>
+        <translation type="vanished">认证失败</translation>
     </message>
     <message>
         <source>ddd MMM HH:mm</source>
-        <translation>MM月dd日 dddd HH:mm</translation>
+        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
         <source>ddd MMM dd HH:mm</source>
