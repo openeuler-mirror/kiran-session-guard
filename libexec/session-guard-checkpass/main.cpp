@@ -19,7 +19,7 @@
 #include <iostream>
 #include "pam-message.h"
 
-#define PAM_SERVICE_NAME "mate-screensaver"
+#define PAM_SERVICE_NAME "kiran-screensaver"
 
 pam_handle_t *pamh = nullptr;
 int CHANNEL_READ = 0;

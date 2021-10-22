@@ -14,6 +14,7 @@ class KSPlugin : public QObject,public KSPluginInterface
     Q_OBJECT
     Q_PLUGIN_METADATA(IID KSPluginInterface_iid)
     Q_INTERFACES(KSPluginInterface)
+
 public:
     KSPlugin();
     ~KSPlugin() override;
