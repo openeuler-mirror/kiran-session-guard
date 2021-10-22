@@ -77,7 +77,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${KIRAN_LOG_INCLUDE_DIRS}
         ${KIRAN_WIDGETS_INCLUDE_DIRS})
 
-# 安装锁屏框执行文件
+# 安装锁屏框插件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 
 # 安装翻译文件

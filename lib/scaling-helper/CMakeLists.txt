@@ -13,7 +13,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-add_library(${TARGET_NAME}
+add_library(${TARGET_NAME} STATIC
         ${ALL_FILES})
 
 target_link_libraries(${TARGET_NAME} PUBLIC

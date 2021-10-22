@@ -12,7 +12,7 @@ set(CMAKE_AUTORCC ON)
 file(GLOB_RECURSE ALL_FILES ./*.h ./*.cpp)
 file(GLOB_RECURSE QRC resources/commonWidgets.qrc)
 
-add_library(${TARGET_NAME}
+add_library(${TARGET_NAME} STATIC
         ${ALL_FILES}
         ${QRC})
 

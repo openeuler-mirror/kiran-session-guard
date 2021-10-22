@@ -13,7 +13,7 @@ file(GLOB_RECURSE CHECKPASS_COMMON "../../checkpass-common/*.cpp" "../../checkpa
 
 add_executable(${TARGET_NAME} ${SRC} ${CHECKPASS_COMMON})
 
-target_link_libraries(${TARGET_NAME} PUBLIC
+target_link_libraries(${TARGET_NAME} PRIVATE
         Qt5::Core
         ${KIRAN_LOG_LIBRARIES}
         pam)
