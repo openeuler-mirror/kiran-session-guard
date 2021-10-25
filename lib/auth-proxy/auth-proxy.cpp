@@ -377,7 +377,7 @@ void AuthProxy::handleAuthServiceAuthMethodChanged(int method, const QString &si
 
     // clang-format off
     //map<SessionAuthMethod,tuple<AuthType,AuthTypeDesc>>
-    const std::map<int, std::tuple<Kiran::AuthType, QString>> AuthTypeTransMap = {
+    const std::map<int, std::pair<Kiran::AuthType, QString>> AuthTypeTransMap = {
         {SESSION_AUTH_METHOD_PASSWORD, {Kiran::AUTH_TYPE_PASSWD, QStringLiteral("Password"),}},
         {SESSION_AUTH_METHOD_FINGERPRINT, {Kiran::AUTH_TYPE_FINGER, QStringLiteral("Fingerprint")}},
         {SESSION_AUTH_METHOD_FACE, {Kiran::AUTH_TYPE_FACE, QStringLiteral("Face")}}
