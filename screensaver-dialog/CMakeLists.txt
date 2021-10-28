@@ -12,6 +12,10 @@ set(CAN_REBOOT true CACHE BOOL "reboot button display")
 #是否显示挂起选项
 set(CAN_SUSPEND true CACHE BOOL "suspend button display")
 
+#构建为kiran-screensaver插件
+set(BUILD_SCREENSAVER_PLUGIN true CACHE BOOL "build libray as kiran-screensaver plugin")
+configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -46,8 +50,11 @@ if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
 
-#add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
-add_library(${PROJECT_NAME} SHARED ${SRC} ${RESOURCES} ${QM_FILES})
+if(BUILD_SCREENSAVER_PLUGIN)
+    add_library(${PROJECT_NAME} SHARED ${SRC} ${RESOURCES} ${QM_FILES})
+else()
+    add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
+endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
         common-widgets
