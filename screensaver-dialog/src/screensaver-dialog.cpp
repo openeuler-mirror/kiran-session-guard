@@ -30,6 +30,7 @@
 #include <QWindow>
 #include <QtDBus>
 
+#include <kiran-screensaver/ks-interface.h>
 
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
@@ -39,7 +40,6 @@
 #include "prefs.h"
 #include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
-#include "ks-plugin.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
