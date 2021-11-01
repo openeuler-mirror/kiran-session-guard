@@ -20,7 +20,7 @@ endforeach()
 file(GLOB_RECURSE ALL_FILES ./*.h ./*.cpp)
 file(GLOB_RECURSE CHECK_PASS_COMMON_SRC ../../checkpass-common/*.cpp ../../checkpass-common/*.h)
 
-add_library(${TARGET_NAME}
+add_library(${TARGET_NAME} STATIC
         ${ALL_FILES}
         ${CHECK_PASS_COMMON_SRC}
         ${DBUS_INTERFACE_SRC})
