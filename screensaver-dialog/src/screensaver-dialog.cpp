@@ -30,7 +30,7 @@
 #include <QWindow>
 #include <QtDBus>
 
-#include <kiran-screensaver/ks-interface.h>
+#include <kiran-screensaver/interface.h>
 
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
@@ -90,7 +90,7 @@ QString get_current_user()
     return pResult->pw_name;
 }
 
-ScreenSaverDialog::ScreenSaverDialog(KSInterface* ksInterface,QWidget *parent)
+ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface* ksInterface,QWidget *parent)
     : QWidget(parent),
       m_ksInterface(ksInterface),
       ui(new Ui::ScreenSaverDialog)

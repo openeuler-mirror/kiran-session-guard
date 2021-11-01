@@ -15,11 +15,11 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include <kiran-screensaver/ks-locker-interface.h>
+#include <kiran-screensaver/locker-interface.h>
 #include <QAbstractNativeEventFilter>
+#include <QGraphicsOpacityEffect>
 #include <QPropertyAnimation>
 #include <QWidget>
-#include <QGraphicsOpacityEffect>
 #include "auth-base.h"
 
 namespace Ui
@@ -27,22 +27,29 @@ namespace Ui
 class ScreenSaverDialog;
 }
 
+namespace Kiran
+{
+namespace ScreenSaver
+{
+class Interface;
+}
+}  // namespace Kiran
+
 class QMenu;
 class AuthProxy;
-class KSInterface;
-class ScreenSaverDialog : public QWidget,public KSLockerInterface
+class ScreenSaverDialog : public QWidget, public Kiran::ScreenSaver::LockerInterface
 {
     Q_OBJECT
 public:
-    explicit ScreenSaverDialog(KSInterface* ksinterface,QWidget *parent = nullptr);
+    explicit ScreenSaverDialog(Kiran::ScreenSaver::Interface *ksinterface, QWidget *parent = nullptr);
     virtual ~ScreenSaverDialog();
 
 public:
-    QWidget* get_widget_ptr() override;
+    QWidget *get_widget_ptr() override;
 
     void setAnimationEnabled(bool enabled) override;
-    void setAnimationDelay(int fadeInDelay,int fadeOutDelay) override;
-    void setAnimationDuration(int fadeInMs,int fadeOutMs) override;
+    void setAnimationDelay(int fadeInDelay, int fadeOutDelay) override;
+    void setAnimationDuration(int fadeInMs, int fadeOutMs) override;
 
     bool fadeVisible() override;
     bool fadeIn() override;
@@ -87,7 +94,7 @@ private:
     Ui::ScreenSaverDialog *ui;
     QMenu *m_powerMenu = nullptr;
 
-    KSInterface* m_ksInterface;
+    Kiran::ScreenSaver::Interface *m_ksInterface;
 
     bool m_fadeVisible = false;
     bool m_animationEnabled = false;
@@ -99,7 +106,7 @@ private:
 
     //Forward为淡入，Backward为淡出
     QPropertyAnimation m_animation;
-    QGraphicsOpacityEffect* m_opacityEffect = nullptr;
+    QGraphicsOpacityEffect *m_opacityEffect = nullptr;
 
     AuthProxy *m_authProxy = nullptr;
     Kiran::AuthType m_authType = Kiran::AUTH_TYPE_PASSWD;

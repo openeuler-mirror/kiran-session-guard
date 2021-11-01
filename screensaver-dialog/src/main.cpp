@@ -16,64 +16,7 @@
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 
-#if BUILD_SCREENSAVER_PLUGIN
-#include <kiran-screensaver/ks-interface.h>
-#include <kiran-screensaver/ks-plugin-interface.h>
-#include <QApplication>
-#include <QLocale>
-#include <QTranslator>
-#include "screensaver-dialog.h"
-
-class KSPlugin : public QObject, public KSPluginInterface
-{
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID KSPluginInterface_iid)
-    Q_INTERFACES(KSPluginInterface)
-
-public:
-    KSPlugin() = default;
-    ~KSPlugin() = default;
-
-    int init(KSInterface* ksInterface) override
-    {
-        Q_ASSERT(ksInterface != nullptr);
-        m_ksInterface = ksInterface;
-
-        Q_INIT_RESOURCE(commonWidgets);
-
-        m_translator = new QTranslator;
-        m_translator->load(QLocale(),
-                           "kiran-screensaver-dialog",
-                           ".",
-                           TRANSLATION_FILE_DIR,
-                           ".qm");
-        qApp->installTranslator(m_translator);
-
-        return 0;
-    }
-
-    void uninit() override
-    {
-        Q_CLEANUP_RESOURCE(commonWidgets);
-
-        if (m_translator != nullptr)
-        {
-            qApp->removeTranslator(m_translator);
-        }
-    }
-
-    KSLockerInterface* createLocker() override
-    {
-        KSLockerInterface* lockerInterface = new ScreenSaverDialog(m_ksInterface);
-        return lockerInterface;
-    }
-
-private:
-    KSInterface* m_ksInterface = nullptr;
-    QTranslator* m_translator = nullptr;
-};
-#include "main.moc"
-#else
+#if !BUILD_SCREENSAVER_PLUGIN
 #include <QApplication>
 #include "screensaver-dialog.h"
 #include <kiran-screensaver/ks-interface.h>
