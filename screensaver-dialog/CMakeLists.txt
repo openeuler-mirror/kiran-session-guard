@@ -12,12 +12,16 @@ set(CAN_REBOOT true CACHE BOOL "reboot button display")
 #是否显示挂起选项
 set(CAN_SUSPEND true CACHE BOOL "suspend button display")
 
+#构建为kiran-screensaver插件
+set(BUILD_SCREENSAVER_PLUGIN true CACHE BOOL "build libray as kiran-screensaver plugin")
+configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include(GNUInstallDirs)
-set(SCREENSAVER_DIALOG_INSTALL ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/)
+set(SCREENSAVER_DIALOG_INSTALL ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/kiran-screensaver)
 set(SCREENSAVER_QM_INSTALL ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/translations/)
 
 find_package(PkgConfig REQUIRED)
@@ -46,7 +50,11 @@ if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
 endif()
 
-add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
+if(BUILD_SCREENSAVER_PLUGIN)
+    add_library(${PROJECT_NAME} SHARED ${SRC} ${RESOURCES} ${QM_FILES})
+else()
+    add_executable(${PROJECT_NAME} ${SRC} ${RESOURCES} ${QM_FILES})
+endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
         common-widgets
@@ -76,7 +84,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${KIRAN_LOG_INCLUDE_DIRS}
         ${KIRAN_WIDGETS_INCLUDE_DIRS})
 
-# 安装锁屏框执行文件
+# 安装锁屏框插件
 install(TARGETS ${PROJECT_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 
 # 安装翻译文件
