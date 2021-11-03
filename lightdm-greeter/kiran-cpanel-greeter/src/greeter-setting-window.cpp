@@ -78,7 +78,7 @@ void GreeterSettingWindow::initUI()
     layoutSideWidget->addWidget(m_sidebarWidget);
 
     QListWidgetItem *item;
-    item = new QListWidgetItem(tr("appearance"), m_sidebarWidget);
+    item = new QListWidgetItem(tr("general settings"), m_sidebarWidget);
     item->setIcon(QIcon(":/kcp-greeter-images/appearance_setting.png"));
     m_sidebarWidget->addItem(item);
 
@@ -91,8 +91,8 @@ void GreeterSettingWindow::initUI()
     m_stackedWidget->setObjectName("GreeterSettingsStacked");
     mainLayout->addWidget(m_stackedWidget);
 
-    auto widgetAppearance = initPageAppearance();
-    m_stackedWidget->addWidget(widgetAppearance);
+    auto widgetGeneralSettings = initPageGeneralSettings();
+    m_stackedWidget->addWidget(widgetGeneralSettings);
 
     auto widgetAutoLogin = initPageAutoLogin();
     m_stackedWidget->addWidget(widgetAutoLogin);
@@ -114,7 +114,7 @@ void GreeterSettingWindow::initUI()
         /* 重置页面 */
         if (page == GreeterSettings_Appearance)
         {
-            resetAppearanceSettings();
+            resetGeneralSettings();
         }
         else if (page == GreeterSettings_Autologin)
         {
@@ -125,7 +125,7 @@ void GreeterSettingWindow::initUI()
         m_hoverTips->hide();
     });
     m_sidebarWidget->setCurrentRow(0);
-    resetAppearanceSettings();
+    resetGeneralSettings();
     resetAutoLoginSettings();
 }
 
@@ -220,10 +220,10 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     return pageAutoLogin;
 }
 
-QWidget *GreeterSettingWindow::initPageAppearance()
+QWidget *GreeterSettingWindow::initPageGeneralSettings()
 {
-    auto pageAppearance = new QWidget(this);
-    auto mainLayout = new QVBoxLayout(pageAppearance);
+    auto pageGeneralSettings = new QWidget(this);
+    auto mainLayout = new QVBoxLayout(pageGeneralSettings);
     mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
 
@@ -302,12 +302,13 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutManualLogin->addItem(manualLoginSpacerItem);
 
     m_enableManualSwitch = new KiranSwitchButton(this);
+    connect(m_enableManualSwitch, &KiranSwitchButton::toggled, this, &GreeterSettingWindow::onLoginOptionsChanged);
     m_enableManualSwitch->setObjectName("btn_enableManualLogin");
     layoutManualLogin->addWidget(m_enableManualSwitch);
 
     /* 用户列表登录设置 */
     auto widgetUserListLogin = new QWidget(this);
-    widgetUserListLogin->setObjectName("widget_hideUserList");
+    widgetUserListLogin->setObjectName("widget_showUserList");
     widgetUserListLogin->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     mainLayout->addWidget(widgetUserListLogin);
 
@@ -315,20 +316,21 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutUserList->setObjectName("layout_userListLogin");
     layoutUserList->setContentsMargins(0, 15, 0, 0);
 
-    auto labelHideUserList = new QLabel(tr("Hide User List"), this);
-    labelHideUserList->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    labelHideUserList->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    layoutUserList->addWidget(labelHideUserList);
+    auto labelShowUserList = new QLabel(tr("Show User List"), this);
+    labelShowUserList->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    labelShowUserList->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    layoutUserList->addWidget(labelShowUserList);
 
-    auto hideUserListSpacerItem = new QSpacerItem(20, 20,
+    auto showUserListSpacerItem = new QSpacerItem(20, 20,
                                                   QSizePolicy::Expanding,
                                                   QSizePolicy::Preferred);
-    layoutUserList->addItem(hideUserListSpacerItem);
+    layoutUserList->addItem(showUserListSpacerItem);
 
-    m_hideUserListSwitch = new KiranSwitchButton(this);
-    m_hideUserListSwitch->setObjectName("btn_hideUserList");
-    m_hideUserListSwitch->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    layoutUserList->addWidget(m_hideUserListSwitch, 0, Qt::AlignVCenter | Qt::AlignRight);
+    m_showUserListSwitch = new KiranSwitchButton(this);
+    connect(m_showUserListSwitch, &KiranSwitchButton::toggled, this, &GreeterSettingWindow::onLoginOptionsChanged);
+    m_showUserListSwitch->setObjectName("btn_showUserList");
+    m_showUserListSwitch->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    layoutUserList->addWidget(m_showUserListSwitch, 0, Qt::AlignVCenter | Qt::AlignRight);
 
     /* 占位 */
     auto mainLayoutSpacerItem = new QSpacerItem(10, 20,
@@ -338,13 +340,13 @@ QWidget *GreeterSettingWindow::initPageAppearance()
 
     /*保存-取消*/
     auto widgetButtonBox = new QWidget(this);
-    widgetButtonBox->setObjectName("widget_appearanceButton");
+    widgetButtonBox->setObjectName("widget_generalSettingsButton");
     widgetButtonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     mainLayout->addWidget(widgetButtonBox);
 
     auto layoutButtonBox = new QHBoxLayout(widgetButtonBox);
     layoutButtonBox->setSpacing(30);
-    layoutButtonBox->setObjectName("layout_appearanceButtonBox");
+    layoutButtonBox->setObjectName("layout_generalSettingsButtonBox");
     layoutButtonBox->setContentsMargins(0, 10, 0, 40);
 
     auto buttonBoxSpacerItem1 = new QSpacerItem(10, 20,
@@ -353,13 +355,13 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutButtonBox->addItem(buttonBoxSpacerItem1);
 
     auto btn_save = new QPushButton(this);
-    btn_save->setObjectName("btn_saveAppearance");
+    btn_save->setObjectName("btn_saveGeneralSettings");
     btn_save->setFixedSize(232, 60);
     btn_save->setText(tr("Save"));
     Kiran::WidgetPropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
     connect(btn_save, &QPushButton::clicked, [this]() {
-        saveAppearanceSettings();
+        saveGeneralSettings();
     });
 
     auto buttonBoxSpacerItem2 = new QSpacerItem(10, 20,
@@ -368,12 +370,12 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutButtonBox->addItem(buttonBoxSpacerItem2);
 
     auto btn_reset = new QPushButton(this);
-    btn_reset->setObjectName("btn_resetAppearance");
+    btn_reset->setObjectName("btn_resetGeneralSettings");
     btn_reset->setFixedSize(232, 60);
     btn_reset->setText(tr("Reset"));
     layoutButtonBox->addWidget(btn_reset);
     connect(btn_reset, &QPushButton::clicked, [this]() {
-        resetAppearanceSettings();
+        resetGeneralSettings();
     });
 
     auto buttonBoxSpacerItem3 = new QSpacerItem(10, 20,
@@ -384,7 +386,7 @@ QWidget *GreeterSettingWindow::initPageAppearance()
     layoutButtonBox->setStretch(2, 2);
     layoutButtonBox->setStretch(4, 5);
 
-    return pageAppearance;
+    return pageGeneralSettings;
 }
 
 void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
@@ -437,12 +439,12 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     combo->addItem("");
 }
 
-void GreeterSettingWindow::saveAppearanceSettings()
+void GreeterSettingWindow::saveGeneralSettings()
 {
-    GreeterSettingInfo::AppearanceSetting backendInfo = getAppearanceSettingInfoFromBackend();
+    GreeterSettingInfo::GeneralSetting backendInfo = getGeneralSettingInfoFromBackend();
 
     /* UI修改之前所加载的配置信息 */
-    GreeterSettingInfo::AppearanceSetting origUIInfo = m_origSettingInfo.appearanceInfo;
+    GreeterSettingInfo::GeneralSetting origUIInfo = m_origSettingInfo.appearanceInfo;
 
     /* 如果后端不是在界面端所做修改,提示用户,是覆盖还是重新加载 */
     if (!(backendInfo == origUIInfo))
@@ -456,7 +458,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
         /* 丢弃所有的修改,重新加载 */
         if (clickedRole == KiranMessageBox::Discard)
         {
-            resetAppearanceSettings();
+            resetGeneralSettings();
             return;
         }
     }
@@ -474,7 +476,7 @@ void GreeterSettingWindow::saveAppearanceSettings()
         goto failed;
     }
 
-    reply = KiranGreeterPrefs::instance()->SetHideUserList(m_hideUserListSwitch->isChecked());
+    reply = KiranGreeterPrefs::instance()->SetHideUserList(!m_showUserListSwitch->isChecked());
     reply.waitForFinished();
     if (reply.isError())
     {
@@ -510,7 +512,7 @@ failed:
     }
 
     /* 重新加载配置，更新界面，重新缓存加载的配置文件 */
-    resetAppearanceSettings();
+    resetGeneralSettings();
 }
 
 void GreeterSettingWindow::saveAutoLoginSettings()
@@ -574,17 +576,17 @@ failed:
 }
 
 /* 重新加载登录外观设置,更新到界面,并缓存 */
-void GreeterSettingWindow::resetAppearanceSettings()
+void GreeterSettingWindow::resetGeneralSettings()
 {
-    GreeterSettingInfo::AppearanceSetting appearanceSetting = getAppearanceSettingInfoFromBackend();
+    GreeterSettingInfo::GeneralSetting appearanceSetting = getGeneralSettingInfoFromBackend();
 
     QString background = appearanceSetting.background;
 
     ///背景设置为空使用默认背景图片,如果背景图片是链接的话，读出指向文件位置
-    if(background.isEmpty())
+    if (background.isEmpty())
     {
         QFileInfo backgroundFileInfo(DEFAULT_BACKGROUND);
-        if( backgroundFileInfo.isSymLink() )
+        if (backgroundFileInfo.isSymLink())
         {
             background = backgroundFileInfo.readLink();
         }
@@ -595,13 +597,13 @@ void GreeterSettingWindow::resetAppearanceSettings()
     }
 
     ///如果图片选择控件不存在选中的图片的话则添加进入图片选择列表
-    if( !m_imageSelector->imageList().contains(background) )
+    if (!m_imageSelector->imageList().contains(background))
     {
         m_imageSelector->addImage(background);
     }
 
     m_imageSelector->setSelectedImage(background);
-    m_hideUserListSwitch->setChecked(appearanceSetting.hideUserList);
+    m_showUserListSwitch->setChecked(!appearanceSetting.hideUserList);
     m_enableManualSwitch->setChecked(appearanceSetting.allowManualLogin);
     int idx = m_comboScaleMode->findData(appearanceSetting.scaleMode);
     m_comboScaleMode->setCurrentIndex(idx);
@@ -621,9 +623,9 @@ void GreeterSettingWindow::resetAutoLoginSettings()
     m_origSettingInfo.autoLoginInfo = autoLoginSetting;
 }
 
-GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSettingInfoFromBackend()
+GreeterSettingInfo::GeneralSetting GreeterSettingWindow::getGeneralSettingInfoFromBackend()
 {
-    GreeterSettingInfo::AppearanceSetting appearanceSetting;
+    GreeterSettingInfo::GeneralSetting appearanceSetting;
 
     appearanceSetting.background = KiranGreeterPrefs::instance()->background();
     appearanceSetting.hideUserList = KiranGreeterPrefs::instance()->hide_user_list();
@@ -661,30 +663,30 @@ GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingIn
     return autoLoginSetting;
 }
 
-GreeterSettingInfo::AppearanceSetting GreeterSettingWindow::getAppearanceSettingInfoFromUI()
-{
-    GreeterSettingInfo::AppearanceSetting appearanceSetting;
-
-    appearanceSetting.background = m_imageSelector->selectedImage();
-    appearanceSetting.scaleFactor = m_comboScaleFactor->currentData().toUInt();
-    appearanceSetting.scaleMode = m_comboScaleMode->currentData().toUInt();
-    appearanceSetting.allowManualLogin = m_enableManualSwitch->isChecked();
-    appearanceSetting.hideUserList = m_hideUserListSwitch->isChecked();
-
-    return appearanceSetting;
-}
-
-GreeterSettingInfo::AutoLoginSetting GreeterSettingWindow::getAutologinSettingInfoFromUI()
-{
-    GreeterSettingInfo::AutoLoginSetting autoLoginSetting;
-
-    autoLoginSetting.autoLoginUser = m_comboAutoLoginUser->currentText();
-    autoLoginSetting.autoLoginTimeout = m_editAutoLoginDelay->text().toUInt();
-
-    return autoLoginSetting;
-}
-
 QSize GreeterSettingWindow::sizeHint() const
 {
-    return {940,653};
+    return {940, 653};
+}
+
+void GreeterSettingWindow::onLoginOptionsChanged()
+{
+    auto changedSwitch = qobject_cast<KiranSwitchButton *>(sender());
+    if (changedSwitch->isChecked())
+    {
+        return;
+    }
+
+    //不允许手动登录以及不显示用户列表
+    if (!m_enableManualSwitch->isChecked() && !m_showUserListSwitch->isChecked())
+    {
+        m_hoverTips->show(HoverTips::HOVE_TIPS_WARNING, tr("Please ensure that one of the two options is turned on!"));
+        if (changedSwitch == m_enableManualSwitch)
+        {
+            m_showUserListSwitch->setChecked(true);
+        }
+        else
+        {
+            m_enableManualSwitch->setChecked(true);
+        }
+    }
 }

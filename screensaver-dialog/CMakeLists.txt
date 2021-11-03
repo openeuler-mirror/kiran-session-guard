@@ -44,7 +44,7 @@ file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h" "src/*.ui")
 file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES} )
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES} )
 
 if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)
