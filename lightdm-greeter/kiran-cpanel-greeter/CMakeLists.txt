@@ -45,7 +45,7 @@ file(GLOB_RECURSE SETTINGS_RESOURCES "resources/*.qrc")
 
 # 翻译
 set(GREETER_SETTINGS_TS_FILES "translations/kiran-cpanel-greeter.zh_CN.ts")
-qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_SOURCE_DIR} ${GREETER_SETTINGS_TS_FILES})
+qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${GREETER_SETTINGS_TS_FILES})
 
 add_library(${PROJECT_NAME} SHARED
         ${PUBLIC_CPP}

@@ -65,7 +65,7 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 
 # 翻译
 set(TS_FILES "translations/lightdm-kiran-greeter.zh_CN.ts")
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES})
 
 add_executable(${PROJECT_NAME}
         ${PUBLIC_CPP}

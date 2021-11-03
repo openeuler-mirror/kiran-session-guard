@@ -21,7 +21,7 @@
 
 struct GreeterSettingInfo
 {
-    struct AppearanceSetting
+    struct GeneralSetting
     {
         QString background;
         bool    hideUserList;
@@ -29,7 +29,7 @@ struct GreeterSettingInfo
         quint64 scaleMode;
         quint64 scaleFactor;
 
-        bool operator==(const AppearanceSetting other) const
+        bool operator==(const GeneralSetting other) const
         {
             if (this->background == other.background &&
                 this->hideUserList == other.hideUserList &&
@@ -93,22 +93,22 @@ public:
 private:
     void initUI();
 
-    QWidget *initPageAppearance();
+    QWidget *initPageGeneralSettings();
     QWidget *initPageAutoLogin();
 
     void initUserComboBox(QComboBox *userComboBox);
 
-    void saveAppearanceSettings();
-    void resetAppearanceSettings();
+    void saveGeneralSettings();
+    void resetGeneralSettings();
 
     void saveAutoLoginSettings();
     void resetAutoLoginSettings();
 
-    GreeterSettingInfo::AppearanceSetting getAppearanceSettingInfoFromBackend();
-    GreeterSettingInfo::AppearanceSetting getAppearanceSettingInfoFromUI();
-
+    GreeterSettingInfo::GeneralSetting getGeneralSettingInfoFromBackend();
     GreeterSettingInfo::AutoLoginSetting getAutologinSettingInfoFromBackend();
-    GreeterSettingInfo::AutoLoginSetting getAutologinSettingInfoFromUI();
+
+private slots:
+    void onLoginOptionsChanged();
 
 private:
     GreeterSettingInfo m_origSettingInfo; /** < 缓存的配置信息,用于判断后端配置是否已经更改 */
@@ -123,7 +123,7 @@ private:
     QComboBox *         m_comboScaleFactor; /** < 缩放比例下拉框 */
     using SwitchButton = KiranSwitchButton;
     SwitchButton *m_enableManualSwitch; /** < 启用手动登录开关 */
-    SwitchButton *m_hideUserListSwitch; /** < 隐藏用户列表开关 */
+    SwitchButton *m_showUserListSwitch; /** < 显示用户列表开关 */
 
     QComboBox *m_comboAutoLoginUser; /** < 自动登录用户下拉框 */
     QLineEdit *m_editAutoLoginDelay;    /** < 自动登录延时输入框 */
