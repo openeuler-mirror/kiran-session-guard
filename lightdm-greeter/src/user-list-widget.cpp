@@ -158,7 +158,7 @@ void UserListWidget::loadUserList()
     m_filterModel.setFilterRole(UsersModel::NameRole);
     m_filterModel.setFilterUsers(hiddenUsers);
 
-    for (int i = 0; i < m_usersModel.rowCount(QModelIndex()); i++)
+    for (int i = 0; i < m_filterModel.rowCount(QModelIndex()); i++)
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);

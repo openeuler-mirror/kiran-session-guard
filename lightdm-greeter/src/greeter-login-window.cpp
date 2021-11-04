@@ -320,14 +320,18 @@ void GreeterLoginWindow::initLightdmGreeter()
     }
 
     ///处理用户个数从0到1个和1到0的情况
-    ///TODO:加入金风那边的需求，加入禁止显示的用户列表配置功能
+    QStringList hiddenUsers = KiranGreeterPrefs::instance()->hiddenUsers();
+    m_filterModel.setSourceModel(&m_userModel);
+    m_filterModel.setFilterRole(UsersModel::NameRole);
+    m_filterModel.setFilterUsers(hiddenUsers);
+
     bool bRes;
-    bRes = connect(&m_userModel, &QLightDM::UsersModel::rowsInserted,
+    bRes = connect(&m_filterModel, &QLightDM::UsersModel::rowsInserted,
                    [this](const QModelIndex &parent, int first, int last) {
                        ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
                        ///显示返回按钮
-                       qInfo() << "rowInserted:" << m_userModel.rowCount(QModelIndex());
-                       if ((m_userModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_authProxy->isAuthenticated())
+                     qInfo() << "rowInserted:" << m_filterModel.rowCount(QModelIndex());
+                     if ((m_filterModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_greeter.isAuthenticated())
                        {
                            qInfo() << "setReturn visible true";
                            ui->btn_notListAndCancel->setVisible(true);
@@ -338,10 +342,10 @@ void GreeterLoginWindow::initLightdmGreeter()
         KLOG_WARNING("connect rowsInserted failed!");
     }
 
-    bRes = connect(&m_userModel, &QLightDM::UsersModel::rowsRemoved,
+    bRes = connect(&m_filterModel, &QLightDM::UsersModel::rowsRemoved,
                    [this](const QModelIndex &parent, int first, int last) {
-                       qInfo() << "rowRemoved:" << m_userModel.rowCount(QModelIndex());
-                       if ((m_userModel.rowCount(QModelIndex()) == 0))
+                       qInfo() << "rowRemoved:" << m_filterModel.rowCount(QModelIndex());
+                       if ((m_filterModel.rowCount(QModelIndex()) == 0))
                        {
                            ///TODO:是否需要判断配置文件中能否手动登录
                            resetUIForManualLogin();
@@ -383,7 +387,7 @@ void GreeterLoginWindow::initSettings()
                  << "\tmanual login:            " << m_noListButotnVisiable << "\n"
                  << "\tshow user list:          " << m_showUserList;
 
-    if (m_showUserList && m_userModel.rowCount(QModelIndex()) > 0)
+    if (m_showUserList && m_filterModel.rowCount(QModelIndex()) > 0)
     {
         resetUIForUserListLogin();
     }
