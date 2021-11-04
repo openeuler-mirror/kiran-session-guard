@@ -28,6 +28,7 @@
 #include "auth-msg-queue.h"
 #include "capslock-snoop.h"
 #include "user-info.h"
+#include "filter-user-proxy-model.h"
 
 namespace Ui
 {
@@ -120,6 +121,8 @@ protected:
 
 private:
     Ui::GreeterLoginWindow *ui;
+
+    FilterUserProxyModel     m_filterModel;
 
     QLightDM::Greeter m_greeter;
     QLightDM::UsersModel m_userModel;
