@@ -149,6 +149,16 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    QString langEnv = qgetenv("LANG");
+    QStringList langSplitRes = langEnv.split(".");
+    if(langSplitRes.size() == 2 && langSplitRes.at(1).compare("UTF-8")!=0)
+    {
+        langSplitRes.replace(1,"UTF-8");
+        QString newLangEnv = langSplitRes.join(".");
+        qputenv("LANG",newLangEnv.toLatin1());
+    }
+    setlocale(LC_ALL,"");
+
     CHANNEL_READ = atoi(argv[0]);
     CHANNEL_WRITE = atoi(argv[1]);
     QString userName = argv[2];
