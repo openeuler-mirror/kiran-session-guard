@@ -108,6 +108,7 @@ private:
     GreeterSettingInfo::AutoLoginSetting getAutologinSettingInfoFromBackend();
 
 private slots:
+    void onScaleModeChanged(int idx);
     void onLoginOptionsChanged();
 
 private:
