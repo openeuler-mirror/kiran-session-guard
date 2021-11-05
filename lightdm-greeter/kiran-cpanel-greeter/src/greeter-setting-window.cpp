@@ -258,12 +258,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
     m_comboScaleMode->addItem(tr("disable"), GreeterScalingMode::GREETER_SCALING_MODE_DISABLE);
     mainLayout->addWidget(m_comboScaleMode, 0);
 
-    connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int idx) {
-        QVariant modeData = m_comboScaleMode->itemData(idx);
-        int itemScaleMode = modeData.toUInt();
-
-        m_comboScaleFactor->setEnabled(itemScaleMode == GreeterScalingMode::GREETER_SCALING_MODE_MANUAL);
-    });
+    connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this,&GreeterSettingWindow::onScaleModeChanged);
 
     /* 缩放倍率 */
     auto labelScaleFactor = new QLabel(tr("Scale Factor"), this);
@@ -607,8 +602,11 @@ void GreeterSettingWindow::resetGeneralSettings()
     m_enableManualSwitch->setChecked(appearanceSetting.allowManualLogin);
     int idx = m_comboScaleMode->findData(appearanceSetting.scaleMode);
     m_comboScaleMode->setCurrentIndex(idx);
+    onScaleModeChanged(idx);
+
     idx = m_comboScaleFactor->findData(appearanceSetting.scaleFactor);
     m_comboScaleFactor->setCurrentIndex(idx);
+
     m_origSettingInfo.appearanceInfo = appearanceSetting;
 }
 
@@ -689,4 +687,11 @@ void GreeterSettingWindow::onLoginOptionsChanged()
             m_enableManualSwitch->setChecked(true);
         }
     }
+}
+void GreeterSettingWindow::onScaleModeChanged(int idx)
+{
+    QVariant modeData = m_comboScaleMode->itemData(idx);
+    int itemScaleMode = modeData.toUInt();
+
+    m_comboScaleFactor->setEnabled(itemScaleMode == GreeterScalingMode::GREETER_SCALING_MODE_MANUAL);
 }
