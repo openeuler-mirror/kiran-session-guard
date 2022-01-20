@@ -5,7 +5,7 @@
     <name>AuthProxy</name>
     <message>
         <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
+        <translation>认证失败</translation>
     </message>
 </context>
 <context>
@@ -37,6 +37,13 @@
     <message>
         <source>Start fingerprint authentication</source>
         <translation type="obsolete">开始指纹认证</translation>
+    </message>
+</context>
+<context>
+    <name>KSPlugin</name>
+    <message>
+        <source>Failed to authenticate</source>
+        <translation type="unfinished">认证失败</translation>
     </message>
 </context>
 <context>

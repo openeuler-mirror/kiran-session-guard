@@ -27,7 +27,7 @@
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../src/greeter-login-window.cpp" line="513"/>
+        <location filename="../src/greeter-login-window.cpp" line="517"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
@@ -83,28 +83,28 @@
         <translation type="vanished">认证失败</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="560"/>
-        <location filename="../src/greeter-login-window.cpp" line="723"/>
+        <location filename="../src/greeter-login-window.cpp" line="564"/>
+        <location filename="../src/greeter-login-window.cpp" line="727"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="572"/>
+        <location filename="../src/greeter-login-window.cpp" line="576"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="607"/>
+        <location filename="../src/greeter-login-window.cpp" line="611"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="778"/>
+        <location filename="../src/greeter-login-window.cpp" line="782"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="789"/>
+        <location filename="../src/greeter-login-window.cpp" line="793"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
@@ -133,13 +133,13 @@
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="190"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="360"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="355"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="205"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="375"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="370"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
@@ -164,48 +164,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="269"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="264"/>
         <source>Scale Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="294"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="289"/>
         <source>Enable manual input user login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="319"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="314"/>
         <source>Show User List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="453"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="529"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="448"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="524"/>
         <source>Configuration changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="454"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="530"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="449"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="525"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="507"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="567"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="502"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="562"/>
         <source>Save failed, reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="511"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="571"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="506"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="566"/>
         <source>Saved successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="682"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="680"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation type="unfinished"></translation>
     </message>
