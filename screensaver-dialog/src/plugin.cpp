@@ -15,8 +15,10 @@
 
 #include <QApplication>
 #include <QLocale>
+#include <kiran-log/qt5-log-i.h>
 #include "config.h"
 #include "screensaver-dialog.h"
+
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 
@@ -30,12 +32,19 @@ int KSPlugin::init(Interface* ksInterface)
     Q_INIT_RESOURCE(commonWidgets);
 
     m_translator = new QTranslator;
-    m_translator->load(QLocale(),
-                       "kiran-screensaver-dialog",
-                       ".",
-                       TRANSLATION_FILE_DIR,
-                       ".qm");
-    qApp->installTranslator(m_translator);
+    if (m_translator->load(QLocale(),
+                           "kiran-screensaver-dialog",
+                           ".",
+                           TRANSLATION_FILE_DIR,
+                           ".qm"))
+    {
+        qApp->installTranslator(m_translator);
+        KLOG_DEBUG() << "install kiran-screensaver-dialog success";
+    }
+    else
+    {
+        KLOG_WARNING() << "can't load kiran-screensaver-dialog translator";
+    }
 
     return 0;
 }

@@ -77,7 +77,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                     else
                     {
                         auto replyEvent = dynamic_cast<PromptReplyEvent *>(recvReply);
-                        KLOG_DEBUG() << "recv prompt reply:" << replyEvent->result() << replyEvent->text();
+                        //KLOG_DEBUG() << "recv prompt reply:" << replyEvent->result() << replyEvent->text();
                         //消息返回失败
                         if (!replyEvent->result())
                         {
