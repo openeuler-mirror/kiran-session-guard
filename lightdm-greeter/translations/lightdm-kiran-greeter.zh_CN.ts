@@ -4,8 +4,9 @@
 <context>
     <name>AuthProxy</name>
     <message>
+        <location filename="../../lib/auth-proxy/auth-proxy.cpp" line="196"/>
         <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
+        <translation>认证失败</translation>
     </message>
 </context>
 <context>
