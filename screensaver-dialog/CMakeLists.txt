@@ -43,8 +43,10 @@ file(GLOB_RECURSE SRC "src/*.cpp" "src/*.h" "src/*.ui")
 # 资源文件
 file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 
+# 翻译文件
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
-qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES} )
+file(GLOB_RECURSE AUTH_PROXY_SRC ../lib/auth-proxy/*.cpp ../lib/auth-proxy/*.h ../lib/auth-proxy/*.ui)
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES} ${AUTH_PROXY_SRC} )
 
 if(SHOW_VIRTUAL_KEYBOARD)
     add_definitions(-DVIRTUAL_KEYBOARD)

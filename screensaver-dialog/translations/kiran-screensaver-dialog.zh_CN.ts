@@ -43,7 +43,7 @@
     <name>KSPlugin</name>
     <message>
         <source>Failed to authenticate</source>
-        <translation type="unfinished">认证失败</translation>
+        <translation type="obsolete">认证失败</translation>
     </message>
 </context>
 <context>
@@ -69,10 +69,6 @@
         <translation>帐号</translation>
     </message>
     <message>
-        <source>cancel</source>
-        <translation type="vanished">取消</translation>
-    </message>
-    <message>
         <source>Recertification</source>
         <translation>重新认证</translation>
     </message>
@@ -83,14 +79,6 @@
     <message>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
-    </message>
-    <message>
-        <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
-    </message>
-    <message>
-        <source>ddd MMM HH:mm</source>
-        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
         <source>ddd MMM dd HH:mm</source>
