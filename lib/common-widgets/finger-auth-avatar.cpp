@@ -15,6 +15,7 @@
 
 #include "finger-auth-avatar.h"
 #include <QPainter>
+#include <QPainterPath>
 
 FingerAuthAvatar::FingerAuthAvatar(QWidget *parent) : QWidget(parent)
 {
