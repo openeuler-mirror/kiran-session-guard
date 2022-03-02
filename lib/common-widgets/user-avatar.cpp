@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QPainter>
+#include <QPainterPath>
 
 #define DEFAULT_USER_AVATAR ":/common-widgets-images/user_180.png"
 
