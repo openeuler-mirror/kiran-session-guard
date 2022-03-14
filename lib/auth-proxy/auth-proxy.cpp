@@ -102,6 +102,7 @@ bool AuthProxy::setMsgQueue(AuthMsgQueueBase *msgQueue)
                 this, &AuthProxy::handleAuthQueueComplete);
     }
 
+    m_authMessageQueue->startDispatcher();
     return true;
 }
 

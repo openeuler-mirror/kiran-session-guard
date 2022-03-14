@@ -201,3 +201,4 @@ dkms.conf
 .nfs*
 
 /build/
+.vscode/c_cpp_properties.json
