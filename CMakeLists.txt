@@ -4,6 +4,8 @@ project(kiran-session-guard)
 
 include(GNUInstallDirs)
 
+include_directories(/usr/include/)
+
 add_subdirectory(./lib)
 add_subdirectory(./libexec)
 add_subdirectory(./lightdm-greeter)
