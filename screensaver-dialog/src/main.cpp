@@ -17,11 +17,11 @@
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
 
 #if !BUILD_SCREENSAVER_PLUGIN
-#include <QApplication>
+#include <kiran-application.h>
 #include "screensaver-dialog.h"
-#include <kiran-screensaver/ks-interface.h>
+#include <kiran-screensaver/interface.h>
 #include <kiran-log/qt5-log-i.h>
-class FakeKsInterface:public KSInterface
+class FakeKsInterface:public Kiran::ScreenSaver::Interface
 {
 public:
     void authenticationPassed() override
