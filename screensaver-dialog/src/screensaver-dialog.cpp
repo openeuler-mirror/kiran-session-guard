@@ -29,7 +29,7 @@
 #include <QPainter>
 #include <QWindow>
 #include <QtDBus>
-
+#include <QApplication>
 #include <kiran-screensaver/interface.h>
 
 #include "auth-msg-queue.h"
@@ -237,7 +237,7 @@ void ScreenSaverDialog::init()
     {
         KLOG_WARNING() << "load style sheet failed";
     }
-    this->setStyleSheet(stylesheet);
+    qApp->setStyleSheet(stylesheet);
 
     startUpdateTimeTimer();
     startAuth();
