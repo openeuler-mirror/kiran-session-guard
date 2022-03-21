@@ -536,6 +536,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
 
     /* 保存 */
     QDBusPendingReply<> reply;
+    QString errMsg;
     bool hasError = false;
 
     reply = KiranGreeterPrefs::instance()->SetAutologinUser(m_comboAutoLoginUser->currentText());
@@ -543,6 +544,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     if (reply.isError())
     {
         KLOG_ERROR() << "SetAutologinUser failed," << reply.error();
+        errMsg = reply.error().message();
         hasError = true;
         goto failed;
     }
@@ -552,6 +554,7 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     if (reply.isError())
     {
         KLOG_ERROR() << "SetAutologinTimeout" << reply.error();
+        errMsg = reply.error().message();
         hasError = true;
     }
 
@@ -559,7 +562,15 @@ failed:
     /* 提示保存是否成功 */
     if (hasError)
     {
-        m_hoverTips->show(HoverTips::HOVE_TIPS_ERR, tr("Save failed, reload"));
+        if( errMsg.isEmpty() )
+        {
+            m_hoverTips->show(HoverTips::HOVE_TIPS_ERR, tr("Save failed, reload"));
+        }
+        else
+        {
+            QString error = QString(tr("Save failed: %1").arg(errMsg));
+            m_hoverTips->show(HoverTips::HOVE_TIPS_ERR, error);
+        }
     }
     else
     {

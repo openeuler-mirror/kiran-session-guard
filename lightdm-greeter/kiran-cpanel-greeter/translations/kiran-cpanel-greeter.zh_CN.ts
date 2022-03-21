@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>GreeterSetting</name>
     <message>
         <source>GreeterSetting</source>
-        <translation type="vanished">登录设置</translation>
+        <translation>登录设置</translation>
     </message>
     <message>
         <source>Appearance Setting</source>
-        <translation type="vanished">外观设置</translation>
+        <translation>外观设置</translation>
     </message>
     <message>
         <source>Select Image</source>
-        <translation type="vanished">选择图片</translation>
+        <translation>选择图片</translation>
     </message>
     <message>
         <source>Browse</source>
-        <translation type="vanished">浏览</translation>
+        <translation>浏览</translation>
     </message>
     <message>
         <source>Scale Mode</source>
-        <translation type="vanished">缩放模式</translation>
+        <translation>缩放模式</translation>
     </message>
     <message>
         <source>Scale Factor</source>
-        <translation type="vanished">缩放比例</translation>
+        <translation>缩放比例</translation>
     </message>
     <message>
         <source>User Login</source>
-        <translation type="vanished">用户登录</translation>
+        <translation>用户登录</translation>
     </message>
     <message>
         <source>enable manual login</source>
-        <translation type="vanished">允许手动登录</translation>
+        <translation>允许手动登录</translation>
     </message>
     <message>
         <source>hide user list</source>
-        <translation type="vanished">隐藏用户列表</translation>
+        <translation>隐藏用户列表</translation>
     </message>
     <message>
         <source>auto login account(take effect after restart)</source>
@@ -45,14 +45,14 @@
     </message>
     <message>
         <source>auto login delay(seconds)(take effect after restart)</source>
-        <translation type="vanished">自动登录延时(秒)(重启后生效)</translation>
+        <translation>自动登录延时(秒)(重启后生效)</translation>
     </message>
 </context>
 <context>
     <name>GreeterSettingWindow</name>
     <message>
         <source>appearance</source>
-        <translation type="vanished">登录设置</translation>
+        <translation>登录设置</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="85"/>
@@ -61,11 +61,11 @@
     </message>
     <message>
         <source>auto login account(take effect after restart)</source>
-        <translation type="vanished">自动登录用户(重启后生效)</translation>
+        <translation>自动登录用户(重启后生效)</translation>
     </message>
     <message>
         <source>auto login dealy(seconds)(take effect after restart)</source>
-        <translation type="vanished">自动登录延时(重启后生效)</translation>
+        <translation>自动登录延时(重启后生效)</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="81"/>
@@ -130,17 +130,30 @@
         <translation>显示用户列表</translation>
     </message>
     <message>
-        <location filename="../src/greeter-setting-window.cpp" line="680"/>
+        <location filename="../src/greeter-setting-window.cpp" line="571"/>
+        <source>Save failed: %1</source>
+        <translation>保存失败: %1</translation>
+    </message>
+    <message>
+        <source>Save failed,%1</source>
+        <translation type="obsolete">保存失败,%1</translation>
+    </message>
+    <message>
+        <source>No permission to modify,reload the configuration</source>
+        <translation>无权限修改，已重新加载配置</translation>
+    </message>
+    <message>
+        <location filename="../src/greeter-setting-window.cpp" line="691"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation>请确保两个选项之一被打开!</translation>
     </message>
     <message>
         <source>Enable Manual Login</source>
-        <translation type="vanished">允许手动登录</translation>
+        <translation>允许手动登录</translation>
     </message>
     <message>
         <source>Hide User List</source>
-        <translation type="vanished">隐藏用户列表</translation>
+        <translation>隐藏用户列表</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="448"/>
@@ -158,13 +171,13 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="502"/>
-        <location filename="../src/greeter-setting-window.cpp" line="562"/>
+        <location filename="../src/greeter-setting-window.cpp" line="567"/>
         <source>Save failed, reload</source>
         <translation>保存失败，已重新加载</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="506"/>
-        <location filename="../src/greeter-setting-window.cpp" line="566"/>
+        <location filename="../src/greeter-setting-window.cpp" line="577"/>
         <source>Saved successfully</source>
         <translation>保存成功</translation>
     </message>
