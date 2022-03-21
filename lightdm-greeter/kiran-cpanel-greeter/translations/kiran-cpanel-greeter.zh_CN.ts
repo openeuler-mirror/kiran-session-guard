@@ -1,71 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
-<context>
-    <name>GreeterSetting</name>
-    <message>
-        <source>GreeterSetting</source>
-        <translation>登录设置</translation>
-    </message>
-    <message>
-        <source>Appearance Setting</source>
-        <translation>外观设置</translation>
-    </message>
-    <message>
-        <source>Select Image</source>
-        <translation>选择图片</translation>
-    </message>
-    <message>
-        <source>Browse</source>
-        <translation>浏览</translation>
-    </message>
-    <message>
-        <source>Scale Mode</source>
-        <translation>缩放模式</translation>
-    </message>
-    <message>
-        <source>Scale Factor</source>
-        <translation>缩放比例</translation>
-    </message>
-    <message>
-        <source>User Login</source>
-        <translation>用户登录</translation>
-    </message>
-    <message>
-        <source>enable manual login</source>
-        <translation>允许手动登录</translation>
-    </message>
-    <message>
-        <source>hide user list</source>
-        <translation>隐藏用户列表</translation>
-    </message>
-    <message>
-        <source>auto login account(take effect after restart)</source>
-        <translation type="obsolete">自动登录用户(重启后生效)</translation>
-    </message>
-    <message>
-        <source>auto login delay(seconds)(take effect after restart)</source>
-        <translation>自动登录延时(秒)(重启后生效)</translation>
-    </message>
-</context>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>GreeterSettingWindow</name>
-    <message>
-        <source>appearance</source>
-        <translation>登录设置</translation>
-    </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="85"/>
         <source>autologin</source>
         <translation>自动登录</translation>
-    </message>
-    <message>
-        <source>auto login account(take effect after restart)</source>
-        <translation>自动登录用户(重启后生效)</translation>
-    </message>
-    <message>
-        <source>auto login dealy(seconds)(take effect after restart)</source>
-        <translation>自动登录延时(重启后生效)</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="81"/>
@@ -139,21 +80,9 @@
         <translation type="obsolete">保存失败,%1</translation>
     </message>
     <message>
-        <source>No permission to modify,reload the configuration</source>
-        <translation>无权限修改，已重新加载配置</translation>
-    </message>
-    <message>
         <location filename="../src/greeter-setting-window.cpp" line="691"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation>请确保两个选项之一被打开!</translation>
-    </message>
-    <message>
-        <source>Enable Manual Login</source>
-        <translation>允许手动登录</translation>
-    </message>
-    <message>
-        <source>Hide User List</source>
-        <translation>隐藏用户列表</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="448"/>
