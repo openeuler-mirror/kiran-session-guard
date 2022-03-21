@@ -68,22 +68,6 @@
         <translation>关机</translation>
     </message>
     <message>
-        <source>User has been disabled</source>
-        <translation type="vanished">用户已被禁用</translation>
-    </message>
-    <message>
-        <source>Incorrect password, please try again</source>
-        <translation type="vanished">密码错误，请再次输入</translation>
-    </message>
-    <message>
-        <source>Incorrect username or password</source>
-        <translation type="vanished">用户名或密码错误</translation>
-    </message>
-    <message>
-        <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
-    </message>
-    <message>
         <location filename="../src/greeter-login-window.cpp" line="564"/>
         <location filename="../src/greeter-login-window.cpp" line="727"/>
         <source>Return</source>
@@ -195,18 +179,23 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="502"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="562"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="567"/>
         <source>Save failed, reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="506"/>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="566"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="577"/>
         <source>Saved successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="680"/>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="571"/>
+        <source>Save failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../kiran-cpanel-greeter/src/greeter-setting-window.cpp" line="691"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation type="unfinished"></translation>
     </message>
