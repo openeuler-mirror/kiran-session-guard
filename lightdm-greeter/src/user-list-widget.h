@@ -38,6 +38,7 @@ public:
     void    setRow0();
     void    JustForTest(int count);
     QString getIconByUserName(const QString &userName);
+    UserInfo getUserInfoByUserName(const QString &userName);
     bool    eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     int     userCount();
 

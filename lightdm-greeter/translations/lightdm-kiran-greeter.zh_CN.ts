@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>AuthProxy</name>
     <message>
@@ -28,7 +28,7 @@
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../src/greeter-login-window.cpp" line="517"/>
+        <location filename="../src/greeter-login-window.cpp" line="529"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
@@ -68,28 +68,28 @@
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="564"/>
-        <location filename="../src/greeter-login-window.cpp" line="727"/>
+        <location filename="../src/greeter-login-window.cpp" line="576"/>
+        <location filename="../src/greeter-login-window.cpp" line="739"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="576"/>
+        <location filename="../src/greeter-login-window.cpp" line="588"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="611"/>
+        <location filename="../src/greeter-login-window.cpp" line="623"/>
         <source>dddd MMM HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="782"/>
+        <location filename="../src/greeter-login-window.cpp" line="794"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="793"/>
+        <location filename="../src/greeter-login-window.cpp" line="805"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
@@ -211,6 +211,11 @@ Select discard to discard the modification and reload the new configuration</sou
         <location filename="../src/login-button.ui" line="51"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/login-button.cpp" line="28"/>
+        <source>login</source>
+        <translation>登录</translation>
     </message>
 </context>
 <context>

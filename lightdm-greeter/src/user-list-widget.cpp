@@ -297,6 +297,24 @@ QString UserListWidget::getIconByUserName(const QString &userName)
     return iconPath;
 }
 
+UserInfo UserListWidget::getUserInfoByUserName(const QString &userName)
+{
+    UserInfo info;
+
+    for (int i = 0; i < m_filterModel.rowCount(QModelIndex()); i++)
+    {
+        UserInfo userInfo;
+        getUserInfoFromModel(i, userInfo);
+        if (userInfo.name == userName)
+        {
+            info = userInfo;
+            break;
+        }
+    }
+
+    return info;
+}
+
 void UserListWidget::setCurrentRow(int idx)
 {
     if (ui->userList->count() > idx)

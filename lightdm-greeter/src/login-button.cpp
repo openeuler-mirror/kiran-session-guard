@@ -25,6 +25,7 @@ LoginButton::LoginButton(QWidget *parent) : QWidget(parent),
                                             m_pressed(false)
 {
     ui->setupUi(this);
+    ui->label_text->setText(tr("login"));
     setAttribute(Qt::WA_Hover);
 }
 

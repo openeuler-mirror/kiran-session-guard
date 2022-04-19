@@ -80,11 +80,10 @@ LoginButton{
     background-color:rgba(0,0,0,0.2);
     padding-left:10px;
     padding-right:10px;
-    qproperty-icon: url("/home/lxh/AutoLoginButton/images/arrow.png") ;
+    qproperty-icon: url(":/images/arrow.png") ;
 }
 LoginButton > QLabel#label_text{
     color:white;
-    qproperty-text:"login";
     font-size:14px;
 }
 LoginButton:focus,LoginButton:hover{

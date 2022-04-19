@@ -194,10 +194,10 @@ void GreeterLoginWindow::initUI()
             this, &GreeterLoginWindow::slotUserActivated);
     ///自动登录按钮点击
     connect(ui->btn_autologin, &LoginButton::sigClicked, [this]() {
-        m_greeter.authenticateAutologin();
+        m_authProxy->authenticate(m_greeter.autologinUserHint());
     });
     connect(&m_greeter, &QLightDM::Greeter::autologinTimerExpired, [this]() {
-        m_greeter.authenticateAutologin();
+        m_authProxy->authenticate(m_greeter.autologinUserHint());
     });
     ///重新认证按钮点击
     connect(ui->btn_reAuth, &QPushButton::clicked, [this]() {
@@ -301,9 +301,13 @@ void GreeterLoginWindow::initMenu()
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
-    AuthBase *authInterface = new AuthLightdm(&m_greeter, this);
-    AuthMsgQueue *msgQueue = new AuthMsgQueue(m_authProxy);
+    AuthBase *authInterface = new AuthLightdm(&m_greeter);
+    AuthMsgQueue *msgQueue = new AuthMsgQueue();
+
     m_authProxy = new AuthProxy(authInterface, this);
+    authInterface->setParent(m_authProxy);
+    msgQueue->setParent(m_authProxy);
+
     m_authProxy->setMsgQueue(msgQueue);
     m_authProxy->setSessionAuthType(SESSION_AUTH_TYPE_TOGETHER);
     if (!m_authProxy->init())
@@ -357,6 +361,16 @@ void GreeterLoginWindow::initLightdmGreeter()
     }
 
     ui->userlist->loadUserList();
+
+    //NOTE:修复#52982问题，若自动登录用户已存在不自动触发自动登录
+    if( !m_greeter.autologinUserHint().isEmpty() )
+    {
+        UserInfo autologinUserInfo = ui->userlist->getUserInfoByUserName(m_greeter.autologinUserHint());
+        if( autologinUserInfo.loggedIn )
+        {
+            m_greeter.cancelAutologin();
+        }
+    }
 }
 
 void GreeterLoginWindow::initSettings()
@@ -481,27 +495,25 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
 
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
-    if (username == m_greeter.autologinUserHint())
+
+    if ( username == m_greeter.autologinUserHint() )
     {
         KLOG_DEBUG() << "authproxy user" << username << "is auto login user,switch to auto login";
         switchToAutoLogin();
-        return;
     }
     else
     {
         switchToPromptEdit();
+        ui->promptEdit->reset();
+        ///NOTE:为了解决在某些环境启动过快，导致的lightdm的认证回复prompt过慢几秒，
+        ///     登录界面输入框未切换到密码模式,用户直接输入明文密码
+        ///     暂时解决方案单独禁用输入框，等待lightdm的prompt消息会启用输入框
+        ui->promptEdit->setEnabled(false);
+        ///FIXME:鼠标点击认证用户列表时，需要延时设置输入焦点到输入框，不然又会被置回UserItem
+        setEditPromptFocus(200);
+
+        m_authProxy->authenticate(username);
     }
-    ui->promptEdit->reset();
-
-    ///NOTE:为了解决在某些环境启动过快，导致的lightdm的认证回复prompt过慢几秒，
-    ///     登录界面输入框未切换到密码模式,用户直接输入明文密码
-    ///     暂时解决方案单独禁用输入框，等待lightdm的prompt消息会启用输入框
-    ui->promptEdit->setEnabled(false);
-
-    ///FIXME:鼠标点击认证用户列表时，需要延时设置输入焦点到输入框，不然又会被置回UserItem
-    setEditPromptFocus(200);
-
-    m_authProxy->authenticate(username);
 }
 
 void GreeterLoginWindow::resetUIForUserListLogin()
