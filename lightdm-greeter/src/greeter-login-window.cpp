@@ -197,7 +197,9 @@ void GreeterLoginWindow::initUI()
         m_authProxy->authenticate(m_greeter.autologinUserHint());
     });
     connect(&m_greeter, &QLightDM::Greeter::autologinTimerExpired, [this]() {
-        m_authProxy->authenticate(m_greeter.autologinUserHint());
+        //NOTE:修复机器配置了autologin-timeout,但未配置autologin-user的情况
+        if( !m_greeter.autologinUserHint().isEmpty() )
+            m_authProxy->authenticate(m_greeter.autologinUserHint());
     });
     ///重新认证按钮点击
     connect(ui->btn_reAuth, &QPushButton::clicked, [this]() {
