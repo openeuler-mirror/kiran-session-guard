@@ -38,6 +38,51 @@
 Q_DECLARE_METATYPE(UserInfo);
 using namespace QLightDM;
 
+bool getIsLoggedIn(const QString &userName)
+{
+    bool res = false;
+
+    QDBusInterface dmInterface("org.freedesktop.DisplayManager",
+                               "/org/freedesktop/DisplayManager",
+                               "org.freedesktop.DisplayManager",
+                               QDBusConnection::systemBus());
+    QVariant sessionsVar = dmInterface.property("Sessions");
+    if( !sessionsVar.isValid() )
+    {
+        KLOG_ERROR("can't get display manager property 'sessions'");
+        return res;
+    }
+
+    QList<QDBusObjectPath> sessions = sessionsVar.value<QList<QDBusObjectPath>>();
+    KLOG_DEBUG() << "sessions:" << sessions.count();
+    for(const auto &session:sessions)
+    {
+        KLOG_DEBUG() << "\t-" << session.path();
+    }
+    foreach (const auto &session, sessions)
+    {
+        QDBusInterface sessionInterface("org.freedesktop.DisplayManager",
+                                        session.path(),
+                                        "org.freedesktop.DisplayManager.Session",
+                                        QDBusConnection::systemBus());
+        QVariant userNameVar = sessionInterface.property("UserName");
+        if( !userNameVar.isValid() )
+        {
+            KLOG_ERROR("can't get display manager session property 'UserName'");
+            continue;
+        }
+
+        QString sessionUser = userNameVar.toString();
+        if (sessionUser.compare(userName) == 0)
+        {
+            res = true;
+            break;
+        }
+    }
+
+    return res;
+}
+
 GreeterLoginWindow::GreeterLoginWindow(QWidget *parent)
     : QWidget(parent),
       ui(new Ui::GreeterLoginWindow),
@@ -181,7 +226,7 @@ void GreeterLoginWindow::initUI()
         m_powerMenu->popup(menuLeftTop);
     });
 
-    if( !KiranGreeterPrefs::instance()->canHibernate() &&
+    if (!KiranGreeterPrefs::instance()->canHibernate() &&
         !KiranGreeterPrefs::instance()->canSuspend() &&
         !KiranGreeterPrefs::instance()->canPowerOff() &&
         !KiranGreeterPrefs::instance()->canReboot())
@@ -336,8 +381,8 @@ void GreeterLoginWindow::initLightdmGreeter()
                    [this](const QModelIndex &parent, int first, int last) {
                        ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
                        ///显示返回按钮
-                     qInfo() << "rowInserted:" << m_filterModel.rowCount(QModelIndex());
-                     if ((m_filterModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_greeter.isAuthenticated())
+                       qInfo() << "rowInserted:" << m_filterModel.rowCount(QModelIndex());
+                       if ((m_filterModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_greeter.isAuthenticated())
                        {
                            qInfo() << "setReturn visible true";
                            ui->btn_notListAndCancel->setVisible(true);
@@ -364,14 +409,22 @@ void GreeterLoginWindow::initLightdmGreeter()
 
     ui->userlist->loadUserList();
 
-    //NOTE:修复#52982问题，若自动登录用户已存在不自动触发自动登录
-    if( !m_greeter.autologinUserHint().isEmpty() )
+    //NOTE:修复#52982问题，若自动登录用户已存在不自动触发延时自动登录
+    if ( !m_greeter.autologinUserHint().isEmpty() )
     {
-        UserInfo autologinUserInfo = ui->userlist->getUserInfoByUserName(m_greeter.autologinUserHint());
-        if( autologinUserInfo.loggedIn )
+        bool isLogged = getIsLoggedIn(m_greeter.autologinUserHint());
+        if( isLogged )
         {
             m_greeter.cancelAutologin();
         }
+#if 0
+        //WARNING:这种方法不能取得root是否已登录信息
+        UserInfo autologinUserInfo = ui->userlist->getUserInfoByUserName(m_greeter.autologinUserHint());
+        if (autologinUserInfo.loggedIn)
+        {
+            m_greeter.cancelAutologin();
+        }
+#endif
     }
 }
 
@@ -498,7 +551,7 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
 
-    if ( username == m_greeter.autologinUserHint() )
+    if (username == m_greeter.autologinUserHint())
     {
         KLOG_DEBUG() << "authproxy user" << username << "is auto login user,switch to auto login";
         switchToAutoLogin();
