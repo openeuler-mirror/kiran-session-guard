@@ -1,0 +1,164 @@
+/******************Label******************/
+QLabel#label_userName{
+    color:white;
+}
+QLabel#label_userName{
+    font-family:"Noto Sans CJK SC Light";
+    font-size: 36px;
+}
+QLabel#label_tips{
+    font-size:14px;
+    font-family:"Noto Sans CJK SC Light";
+    background-color:transparent;
+}
+ShadowLabel{
+    qproperty-shadowEnable:true;
+    qproperty-shadowColor:rgba(0,0,0,0.1);
+    qproperty-shadowOffsetX:2;
+    qproperty-shadowOffsetY:2;
+}
+/*****************LineEdit************************/
+PromptEdit#promptEdit{
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:4px;
+    background-color:rgba(0,0,0,0.2);
+}
+PromptEdit#promptEdit[editFocused=true]{
+    border:1px solid rgba(46,179,255,0.8);
+}
+PromptEdit#promptEdit[hasError=true]{
+    border:1px solid rgba(255, 46, 46,0.4);
+}
+PromptEdit[showPasswordModeStyle=false] > QLineEdit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:14px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+PromptEdit[showPasswordModeStyle=true] > QLineEdit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:7px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+PromptEdit#promptEdit > QToolButton#button{
+    border:0px;
+    background-color:transparent;
+    background-repeat:false;
+}
+PromptEdit#promptEdit > QWidget#separator{
+    border:0px;
+    background-color:rgba(255,255,255,0.3);
+}
+/******************Button*******************************/
+QToolButton#btn_cancel{
+    border:0px;
+    color:rgb(255,254,254);
+    font-family:"Noto Sans CJK SC";
+    font-size:14px;
+    text-decoration:underline;
+}
+QToolButton#btn_cancel:hover,
+QToolButton#btn_cancel:focus{
+    color:#2eb3ff;
+}
+QToolButton#btn_cancel:pressed{
+    color:1b82bd;
+}
+QToolButton#btn_switchuser{
+    border:0px;
+    border-image:url(:/images/switch_users_normal.png);
+}
+QToolButton#btn_switchuser:pressed{
+    border-image:url(:/images/switch_users_pressed.png);
+}
+QToolButton#btn_switchuser:focus:!pressed,QToolButton#btn_switchuser:hover:!pressed{
+    border-image:url(:/images/switch_users_select.png);
+}
+QToolButton#btn_keyboard{
+    border:0px;
+    border-image:url(:/images/keyboard_normal.png);
+}
+QToolButton#btn_keyboard:pressed{
+    border-image:url(:/images/keyboard_pressed.png);
+}
+QToolButton#btn_keyboard:focus:!pressed,QToolButton#btn_keyboard:hover:!pressed{
+    border-image:url(:/images/keyboard_select.png);
+}
+QToolButton#btn_power{
+    border:0px;
+    border-image:url(:/images/shutdown_normal.png);
+}
+QToolButton#btn_power:pressed{
+    border-image:url(:/images/shutdown_hover.png);
+}
+QToolButton#btn_power:focus:!pressed,
+QToolButton#btn_power:hover:!pressed{
+    border-image:url(:/images/shutdown_select.png);
+}
+/*********************Menu************************/
+QMenu {
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color: rgba(0,0,0,0.3);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+}
+QMenu::item {
+    font-family:"Noto Sans CJK SC Light";
+    padding-left:16px;
+    height:28px;
+    color:white;
+    font-size:12px;
+}
+QMenu::item:selected {
+    border-right:2px solid #2EB3FF;
+    background: rgba(255, 255, 255, 0.1);
+}
+QMenu::separator {
+    height: 0px;
+    background: lightblue;
+}
+GreeterMenuItem#GreeterMenuItem{
+    height:28px;
+}
+GreeterMenuItem#GreeterMenuItem > QLabel{
+    font-family:"Noto Sans CJK SC Light";
+    padding-left:16px;
+    color:white;
+    font-size:12px;
+    border: 0px;
+    margin:0px;
+}
+GreeterMenuItem#GreeterMenuItem > QCheckBox{
+    margin-left:2px;
+    margin-right:0px;
+}
+GreeterMenuItem#GreeterMenuItem:hover{
+    border-right:2px solid #2EB3FF;
+    background: rgba(255, 255, 255, 0.1);
+}
+/*重新认证按钮*/
+QPushButton#btn_reAuth{
+    border:1px solid rgba(255,255,255,0.01);
+    border-radius:8px;
+    background-color:rgba(255,255,255,0.05);
+    color:white;
+}
+QPushButton#btn_reAuth:pressed{
+    background-color:rgba(0,0,0,0.1);
+    border:1px solid rgba(67,163,242,0.03);
+}
+QPushButton#btn_reAuth:hover{
+    background-color:rgba(255,255,255,0.1);
+}
+
+QPushButton#btn_reAuth:focus{
+    border:1px solid rgba(67,163,242,0.1);
+}
