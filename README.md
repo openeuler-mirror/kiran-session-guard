@@ -1,37 +1,94 @@
 # kiran-session-guard
 
-#### 介绍
-Kiran desktop bottom panel
+提供对于lightdm的显示管理器的登陆器和基于mate-screensaver的解锁框
 
-#### 软件架构
-软件架构说明
+## 使用
+
+### 编译
+
+- 安装依赖
+
+  ```bash
+  sudo yum install qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel kiranwidgets-qt5-devel kiran-log-qt5-devel kiran-cc-daemon-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-control-panel-devel libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel pam-devel
+  ```
+
+- 源码根目录下创建**build**目录
+
+  ```bash
+  mkdir build
+  ```
+
+- 进**build**目录，通过**cmake**生成**Makefile**
+
+  ```bash
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  ```
+
+- 通过**make**进行编译
+
+  ```bash
+  make -j4
+  ```
+
+### 安装
+
+- 在源码根目录下的**build**目录下，执行
+
+  ```bash
+  sudo make install
+  ```
+
+### 运行
+
+- 重启**lightdm**服务即可运行**lightdm-kiran-greeter**
+
+  ```bash
+  sudo systemctl restart lightdm
+  ```
+
+- 重启mate-screensaver，再进行锁屏，即可运行kiran-screensaver-dialog
+
+## 目录结构
+
+源码根目录
+
+├── checkpass-common  
+├── lib  
+│   ├── auth-proxy  
+│   ├── common-widgets  
+│   └── scaling-helper  
+├── libexec  
+│   └── session-guard-checkpass  
+├── lightdm-greeter  
+│   ├── kiran-cpanel-greeter  
+└── screensaver-dialog
 
 
-#### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- checkpass-common
 
-#### 使用说明
+  封装 lib/auth-proxy/auth-pam和kiran-session-guard-checkpass之间通过管道
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- lib/auth-proxy
 
-#### 参与贡献
+  共用认证相关代码封装
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+- lib/common-widgets
 
+  共用界面组件代码封装
 
-#### 特技
+- lib/scaling-helper
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+  界面缩放代码封装
+
+- libexec/session-guard-checkpass
+
+  AuthProxy/AuthPam中进行PAM认证的子进程
+
+- lightdm-greeter
+
+  lightdm登陆器lightdm-kiran-greeter的实现
+
+- screensaver-dialog
+
+  mate-screensaver的解锁框kiran-screensaver-dialog实现

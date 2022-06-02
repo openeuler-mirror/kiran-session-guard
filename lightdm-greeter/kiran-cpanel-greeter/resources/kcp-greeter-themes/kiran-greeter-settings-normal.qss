@@ -1,0 +1,9 @@
+/*******************Widget***********************/
+/*预览控件边框*/
+QWidget#preview{
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px;
+}
+QWidget#tab{
+    border-right:1px solid rgba(255,255,255,25);
+}

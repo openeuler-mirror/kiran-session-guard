@@ -1,0 +1,23 @@
+[Common]
+#需隐藏的session，以','分割
+hidden-sessions = xinit-compat
+
+#用户列表中需要隐藏的用户
+#以英文逗号分割，区分大小写
+hide-users=@HIDDEN_USER@
+
+[Power]
+##以下选项由logind配置文件共同决定
+##若都为开启则登录界面进行显示
+##若存在一个不开启则不进行显示
+#是否提供关机选项
+can-poweroff=@CAN_POWER_OFF@
+
+#是否提供重启选项
+can-reboot=@CAN_REBOOT@
+
+#是否提供挂起选项
+can-suspend=@CAN_SUSPEND@
+
+#是否提供休眠选项
+can-hibernate=@CAN_HIBERNATE@

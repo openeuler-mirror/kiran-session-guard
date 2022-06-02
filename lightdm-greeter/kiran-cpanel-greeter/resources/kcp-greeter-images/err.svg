@@ -1,0 +1,16 @@
+<svg id="错误信息" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ff4b21;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <circle id="椭圆_7" data-name="椭圆 7" class="cls-1" cx="8" cy="8" r="8"/>
+  <path id="_" data-name="!" class="cls-2" d="M1710.47,823.911l0.15,7.574h1.09l0.16-7.574h-1.4Zm0.09,10.469a0.89,0.89,0,0,0,.66.256,0.851,0.851,0,0,0,.58-1.463,0.836,0.836,0,0,0-.61-0.26,0.9,0.9,0,0,0-.63.25,0.836,0.836,0,0,0-.26.619A0.827,0.827,0,0,0,1710.56,834.38Z" transform="translate(-1703 -821)"/>
+</svg>
