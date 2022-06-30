@@ -457,7 +457,13 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     ///加入ComboBox
     for (auto &iter : userInfoVector)
     {
-        combo->addItem(QIcon(iter.iconFile), iter.name);
+        QString iconFile = iter.iconFile;
+        QPixmap tempPixmap;
+        if( iconFile.isEmpty() || !tempPixmap.load(iconFile) )
+        {
+            iconFile = ":/kcp-greeter-images/user_180.png";
+        }
+        combo->addItem(QIcon(iconFile), iter.name);
     }
 }
 
