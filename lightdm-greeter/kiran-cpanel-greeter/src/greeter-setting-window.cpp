@@ -72,6 +72,7 @@ void GreeterSettingWindow::initUI()
     layoutSideWidget->setMargin(0);
 
     m_sidebarWidget = new KiranSidebarWidget(this);
+    m_sidebarWidget->setInvertIconPixelsEnable(true);
     m_sidebarWidget->setFrameShape(QFrame::NoFrame);
     m_sidebarWidget->setObjectName("SidebarTabListWidget");
     m_sidebarWidget->setIconSize(QSize(16, 16));
