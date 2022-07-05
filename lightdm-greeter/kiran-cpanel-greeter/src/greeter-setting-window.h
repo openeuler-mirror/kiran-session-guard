@@ -123,11 +123,13 @@ private:
     QComboBox *         m_comboScaleMode;   /** < 缩放下拉框 */
     QComboBox *         m_comboScaleFactor; /** < 缩放比例下拉框 */
     using SwitchButton = KiranSwitchButton;
-    SwitchButton *m_enableManualSwitch; /** < 启用手动登录开关 */
-    SwitchButton *m_showUserListSwitch; /** < 显示用户列表开关 */
+    SwitchButton *m_enableManualSwitch;     /** < 启用手动登录开关 */
+    SwitchButton *m_showUserListSwitch;     /** < 显示用户列表开关 */
 
-    QComboBox *m_comboAutoLoginUser; /** < 自动登录用户下拉框 */
-    QLineEdit *m_editAutoLoginDelay;    /** < 自动登录延时输入框 */
+    KiranSwitchButton* m_autologinSwitch;   /** < 自动登录开关 */
+    QWidget* m_autologinComboWidget;
+    QComboBox *m_comboAutoLoginUser;        /** < 自动登录用户下拉框 */
+    QLineEdit *m_editAutoLoginDelay;        /** < 自动登录延时输入框 */
 };
 
 #endif  // GREETERSETTING_H
