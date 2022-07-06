@@ -58,14 +58,13 @@ void GreeterSettingWindow::initUI()
 {
     /* 内容区域主布局 */
     auto mainLayout = new QHBoxLayout(this);
-    mainLayout->setContentsMargins(9, 0, 9, 9);
+    mainLayout->setContentsMargins(9, 0, 9, 0);
 
     /* 左侧侧边栏 */
     auto sideWidget = new QWidget(this);
     sideWidget->setObjectName("widget_side");
     sideWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     sideWidget->setFixedWidth(286);
-    sideWidget->setStyleSheet("QWidget{border-right:1px solid rgba(255,255,255,25);}");
     mainLayout->addWidget(sideWidget);
 
     auto layoutSideWidget = new QHBoxLayout(sideWidget);
@@ -73,6 +72,8 @@ void GreeterSettingWindow::initUI()
     layoutSideWidget->setMargin(0);
 
     m_sidebarWidget = new KiranSidebarWidget(this);
+    m_sidebarWidget->setInvertIconPixelsEnable(true);
+    m_sidebarWidget->setFrameShape(QFrame::NoFrame);
     m_sidebarWidget->setObjectName("SidebarTabListWidget");
     m_sidebarWidget->setIconSize(QSize(16, 16));
     layoutSideWidget->addWidget(m_sidebarWidget);
@@ -85,6 +86,13 @@ void GreeterSettingWindow::initUI()
     item = new QListWidgetItem(tr("autologin"), m_sidebarWidget);
     item->setIcon(QIcon(":/kcp-greeter-images/user_login_setting.png"));
     m_sidebarWidget->addItem(item);
+
+    /* 分隔线 */
+    auto line = new QFrame(this);
+    line->setObjectName(QString::fromUtf8("split_line"));
+    line->setFrameShape(QFrame::VLine);
+    line->setFrameShadow(QFrame::Sunken);
+    mainLayout->addWidget(line);
 
     /* 堆叠区域控件 */
     m_stackedWidget = new QStackedWidget(this);
@@ -137,27 +145,55 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     mainLayout->setContentsMargins(12, 24, 0, 0);
     mainLayout->setSpacing(0);
 
-    /* 自动登录用户 */
-    auto labelAutoLogonUser = new QLabel(tr("auto login user(take effect after restart)"), this);
+    /* 自动登录用户总开关 */
+    auto* autologinSwitchLayout = new QHBoxLayout();
+    autologinSwitchLayout->setSpacing(0);
+    autologinSwitchLayout->setMargin(0);
+
+    auto labelAutoLogonUser = new QLabel(tr("auto login user(take effect after restart)"), pageAutoLogin);
     labelAutoLogonUser->setObjectName("label_autoLogonUser");
     labelAutoLogonUser->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelAutoLogonUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     labelAutoLogonUser->setStyleSheet("QLabel{margin-bottom:8px;}");
-    mainLayout->addWidget(labelAutoLogonUser);
+    autologinSwitchLayout->addWidget(labelAutoLogonUser);
+
+    auto spaceItem = new QSpacerItem(20,10,QSizePolicy::Expanding,QSizePolicy::Minimum);
+    autologinSwitchLayout->addItem(spaceItem);
+
+    m_autologinSwitch = new KiranSwitchButton(pageAutoLogin);
+    connect(m_autologinSwitch,&QAbstractButton::toggled,[this](bool checked){
+        m_autologinComboWidget->setVisible(checked);
+    });
+    autologinSwitchLayout->addWidget(m_autologinSwitch);
+
+    mainLayout->addItem(autologinSwitchLayout);
+
+    /* 自动登录下拉框 */
+    m_autologinComboWidget = new QWidget(pageAutoLogin);
+    auto autologinHBoxLayout = new QHBoxLayout(m_autologinComboWidget);
+    autologinHBoxLayout->setSpacing(0);
+    autologinHBoxLayout->setContentsMargins(0,10,10,0);
 
     m_comboAutoLoginUser = new QComboBox(this);
     m_comboAutoLoginUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     m_comboAutoLoginUser->setFixedHeight(40);
     m_comboAutoLoginUser->setIconSize(QSize(24, 24));
     initUserComboBox(m_comboAutoLoginUser);
-    mainLayout->addWidget(m_comboAutoLoginUser, 0);
+    autologinHBoxLayout->addWidget(m_comboAutoLoginUser, 0);
+    mainLayout->addWidget(m_autologinComboWidget);
 
     /* 自动登录延时 */
+    auto spaceItem_2 = new QSpacerItem(20,16,QSizePolicy::Minimum,QSizePolicy::Fixed);
+    mainLayout->addItem(spaceItem_2);
+
     auto labelAutoLogonDelay = new QLabel(tr("auto login delay(seconds)(take effect after restart)"), this);
     labelAutoLogonDelay->setObjectName("label_autoLogonDealy");
     labelAutoLogonDelay->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelAutoLogonDelay->setStyleSheet("QLabel{margin-bottom:8px; margin-top:15px;}");
     mainLayout->addWidget(labelAutoLogonDelay);
+
+    auto spaceItem_3 = new QSpacerItem(20,10,QSizePolicy::Minimum,QSizePolicy::Fixed);
+    mainLayout->addItem(spaceItem_3);
 
     m_editAutoLoginDelay = new QLineEdit(this);
     m_editAutoLoginDelay->setFixedHeight(40);
@@ -174,7 +210,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
 
     /* 保存-取消 */
     auto layoutButtonBox = new QHBoxLayout();
-    layoutButtonBox->setSpacing(30);
+    layoutButtonBox->setSpacing(0);
     layoutButtonBox->setObjectName("layout_autoLoginButtonBox");
     layoutButtonBox->setContentsMargins(0, 10, 0, 40);
     mainLayout->addLayout(layoutButtonBox);
@@ -186,7 +222,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
 
     auto btn_save = new QPushButton(this);
     btn_save->setObjectName("btn_saveAutoLogin");
-    btn_save->setFixedSize(232, 60);
+    btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
     Kiran::WidgetPropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
@@ -194,14 +230,14 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
         saveAutoLoginSettings();
     });
 
-    auto buttonBoxSpacerItem2 = new QSpacerItem(10, 20,
-                                                QSizePolicy::Expanding,
+    auto buttonBoxSpacerItem2 = new QSpacerItem(40, 20,
+                                                QSizePolicy::Fixed,
                                                 QSizePolicy::Minimum);
     layoutButtonBox->addItem(buttonBoxSpacerItem2);
 
     auto btn_reset = new QPushButton(this);
     btn_reset->setObjectName("btn_resetAutoLogin");
-    btn_reset->setFixedSize(232, 60);
+    btn_reset->setFixedSize(110, 40);
     btn_reset->setText(tr("Reset"));
     layoutButtonBox->addWidget(btn_reset);
 
@@ -213,10 +249,6 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
                                                 QSizePolicy::Expanding,
                                                 QSizePolicy::Minimum);
     layoutButtonBox->addItem(buttonBoxSpacerItem3);
-    layoutButtonBox->setStretch(0, 5);
-    layoutButtonBox->setStretch(2, 2);
-    layoutButtonBox->setStretch(4, 5);
-
     return pageAutoLogin;
 }
 
@@ -340,7 +372,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
     mainLayout->addWidget(widgetButtonBox);
 
     auto layoutButtonBox = new QHBoxLayout(widgetButtonBox);
-    layoutButtonBox->setSpacing(30);
+    layoutButtonBox->setSpacing(0);
     layoutButtonBox->setObjectName("layout_generalSettingsButtonBox");
     layoutButtonBox->setContentsMargins(0, 10, 0, 40);
 
@@ -351,7 +383,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
 
     auto btn_save = new QPushButton(this);
     btn_save->setObjectName("btn_saveGeneralSettings");
-    btn_save->setFixedSize(232, 60);
+    btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
     Kiran::WidgetPropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
@@ -359,14 +391,14 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
         saveGeneralSettings();
     });
 
-    auto buttonBoxSpacerItem2 = new QSpacerItem(10, 20,
-                                                QSizePolicy::Expanding,
+    auto buttonBoxSpacerItem2 = new QSpacerItem(40, 20,
+                                                QSizePolicy::Fixed,
                                                 QSizePolicy::Minimum);
     layoutButtonBox->addItem(buttonBoxSpacerItem2);
 
     auto btn_reset = new QPushButton(this);
     btn_reset->setObjectName("btn_resetGeneralSettings");
-    btn_reset->setFixedSize(232, 60);
+    btn_reset->setFixedSize(110, 40);
     btn_reset->setText(tr("Reset"));
     layoutButtonBox->addWidget(btn_reset);
     connect(btn_reset, &QPushButton::clicked, [this]() {
@@ -377,10 +409,6 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
                                                 QSizePolicy::Expanding,
                                                 QSizePolicy::Minimum);
     layoutButtonBox->addItem(buttonBoxSpacerItem3);
-    layoutButtonBox->setStretch(0, 5);
-    layoutButtonBox->setStretch(2, 2);
-    layoutButtonBox->setStretch(4, 5);
-
     return pageGeneralSettings;
 }
 
@@ -429,9 +457,14 @@ void GreeterSettingWindow::initUserComboBox(QComboBox *combo)
     ///加入ComboBox
     for (auto &iter : userInfoVector)
     {
-        combo->addItem(QIcon(iter.iconFile), iter.name);
+        QString iconFile = iter.iconFile;
+        QPixmap tempPixmap;
+        if( iconFile.isEmpty() || !tempPixmap.load(iconFile) )
+        {
+            iconFile = ":/kcp-greeter-images/user_180.png";
+        }
+        combo->addItem(QIcon(iconFile), iter.name);
     }
-    combo->addItem("");
 }
 
 void GreeterSettingWindow::saveGeneralSettings()
@@ -539,7 +572,12 @@ void GreeterSettingWindow::saveAutoLoginSettings()
     QString errMsg;
     bool hasError = false;
 
-    reply = KiranGreeterPrefs::instance()->SetAutologinUser(m_comboAutoLoginUser->currentText());
+    QString autologinUser;
+    if( m_autologinSwitch->isChecked() )
+    {
+        autologinUser = m_comboAutoLoginUser->currentText();
+    }
+    reply = KiranGreeterPrefs::instance()->SetAutologinUser(autologinUser);
     reply.waitForFinished();
     if (reply.isError())
     {
@@ -625,10 +663,9 @@ void GreeterSettingWindow::resetGeneralSettings()
 void GreeterSettingWindow::resetAutoLoginSettings()
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting = getAutologinSettingInfoFromBackend();
-
-    m_comboAutoLoginUser->setCurrentText(autoLoginSetting.autoLoginUser);
+    m_autologinSwitch->setChecked(autoLoginSetting.autoLoginUser.size());
+    m_autologinComboWidget->setVisible(autoLoginSetting.autoLoginUser.size());
     m_editAutoLoginDelay->setText(QString::number(autoLoginSetting.autoLoginTimeout));
-
     m_origSettingInfo.autoLoginInfo = autoLoginSetting;
 }
 
