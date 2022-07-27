@@ -664,7 +664,13 @@ void GreeterSettingWindow::resetAutoLoginSettings()
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting = getAutologinSettingInfoFromBackend();
     m_autologinSwitch->setChecked(autoLoginSetting.autoLoginUser.size());
+    
     m_autologinComboWidget->setVisible(autoLoginSetting.autoLoginUser.size());
+    if( !autoLoginSetting.autoLoginUser.isEmpty() )
+    {
+        m_comboAutoLoginUser->setCurrentText(autoLoginSetting.autoLoginUser);
+    }
+
     m_editAutoLoginDelay->setText(QString::number(autoLoginSetting.autoLoginTimeout));
     m_origSettingInfo.autoLoginInfo = autoLoginSetting;
 }
