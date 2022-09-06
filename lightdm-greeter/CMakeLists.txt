@@ -20,6 +20,9 @@ set(CAN_SUSPEND true CACHE BOOL "suspend button display")
 #是否显示休眠选项
 set(CAN_HIBERNATE true CACHE BOOL "hibernate button display")
 
+#NumLock初始化状态,是否点亮NumLock，true点亮NumLock,false不处理
+set(NUMLOCK_INIT_STATE true CACHE BOOL "NumLock initialization status")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

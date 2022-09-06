@@ -105,8 +105,9 @@ int main(int argc, char *argv[])
         KLOG_ERROR("set root window watch cursor failed!");
     }
 
+    KLOG_INFO() << "Num Lock Init State:" << KiranGreeterPrefs::instance()->numlockInitState();
     ///为了解决键盘NumLock灯亮起，但实际不可用的情况，手动同步键盘NumLock灯状态和实际状态
-    initLockStatus();
+    initLockStatus(KiranGreeterPrefs::instance()->numlockInitState());
 
     ///翻译
     QTranslator translator;
