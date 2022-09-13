@@ -30,7 +30,7 @@ QT_END_NAMESPACE
 GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
     : QWidget(parent), m_screen(nullptr)
 {
-    //setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnBottomHint);
+    setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnBottomHint);
 
     QStringList backgrounds = {KiranGreeterPrefs::instance()->background(),DEFAULT_BACKGROUND};
     foreach(const QString background,backgrounds)

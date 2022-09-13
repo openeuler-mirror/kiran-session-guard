@@ -56,6 +56,9 @@ KiranGreeterPrefs::KiranGreeterPrefs()
     auto hiddenUsers = settings.value("hide-users");
     m_hiddenUsers = hiddenUsers.toStringList();
 
+    auto numlockInitState = settings.value("numlock-init-state");
+    m_numlockInitState = numlockInitState.toBool();
+
     settings.endGroup();
 
     ///power
@@ -116,4 +119,9 @@ bool KiranGreeterPrefs::canSuspend()
 bool KiranGreeterPrefs::canHibernate()
 {
     return m_canHibernate;
+}
+
+bool KiranGreeterPrefs::numlockInitState()
+{
+    return m_numlockInitState;
 }

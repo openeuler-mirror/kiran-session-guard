@@ -2,9 +2,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Greeter Settings
-Name[zh_CN]=登录设置
+Name[zh_CN]=登录选项
 Comment=kiran greeter settings
-Comment=Kiran登录界面设置
+Comment=Kiran登录界面选项
 #通过启动器单独执行 <kiran-cpanel-launcher -cpanel-plugin 插件的desktop文件名>
 Exec=kiran-cpanel-launcher --cpanel-plugin=kiran-cpanel-greeter
 Icon=kcp-greeter
@@ -25,9 +25,9 @@ SubItems=Greeter
 [Greeter]
 #插件子项名 该值提供给控制中心形成子项列表
 Name=Greeter Settings
-Name[zh_CN] = 登录设置
+Name[zh_CN] = 登录选项
 #插件Icon
 Icon=kcp-greeter
 #插件关键字 该值提供给控制中心形成搜索列表
-Keywords[zh_CN]=登录设置
+Keywords[zh_CN]=登录选项
 Keywords = Greeter

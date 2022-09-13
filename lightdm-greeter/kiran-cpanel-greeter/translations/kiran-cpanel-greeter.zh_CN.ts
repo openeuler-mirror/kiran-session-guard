@@ -11,7 +11,7 @@
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="81"/>
         <source>general settings</source>
-        <translation>登录设置</translation>
+        <translation>登录选项</translation>
     </message>
     <message>
         <location filename="../src/greeter-setting-window.cpp" line="141"/>

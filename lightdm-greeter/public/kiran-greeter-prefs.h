@@ -30,6 +30,7 @@ public:
     bool canReboot();
     bool canSuspend();
     bool canHibernate();
+    bool numlockInitState();
 
 private:
     KiranGreeterPrefs();
@@ -43,6 +44,8 @@ private Q_SLOTS:
 private:
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
+    bool m_numlockInitState = true;
+    
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;
