@@ -15,6 +15,6 @@
 #ifndef SYNCLOCKSTATUS_H
 #define SYNCLOCKSTATUS_H
 
-bool initLockStatus();
+bool initLockStatus(bool numlockOn);
 
 #endif  // SYNCLOCKSTATUS_H

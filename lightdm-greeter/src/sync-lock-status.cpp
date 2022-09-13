@@ -65,7 +65,7 @@ unsigned int xkb_capslock_mask(Display *dpy)
     return 0;
 }
 
-bool initLockStatus()
+bool initLockStatus(bool numLockOn)
 {
     Display *   display = QX11Info::display();
     XkbStateRec xkbState;
@@ -79,7 +79,14 @@ bool initLockStatus()
     int mask = xkb_numlock_mask(display);
     XkbGetState(display, XkbUseCoreKbd, &xkbState);
     unsigned int numlockState = xkbState.locked_mods & mask;
-    XkbLockModifiers(display, XkbUseCoreKbd, mask, mask);
+    if( numLockOn )//强制打开NumLock
+    {
+        XkbLockModifiers(display, XkbUseCoreKbd, mask, mask);
+    }
+    else
+    {
+        XkbLockModifiers(display, XkbUseCoreKbd, mask, numlockState);
+    }
 
     //capslock
     mask = xkb_capslock_mask(display);
