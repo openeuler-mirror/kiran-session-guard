@@ -29,6 +29,7 @@
 #include <QStackedWidget>
 #include <QStandardPaths>
 
+#include <kiran-color-block.h>
 #include <kiran-image-selector.h>
 #include <kiran-message-box.h>
 #include <kiran-sidebar-widget.h>
@@ -58,13 +59,14 @@ void GreeterSettingWindow::initUI()
 {
     /* 内容区域主布局 */
     auto mainLayout = new QHBoxLayout(this);
-    mainLayout->setContentsMargins(9, 0, 9, 0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(4);
 
     /* 左侧侧边栏 */
-    auto sideWidget = new QWidget(this);
+    auto sideWidget = new KiranColorBlock(this);
     sideWidget->setObjectName("widget_side");
     sideWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    sideWidget->setFixedWidth(286);
+    sideWidget->setFixedWidth(272);
     mainLayout->addWidget(sideWidget);
 
     auto layoutSideWidget = new QHBoxLayout(sideWidget);
@@ -76,6 +78,7 @@ void GreeterSettingWindow::initUI()
     m_sidebarWidget->setFrameShape(QFrame::NoFrame);
     m_sidebarWidget->setObjectName("SidebarTabListWidget");
     m_sidebarWidget->setIconSize(QSize(16, 16));
+    m_sidebarWidget->viewport()->setAutoFillBackground(false);
     layoutSideWidget->addWidget(m_sidebarWidget);
 
     QListWidgetItem *item;
@@ -87,17 +90,16 @@ void GreeterSettingWindow::initUI()
     item->setIcon(QIcon(":/kcp-greeter-images/user_login_setting.png"));
     m_sidebarWidget->addItem(item);
 
-    /* 分隔线 */
-    auto line = new QFrame(this);
-    line->setObjectName(QString::fromUtf8("split_line"));
-    line->setFrameShape(QFrame::VLine);
-    line->setFrameShadow(QFrame::Sunken);
-    mainLayout->addWidget(line);
-
     /* 堆叠区域控件 */
+    KiranColorBlock *stackedColorBlock = new KiranColorBlock(this);
+    mainLayout->addWidget(stackedColorBlock);
+    auto colorBlockLayout = new QHBoxLayout(stackedColorBlock);
+    colorBlockLayout->setSpacing(0);
+    colorBlockLayout->setMargin(0);
+
     m_stackedWidget = new QStackedWidget(this);
     m_stackedWidget->setObjectName("GreeterSettingsStacked");
-    mainLayout->addWidget(m_stackedWidget);
+    colorBlockLayout->addWidget(m_stackedWidget);
 
     auto widgetGeneralSettings = initPageGeneralSettings();
     m_stackedWidget->addWidget(widgetGeneralSettings);
@@ -142,7 +144,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     auto pageAutoLogin = new QWidget(this);
 
     auto mainLayout = new QVBoxLayout(pageAutoLogin);
-    mainLayout->setContentsMargins(12, 24, 0, 0);
+    mainLayout->setContentsMargins(12, 24, 12, 0);
     mainLayout->setSpacing(0);
 
     /* 自动登录用户总开关 */
@@ -154,10 +156,9 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     labelAutoLogonUser->setObjectName("label_autoLogonUser");
     labelAutoLogonUser->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelAutoLogonUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelAutoLogonUser->setStyleSheet("QLabel{margin-bottom:8px;}");
     autologinSwitchLayout->addWidget(labelAutoLogonUser);
 
-    auto spaceItem = new QSpacerItem(20,10,QSizePolicy::Expanding,QSizePolicy::Minimum);
+    auto spaceItem = new QSpacerItem(20, 8, QSizePolicy::Expanding, QSizePolicy::Minimum);
     autologinSwitchLayout->addItem(spaceItem);
 
     m_autologinSwitch = new KiranSwitchButton(pageAutoLogin);
@@ -172,7 +173,7 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     m_autologinComboWidget = new QWidget(pageAutoLogin);
     auto autologinHBoxLayout = new QHBoxLayout(m_autologinComboWidget);
     autologinHBoxLayout->setSpacing(0);
-    autologinHBoxLayout->setContentsMargins(0,10,10,0);
+    autologinHBoxLayout->setContentsMargins(0, 10, 0, 0);
 
     m_comboAutoLoginUser = new QComboBox(this);
     m_comboAutoLoginUser->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -189,7 +190,6 @@ QWidget *GreeterSettingWindow::initPageAutoLogin()
     auto labelAutoLogonDelay = new QLabel(tr("auto login delay(seconds)(take effect after restart)"), this);
     labelAutoLogonDelay->setObjectName("label_autoLogonDealy");
     labelAutoLogonDelay->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    labelAutoLogonDelay->setStyleSheet("QLabel{margin-bottom:8px; margin-top:15px;}");
     mainLayout->addWidget(labelAutoLogonDelay);
 
     auto spaceItem_3 = new QSpacerItem(20,10,QSizePolicy::Minimum,QSizePolicy::Fixed);
@@ -256,7 +256,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
 {
     auto pageGeneralSettings = new QWidget(this);
     auto mainLayout = new QVBoxLayout(pageGeneralSettings);
-    mainLayout->setContentsMargins(12, 24, 0, 0);
+    mainLayout->setContentsMargins(12, 24, 12, 0);
     mainLayout->setSpacing(0);
 
     /* 外观设置 */
@@ -278,7 +278,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
     labelScaleMode->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelScaleMode->setObjectName("label_scaleMode");
     labelScaleMode->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelScaleMode->setStyleSheet("QLabel{margin-top:15px;margin-bottom:8px;}");
+    labelScaleMode->setStyleSheet("QLabel{margin-top:16px;margin-bottom:10px;}");
     mainLayout->addWidget(labelScaleMode);
 
     m_comboScaleMode = new QComboBox(this);
@@ -297,7 +297,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
     labelScaleFactor->setObjectName("label_ScaleFactor");
     labelScaleFactor->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labelScaleFactor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    labelScaleFactor->setStyleSheet("QLabel{margin-top:15px;margin-bottom:8px;}");
+    labelScaleFactor->setStyleSheet("QLabel{margin-top:16px;margin-bottom:10px;}");
     mainLayout->addWidget(labelScaleFactor, 0, Qt::AlignLeft);
 
     m_comboScaleFactor = new QComboBox(this);
@@ -316,7 +316,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
 
     auto layoutManualLogin = new QHBoxLayout(widgetManualLogin);
     layoutManualLogin->setObjectName("layout_manualLogin");
-    layoutManualLogin->setContentsMargins(0, 15, 0, 0);
+    layoutManualLogin->setContentsMargins(0, 8, 0, 0);
 
     auto labelManualLogin = new QLabel(tr("Enable manual input user login"), this);
     labelManualLogin->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -341,7 +341,7 @@ QWidget *GreeterSettingWindow::initPageGeneralSettings()
 
     auto layoutUserList = new QHBoxLayout(widgetUserListLogin);
     layoutUserList->setObjectName("layout_userListLogin");
-    layoutUserList->setContentsMargins(0, 15, 0, 0);
+    layoutUserList->setContentsMargins(0, 8, 0, 0);
 
     auto labelShowUserList = new QLabel(tr("Show User List"), this);
     labelShowUserList->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
