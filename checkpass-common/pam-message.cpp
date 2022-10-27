@@ -53,7 +53,7 @@ bool kiran_pam_message_send(int fd, QJsonDocument& content)
         return false;
     }
 
-    KLOG_DEBUG() << "send json:" << content;
+    // KLOG_DEBUG() << "send json:" << content;
     return true;
 }
 
@@ -81,7 +81,7 @@ bool kiran_pam_message_recv(int fd, QJsonDocument& content)
     }
 
     content = doc;
-    KLOG_DEBUG() << "recv json:" << content;
+    // KLOG_DEBUG() << "recv json:" << content;
     return true;
 }
 
