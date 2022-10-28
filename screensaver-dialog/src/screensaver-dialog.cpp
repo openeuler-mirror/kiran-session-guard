@@ -45,7 +45,7 @@
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
 
 QT_BEGIN_NAMESPACE
-Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
 QString get_current_user()
