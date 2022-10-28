@@ -24,7 +24,7 @@
 #include "kiran-greeter-prefs.h"
 
 QT_BEGIN_NAMESPACE
-Q_WIDGETS_EXPORT void qt_blurImage(QImage &blurImage, qreal radius, bool quality, int transposed = 0);
+Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
 GreeterBackground::GreeterBackground(QScreen *screen, QWidget *parent)
@@ -102,7 +102,11 @@ void GreeterBackground::resizeEvent(QResizeEvent *event)
     {
         m_scaledBackground = m_background.scaled(this->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         QImage tmp         = m_scaledBackground.toImage();
-        qt_blurImage(tmp, 10, true);
+
+        QImage blurImage(tmp.size(), QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&blurImage);
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+        qt_blurImage(&painter, blurImage, 10, true, false);
         m_scaledBackground = QPixmap::fromImage(tmp);
     }
 
