@@ -106,8 +106,8 @@ void GreeterBackground::resizeEvent(QResizeEvent *event)
         QImage blurImage(tmp.size(), QImage::Format_ARGB32_Premultiplied);
         QPainter painter(&blurImage);
         painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        qt_blurImage(&painter, blurImage, 10, true, false);
-        m_scaledBackground = QPixmap::fromImage(tmp);
+        qt_blurImage(&painter, tmp, 10, true, false);
+        m_scaledBackground = QPixmap::fromImage(blurImage);
     }
 
     //NOTE:子窗体因未加入布局，需要手动Resize
