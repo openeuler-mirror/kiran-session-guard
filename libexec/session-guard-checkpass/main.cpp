@@ -203,12 +203,16 @@ int main(int argc, char *argv[])
 
     int authRes = PAM_SUCCESS;
     authRes = pam_authenticate(pamh, 0);
-
     const char *newUserName;
     if (pam_get_item(pamh, PAM_USER, (const void **)&newUserName) != PAM_SUCCESS)
     {
         pam_end(pamh, 0);
         return EXIT_FAILURE;
+    }
+
+    if( authRes == PAM_SUCCESS )
+    {
+        authRes = pam_acct_mgmt(pamh, 0);
     }
 
     const char *authResultString = pam_strerror(pamh, authRes);
