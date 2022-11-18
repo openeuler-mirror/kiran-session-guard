@@ -18,6 +18,7 @@
 #include <QFile>
 #include <QPainter>
 #include <QPainterPath>
+#include <QApplication>
 
 #define DEFAULT_USER_AVATAR ":/common-widgets-images/user_180.png"
 
@@ -81,7 +82,7 @@ QPixmap UserAvatar::scalePixmapAdjustSize (const QPixmap &pixmap)
     QPixmap temp = pixmap.scaled(radius * 2, radius * 2, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     return temp;
 }
-#include <QApplication>
+
 void UserAvatar::setDefaultImage ()
 {
     if (!m_pixmap.load(DEFAULT_USER_AVATAR))
@@ -90,4 +91,5 @@ void UserAvatar::setDefaultImage ()
         return;
     }
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
+    update();
 }
