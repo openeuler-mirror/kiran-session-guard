@@ -12,12 +12,13 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 #include "plugin.h"
+#include "config.h"
+#include "screensaver-dialog.h"
+#include "virtual-keyboard.h"
 
 #include <QApplication>
 #include <QLocale>
 #include <kiran-log/qt5-log-i.h>
-#include "config.h"
-#include "screensaver-dialog.h"
 
 
 #define TRANSLATION_FILE_DIR "/usr/share/kiran-screensaver-dialog/translations/"
@@ -45,6 +46,13 @@ int KSPlugin::init(Interface* ksInterface)
     {
         KLOG_WARNING() << "can't load kiran-screensaver-dialog translator";
     }
+
+#ifdef VIRTUAL_KEYBOARD
+    if( !VirtualKeyboard::instance()->init() )
+    {
+        KLOG_WARNING() << "init virtual keyboard failed!";
+    }
+#endif
 
     return 0;
 }
