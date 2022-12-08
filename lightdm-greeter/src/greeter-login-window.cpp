@@ -86,7 +86,7 @@ bool getIsLoggedIn(const QString &userName)
 GreeterLoginWindow::GreeterLoginWindow(QWidget *parent)
     : QWidget(parent),
       ui(new Ui::GreeterLoginWindow),
-      m_greeter(this),
+      m_greeterPtr(new QLightDM::Greeter()),
       m_powerMenu(nullptr),
       m_sessionMenu(nullptr),
       m_noListButotnVisiable(true),
@@ -239,12 +239,12 @@ void GreeterLoginWindow::initUI()
             this, &GreeterLoginWindow::slotUserActivated);
     ///自动登录按钮点击
     connect(ui->btn_autologin, &LoginButton::sigClicked, [this]() {
-        m_authProxy->authenticate(m_greeter.autologinUserHint());
+        m_authProxy->authenticate(m_greeterPtr->autologinUserHint());
     });
-    connect(&m_greeter, &QLightDM::Greeter::autologinTimerExpired, [this]() {
+    connect(m_greeterPtr.data(), &QLightDM::Greeter::autologinTimerExpired, [this]() {
         //NOTE:修复机器配置了autologin-timeout,但未配置autologin-user的情况
-        if( !m_greeter.autologinUserHint().isEmpty() )
-            m_authProxy->authenticate(m_greeter.autologinUserHint());
+        if( !m_greeterPtr->autologinUserHint().isEmpty() )
+            m_authProxy->authenticate(m_greeterPtr->autologinUserHint());
     });
     ///重新认证按钮点击
     connect(ui->btn_reAuth, &QPushButton::clicked, [this]() {
@@ -348,7 +348,7 @@ void GreeterLoginWindow::initMenu()
 
 void GreeterLoginWindow::initLightdmGreeter()
 {
-    AuthBase *authInterface = new AuthLightdm(&m_greeter);
+    AuthBase *authInterface = new AuthLightdm(m_greeterPtr);
     AuthMsgQueue *msgQueue = new AuthMsgQueue();
 
     m_authProxy = new AuthProxy(authInterface, this);
@@ -382,7 +382,7 @@ void GreeterLoginWindow::initLightdmGreeter()
                        ///用户0->1 且 配置允许显示用户链表 且 当前登录模式为输入用户登录 且 手动登录还未输入用户名并点击确定
                        ///显示返回按钮
                        qInfo() << "rowInserted:" << m_filterModel.rowCount(QModelIndex());
-                       if ((m_filterModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_greeter.isAuthenticated())
+                       if ((m_filterModel.rowCount(QModelIndex()) == 1) && m_showUserList && m_loginMode == LOGIN_MODE_MANUAL && !m_greeterPtr->isAuthenticated())
                        {
                            qInfo() << "setReturn visible true";
                            ui->btn_notListAndCancel->setVisible(true);
@@ -410,12 +410,12 @@ void GreeterLoginWindow::initLightdmGreeter()
     ui->userlist->loadUserList();
 
     //NOTE:修复#52982问题，若自动登录用户已存在不自动触发延时自动登录
-    if ( !m_greeter.autologinUserHint().isEmpty() )
+    if ( !m_greeterPtr->autologinUserHint().isEmpty() )
     {
-        bool isLogged = getIsLoggedIn(m_greeter.autologinUserHint());
+        bool isLogged = getIsLoggedIn(m_greeterPtr->autologinUserHint());
         if( isLogged )
         {
-            m_greeter.cancelAutologin();
+            m_greeterPtr->cancelAutologin();
         }
 #if 0
         //WARNING:这种方法不能取得root是否已登录信息
@@ -551,7 +551,7 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
     ui->label_userName->setText(username);
     ui->loginAvatar->setImage(userIcon);
 
-    if (username == m_greeter.autologinUserHint())
+    if (username == m_greeterPtr->autologinUserHint())
     {
         KLOG_DEBUG() << "authproxy user" << username << "is auto login user,switch to auto login";
         switchToAutoLogin();
@@ -819,7 +819,7 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success)
             }
         }
 #endif
-        if (!m_greeter.startSessionSync(m_session))
+        if (!m_greeterPtr->startSessionSync(m_session))
         {
             KLOG_WARNING() << "start session failed,session:" << m_session;
         }

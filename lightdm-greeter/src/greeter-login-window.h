@@ -23,6 +23,7 @@
 #include <QStateMachine>
 #include <QWidget>
 #include <QWindow>
+#include <QSharedPointer>
 
 #include "auth-define.h"
 #include "auth-msg-queue.h"
@@ -124,7 +125,7 @@ private:
 
     FilterUserProxyModel     m_filterModel;
 
-    QLightDM::Greeter m_greeter;
+    QSharedPointer<QLightDM::Greeter> m_greeterPtr;
     QLightDM::UsersModel m_userModel;
     QLightDM::PowerInterface m_powerIface;
 

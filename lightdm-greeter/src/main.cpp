@@ -19,6 +19,8 @@
 #include <QFile>
 #include <QTranslator>
 #include <qt5-log-i.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include "../../lib/common-widgets/virtual-keyboard.h"
 #include "cursor-helper.h"
@@ -28,23 +30,27 @@
 #include "scaling-helper.h"
 #include "sync-lock-status.h"
 
+static int sigtermFd[2];
+
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
 
 void termSignalHandler(int unused)
 {
-#ifdef VIRTUAL_KEYBOARD
-    VirtualKeyboard::instance()->keyboardProcessExit();
-#endif
-    qApp->quit();
+    char a = 1;
+    if(write(sigtermFd[0], &a, sizeof(a)) < 1)
+    {
+        qWarning("Failed to handle term signal.");
+    }
 }
 
 void setup_unix_signal_handlers()
 {
     struct sigaction term;
     term.sa_handler = termSignalHandler;
-    sigemptyset(&term.sa_mask);
     term.sa_flags = 0;
-    term.sa_flags |= SA_RESETHAND;
+    term.sa_flags = SA_RESTART;
+
+    sigemptyset(&term.sa_mask);
     int iRet = sigaction(SIGTERM, &term, 0);
     if (iRet != 0)
     {
@@ -60,9 +66,6 @@ int main(int argc, char *argv[])
     {
         qWarning() << "klog_qt5_init error:" << iRet;
     }
-
-    ///安装信号处理
-    setup_unix_signal_handlers();
 
     ///设置缩放比
     double scaled_factor = 0.0;
@@ -92,6 +95,15 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    // 处理SIGTERM信号
+    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd))
+    {
+        KLOG_WARNING() << "Couldn't create TERM socketpair";
+    }
+    QSocketNotifier *snTerm = new QSocketNotifier(sigtermFd[1], QSocketNotifier::Read, &a);
+    QObject::connect(snTerm, SIGNAL(activated(int)), &a, SLOT(quit()));
+    setup_unix_signal_handlers();
 
     ///依据登陆器整体缩放比例，设置默认光标大小
     if (!CursorHelper::setDefaultCursorSize(scaled_factor))
@@ -135,5 +147,10 @@ int main(int argc, char *argv[])
     GreeterScreenManager screenManager;
     screenManager.init();
 
-    return a.exec();
+    int res = a.exec();
+
+    close(sigtermFd[0]);
+    close(sigtermFd[1]);
+
+    return res;
 }
