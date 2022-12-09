@@ -46,14 +46,6 @@ int KSPlugin::init(Interface* ksInterface)
     {
         KLOG_WARNING() << "can't load kiran-screensaver-dialog translator";
     }
-
-#ifdef VIRTUAL_KEYBOARD
-    if( !VirtualKeyboard::instance()->init() )
-    {
-        KLOG_WARNING() << "init virtual keyboard failed!";
-    }
-#endif
-
     return 0;
 }
 
