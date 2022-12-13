@@ -37,6 +37,7 @@ class Interface;
 
 class QMenu;
 class AuthProxy;
+class VirtualKeyboard;
 class ScreenSaverDialog : public QWidget, public Kiran::ScreenSaver::LockerInterface
 {
     Q_OBJECT
@@ -112,6 +113,9 @@ private:
     Kiran::AuthType m_authType = Kiran::AUTH_TYPE_PASSWD;
     bool m_havePrompt = false;
     QString m_userName;
+#ifdef VIRTUAL_KEYBOARD
+    VirtualKeyboard *m_keyboard = nullptr;
+#endif
 };
 
 #endif  // WIDGET_H
