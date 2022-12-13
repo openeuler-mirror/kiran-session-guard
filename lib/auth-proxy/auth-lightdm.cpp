@@ -16,13 +16,13 @@
 #include "auth-lightdm.h"
 #include <qt5-log-i.h>
 
-AuthLightdm::AuthLightdm(QLightDM::Greeter* greeterAuth, QObject* parent)
+AuthLightdm::AuthLightdm(QSharedPointer<QLightDM::Greeter> greeterAuth, QObject* parent)
     : AuthBase(parent),
-      m_greeterAuth(greeterAuth)
+      m_greeterPtrAuth(greeterAuth)
 {
-    connect(m_greeterAuth,&QLightDM::Greeter::showPrompt,this,&AuthLightdm::handleGreeterAuthShowPrompt);
-    connect(m_greeterAuth,&QLightDM::Greeter::showMessage,this,&AuthLightdm::handleGreeterAuthShowMessage);
-    connect(m_greeterAuth,&QLightDM::Greeter::authenticationComplete, this,&AuthLightdm::handleGreeterAuthComplete);
+    connect(m_greeterPtrAuth.data(),&QLightDM::Greeter::showPrompt,this,&AuthLightdm::handleGreeterAuthShowPrompt);
+    connect(m_greeterPtrAuth.data(),&QLightDM::Greeter::showMessage,this,&AuthLightdm::handleGreeterAuthShowMessage);
+    connect(m_greeterPtrAuth.data(),&QLightDM::Greeter::authenticationComplete, this,&AuthLightdm::handleGreeterAuthComplete);
 }
 
 AuthLightdm::~AuthLightdm()
@@ -31,7 +31,7 @@ AuthLightdm::~AuthLightdm()
 
 bool AuthLightdm::init()
 {
-    bool bRes = m_greeterAuth->connectSync();
+    bool bRes = m_greeterPtrAuth->connectSync();
     if( !bRes )
     {
         KLOG_ERROR() << "can't connect greeter auth!";
@@ -41,33 +41,33 @@ bool AuthLightdm::init()
 
 bool AuthLightdm::authenticate(const QString &userName)
 {
-    m_greeterAuth->authenticate(userName);
+    m_greeterPtrAuth->authenticate(userName);
     return true;
 }
 
 void AuthLightdm::cancelAuthentication()
 {
-    m_greeterAuth->cancelAuthentication();
+    m_greeterPtrAuth->cancelAuthentication();
 }
 
 bool AuthLightdm::isAuthenticated() const
 {
-    return m_greeterAuth->isAuthenticated();
+    return m_greeterPtrAuth->isAuthenticated();
 }
 
 bool AuthLightdm::inAuthentication() const
 {
-    return m_greeterAuth->inAuthentication();
+    return m_greeterPtrAuth->inAuthentication();
 }
 
 QString AuthLightdm::authenticationUser() const
 {
-    return m_greeterAuth->authenticationUser();
+    return m_greeterPtrAuth->authenticationUser();
 }
 
 void AuthLightdm::respond(const QString &response)
 {
-    m_greeterAuth->respond(response);
+    m_greeterPtrAuth->respond(response);
 }
 
 void AuthLightdm::handleGreeterAuthShowPrompt(QString text, QLightDM::Greeter::PromptType type)

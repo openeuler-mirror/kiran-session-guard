@@ -101,7 +101,17 @@ ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface* ksInterface,
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
-    delete ui;
+#ifdef VIRTUAL_KEYBOARD
+    if( m_keyboard )
+    {
+        auto keyboardWidget = m_keyboard->getKeyboard();
+        if (m_keyboard->getKeyboard() && m_keyboard->getKeyboard()->parentWidget()==this)
+        {
+            m_keyboard->getKeyboard()->setParent(nullptr);
+        }
+    }
+#endif
+        delete ui;
 }
 
 QWidget *ScreenSaverDialog::get_widget_ptr()
@@ -274,17 +284,23 @@ void ScreenSaverDialog::initUI()
         m_authProxy->respond(ui->promptEdit->getText());
     });
 
+
 #ifdef VIRTUAL_KEYBOARD
+    m_keyboard = new VirtualKeyboard(this);
+
+    if (!m_keyboard->init())
+    {
+        KLOG_WARNING() << "init virtual keyboard failed!";
+    }
     connect(ui->btn_keyboard, &QToolButton::pressed, this, [this] {
-        VirtualKeyboard *keyboard = VirtualKeyboard::instance();
-        if (keyboard->isVisible())
+        if (m_keyboard->isVisible())
         {
-            keyboard->hide();
+            m_keyboard->hide();
         }
         else
         {
             //虚拟键盘通过传入的父窗口调整大小并进行显示
-            keyboard->showAdjustSize(this);
+            m_keyboard->showAdjustSize(this);
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
@@ -560,17 +576,6 @@ void ScreenSaverDialog::startAuth()
 
 void ScreenSaverDialog::closeEvent(QCloseEvent *event)
 {
-#ifdef VIRTUAL_KEYBOARD
-    //在关闭时若虚拟键盘的副窗口设置为当前窗口的话，则更改父窗口,避免释放相关X资源导致onboard释放出错，导致onboard崩溃
-    if (VirtualKeyboard::instance()->getKeyboard())
-    {
-        if (VirtualKeyboard::instance()->getKeyboard()->parentWidget() == this)
-        {
-            KLOG_DEBUG() << "keyboard reparent";
-            VirtualKeyboard::instance()->getKeyboard()->setParent(nullptr);
-        }
-    }
-#endif
     QWidget::closeEvent(event);
 }
 
