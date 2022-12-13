@@ -78,7 +78,7 @@ bool VirtualKeyboard::init(QWidget *parent)
         }
 
         xid = stdoutput.toULongLong();
-
+        KLOG_DEBUG() << "foreign virtual keyboard window id:" << xid;
         foreignWindow = QWindow::fromWinId(xid);
         foreignWindow->setFlag(Qt::ForeignWindow);
         m_keyboardWidget = QWidget::createWindowContainer(foreignWindow, nullptr);
@@ -113,15 +113,15 @@ void VirtualKeyboard::showAdjustSize(QWidget *parent)
     if (parent == nullptr)
     {
         KLOG_WARNING() << "VirtualKeyboard::showAdjustSize parent can't be nullptr";
+        return;
     }
 
     KLOG_DEBUG() << "VirtualKeyboard::showAdjustSize" << parent->objectName();
     m_keyboardWidget->hide();
-    QRect parentRect = parent->geometry();
     m_keyboardWidget->setParent(parent);
 
+    QRect parentRect = parent->geometry();
     QSize keyboardSize(parentRect.width()*ONBOARD_WIDTH_FACTOR,parentRect.height()*ONBOARD_HEIGHT_FACTOR);
-
     m_keyboardWidget->resize(parentRect.width()*ONBOARD_WIDTH_FACTOR, parentRect.height()*ONBOARD_HEIGHT_FACTOR);
     m_keyboardWidget->move((parentRect.width() - keyboardSize.width()) / 2, parentRect.height() - keyboardSize.height());
     m_keyboardWidget->show();

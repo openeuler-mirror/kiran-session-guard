@@ -21,8 +21,10 @@ class VirtualKeyboard : public QObject
 {
     Q_OBJECT
 public:
-    static VirtualKeyboard *instance();
+    explicit VirtualKeyboard(QObject *parent = nullptr);
     ~VirtualKeyboard();
+
+    static VirtualKeyboard *instance();
 
     bool     init(QWidget *parent = nullptr);
     void     hide();
@@ -34,13 +36,11 @@ public:
 public slots:
     void slot_finished(int exitCode, QProcess::ExitStatus exitStatus);
 
-private:
-    explicit VirtualKeyboard(QObject *parent = nullptr);
-
 private slots:
     void slotReadyReadStandardOutput();
 
 private:
     QWidget * m_keyboardWidget;
     QProcess *m_process;
+    QWidget *m_keyboardEmbed = nullptr;
 };

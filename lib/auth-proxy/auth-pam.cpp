@@ -139,7 +139,7 @@ void AuthPam::cancelAuthentication()
     if (m_authPid != 0)
     {
         kill(m_authPid, SIGKILL);
-        waitpid(m_authPid, nullptr, WNOHANG);
+        waitpid(m_authPid, nullptr, 0);
         m_authPid = 0;
     }
 
