@@ -1,0 +1,142 @@
+QLabel#userName{
+    font-family:"Noto Sans CJK SC Light";
+    font-size: 36px;
+    color: white;
+}
+QLabel#tips{
+    font-size:14px;
+    font-family:"Noto Sans CJK SC Light";
+    background-color:transparent;
+}
+QLabel#timedate{
+    font-family:"Noto Sans CJK SC Light";
+    font-size:20px;
+    color:white;
+    border:0px;
+}
+Kiran--SessionGuard--ShadowLabel{
+    qproperty-shadowEnable:true;
+    qproperty-shadowColor:rgba(0,0,0,0.1);
+    qproperty-shadowOffsetX:2;
+    qproperty-shadowOffsetY:2;
+}
+/*右下虚拟键盘按钮*/
+QToolButton#btn_keyboard{
+    border-image:url(:/locker/images/keyboard_normal.png);
+}
+QToolButton#btn_keyboard:pressed{
+    border-image:url(:/locker/images/keyboard_pressed.png);
+}
+QToolButton#btn_keyboard:hover:!pressed,
+QToolButton#btn_keyboard:focus:!pressed{
+    border-image:url(:/locker/images/keyboard_select.png);
+}
+/*右下电源按钮*/
+QToolButton#btn_power{
+    border-image:url(:/locker/images/shutdown_normal.png);
+}
+QToolButton#btn_power:pressed{
+    border-image:url(:/locker/images/shutdown_pressed.png);
+}
+QToolButton#btn_power:hover:!pressed,
+QToolButton#btn_power:focus:!pressed{
+    border-image:url(:/locker/images/shutdown_select.png);
+}
+QToolButton#btn_switchuser{
+    border-image:url(:/locker/images/switch_users_normal.png);
+}
+QToolButton#btn_switchuser:pressed{
+    border-image:url(:/locker/images/switch_users_pressed.png);
+}
+QToolButton#btn_switchuser:hover:!pressed,
+QToolButton#btn_switchuser:focus:!pressed{
+    border-image:url(:/locker/images/switch_users_select.png);
+}
+/*重新认证按钮*/
+QPushButton#btn_reAuth{
+    border:1px solid rgba(255,255,255,0.01);
+    border-radius:8px;
+    background-color:rgba(255,255,255,0.05);
+    color:white;
+}
+QPushButton#btn_reAuth:pressed{
+    background-color:rgba(0,0,0,0.1);
+    border:1px solid rgba(67,163,242,0.03);
+}
+QPushButton#btn_reAuth:hover{
+    background-color:rgba(255,255,255,0.1);
+}
+
+QPushButton#btn_reAuth:focus{
+    border:1px solid rgba(67,163,242,0.1);
+}
+
+Kiran--SessionGuard--PromptEdit{
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:4px;
+    background-color:rgba(0,0,0,0.2);
+}
+Kiran--SessionGuard--PromptEdit[editFocused=true]{
+    border:1px solid rgba(46,179,255,0.8);
+}
+Kiran--SessionGuard--PromptEdit[hasError=true]{
+    border:1px solid rgba(255, 46, 46,0.4);
+}
+Kiran--SessionGuard--PromptEdit[showPasswordModeStyle=false] > QLineEdit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:14px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+Kiran--SessionGuard--PromptEdit[showPasswordModeStyle=true] > QLineEdit{
+    border:0px;
+    background-color:transparent;
+    color:white;
+    font-family:"Noto Sans CJK SC";
+    font-size:7px;
+    color:white;
+    lineedit-password-character: 9679;
+}
+Kiran--SessionGuard--PromptEdit > QToolButton#button{
+    border:0px;
+    background-color:transparent;
+    background-repeat:false;
+}
+Kiran--SessionGuard--PromptEdit > QWidget#separator{
+    border:0px;
+    background-color:rgba(255,255,255,0.3);
+}
+
+QMenu {
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color: rgba(0,0,0,0.3);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px;
+}
+QMenu::item {
+    font-family:"Noto Sans CJK SC Light";
+    padding-left:16px;
+    height:28px;
+    color:white;
+    font-size:12px;
+}
+QMenu::item:selected {
+    border-right:2px solid #2EB3FF;
+    background: rgba(255, 255, 255, 0.1);
+}
+QMenu::separator {
+    height: 0px;
+    background: lightblue;
+}
+Kiran--SessionGuard--AuthTypeDrawer{
+    qproperty-specifyBorderColor: #454545;
+    qproperty-specifyBackgroundColor: #222222;
+}
+
+Kiran--SessionGuard--AuthTypeDrawer  QWidget{
+    background: #222222;
+}

@@ -27,6 +27,7 @@ add_library(${TARGET_NAME} STATIC
 
 target_include_directories(${TARGET_NAME} PRIVATE
         ../../checkpass-common
+        ${PROJECT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_BINARY_DIR}
         ${KIRANLOG_INCLUDE_DIRS}
         ${LIGHTDM_QT5_INCLUDE_DIRS})

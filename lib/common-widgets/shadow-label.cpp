@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd. 
+ * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd.
  * kiran-session-guard is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
@@ -16,6 +16,7 @@
 #include <QDebug>
 #include <QPaintEvent>
 
+GUARD_BEGIN_NAMESPACE
 ShadowLabel::ShadowLabel(QWidget *parent, Qt::WindowFlags f)
     : QLabel(parent, f),
       m_shadowColor(Qt::black),
@@ -26,8 +27,6 @@ ShadowLabel::ShadowLabel(QWidget *parent, Qt::WindowFlags f)
 {
     m_shadowEffect = new QGraphicsDropShadowEffect(this);
     m_shadowEffect->setEnabled(false);
-    ///FIXME: screensaver plugin crash
-//    this->setGraphicsEffect(m_shadowEffect);
     updateShadow();
 }
 
@@ -113,3 +112,4 @@ void ShadowLabel::updateShadow()
         m_shadowEffect->setEnabled(false);
     }
 }
+GUARD_END_NAMESPACE

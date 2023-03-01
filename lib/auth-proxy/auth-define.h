@@ -11,12 +11,11 @@
  *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
+#pragma once
+#include "guard-global.h"
+#include <kiran-authentication-service/kas-authentication-i.h>
 
-#ifndef KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_DEFINE_H_
-#define KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_DEFINE_H_
-
-namespace Kiran
-{
+GUARD_BEGIN_NAMESPACE
 enum PromptType
 {
     PromptTypeQuestion,
@@ -29,22 +28,9 @@ enum MessageType
     MessageTypeError
 };
 
-enum AuthType
-{
-    AUTH_TYPE_PASSWD = (1 << 0),
-    AUTH_TYPE_FINGER = (1 << 1),
-    AUTH_TYPE_FACE = (1 << 2)
-};
-
-inline AuthType operator|(AuthType type1,AuthType type2)
-{
-    return static_cast<AuthType>(static_cast<int>(type1)|static_cast<int>(type2));
-}
-
 enum PromptFromEnum
 {
     PROMPT_FROM_PAM,
     PROMPT_FROM_AUTH_SERVICE
 };
-}  // namespace Kiran
-#endif  //KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_DEFINE_H_
+GUARD_END_NAMESPACE
