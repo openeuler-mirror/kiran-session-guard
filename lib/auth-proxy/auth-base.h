@@ -12,22 +12,20 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
- 
-#ifndef KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_BASE_H_
-#define KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_BASE_H_
-
-#include <QObject>
+#pragma once
 #include "auth-define.h"
+#include "auth-controller-i.h"
+#include "guard-global.h"
 
 /**
- * @brief 提供对底层认证相关的一层封装(直接使用PAM模块进行认证或使用lightdm提供的greeter认证接口)，
- * 向上提供给AuthProxy提供统一的接口
+ * @brief 提供对底层认证相关的一层封装(例如直接使用PAM认证,使用Greeter接口,使用Polkit接口等底层认证方式)，
+ * 向上提供给AuthController提供统一的接口
  */
-class AuthBase : public QObject
+GUARD_BEGIN_NAMESPACE
+class AuthBase
 {
-    Q_OBJECT
 public:
-    AuthBase(QObject* parent= nullptr){};
+    AuthBase(){};
     virtual ~AuthBase() = default;
 
 public:
@@ -35,8 +33,9 @@ public:
      * 提供认证模块的相应初始化操作
      * \return
      */
-    virtual bool init() = 0;
+    virtual bool init(AuthControllerInterface* controllerInterface) = 0;
 
+    virtual bool loginUserSwitchable() { return false; };
     /**
      * 开始进行认证
      * \param userName 认证的用户
@@ -72,26 +71,5 @@ public:
      * 取消正在进行的认证
      */
     virtual void cancelAuthentication() = 0;
-
-signals:
-    /**
-     * 显示文本提示或错误消息的信号
-     * \param text 消息内容
-     * \param type 消息类型，错误/文本消息
-     */
-    void showMessage(QString text,Kiran::MessageType type);
-
-    /**
-     * 显示询问消息的信号
-     * \param text 消息内容
-     * \param type 消息类型,密码类型/明文类型
-     */
-    void showPrompt(QString text,Kiran::PromptType type);
-
-    /**
-     * 认证完成信号
-     */
-    void authenticationComplete();
 };
-
-#endif  //KIRAN_SCREENSAVER_DIALOG_SRC_AUTH_AUTH_BASE_H_
+GUARD_END_NAMESPACE

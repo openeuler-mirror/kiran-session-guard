@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PolicyKit Authentication Agent
+Exec=/usr/libexec/kiran-polkit-agent
+Terminal=false
+Type=Application
+Categories=
+NoDisplay=true
+OnlyShowIn=KIRAN;
+X-KIRAN-AutoRestart=true

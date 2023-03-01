@@ -1,0 +1,33 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Encoding=UTF-8
+Name=Greeter Settings
+Name[zh_CN]=登录选项
+Comment=kiran greeter settings
+Comment=Kiran登录界面选项
+#通过启动器单独执行 <kiran-cpanel-launcher -cpanel-plugin 插件的desktop文件名>
+Exec=kiran-cpanel-launcher --cpanel-plugin=kiran-cpanel-greeter
+Icon=kcp-greeter
+Terminal=false
+Type=Application
+Categories=Lightdm;Greeter;Core;Settings;System;X-Common-Features;X-Common-Features;
+X-KIRAN-NoDisplay=true
+
+[Kiran Control Panel Plugin]
+#插件排序
+Weight=99
+#插件分类
+Category=login-settings
+#插件共享库位置，若以'/'开头则为绝对路径，也可支持通过共享库名去插件安装目录去查找
+Library=libkiran-cpanel-greeter.so
+SubItems=Greeter
+
+[Greeter]
+#插件子项名 该值提供给控制中心形成子项列表
+Name=Greeter Settings
+Name[zh_CN] = 登录选项
+#插件Icon
+Icon=kcp-greeter
+#插件关键字 该值提供给控制中心形成搜索列表
+Keywords[zh_CN]=登录选项
+Keywords = Greeter

@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/login-frame">
+        <file>images/loading_0.png</file>
+        <file>images/loading_10.png</file>
+        <file>images/loading_11.png</file>
+        <file>images/loading_12.png</file>
+        <file>images/loading_13.png</file>
+        <file>images/loading_14.png</file>
+        <file>images/loading_15.png</file>
+        <file>images/loading_16.png</file>
+        <file>images/loading_17.png</file>
+        <file>images/loading_1.png</file>
+        <file>images/loading_2.png</file>
+        <file>images/loading_3.png</file>
+        <file>images/loading_4.png</file>
+        <file>images/loading_5.png</file>
+        <file>images/loading_6.png</file>
+        <file>images/loading_7.png</file>
+        <file>images/loading_8.png</file>
+        <file>images/loading_9.png</file>
+        <file>images/unlock.png</file>
+        <file>images/user_180.png</file>
+        <file>images/user_48.png</file>
+    </qresource>
+</RCC>

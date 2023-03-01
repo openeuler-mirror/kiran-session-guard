@@ -11,16 +11,15 @@
  *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
-
-#ifndef SHADOWLABEL_H
-#define SHADOWLABEL_H
+#pragma once
 
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include <QObject>
 #include <QPointF>
+#include "guard-global.h"
 
-///FIXME:设置阴影会对所有子控件和边框生效
+GUARD_BEGIN_NAMESPACE
 class ShadowLabel : public QLabel
 {
     Q_OBJECT
@@ -51,12 +50,11 @@ private:
     void updateShadow();
 
 private:
-    QGraphicsDropShadowEffect* m_shadowEffect = nullptr;
+    QGraphicsDropShadowEffect *m_shadowEffect = nullptr;
     QColor m_shadowColor;
     bool m_shadowEnable;
     qreal m_shadowBlurRadius;
     qreal m_shadowOffsetX;
     qreal m_shadowOffsetY;
 };
-
-#endif  // SHADOWLABEL_H
+GUARD_END_NAMESPACE

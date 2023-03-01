@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/locker">
+        <file>images/keyboard_normal.png</file>
+        <file>images/shutdown_hover.png</file>
+        <file>images/shutdown_normal.png</file>
+        <file>images/keyboard_pressed.png</file>
+        <file>images/keyboard_select.png</file>
+        <file>images/shutdown_pressed.png</file>
+        <file>images/shutdown_select.png</file>
+        <file>images/switch_users_normal.png</file>
+        <file>images/switch_users_pressed.png</file>
+        <file>images/switch_users_select.png</file>
+    </qresource>
+
+    <qresource prefix="/locker">
+        <file>stylesheets/kiran-screensaver-dialog-normal.qss</file>
+    </qresource>
+</RCC>
