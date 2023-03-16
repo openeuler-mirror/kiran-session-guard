@@ -13,15 +13,17 @@
  */
 
 #pragma once
-#include "auth-define.h"
 #include "auth-controller-i.h"
-#include "guard-global.h"
+#include "auth-define.h"
 
 /**
  * @brief 提供对底层认证相关的一层封装(例如直接使用PAM认证,使用Greeter接口,使用Polkit接口等底层认证方式)，
  * 向上提供给AuthController提供统一的接口
  */
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class AuthBase
 {
 public:
@@ -72,4 +74,5 @@ public:
      */
     virtual void cancelAuthentication() = 0;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

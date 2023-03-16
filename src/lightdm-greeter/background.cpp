@@ -18,15 +18,20 @@
 #include <QScreen>
 
 #include "background.h"
-#include "greeter-define.h"
 #include "frame.h"
+#include "greeter-define.h"
 
 QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
-Background::Background(const QString& image,QScreen *screen, QWidget *parent)
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
+Background::Background(const QString &image, QScreen *screen, QWidget *parent)
     : QWidget(parent),
       m_screen(nullptr)
 {
@@ -127,4 +132,6 @@ void Background::paintEvent(QPaintEvent *event)
     }
     QWidget::paintEvent(event);
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

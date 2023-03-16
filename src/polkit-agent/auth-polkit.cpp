@@ -1,13 +1,31 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "auth-polkit.h"
-#include "auxiliary.h"
-#include "auth-controller-i.h"
+#include <qt5-log-i.h>
 #include <PolkitQt1/Agent/Session>
 #include <PolkitQt1/Identity>
-#include <qt5-log-i.h>
+#include "auth-controller-i.h"
+#include "auxiliary.h"
 
 using namespace PolkitQt1;
 
-GUARD_POLKIT_AGENT_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace PolkitAgent
+{
 AuthPolkit::AuthPolkit(const QString& cookie)
     : AuthBase(),
       m_cookie(cookie)
@@ -15,9 +33,9 @@ AuthPolkit::AuthPolkit(const QString& cookie)
 }
 
 AuthPolkit::~AuthPolkit()
-{   
+{
     // session需手动结束,不手动结束,认证子进程会一直保持
-    if( m_session )
+    if (m_session)
     {
         m_session->cancel();
         m_session->deleteLater();
@@ -32,21 +50,21 @@ bool AuthPolkit::init(AuthControllerInterface* controllerInterface)
 
 bool AuthPolkit::authenticate(const QString& userName)
 {
-    if( m_session )
+    if (m_session)
     {
         m_session->cancel();
         m_session->deleteLater();
         m_session = nullptr;
     }
 
-    Identity id = Identity::fromString("unix-user:"+userName);
-    RETURN_VAL_IF_FALSE(id.isValid(),false);
+    Identity id = Identity::fromString("unix-user:" + userName);
+    RETURN_VAL_IF_FALSE(id.isValid(), false);
 
-    m_session =  new Agent::Session(id,m_cookie,nullptr);
-    connect(m_session, &Agent::Session::completed,this,&AuthPolkit::handleSessionCompleted);
-    connect(m_session, &Agent::Session::request,this,&AuthPolkit::handleSessionRequest);
-    connect(m_session, &Agent::Session::showError,this,&AuthPolkit::handleSessionShowError);
-    connect(m_session, &Agent::Session::showInfo,this,&AuthPolkit::handleSessionShowInfo);
+    m_session = new Agent::Session(id, m_cookie, nullptr);
+    connect(m_session, &Agent::Session::completed, this, &AuthPolkit::handleSessionCompleted);
+    connect(m_session, &Agent::Session::request, this, &AuthPolkit::handleSessionRequest);
+    connect(m_session, &Agent::Session::showError, this, &AuthPolkit::handleSessionShowError);
+    connect(m_session, &Agent::Session::showInfo, this, &AuthPolkit::handleSessionShowInfo);
 
     m_inAuth = true;
     m_session->initiate();
@@ -97,7 +115,7 @@ void AuthPolkit::handleSessionCompleted(bool gainedAuthorization)
     m_session->cancel();
     m_session->deleteLater();
     m_session = nullptr;
-    
+
     m_inAuth = false;
 
     m_controllerInterface->onAuthComplete();
@@ -105,7 +123,7 @@ void AuthPolkit::handleSessionCompleted(bool gainedAuthorization)
 
 void AuthPolkit::handleSessionRequest(const QString& request, bool echo)
 {
-    m_controllerInterface->onShowPrompt(request,echo ? PromptTypeQuestion : PromptTypeSecret);
+    m_controllerInterface->onShowPrompt(request, echo ? PromptTypeQuestion : PromptTypeSecret);
 }
 
 void AuthPolkit::handleSessionShowError(const QString& text)
@@ -117,4 +135,6 @@ void AuthPolkit::handleSessionShowInfo(const QString& text)
 {
     m_controllerInterface->onShowMessage(text, MessageTypeInfo);
 }
-GUARD_POLKIT_AGENT_END_NAMESPACE
+}  // namespace PolkitAgent
+}  // namespace SessionGuard
+}  // namespace Kiran

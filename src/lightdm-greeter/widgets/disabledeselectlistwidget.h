@@ -14,9 +14,14 @@
 #pragma once
 #include <QItemSelectionModel>
 #include <QListWidget>
-#include "guard-global.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class DisableDeselectListWidget : public QListWidget
 {
 public:
@@ -24,6 +29,8 @@ public:
 
 protected:
     virtual QItemSelectionModel::SelectionFlags selectionCommand(const QModelIndex &index,
-                                                                 const QEvent *     event = Q_NULLPTR) const override;
+                                                                 const QEvent *event = Q_NULLPTR) const override;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

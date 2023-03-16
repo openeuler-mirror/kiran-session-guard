@@ -13,8 +13,8 @@
  */
 #include "plugin.h"
 #include "frame.h"
-#include "prefs.h"
 #include "power.h"
+#include "prefs.h"
 #include "virtual-keyboard.h"
 
 #include <qt5-log-i.h>
@@ -35,10 +35,14 @@ static void cleanupResouces()
 {
     Q_CLEANUP_RESOURCE(commonWidgets);
     Q_CLEANUP_RESOURCE(loginFrame);
-
 }
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 int KSPlugin::init(Interface* ksInterface)
 {
     Q_ASSERT(ksInterface != nullptr);
@@ -81,8 +85,10 @@ void KSPlugin::uninit()
 
 LockerInterface* KSPlugin::createLocker()
 {
-    LockerInterface* lockerInterface = new Frame(m_ksInterface,Power::getInstance());
+    LockerInterface* lockerInterface = new Frame(m_ksInterface, Power::getInstance());
     return lockerInterface;
 }
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

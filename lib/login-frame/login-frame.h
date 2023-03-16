@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #pragma once
 #include <QLabel>
 #include <QWidget>
@@ -12,8 +25,11 @@ QT_BEGIN_NAMESPACE
 class QLayoutItem;
 QT_END_NAMESPACE
 
-//TODO:对于AuthController的修改未改完
-GUARD_BEGIN_NAMESPACE
+// TODO:对于AuthController的修改未改完
+namespace Kiran
+{
+namespace SessionGuard
+{
 // 提供基础的认证界面给登录以及解锁框
 // 负责基础的认证流程
 class AuthController;
@@ -91,4 +107,5 @@ private:
     QString m_specifyUser;
     AuthTypeSwitcher* m_switcher = nullptr;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

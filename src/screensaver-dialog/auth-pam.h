@@ -20,14 +20,23 @@ class QProcess;
 class QSocketNotifier;
 QT_END_NAMESPACE
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class AuthControllerInterface;
-GUARD_END_NAMESPACE
+}
+}  // namespace Kiran
 
 /**
  * 封装使用fork出子进程进行PAM认证的相关接口
  */
-GUARD_LOCKER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 class AuthPam : public QObject, public AuthBase
 {
     Q_OBJECT
@@ -65,4 +74,6 @@ private:
     int m_toChildPipe[2] = {0, 0};
     QSocketNotifier* m_socketNotifier = nullptr;
 };
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

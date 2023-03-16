@@ -13,13 +13,18 @@
  */
 #pragma once
 #include <kcp-plugin-interface.h>
-#include "guard-global.h"
+
 
 QT_BEGIN_NAMESPACE
 class QTranslator;
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class KcpInterface : public QObject, public KcpPluginInterface
 {
     Q_OBJECT
@@ -40,4 +45,6 @@ private:
     QWidget* m_currentWidget = nullptr;
     QTranslator* m_translator = nullptr;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

@@ -15,16 +15,21 @@
 
 #include <QPixmap>
 #include <QWidget>
-#include "guard-global.h"
+
 
 class QScreen;
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class Background : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Background(const QString& image,QScreen *screen, QWidget *parent = nullptr);
+    explicit Background(const QString &image, QScreen *screen, QWidget *parent = nullptr);
     ~Background();
 
     void setScreen(QScreen *screen);
@@ -45,4 +50,6 @@ private:
     QPixmap m_background;
     QPixmap m_scaledBackground;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

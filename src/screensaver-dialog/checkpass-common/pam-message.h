@@ -15,10 +15,14 @@
 #include <QJsonDocument>
 #include <QString>
 #include <QtCore>
-#include "guard-global.h"
 
-GUARD_LOCKER_BEGIN_NAMESPACE
 
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 class PamEvent
 {
     Q_GADGET
@@ -34,7 +38,7 @@ public:
     };
     Q_ENUM(Type);
 
-    PamEvent(Type type, QString textInfo):m_type(type),m_text(textInfo){};
+    PamEvent(Type type, QString textInfo) : m_type(type), m_text(textInfo){};
     virtual ~PamEvent(){};
 
     inline Type type() { return m_type; };
@@ -49,7 +53,7 @@ class ErrorEvent : public PamEvent
 {
 public:
     ErrorEvent(QString textInfo) : PamEvent(Error, textInfo){};
-    ~ErrorEvent()=default;
+    ~ErrorEvent() = default;
 };
 
 class PromptRequestEvent : public PamEvent
@@ -70,8 +74,7 @@ class PromptReplyEvent : public PamEvent
 {
 public:
     PromptReplyEvent(bool result, QString textInfo)
-        : PamEvent(PromptReply, textInfo)
-          ,m_result(result){};
+        : PamEvent(PromptReply, textInfo), m_result(result){};
     ~PromptReplyEvent() = default;
 
     inline bool result() { return m_result; };
@@ -84,8 +87,7 @@ class MessageEvent : public PamEvent
 {
 public:
     MessageEvent(bool isError, QString textInfo)
-        : PamEvent(Message, textInfo)
-          ,m_isError(isError){};
+        : PamEvent(Message, textInfo), m_isError(isError){};
     ~MessageEvent() = default;
 
     inline bool isError() { return m_isError; };
@@ -115,4 +117,6 @@ bool kiran_pam_message_send_event(int fd, PamEvent* event);
 bool kiran_pam_message_recv_event(int fd, PamEvent** event);
 void kiran_pam_message_free(PamEvent** event);
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

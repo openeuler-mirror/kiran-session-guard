@@ -14,13 +14,17 @@
 #pragma once
 #include <QMap>
 #include <QWidget>
-#include "guard-global.h"
 
 QT_BEGIN_NAMESPACE
 class QLabel;
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class HoverTips : private QWidget
 {
     Q_OBJECT
@@ -67,4 +71,6 @@ private:
     quint32 m_hideTimeout = 3000;
     int m_hideTimerID = -1;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

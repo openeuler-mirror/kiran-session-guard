@@ -30,7 +30,12 @@ enum PipeChannelEnum
     CHANNEL_WRITE
 };
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 AuthPam::AuthPam(QObject *parent)
     : QObject(parent), AuthBase()
 {
@@ -93,6 +98,7 @@ bool AuthPam::authenticate(const QString &userName)
     }
 
     m_inAuthenticating = true;
+    m_hasSendCompleteSignal = false;
 
     // 父进程
     m_authPid = forkPid;
@@ -254,7 +260,10 @@ void AuthPam::handleChildExit()
     // 中途意外结束，未发认证完成信号的时候，补上认证完成信号
     if (!m_hasSendCompleteSignal)
     {
+        KLOG_DEBUG() << "authentication subprocess exits without sending a completion signal. completion signal is sent again";
         this->m_interface->onAuthComplete();
     }
 }
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

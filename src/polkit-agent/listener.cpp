@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "listener.h"
 #include "dialog.h"
 
@@ -8,8 +21,14 @@
 #include <QDBusError>
 #include <QScreen>
 #include <QTimer>
+#include <QX11Info>
 
-GUARD_POLKIT_AGENT_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace PolkitAgent
+{
 Listener::Listener(QObject *parent)
     : PolkitQt1::Agent::Listener(parent)
 {
@@ -67,8 +86,10 @@ void Listener::initiateAuthentication(const QString &actionId,
 
     QTimer::singleShot(200, [this]()
                        {
-        m_authDialog->show();
-        m_authDialog->activateWindow(); });
+                           QX11Info::setAppTime(QX11Info::getTimestamp());
+                           m_authDialog->show();
+                           m_authDialog->activateWindow();
+                       });
 
     return;
 }
@@ -112,4 +133,6 @@ void Listener::onAuthDialogCancelled()
     KLOG_DEBUG() << "dialog cancelled,cancel authentication";
     cancelAuthentication();
 }
-GUARD_POLKIT_AGENT_END_NAMESPACE
+}  // namespace PolkitAgent
+}  // namespace SessionGuard
+}  // namespace Kiran

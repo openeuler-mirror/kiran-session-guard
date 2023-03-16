@@ -27,7 +27,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 int KeyboardMonitor::getXiMajorVersion(Display *display)
 {
     XExtensionVersion *version;
@@ -92,10 +95,7 @@ void KeyboardMonitor::selectEvents(Display *display)
 
 int KeyboardMonitor::listenXiEvent(Display *display)
 {
-    Window root = DefaultRootWindow(display);
-    int root_x, root_y, nouse;
-    Window noused_window;
-    unsigned int mask;
+    // Window root = DefaultRootWindow(display);
 
     while (1)
     {
@@ -106,36 +106,17 @@ int KeyboardMonitor::listenXiEvent(Display *display)
         if (XGetEventData(display, cookie) && cookie->type == GenericEvent &&
             cookie->extension == m_xi2Opcode)
         {
-            // XQueryPointer(display, root, &noused_window, &noused_window,
-            //    &root_x, &root_y, &nouse, &nouse, &mask);
             XIRawEvent *event = static_cast<XIRawEvent *>(cookie->data);
             switch (cookie->evtype)
             {
-            case XI_RawButtonPress:
-                /*printf("Button press: Detail(%d), X(%d), Y(%d), Mask(%u)\n", event->detail, root_x, root_y, mask);*/
-                break;
-            case XI_RawButtonRelease:
-                /*printf("Button release: Detail(%d), X(%d), Y(%d), Mask(%u)\n", event->detail, root_x, root_y, mask);*/
-                break;
-            case XI_RawKeyPress:
-                break;
-            case XI_RawTouchBegin:
-                //                printf("Touch begin: Detail(%d), X(%d), Y(%d), Mask(%u)\n", event->detail, root_x, root_y, mask);
-                break;
-            case XI_RawTouchUpdate:
-                //                printf("Touch update: Detail(%d), X(%d), Y(%d), Mask(%u)\n", event->detail, root_x, root_y, mask);
-                break;
-            case XI_RawTouchEnd:
-                //                printf("Touch end: Detail(%d), X(%d), Y(%d), Mask(%u)\n", event->detail, root_x, root_y, mask);
-                break;
             case XI_RawKeyRelease:
             {
                 KeySym sym = XkbKeycodeToKeysym(display, event->detail, 0, 0);
-                if( sym == XKB_KEY_Caps_Lock )
+                if (sym == XKB_KEY_Caps_Lock)
                 {
                     emit capslockStatusChanged(isCapslockOn());
                 }
-                else if( sym == XKB_KEY_Num_Lock )
+                else if (sym == XKB_KEY_Num_Lock)
                 {
                     emit numlockStatusChanged(isNumlockOn());
                 }
@@ -224,4 +205,5 @@ void KeyboardMonitor::run()
     listenXiEvent(display);
 }
 
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

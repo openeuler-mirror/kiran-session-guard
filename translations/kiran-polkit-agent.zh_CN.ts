@@ -2,50 +2,138 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>AuthController</name>
+    <message>
+        <source>Failed to authenticate</source>
+        <translation type="vanished">认证失败</translation>
+    </message>
+</context>
+<context>
+    <name>AuthTypeSwitcher</name>
+    <message>
+        <source>face auth</source>
+        <translation type="vanished">人脸认证</translation>
+    </message>
+    <message>
+        <source>finger auth</source>
+        <translation type="vanished">人脸认证</translation>
+    </message>
+    <message>
+        <source>password auth</source>
+        <translation type="vanished">密码认证</translation>
+    </message>
+    <message>
+        <source>finger vein auth</source>
+        <translation type="vanished">指静脉认证</translation>
+    </message>
+</context>
+<context>
     <name>Dialog</name>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="59"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="238"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>确认</translation>
     </message>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="279"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>取消</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="92"/>
         <source>authorization</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="162"/>
         <source>fingerprint auth</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="163"/>
         <source>face auth</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">人脸认证</translation>
+    </message>
+    <message>
+        <source>fingervein auth</source>
+        <translation type="vanished">指静脉认证</translation>
+    </message>
+</context>
+<context>
+    <name>Kiran::SessionGuard::AuthController</name>
+    <message>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="275"/>
+        <source>Failed to authenticate</source>
+        <translation>认证失败</translation>
+    </message>
+</context>
+<context>
+    <name>Kiran::SessionGuard::AuthTypeSwitcher</name>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="55"/>
+        <source>face auth</source>
+        <translation>人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="56"/>
+        <source>finger auth</source>
+        <translation>人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="57"/>
+        <source>password auth</source>
+        <translation>密码认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="58"/>
+        <source>finger vein auth</source>
+        <translation>指静脉认证</translation>
+    </message>
+</context>
+<context>
+    <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="111"/>
+        <source>authorization</source>
+        <translation>认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="182"/>
+        <source>fingerprint auth</source>
+        <translation>指纹认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="183"/>
+        <source>face auth</source>
+        <translation>人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="184"/>
+        <source>fingervein auth</source>
+        <translation>指静脉认证</translation>
+    </message>
+</context>
+<context>
+    <name>Kiran::SessionGuard::PolkitAgent::Listener</name>
+    <message>
+        <location filename="../src/polkit-agent/listener.cpp" line="51"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="72"/>
+        <source>Existing authentication is in progress, please try again later</source>
+        <translation>已存在正在进行的认证，请稍后再进行尝试</translation>
     </message>
 </context>
 <context>
     <name>Listener</name>
     <message>
-        <location filename="../src/polkit-agent/listener.cpp" line="41"/>
-        <location filename="../src/polkit-agent/listener.cpp" line="62"/>
         <source>Existing authentication is in progress, please try again later</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">已存在正在进行的认证，请稍后再进行尝试</translation>
     </message>
 </context>
 </TS>

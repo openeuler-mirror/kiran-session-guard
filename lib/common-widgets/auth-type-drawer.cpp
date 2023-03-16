@@ -1,6 +1,7 @@
 #include "auth-type-drawer.h"
 #include "style-palette.h"
 
+#include <kiran-style/style-palette.h>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QDebug>
@@ -16,9 +17,10 @@
 #include <QTimer>
 #include <QToolButton>
 
-// TODO:限制最大长度
-
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 AuthTypeDrawer::AuthTypeDrawer(AuthTypeDrawerExpandDirection direction, int radius, QWidget* parent, QWidget* switcher)
     : QWidget(parent),
       m_switcher(switcher),
@@ -26,10 +28,28 @@ AuthTypeDrawer::AuthTypeDrawer(AuthTypeDrawerExpandDirection direction, int radi
       m_radius(radius)
 {
     init();
+
+    auto kiranPalette = Kiran::StylePalette::instance();
+    connect(kiranPalette, &Kiran::StylePalette::themeChanged, this, &AuthTypeDrawer::onThemeChanged);
 }
 
 AuthTypeDrawer::~AuthTypeDrawer()
 {
+}
+
+void AuthTypeDrawer::setAdjustColorToTheme(bool enable)
+{
+    if (m_adjustColorToTheme == enable)
+    {
+        return;
+    }
+
+    m_adjustColorToTheme = enable;
+
+    if (m_adjustColorToTheme)
+    {
+        updateButtonIconColor();
+    }
 }
 
 void AuthTypeDrawer::setAuthTypes(QList<std::tuple<int, QString, QString>> authTypes)
@@ -54,13 +74,23 @@ void AuthTypeDrawer::setAuthTypes(QList<std::tuple<int, QString, QString>> authT
         btn->setIconSize(QSize(14, 14));
         btn->setFixedSize(QSize(16, 16));
         connect(btn, &QToolButton::clicked, this, [this, authType]()
-                { emit authTypeClicked(authType);shrink(); });
-
+                {
+                    emit authTypeClicked(authType);
+                    shrink(); });
         m_containerLayout->addWidget(btn, 0, Qt::AlignCenter);
-        m_buttonMap[authType] = btn;
-    }
 
+        AuthTypeButtonInfo authButtonInfo;
+        authButtonInfo.m_button = btn;
+        authButtonInfo.m_icon = icon;
+        m_buttonMap[authType] = authButtonInfo;
+    }
+    
     updateValidSizeHint();
+
+    if (m_adjustColorToTheme)
+    {
+        updateButtonIconColor();
+    }
 }
 
 void AuthTypeDrawer::clear()
@@ -280,6 +310,32 @@ void AuthTypeDrawer::updateValidSizeHint()
     m_validSizeHint = totalSize;
 }
 
+void AuthTypeDrawer::updateButtonIconColor()
+{
+    auto kiranPalette = Kiran::StylePalette::instance();
+
+    for (auto buttonInfo : m_buttonMap)
+    {
+        QIcon icon(buttonInfo.m_icon);
+        auto pixmap = icon.pixmap(QSize(16, 16));
+        if (kiranPalette->paletteType() == Kiran::PALETTE_LIGHT)
+        {
+            auto image = pixmap.toImage();
+            image.invertPixels(QImage::InvertRgb);
+            pixmap = QPixmap::fromImage(image);
+        }
+        buttonInfo.m_button->setIcon(pixmap);
+    }
+}
+
+void AuthTypeDrawer::onThemeChanged()
+{
+    if (m_adjustColorToTheme)
+    {
+        updateButtonIconColor();
+    }
+}
+
 void AuthTypeDrawer::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
@@ -379,4 +435,5 @@ bool AuthTypeDrawer::eventFilter(QObject* watched, QEvent* event)
 
     return false;
 }
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

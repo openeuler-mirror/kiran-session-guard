@@ -14,9 +14,13 @@
 #pragma once
 
 #include "ksd_greeter_proxy.h"
-#include "guard-global.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class Prefs : public KSDGreeterProxy
 {
     Q_OBJECT
@@ -54,4 +58,6 @@ private:
     bool m_canSuspend = true;
     bool m_canHibernate = true;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

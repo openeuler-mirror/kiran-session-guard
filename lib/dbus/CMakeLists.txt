@@ -1,9 +1,5 @@
 set(TARGET_NAME dbus)
 
-find_package(PkgConfig REQUIRED)
-find_package(Qt5 COMPONENTS Core DBus)
-pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
-
 set(DBUS_SRC_LIST "")
 
 kiran_qt5_add_dbus_interface_ex(KSD_ACCOUNTS_SRC

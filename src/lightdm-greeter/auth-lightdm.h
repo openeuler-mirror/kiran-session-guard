@@ -20,8 +20,13 @@
 /**
  * 简单的对QLightDM::Greeter进行了一层包装，只是为了给上层认证代理AuthProxy提供统一的接口
  */
-GUARD_GREETER_BEGIN_NAMESPACE
-class AuthLightdm : public QObject,public AuthBase
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
+class AuthLightdm : public QObject, public AuthBase
 {
     Q_OBJECT
 public:
@@ -47,4 +52,6 @@ private:
     AuthControllerInterface* m_interface = nullptr;
     QSharedPointer<QLightDM::Greeter> m_greeterPtr;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

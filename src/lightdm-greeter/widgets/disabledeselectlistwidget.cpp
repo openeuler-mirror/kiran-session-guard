@@ -17,8 +17,12 @@
 #include <QEvent>
 #include <QMouseEvent>
 
-GUARD_GREETER_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 DisableDeselectListWidget::DisableDeselectListWidget(QWidget *parent)
     : QListWidget(parent)
 {
@@ -48,4 +52,6 @@ DisableDeselectListWidget::selectionCommand(const QModelIndex &index, const QEve
     return QListWidget::selectionCommand(index, event);
 }
 
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

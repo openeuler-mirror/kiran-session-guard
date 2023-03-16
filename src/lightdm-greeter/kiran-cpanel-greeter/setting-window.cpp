@@ -18,7 +18,7 @@
 #include "hover-tips.h"
 #include "user-manager.h"
 
-#include <widget-property-helper.h>
+#include <style-property.h>
 #include <QApplication>
 #include <QComboBox>
 #include <QDir>
@@ -45,7 +45,12 @@ enum GreeterSettingsPageEnum
     GreeterSettings_Autologin
 };
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 SettingWindow::SettingWindow(QWidget *parent) : QWidget(parent)
 {
     Prefs::globalInit();
@@ -118,26 +123,27 @@ void SettingWindow::initUI()
     /* 处理相关控件信号和初始化 */
     connect(m_sidebarWidget, &KiranSidebarWidget::itemSelectionChanged, [this]
             {
-        QList<QListWidgetItem *> selecteds = m_sidebarWidget->selectedItems();
-        if (selecteds.size() != 1)
-        {
-            KLOG_FATAL("tabList: selecteds size != 1");
-        }
-        int page = m_sidebarWidget->row(selecteds.at(0));
-        m_stackedWidget->setCurrentIndex(page);
+                QList<QListWidgetItem *> selecteds = m_sidebarWidget->selectedItems();
+                if (selecteds.size() != 1)
+                {
+                    KLOG_FATAL("tabList: selecteds size != 1");
+                }
+                int page = m_sidebarWidget->row(selecteds.at(0));
+                m_stackedWidget->setCurrentIndex(page);
 
-        /* 重置页面 */
-        if (page == GreeterSettings_Appearance)
-        {
-            resetGeneralSettings();
-        }
-        else if (page == GreeterSettings_Autologin)
-        {
-            resetAutoLoginSettings();
-        }
+                /* 重置页面 */
+                if (page == GreeterSettings_Appearance)
+                {
+                    resetGeneralSettings();
+                }
+                else if (page == GreeterSettings_Autologin)
+                {
+                    resetAutoLoginSettings();
+                }
 
-        /* 隐藏悬浮提示 */
-        m_hoverTips->hide(); });
+                /* 隐藏悬浮提示 */
+                m_hoverTips->hide();
+            });
     m_sidebarWidget->setCurrentRow(0);
     resetGeneralSettings();
     resetAutoLoginSettings();
@@ -227,7 +233,7 @@ QWidget *SettingWindow::initPageAutoLogin()
     btn_save->setObjectName("btn_saveAutoLogin");
     btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
-    Kiran::WidgetPropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
+    Kiran::StylePropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
     connect(btn_save, &QPushButton::clicked, [this]()
             { saveAutoLoginSettings(); });
@@ -386,7 +392,7 @@ QWidget *SettingWindow::initPageGeneralSettings()
     btn_save->setObjectName("btn_saveGeneralSettings");
     btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
-    Kiran::WidgetPropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
+    Kiran::StylePropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
     connect(btn_save, &QPushButton::clicked, [this]()
             { saveGeneralSettings(); });
@@ -441,7 +447,7 @@ void SettingWindow::initUserComboBox(QComboBox *combo)
 }
 
 void SettingWindow::saveGeneralSettings()
-{   
+{
     GreeterSettingInfo::GeneralSetting backendInfo = getGeneralSettingInfoFromBackend();
 
     /* UI修改之前所加载的配置信息 */
@@ -722,4 +728,6 @@ void SettingWindow::onScaleModeChanged(int idx)
 
     m_comboScaleFactor->setEnabled(itemScaleMode == GreeterScalingMode::GREETER_SCALING_MODE_MANUAL);
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran
