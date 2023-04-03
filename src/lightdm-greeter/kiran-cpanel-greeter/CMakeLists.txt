@@ -10,12 +10,12 @@ pkg_get_variable(CPANEL_DESKTOP_DIR kiran-control-panel plugin_desktop_location)
 file(GLOB CPANEL_GREETER_SRC "../common/*.cpp" "../common/*.h" "./*.cpp" "./*.h" "./*.ui")
 set(CPANEL_GREETER_RESOURCE ${CMAKE_SOURCE_DIR}/resources/kcp-greeter-resources.qrc)
 set(CPANEL_GREETER_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/kiran-cpanel-greeter.zh_CN.ts)
-qt5_create_translation(GREETER_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR})
+qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} CPANEL_GREETER_TRANSLATION)
 
 add_library(${TARGET_NAME} SHARED
             ${CPANEL_GREETER_SRC}
             ${CPANEL_GREETER_RESOURCE}
-            ${CPANEL_GREETER_TRANSLATION})
+            ${GREETER_SETTINS_QM_FILES})
 
 target_include_directories(${TARGET_NAME} PRIVATE
         ../public

@@ -71,8 +71,12 @@ void Listener::initiateAuthentication(const QString &actionId,
     {
         result->setError(tr("Existing authentication is in progress, please try again later"));
         result->setCompleted();
+
         m_result = nullptr;
         m_inProcess = false;
+
+        m_authDialog->deleteLater();
+        m_authDialog = nullptr;
         return;
     }
 
@@ -80,17 +84,16 @@ void Listener::initiateAuthentication(const QString &actionId,
     connect(m_authDialog, &Dialog::cancelled, this, &Listener::onAuthDialogCancelled);
 
     auto screen = QApplication::screenAt(QCursor::pos());
-    QRect screenGeometry = screen->geometry();
-    m_authDialog->move(screenGeometry.x() + (screenGeometry.width() - m_authDialog->width()) / 2,
-                       screenGeometry.y() + (screenGeometry.height() - m_authDialog->height()) / 2);
+    if (screen != nullptr)
+    {
+        QRect screenGeometry = screen->geometry();
+        m_authDialog->move(screenGeometry.x() + (screenGeometry.width() - m_authDialog->width()) / 2,
+                           screenGeometry.y() + (screenGeometry.height() - m_authDialog->height()) / 2);
+    }
 
-    QTimer::singleShot(200, [this]()
-                       {
-                           QX11Info::setAppTime(QX11Info::getTimestamp());
-                           m_authDialog->show();
-                           m_authDialog->activateWindow();
-                       });
-
+    QX11Info::setAppTime(QX11Info::getTimestamp());
+    m_authDialog->show();
+    m_authDialog->activateWindow();
     return;
 }
 
@@ -106,6 +109,7 @@ void Listener::cancelAuthentication()
         m_inProcess = false;
         m_authDialog->hide();
         m_authDialog->deleteLater();
+        m_authDialog = nullptr;
 
         m_result->setError("Authentication Cancelled");
         m_result->setCompleted();
