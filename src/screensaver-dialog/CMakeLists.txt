@@ -13,9 +13,10 @@ set(SCREENSAVER_DIALOG_TRANSLATOR_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}                
         ${PROJECT_SOURCE_DIR}/lib/login-frame/
         ${PROJECT_SOURCE_DIR}/lib/auth-proxy/)
+file(GLOB SCREENSAVER_DIALOG_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/kiran-screensaver-dialog*.ts)
 qt5_create_translation(SCREENSAVER_DIALOG_QM_FILES   
                        ${SCREENSAVER_DIALOG_TRANSLATOR_SOURCE}
-                       ${CMAKE_SOURCE_DIR}/translations/kiran-screensaver-dialog.zh_CN.ts
+                       ${SCREENSAVER_DIALOG_TRANSLATION}
                        OPTIONS -I ${SCREENSAVER_DIALOG_TRANSLATOR_SOURCE})
                        
 add_library(${TARGET_NAME} SHARED 
