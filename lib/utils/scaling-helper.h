@@ -13,14 +13,16 @@
  */
 
 #pragma once
-#include "guard-global.h"
 
-GUARD_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
 namespace ScalingHelper
 {
 void auto_calculate_screen_scaling();
 void set_scale_factor(double factor);
 }  // namespace ScalingHelper
 
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

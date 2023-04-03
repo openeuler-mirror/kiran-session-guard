@@ -27,7 +27,12 @@
 
 using namespace QLightDM;
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 UserList::UserList(QWidget *parent)
     : QWidget(parent), ui(new Ui::UserList)
 {
@@ -134,22 +139,23 @@ void UserList::initUI()
     /// 处理当焦点从外部到UserItem时，应默认到当前行
     connect(qApp, &QApplication::focusChanged, [this](QWidget *oldWidget, QWidget *newWidget)
             {
-        bool oldFocusInList = oldWidget == nullptr ? false : oldWidget->objectName() == USERITEM_OBJ_NAME;
-        bool newFocusInList = newWidget == nullptr ? false : newWidget->objectName() == USERITEM_OBJ_NAME;
-        if (!oldFocusInList && !newFocusInList)
-        {
-            return;
-        }
-        else if (newFocusInList)
-        {  ///UserItem->UserItem,滚动到焦点行
-            UserItem *userItem = dynamic_cast<UserItem *>(newWidget);
-            const QListWidgetItem *listItem = userItem->getListItem();
-            ui->userList->scrollToItem(listItem);
-        }
-        else if (oldFocusInList)
-        {  ///UserItem->外部，滚动到当前行
-            ui->userList->scrollToItem(ui->userList->currentItem());
-        } });
+                bool oldFocusInList = oldWidget == nullptr ? false : oldWidget->objectName() == USERITEM_OBJ_NAME;
+                bool newFocusInList = newWidget == nullptr ? false : newWidget->objectName() == USERITEM_OBJ_NAME;
+                if (!oldFocusInList && !newFocusInList)
+                {
+                    return;
+                }
+                else if (newFocusInList)
+                {  ///UserItem->UserItem,滚动到焦点行
+                    UserItem *userItem = dynamic_cast<UserItem *>(newWidget);
+                    const QListWidgetItem *listItem = userItem->getListItem();
+                    ui->userList->scrollToItem(listItem);
+                }
+                else if (oldFocusInList)
+                {  ///UserItem->外部，滚动到当前行
+                    ui->userList->scrollToItem(ui->userList->currentItem());
+                }
+            });
 }
 
 void UserList::loadUserList()
@@ -340,8 +346,6 @@ void UserList::onUserItemActivated()
 
 void UserList::onModelRowsRemoved(const QModelIndex &parent, int first, int last)
 {
-    bool reSelect = false;
-
     int oldCount = userCount();
     for (int i = last; (i >= first); i--)
     {
@@ -369,7 +373,7 @@ void UserList::onModelRowsInserted(const QModelIndex &parent, int first, int las
     KLOG_DEBUG() << "row inserted: "
                  << "cout[" << ui->userList->count() << "]";
     updateGeometry();
-    emit userCountChanged(oldCount,newCount);
+    emit userCountChanged(oldCount, newCount);
 }
 
 QSize UserList::sizeHint() const
@@ -378,4 +382,6 @@ QSize UserList::sizeHint() const
     KLOG_DEBUG() << "count: " << ui->userList->count() << "size: " << size;
     return size;
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

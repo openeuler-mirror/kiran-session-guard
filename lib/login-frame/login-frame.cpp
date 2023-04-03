@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
+
 #include "login-frame.h"
 #include "auth-controller.h"
 #include "auth-type-switcher.h"
@@ -13,7 +27,10 @@
 #include <QTimer>
 #include <QToolButton>
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 LoginFrame::LoginFrame(QWidget* parent)
     : QWidget(parent),
       ui(new Ui::LoginFrame),
@@ -275,7 +292,6 @@ void LoginFrame::onAuthComplete(bool authRes)
         {
             // 未存在prompt消息,应切换至显示重新认真按钮,点击重新认证按钮再开始认证
             switchControlPage(CONTROL_PAGE_REAUTH);
-            m_switcher->setVisible(false);
         }
     }
 }
@@ -309,4 +325,5 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
     }
 }
 
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

@@ -17,16 +17,19 @@
 #include <QScopedPointer>
 #include <QSettings>
 
-GUARD_LOCKER_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 Prefs::Prefs()
 {
-
 }
 
 void Prefs::init()
 {
-    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver-dialog.ini",QSettings::IniFormat);
+    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver-dialog.ini", QSettings::IniFormat);
     ///power
     settings.beginGroup("Power");
 
@@ -66,4 +69,6 @@ bool Prefs::canSuspend()
     return m_canSuspend;
 }
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

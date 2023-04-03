@@ -15,7 +15,7 @@
 #include <QGSettings>
 #include <QVariant>
 #include <QWidget>
-#include "guard-global.h"
+
 
 QT_BEGIN_NAMESPACE
 class QStackedWidget;
@@ -29,7 +29,12 @@ class KiranSwitchButton;
 class KiranSidebarWidget;
 class KiranImageSelector;
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 struct GreeterSettingInfo
 {
     struct GeneralSetting
@@ -136,4 +141,6 @@ private:
     QComboBox *m_comboAutoLoginUser; /** < 自动登录用户下拉框 */
     QLineEdit *m_editAutoLoginDelay; /** < 自动登录延时输入框 */
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

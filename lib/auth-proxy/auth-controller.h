@@ -14,14 +14,17 @@
 
 #pragma once
 
+#include <kiran-authentication-service/kas-authentication-i.h>
 #include <QObject>
 #include "auth-base.h"
-#include <kiran-authentication-service/kas-authentication-i.h>
 
 /**
  * 认证代理:对PAM认证相关和认证服务的一层封装,提供认证队列接口可以将消息存储延时发出或做相关过滤
  */
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class Q_DECL_IMPORT AuthController : public QObject, public AuthControllerInterface
 {
     Q_OBJECT
@@ -54,7 +57,7 @@ public:
 
     KADAuthType currentAuthType();
     QList<KADAuthType> getSupportedAuthType();
-    
+
 signals:
     // 显示message信息
     void showMessage(QString text, MessageType type);
@@ -94,4 +97,5 @@ private:
     KADAuthType m_currentAuthType = KAD_AUTH_TYPE_NONE;
     QList<KADAuthType> m_supportedAuthType;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

@@ -11,9 +11,9 @@
  *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
-#pragma ocne
+#pragma once
 #include <QWidget>
-#include "guard-global.h"
+
 
 QT_BEGIN_NAMESPACE
 class QButtonGroup;
@@ -22,15 +22,20 @@ class QCheckBox;
 class QEvent;
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class GreeterMenuItem : public QWidget
 {
     Q_OBJECT
 public:
     explicit GreeterMenuItem(const QString &text, bool checkable, QWidget *parent = nullptr);
-    void    setExclusiveGroup(QButtonGroup *group);
+    void setExclusiveGroup(QButtonGroup *group);
     QString getActionName();
-    void    setChecked(bool isChecked);
+    void setChecked(bool isChecked);
 signals:
     void sigChecked(QString action);
 public slots:
@@ -42,9 +47,11 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event) override;
 
 private:
-    bool       m_checkable;
-    QString    m_actionName;
-    QLabel *   m_label;
+    bool m_checkable;
+    QString m_actionName;
+    QLabel *m_label;
     QCheckBox *m_checkbox;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

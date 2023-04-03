@@ -1,9 +1,22 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #pragma once
-#include <QObject>
+#include <kiran-titlebar-window.h>
 #include <PolkitQt1/Agent/Listener>
 #include <PolkitQt1/Details>
+#include <QObject>
 #include <QString>
-#include <kiran-titlebar-window.h>
 #include "auth-base.h"
 
 namespace Ui
@@ -19,12 +32,21 @@ class QLabel;
 class QComboBox;
 QT_END_NAMESPACE
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class AuthController;
 class AuthTypeSwitcher;
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran
 
-GUARD_POLKIT_AGENT_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace PolkitAgent
+{
 class AuthPolkit;
 class AuthInfo
 {
@@ -82,4 +104,6 @@ private:
     bool m_havePrompt = false;
     int m_triesCount = 0;
 };
-GUARD_POLKIT_AGENT_END_NAMESPACE
+}  // namespace PolkitAgent
+}  // namespace SessionGuard
+}  // namespace Kiran

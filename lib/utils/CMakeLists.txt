@@ -1,12 +1,11 @@
 set(TARGET_NAME utils)
+file(GLOB UTILS_SRC "*.cpp" "*.h")
 
-find_package(Qt5 COMPONENTS Widgets Core X11Extras DBus)
-find_package(PkgConfig REQUIRED)
 pkg_search_module(X11 REQUIRED x11)
 pkg_search_module(XINPUT REQUIRED xi)
-pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
-
-file(GLOB UTILS_SRC "*.cpp" "*.h")
+pkg_search_module(XRANDR REQUIRED xrandr)
+pkg_search_module(XCURSOR REQUIRED xcursor)
+pkg_search_module(XFIXES REQUIRED xfixes)
 
 add_library(${TARGET_NAME} STATIC ${UTILS_SRC})
 
@@ -14,6 +13,9 @@ target_include_directories(${TARGET_NAME} PRIVATE
                     ${$CMAKE_CURRENT_SOURCE_DIR} 
                     ${PROJECT_SOURCE_DIR}/include
                     ${XINPUT_INCLUDE_DIRS}
+                    ${XRANDR_INCLUDE_DIRS}
+                    ${XCURSOR_INCLUDE_DIRS}
+                    ${XFIXES_INCLUDE_DIRS}
                     ${KLOG_QT5_INCLUDE_DIRS})
 
 target_include_directories(${TARGET_NAME} INTERFACE
@@ -27,5 +29,8 @@ target_link_libraries(${TARGET_NAME}
                     Qt5::X11Extras 
                     ${X11_LIBRARIES} 
                     ${XINPUT_LIBRARIES}
+                    ${XRANDR_LIBRARIES}
+                    ${XCURSOR_LIBRARIES}
+                    ${XFIXES_LIBRARIES}
                     ${KLOG_QT5_LIBRARIES})
                     

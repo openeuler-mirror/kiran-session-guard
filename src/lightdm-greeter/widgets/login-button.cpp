@@ -18,7 +18,12 @@
 #include <QStyleOption>
 #include "ui_login-button.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 LoginButton::LoginButton(QWidget *parent) : QWidget(parent),
                                             ui(new Ui::LoginButton),
                                             m_pressed(false)
@@ -85,4 +90,6 @@ void LoginButton::mouseReleaseEvent(QMouseEvent *event)
     setPressed(false);
     QWidget::mouseReleaseEvent(event);
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

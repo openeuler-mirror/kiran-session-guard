@@ -24,7 +24,10 @@
 #define LOADING_ICON_FORMAT ":/login-frame/images/loading_%1.png"
 #define LOADING_ICON_INDEX_MAX 17
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 PromptEdit::PromptEdit(QWidget *parent)
     : QWidget(parent),
       ui(new Ui::PromptEdit),
@@ -271,4 +274,5 @@ bool PromptEdit::showPasswordModeStyle() const
 {
     return m_showPasswordModeStyle;
 }
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

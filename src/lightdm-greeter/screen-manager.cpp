@@ -19,10 +19,15 @@
 
 #include "background.h"
 #include "frame.h"
-#include "screen-manager.h"
 #include "prefs.h"
+#include "screen-manager.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 /// 析构:
 ///      清理登录窗口和背景窗口
 ScreenManager::~ScreenManager()
@@ -43,7 +48,7 @@ ScreenManager::~ScreenManager()
 /// 初始化窗口：
 ///      获取显示器数量，根据主显示器创建背景窗口，保存显示器和背景窗口的映射关系
 ///      创建GreeterWindow与主显示器绑定.若不存在主显示器，则不显示
-void ScreenManager::init(Prefs* prefs)
+void ScreenManager::init(Prefs *prefs)
 {
     m_prefs = prefs;
     for (QScreen *screen : qApp->screens())
@@ -135,7 +140,7 @@ void ScreenManager::mouseEnterInWindow(Background *background)
 
 void ScreenManager::newScreenBackgroundWidget(QScreen *screen)
 {
-    auto background = new Background(m_prefs->background(),screen);
+    auto background = new Background(m_prefs->background(), screen);
     background->setObjectName(QString("BackgroundWindow_%1").arg(screen->name()));
     m_BackgroundWidgetMap.insert(screen, background);
     connect(background, &Background::mouseEnter,
@@ -161,4 +166,6 @@ ScreenManager::ScreenManager(QObject *parent)
     connect(qApp, &QApplication::screenRemoved,
             this, &ScreenManager::slotScreenRemoved);
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

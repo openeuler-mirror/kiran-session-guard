@@ -18,7 +18,6 @@
 #include <QPaintEvent>
 #include <QWidget>
 #include "user-info.h"
-#include "guard-global.h"
 
 #define USERITEM_OBJ_NAME "UserItem"
 namespace Ui
@@ -26,7 +25,12 @@ namespace Ui
 class UserItem;
 }
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class UserItem : public QWidget
 {
     Q_OBJECT
@@ -48,4 +52,6 @@ private:
     UserInfo m_userInfo;
     const QListWidgetItem *m_listItem;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

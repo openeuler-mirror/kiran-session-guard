@@ -6,7 +6,7 @@
 
 #include <QTimer>
 
-#define SHRINK_ICON "/home/liuxinhao/code/kiran-desktop/kiran-session-guard/resources/images/loginbutton-arrow.png"
+#define SHRINK_ICON ":/common-widgets-images/loginbutton-arrow.svg"
 
 namespace Kiran
 {
@@ -17,7 +17,7 @@ AuthTypeSwitcher::AuthTypeSwitcher(AuthTypeDrawerExpandDirection direction, int 
       m_radius(radius)
 {
     setFixedSize(42, 42);
-    
+
     m_drawer = new AuthTypeDrawer(direction, radius, parent, this);
     connect(m_drawer, &AuthTypeDrawer::authTypeClicked, this, &AuthTypeSwitcher::onAuthTypeChanged);
     // clang-format off
@@ -43,6 +43,11 @@ void AuthTypeSwitcher::clear()
     m_currentAuthType = -1;
 }
 
+void AuthTypeSwitcher::setAdjustColorToTheme(bool enable)
+{
+    m_drawer->setAdjustColorToTheme(enable);
+}
+
 void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
 {
     // clang-format off
@@ -50,7 +55,7 @@ void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
             {KAD_AUTH_TYPE_FACE, {":/common-widgets-images/face-auth.svg",tr("face auth")}},
             {KAD_AUTH_TYPE_FINGERPRINT,{":/common-widgets-images/finger-auth.svg",tr("finger auth")}},
             {KAD_AUTH_TYPE_PASSWORD,{":/common-widgets-images/passwd-auth.svg",tr("password auth")}},
-            {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/finger-auth.svg",tr("finger vein auth")}}
+            {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}}
         };
     // clang-format on
 

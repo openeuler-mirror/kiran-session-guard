@@ -1,20 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
-
 set(TARGET_NAME kiran-cpanel-greeter)
 
-# Qt依赖
-find_package(Qt5 COMPONENTS
-        Widgets
-        DBus
-        LinguistTools)
-
-# 第三方依赖
-find_package(PkgConfig REQUIRED)
 pkg_search_module(GSETTINGS_QT REQUIRED gsettings-qt)
 pkg_search_module(GLIB_2 REQUIRED glib-2.0)
-pkg_search_module(KIRANWIDGETS_QT5 REQUIRED kiranwidgets-qt5)
-pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
-pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
 
 pkg_search_module(KIRAN_CONTROL_PANEL REQUIRED kiran-control-panel)
 pkg_get_variable(CPANEL_PLUGIN_DIR kiran-control-panel plugin_location)
@@ -23,17 +10,12 @@ pkg_get_variable(CPANEL_DESKTOP_DIR kiran-control-panel plugin_desktop_location)
 file(GLOB CPANEL_GREETER_SRC "../common/*.cpp" "../common/*.h" "./*.cpp" "./*.h" "./*.ui")
 set(CPANEL_GREETER_RESOURCE ${CMAKE_SOURCE_DIR}/resources/kcp-greeter-resources.qrc)
 set(CPANEL_GREETER_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/kiran-cpanel-greeter.zh_CN.ts)
-qt5_create_translation(GREETER_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR})
+qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} CPANEL_GREETER_TRANSLATION)
 
-# add_library(${TARGET_NAME} SHARED
-#             ${CPANEL_GREETER_SRC}
-#             ${CPANEL_GREETER_RESOURCE}
-#             ${CPANEL_GREETER_TRANSLATION})
-
-add_executable(${TARGET_NAME}
+add_library(${TARGET_NAME} SHARED
             ${CPANEL_GREETER_SRC}
             ${CPANEL_GREETER_RESOURCE}
-            ${CPANEL_GREETER_TRANSLATION})
+            ${GREETER_SETTINS_QM_FILES})
 
 target_include_directories(${TARGET_NAME} PRIVATE
         ../public
@@ -44,7 +26,8 @@ target_include_directories(${TARGET_NAME} PRIVATE
         ${KIRANWIDGETS_QT5_INCLUDE_DIRS}
         ${KLOG_QT5_INCLUDE_DIRS}
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS}
-        ${KIRAN_CONTROL_PANEL_INCLUDE_DIRS})
+        ${KIRAN_CONTROL_PANEL_INCLUDE_DIRS}
+        ${KIRAN_STYLE_HELPER_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME}
         Qt5::Widgets
@@ -55,7 +38,8 @@ target_link_libraries(${TARGET_NAME}
         ${GLIB_2_LIBRARIES}
         ${KIRANWIDGETS_QT5_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
-        ${KIRAN_CC_DAEMON_LIBRARIES})
+        ${KIRAN_CC_DAEMON_LIBRARIES}
+        ${KIRAN_STYLE_HELPER_LIBRARIES})
 
 # 安装
 #安装插件desktop文件

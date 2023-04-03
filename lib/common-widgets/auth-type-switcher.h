@@ -1,5 +1,17 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #pragma once
-#include "auth-type-switcher-define.h"
 #include <kiran-authentication-service/kas-authentication-i.h>
 #include <QIcon>
 #include <QList>
@@ -7,21 +19,25 @@
 #include <QString>
 #include <QWidget>
 #include <tuple>
+#include "auth-type-switcher-define.h"
 
-//TODO:图标随深浅色变化
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class AuthTypeDrawer;
 class AuthTypeSwitcher : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AuthTypeSwitcher(AuthTypeDrawerExpandDirection direction,int radius,QWidget* parent = nullptr);
+    explicit AuthTypeSwitcher(AuthTypeDrawerExpandDirection direction, int radius, QWidget* parent = nullptr);
     ~AuthTypeSwitcher();
 
     bool getExpaned();
 
+    void setAdjustColorToTheme(bool enable);
     void setAuthTypes(QList<KADAuthType> authtypes);
-    int  getCurrentAuthType();
+    int getCurrentAuthType();
     void setCurrentAuthType(int authType);
 
 signals:
@@ -29,7 +45,7 @@ signals:
 
 private slots:
     void onAuthTypeChanged(int authType);
-    
+
 private:
     void clear();
 
@@ -45,4 +61,5 @@ private:
     int m_radius = 21;
     int m_currentAuthType = -1;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

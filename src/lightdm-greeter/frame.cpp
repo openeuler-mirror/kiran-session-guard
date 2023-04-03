@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "frame.h"
 #include "auth-lightdm.h"
 #include "auxiliary.h"
@@ -19,11 +32,16 @@
 #include <QWidgetAction>
 #include <QWindow>
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 Frame::Frame(Prefs* prefs, QWidget* parent)
     : LoginFrame(parent),
-      m_greeter(new QLightDM::Greeter()),
-      m_prefs(prefs)
+      m_prefs(prefs),
+      m_greeter(new QLightDM::Greeter())
 {
     setObjectName("Frame");
 
@@ -168,7 +186,7 @@ void Frame::initUI()
     m_btnLoginOther = new QToolButton(this);
     m_btnLoginOther->setCursor(QCursor(Qt::PointingHandCursor));
     m_btnLoginOther->setObjectName("LoginOtherUser");
-    m_btnLoginOther->setText(tr("login other"));
+    m_btnLoginOther->setText(tr("login other user"));
     m_btnLoginOther->setFont(font);
     addWidgetToCenterBottomWidget(0, m_btnLoginOther);
     addLayoutItemToCenterBottomWidget(0, new QSpacerItem(10, 16, QSizePolicy::Minimum, QSizePolicy::Fixed));
@@ -452,6 +470,10 @@ void Frame::onLoginOtherClicked()
         // 当前是手动输入名已完成开始认证阶段,切换至手动输入用户名模式
         reset(STATE_INTPUT_USER_NAME);
         break;
+    default:
+        break;
     }
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

@@ -12,5 +12,4 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
-
 #include "auth-base.h"
