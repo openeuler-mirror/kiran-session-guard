@@ -18,7 +18,7 @@
 #include <sys/mman.h>
 #include <iostream>
 
-#include "pam-message.h"
+#include "../checkpass-common/pam-message.h"
 
 #define PAM_SERVICE_NAME "kiran-screensaver"
 

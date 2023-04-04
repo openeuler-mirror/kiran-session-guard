@@ -56,5 +56,7 @@ install(TARGETS ${TARGET_NAME} DESTINATION ${SCREENSAVER_DIALOG_INSTALL})
 install(FILES ${SCREENSAVER_DIALOG_QM_FILES} DESTINATION ${SCREENSAVER_QM_INSTALL})
 
 # 安装kiran-screensaver-dialog私有配置文件
-configure_file(${CMAKE_SOURCE_DIR}/data/screensaver.ini.in ${CMAKE_CURRENT_BINARY_DIR}/screensaver.ini @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/screensaver.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/)
+configure_file(${CMAKE_SOURCE_DIR}/data/screensaver-dialog.ini.in ${CMAKE_CURRENT_BINARY_DIR}/screensaver-dialog.ini @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/screensaver-dialog.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATAROOTDIR}/${TARGET_NAME}/)
+
+add_subdirectory(session-guard-checkpass)

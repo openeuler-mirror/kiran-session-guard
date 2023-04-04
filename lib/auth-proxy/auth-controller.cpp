@@ -246,7 +246,7 @@ void AuthController::onNotifyAuthType(KADAuthType authType)
 
 void AuthController::onRequestAuthType()
 {
-    KADAuthType specifyAuthType;
+    KADAuthType specifyAuthType = KAD_AUTH_TYPE_PASSWORD;
     if (m_specifyAuthType != KAD_AUTH_TYPE_NONE)
     {
         specifyAuthType = m_specifyAuthType;
