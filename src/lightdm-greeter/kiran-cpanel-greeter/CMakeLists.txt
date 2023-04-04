@@ -10,7 +10,10 @@ pkg_get_variable(CPANEL_DESKTOP_DIR kiran-control-panel plugin_desktop_location)
 file(GLOB CPANEL_GREETER_SRC "../common/*.cpp" "../common/*.h" "./*.cpp" "./*.h" "./*.ui")
 set(CPANEL_GREETER_RESOURCE ${CMAKE_SOURCE_DIR}/resources/kcp-greeter-resources.qrc)
 set(CPANEL_GREETER_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/kiran-cpanel-greeter.zh_CN.ts)
-qt5_create_translation(GREETER_SETTINS_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} CPANEL_GREETER_TRANSLATION)
+qt5_create_translation(GREETER_SETTINS_QM_FILES 
+        ${CMAKE_CURRENT_SOURCE_DIR} 
+        ${CPANEL_GREETER_TRANSLATION}
+        OPTIONS -I ${CMAKE_CURRENT_SOURCE_DIR} -I ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_library(${TARGET_NAME} SHARED
             ${CPANEL_GREETER_SRC}
@@ -45,13 +48,6 @@ target_link_libraries(${TARGET_NAME}
 #安装插件desktop文件
 configure_file(${CMAKE_SOURCE_DIR}/data/kiran-cpanel-greeter.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/kiran-cpanel-greeter.desktop @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kiran-cpanel-greeter.desktop DESTINATION ${CPANEL_DESKTOP_DIR}/)
-
-SET(link_source ${CPANEL_DESKTOP_DIR}/${TARGET_NAME}.desktop)
-SET(link_target ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}-link.desktop)
-add_custom_target(kcp-applications-desktop ALL COMMAND ln -sf ${link_source} ${link_target})
-install(FILES ${link_target}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/applications/
-        RENAME ${TARGET_NAME}.desktop)
 
 #安装插件
 install(TARGETS ${TARGET_NAME} DESTINATION ${CPANEL_PLUGIN_DIR}/)

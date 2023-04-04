@@ -29,7 +29,7 @@ Prefs::Prefs()
 
 void Prefs::init()
 {
-    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver-dialog.ini", QSettings::IniFormat);
+    QSettings settings("/usr/share/kiran-session-guard/screensaver-dialog.ini", QSettings::IniFormat);
     ///power
     settings.beginGroup("Power");
 

@@ -92,11 +92,11 @@ void SettingWindow::initUI()
 
     QListWidgetItem *item;
     item = new QListWidgetItem(tr("general settings"), m_sidebarWidget);
-    item->setIcon(QIcon(":/kcp-greeter-images/appearance_setting.png"));
+    item->setIcon(QIcon(":/kcp-greeter/images/appearance_setting.png"));
     m_sidebarWidget->addItem(item);
 
     item = new QListWidgetItem(tr("autologin"), m_sidebarWidget);
-    item->setIcon(QIcon(":/kcp-greeter-images/user_login_setting.png"));
+    item->setIcon(QIcon(":/kcp-greeter/images/user_login_setting.png"));
     m_sidebarWidget->addItem(item);
 
     /* 堆叠区域控件 */

@@ -62,7 +62,8 @@ bool TermSignalHandler::init()
 void TermSignalHandler::termCallback(int unused)
 {
     char a = 1;
-    ::write(sigTermFd[0], &a, sizeof(a));
+    auto size = ::write(sigTermFd[0], &a, sizeof(a));
+    Q_UNUSED(size);
 }
 
 void TermSignalHandler::handlerSigTerm()
@@ -70,7 +71,8 @@ void TermSignalHandler::handlerSigTerm()
     // 异步处理SIGTERM
     m_termNotifier->setEnabled(false);
     char tmp;
-    ::read(sigTermFd[1], &tmp, sizeof(tmp));
+    auto size = ::read(sigTermFd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(size);
     qApp->quit();
 }
 

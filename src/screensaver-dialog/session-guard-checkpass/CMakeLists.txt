@@ -9,7 +9,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 file(GLOB_RECURSE SRC "*.cpp" "*.h")
-file(GLOB_RECURSE CHECKPASS_COMMON "../../checkpass-common/*.cpp" "../../checkpass-common/*.h" )
+file(GLOB_RECURSE CHECKPASS_COMMON "../checkpass-common/*.cpp" "../checkpass-common/*.h" )
 
 add_executable(${TARGET_NAME} ${SRC} ${CHECKPASS_COMMON})
 
