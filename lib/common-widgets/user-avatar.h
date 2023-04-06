@@ -14,9 +14,12 @@
 #pragma once
 
 #include <QWidget>
-#include "guard-global.h"
 
-GUARD_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
 class UserAvatar : public QWidget
 {
     Q_OBJECT
@@ -37,4 +40,5 @@ private:
     QPixmap m_scaledPixmap;
     QPixmap m_pixmap;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

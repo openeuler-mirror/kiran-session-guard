@@ -15,18 +15,24 @@
 #pragma once
 #include <QObject>
 #include <QVariant>
-#include "guard-global.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 struct UserInfo
 {
-    QString    name;
-    QString    realName;
-    QString    session;
+    QString name;
+    QString realName;
+    QString session;
     qulonglong uid;
-    QString    backgroundPath;
-    bool       hasMessage;
-    QString    imagePath;
-    bool       loggedIn;
+    QString backgroundPath;
+    bool hasMessage;
+    QString imagePath;
+    bool loggedIn;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

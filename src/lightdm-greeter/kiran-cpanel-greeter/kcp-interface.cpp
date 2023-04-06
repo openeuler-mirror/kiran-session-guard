@@ -21,7 +21,12 @@
 
 #define KCP_SUBITEM_GREETER_ID "Greeter"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 KcpInterface::KcpInterface()
 {
 }
@@ -81,4 +86,6 @@ QStringList KcpInterface::visibleSubItems()
 {
     return QStringList() << KCP_SUBITEM_GREETER_ID;
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

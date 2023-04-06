@@ -24,7 +24,12 @@
 #include <QSpacerItem>
 #include <QStyleOption>
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 GreeterMenuItem::GreeterMenuItem(const QString &text, bool checkable, QWidget *parent)
     : QWidget(parent), m_checkable(checkable), m_actionName(text), m_label(nullptr), m_checkbox(nullptr)
 {
@@ -69,12 +74,13 @@ void GreeterMenuItem::initUI()
         m_checkbox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
         ///鼠标事件由父窗口处理，不可直接取消勾选
         m_checkbox->setAttribute(Qt::WA_TransparentForMouseEvents, true);
-        connect(m_checkbox, &QCheckBox::stateChanged, [this]() {
-            if (m_checkbox->isChecked())
-            {
-                emit sigChecked(m_actionName);
-            }
-        });
+        connect(m_checkbox, &QCheckBox::stateChanged, [this]()
+                {
+                    if (m_checkbox->isChecked())
+                    {
+                        emit sigChecked(m_actionName);
+                    }
+                });
         hboxLayout->addWidget(m_checkbox, Qt::AlignVCenter | Qt::AlignRight);
     }
     this->setLayout(hboxLayout);
@@ -82,7 +88,7 @@ void GreeterMenuItem::initUI()
 
 void GreeterMenuItem::paintEvent(QPaintEvent *event)
 {
-    QPainter     painter(this);
+    QPainter painter(this);
     QStyleOption option;
     option.init(this);
     style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
@@ -104,4 +110,6 @@ void GreeterMenuItem::mousePressEvent(QMouseEvent *event)
     return QWidget::mousePressEvent(event);
 }
 
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

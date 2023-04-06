@@ -1,13 +1,31 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "moreinfo-button.h"
+#include <QDebug>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyle>
-#include <QDebug>
 
 #define ICON_TEXT_SPACE 2
 
-GUARD_POLKIT_AGENT_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace PolkitAgent
+{
 MoreInfoButton::MoreInfoButton(QWidget* parent)
     : QWidget(parent)
 {
@@ -18,7 +36,7 @@ MoreInfoButton::MoreInfoButton(QWidget* parent)
 
     // m_shrinkPix = m_shrinkPix.scaled(m_iconSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
     // m_expandPix = m_expandPix.scaled(m_iconSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    
+
     setText("more info");
 }
 
@@ -61,7 +79,7 @@ void MoreInfoButton::paintEvent(QPaintEvent* event)
     contentRect.setLeft(imageRect.right() + ICON_TEXT_SPACE);
 
     QFontMetrics fontMetrics(font());
-    QRect textRect = fontMetrics.boundingRect(contentRect,Qt::TextSingleLine|Qt::AlignVCenter|Qt::AlignLeft,m_text);
+    QRect textRect = fontMetrics.boundingRect(contentRect, Qt::TextSingleLine | Qt::AlignVCenter | Qt::AlignLeft, m_text);
     p.drawText(textRect, m_text);
 }
 
@@ -72,4 +90,6 @@ void MoreInfoButton::mousePressEvent(QMouseEvent* event)
     update();
     return QWidget::mousePressEvent(event);
 }
-GUARD_POLKIT_AGENT_END_NAMESPACE
+}  // namespace PolkitAgent
+}  // namespace SessionGuard
+}  // namespace Kiran

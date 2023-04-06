@@ -12,9 +12,14 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 #pragma once
-#include "guard-global.h"
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 class Prefs
 {
 private:
@@ -31,11 +36,13 @@ public:
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
-    
+
 private:
     static Prefs* m_instance;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;
 };
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

@@ -12,7 +12,6 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
-
 #include "pam-message.h"
 
 #include <QDataStream>
@@ -22,8 +21,12 @@
 #include <unistd.h>
 #include <QJsonObject>
 
-GUARD_LOCKER_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 bool kiran_pam_message_send(int fd, QJsonDocument& content);
 bool kiran_pam_message_recv(int fd, QJsonDocument& content);
 
@@ -225,4 +228,6 @@ void kiran_pam_message_free(PamEvent** event)
     *event = nullptr;
 }
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

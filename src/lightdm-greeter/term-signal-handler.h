@@ -15,23 +15,27 @@
 #ifndef __TERMIN_SIGNAL_H__
 #define __TERMIN_SIGNAL_H__
 
-#include "guard-global.h"
 #include <QObject>
 
 QT_BEGIN_NAMESPACE
 class QSocketNotifier;
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class TermSignalHandler : public QObject
 {
     Q_OBJECT
 public:
     explicit TermSignalHandler(QObject *parent = nullptr);
 
-    bool init();    
+    bool init();
     static void termCallback(int unused);
-    
+
 public slots:
     void handlerSigTerm();
 
@@ -39,6 +43,8 @@ private:
     static int sigTermFd[2];
     QSocketNotifier *m_termNotifier = nullptr;
 };
-GUARD_GREETER_END_NAMESPACE;
+}  // namespace Greeter
+}  // namespace SessionGuard
+};  // namespace Kiran
 
 #endif  // __TERMIN_SIGNAL_H__

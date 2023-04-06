@@ -11,6 +11,7 @@
  *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
+#include "scaling-helper.h"
 #include <qt5-log-i.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
@@ -18,9 +19,10 @@
 #include <QtMath>
 #include <list>
 
-#include "scaling-helper.h"
-
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 void ScalingHelper::set_scale_factor(double factor)
 {
     qputenv("QT_SCALE_FACTOR", QString::number(factor).toUtf8());
@@ -122,4 +124,5 @@ failed:
     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 }
 
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

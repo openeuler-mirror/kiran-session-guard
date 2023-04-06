@@ -17,12 +17,12 @@
 #include <security/pam_appl.h>
 #include <sys/mman.h>
 #include <iostream>
-#include "pam-message.h"
-#include "guard-global.h"
+
+#include "../checkpass-common/pam-message.h"
 
 #define PAM_SERVICE_NAME "kiran-screensaver"
 
-GUARD_LOCKER_USING_NMAESPACE
+using namespace ::Kiran::SessionGuard::Locker;
 
 pam_handle_t *pamh = nullptr;
 int CHANNEL_READ = 0;
@@ -154,13 +154,13 @@ int main(int argc, char *argv[])
 
     QString langEnv = qgetenv("LANG");
     QStringList langSplitRes = langEnv.split(".");
-    if(langSplitRes.size() == 2 && langSplitRes.at(1).compare("UTF-8")!=0)
+    if (langSplitRes.size() == 2 && langSplitRes.at(1).compare("UTF-8") != 0)
     {
-        langSplitRes.replace(1,"UTF-8");
+        langSplitRes.replace(1, "UTF-8");
         QString newLangEnv = langSplitRes.join(".");
-        qputenv("LANG",newLangEnv.toLatin1());
+        qputenv("LANG", newLangEnv.toLatin1());
     }
-    setlocale(LC_ALL,"");
+    setlocale(LC_ALL, "");
 
     CHANNEL_READ = atoi(argv[0]);
     CHANNEL_WRITE = atoi(argv[1]);
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if( authRes == PAM_SUCCESS )
+    if (authRes == PAM_SUCCESS)
     {
         authRes = pam_acct_mgmt(pamh, 0);
     }

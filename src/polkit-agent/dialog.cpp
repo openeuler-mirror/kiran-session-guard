@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "dialog.h"
 #include "auth-controller.h"
 #include "auth-polkit.h"
@@ -17,7 +30,12 @@
 
 #define MAX_ERROR_COUNT 3
 
-GUARD_POLKIT_AGENT_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace PolkitAgent
+{
 void AuthInfo::dump()
 {
     qDebug() << "action:   " << actionID;
@@ -102,7 +120,8 @@ void Dialog::initUI()
     ui->label_tips->setWordWrap(true);
     Kiran::StylePropertyHelper::setButtonType(ui->btn_ok, Kiran::BUTTON_Default);
 
-    m_switcher = new AuthTypeSwitcher(EXPAND_DIRECTION_BOTTOM,4,this);
+    m_switcher = new AuthTypeSwitcher(EXPAND_DIRECTION_BOTTOM, 4, this);
+    m_switcher->setAdjustColorToTheme(true);
     m_switcher->setFixedSize(QSize(42, 36));
     m_switcher->setVisible(false);
     ui->layout_edit->addWidget(m_switcher);
@@ -159,11 +178,10 @@ void Dialog::onCurrentUserChanged(int idx)
 
 void Dialog::onCurrentAuthTypeChanged(KADAuthType authType)
 {
-    QMap<KADAuthType,QString> authTypeDesc = {
-        {KAD_AUTH_TYPE_FINGERPRINT,tr("fingerprint auth")},
-        {KAD_AUTH_TYPE_FACE,tr("face auth")},
-        {KAD_AUTH_TYPE_FINGERVEIN,tr("fingervein auth")}
-    };
+    QMap<KADAuthType, QString> authTypeDesc = {
+        {KAD_AUTH_TYPE_FINGERPRINT, tr("fingerprint auth")},
+        {KAD_AUTH_TYPE_FACE, tr("face auth")},
+        {KAD_AUTH_TYPE_FINGERVEIN, tr("fingervein auth")}};
 
     ui->label_tips->setText("");
     m_authController->switchAuthType(authType);
@@ -231,7 +249,7 @@ void Dialog::onAuthShowPrompt(const QString& text, PromptType promptType)
 void Dialog::onAuthShowMessage(const QString& text, MessageType msgType)
 {
     QString tips = text;
-    if (msgType==MessageTypeError)
+    if (msgType == MessageTypeError)
     {
         tips = QString("<font style = 'color:red;'>%1</font>").arg(text);
     }
@@ -239,4 +257,6 @@ void Dialog::onAuthShowMessage(const QString& text, MessageType msgType)
     ui->label_tips->setText(tips);
 }
 
-GUARD_POLKIT_AGENT_END_NAMESPACE
+}  // namespace PolkitAgent
+}  // namespace SessionGuard
+}  // namespace Kiran

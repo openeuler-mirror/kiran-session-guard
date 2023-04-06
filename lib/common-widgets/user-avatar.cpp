@@ -22,7 +22,10 @@
 
 #define DEFAULT_USER_AVATAR ":/common-widgets-images/user_180.png"
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 UserAvatar::UserAvatar(QWidget *parent) : QWidget(parent)
 {
     setDefaultImage();
@@ -95,4 +98,5 @@ void UserAvatar::setDefaultImage()
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     update();
 }
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

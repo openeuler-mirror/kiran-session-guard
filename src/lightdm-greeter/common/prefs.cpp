@@ -18,7 +18,12 @@
 #include <QDBusConnection>
 #include <QSettings>
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 Prefs* Prefs::m_instance = nullptr;
 void Prefs::globalInit()
 {
@@ -121,4 +126,6 @@ bool Prefs::numlockInitState()
 {
     return m_numlockInitState;
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

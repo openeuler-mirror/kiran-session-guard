@@ -16,13 +16,15 @@
 #include <QLineEdit>
 #include <QTimerEvent>
 #include <QWidget>
-#include "guard-global.h"
 
 namespace Ui
 {
 class PromptEdit;
 }
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class PromptEdit : public QWidget
 {
     Q_OBJECT
@@ -99,4 +101,5 @@ private:
     bool m_hasError;
     bool m_showPasswordModeStyle;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

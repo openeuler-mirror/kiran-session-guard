@@ -27,7 +27,12 @@ namespace Ui
 class UserList;
 }
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class UserList : public QWidget
 {
     Q_OBJECT
@@ -59,7 +64,7 @@ private slots:
 
 Q_SIGNALS:
     void userActivated(const UserInfo &userInfo);
-    void userCountChanged(int oldCount,int newCount);
+    void userCountChanged(int oldCount, int newCount);
     void userRemoved(const QString &userName);
 
 protected:
@@ -70,4 +75,6 @@ private:
     QLightDM::UsersModel m_usersModel;
     FilterUserProxyModel m_filterModel;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

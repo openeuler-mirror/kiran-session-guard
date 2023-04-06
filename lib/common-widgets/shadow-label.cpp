@@ -16,7 +16,10 @@
 #include <QDebug>
 #include <QPaintEvent>
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 ShadowLabel::ShadowLabel(QWidget *parent, Qt::WindowFlags f)
     : QLabel(parent, f),
       m_shadowColor(Qt::black),
@@ -112,4 +115,5 @@ void ShadowLabel::updateShadow()
         m_shadowEffect->setEnabled(false);
     }
 }
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

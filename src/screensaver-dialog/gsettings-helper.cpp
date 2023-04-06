@@ -18,13 +18,17 @@
 #include <qt5-log-i.h>
 #include <QDebug>
 
-GUARD_LOCKER_BEGIN_NAMESPACE
-GSettingsHelper::GSettingsHelper ()
+namespace Kiran
 {
-
+namespace SessionGuard
+{
+namespace Locker
+{
+GSettingsHelper::GSettingsHelper()
+{
 }
 
-QString GSettingsHelper::getBackgrountPath ()
+QString GSettingsHelper::getBackgrountPath()
 {
     QString path;
     GSettings *settings = g_settings_new("org.mate.background");
@@ -45,7 +49,7 @@ QString GSettingsHelper::getBackgrountPath ()
     return path;
 }
 
-int GSettingsHelper::getMateScalingFactor ()
+int GSettingsHelper::getMateScalingFactor()
 {
     GSettings *settings = g_settings_new("org.mate.interface");
     if (!settings)
@@ -80,4 +84,6 @@ int GSettingsHelper::getMateScalingFactor ()
     g_object_unref(settings);
     return res;
 }
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

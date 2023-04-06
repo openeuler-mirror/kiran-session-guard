@@ -13,8 +13,8 @@
  */
 
 #include "frame.h"
-#include "auth-pam.h"
 #include "auth-controller.h"
+#include "auth-pam.h"
 #include "auxiliary.h"
 #include "power.h"
 #include "prefs.h"
@@ -39,16 +39,21 @@ QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QPainter* p, QImage& blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-GUARD_LOCKER_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 Frame::Frame(Kiran::ScreenSaver::Interface* ksinterface, Power* power, QWidget* parent)
     : LoginFrame(parent),
+      m_power(power),
+      m_keyboard(nullptr),
       m_ksInterface(ksinterface),
-      m_power(power)
+      m_authProxy(nullptr)
 {
     m_userName = UserManager::getCurrentUser();
     KLOG_DEBUG() << "locker create for" << m_userName;
-
     initMenus();
     initUI();
     initAnimation();
@@ -59,7 +64,6 @@ Frame::~Frame()
 {
     if (m_keyboard)
     {
-        auto keyboardWidget = m_keyboard->getKeyboard();
         if (m_keyboard->getKeyboard() && m_keyboard->getKeyboard()->parentWidget() == this)
         {
             m_keyboard->getKeyboard()->setParent(nullptr);
@@ -383,4 +387,6 @@ void Frame::timerEvent(QTimerEvent* event)
     QObject::timerEvent(event);
 }
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

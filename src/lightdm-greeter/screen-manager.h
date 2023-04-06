@@ -12,7 +12,6 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 #pragma once
-#include "guard-global.h"
 #include <QMap>
 #include <QObject>
 #include <QScreen>
@@ -21,7 +20,12 @@ QT_BEGIN_NAMESPACE
 class QScreen;
 QT_END_NAMESPACE
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class Prefs;
 class Frame;
 class Background;
@@ -31,7 +35,7 @@ class ScreenManager : public QObject
 public:
     ScreenManager(QObject *parent = nullptr);
     ~ScreenManager();
-    void init(Prefs* prefs);
+    void init(Prefs *prefs);
 
 private slots:
     void slotScreenAdded(QScreen *screen);
@@ -45,7 +49,9 @@ private:
 private:
     Prefs *m_prefs;
     Frame *m_greeterFrame;
-        // 保存屏幕和屏幕的映射
+    // 保存屏幕和屏幕的映射
     QMap<QScreen *, Background *> m_BackgroundWidgetMap;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

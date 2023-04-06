@@ -12,10 +12,12 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 #pragma once
-#include "guard-global.h"
 #include <kiran-authentication-service/kas-authentication-i.h>
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 enum PromptType
 {
     PromptTypeQuestion,
@@ -33,4 +35,5 @@ enum PromptFromEnum
     PROMPT_FROM_PAM,
     PROMPT_FROM_AUTH_SERVICE
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

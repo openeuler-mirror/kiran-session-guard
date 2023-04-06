@@ -15,10 +15,13 @@
 #pragma once
 #include <QThread>
 #include <QX11Info>
-#include "guard-global.h"
 
-GUARD_BEGIN_NAMESPACE
-class KeyboardMonitor : public QThread {
+namespace Kiran
+{
+namespace SessionGuard
+{
+class KeyboardMonitor : public QThread
+{
     Q_OBJECT
 
 public:
@@ -28,7 +31,7 @@ public:
     bool isNumlockOn();
 
     bool setNumlockStatus(const bool &on);
-    
+
 signals:
     void capslockStatusChanged(bool on);
     void numlockStatusChanged(bool on);
@@ -38,11 +41,12 @@ protected:
 
 private:
     KeyboardMonitor();
-    int getXiMajorVersion(Display* display);
+    int getXiMajorVersion(Display *display);
     void selectEvents(Display *display);
     int listenXiEvent(Display *display);
 
 private:
     int m_xi2Opcode = 0;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran
