@@ -22,7 +22,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 AuthController::AuthController(QObject* parent)
     : QObject(parent)
 {
@@ -243,7 +246,7 @@ void AuthController::onNotifyAuthType(KADAuthType authType)
 
 void AuthController::onRequestAuthType()
 {
-    KADAuthType specifyAuthType;
+    KADAuthType specifyAuthType = KAD_AUTH_TYPE_PASSWORD;
     if (m_specifyAuthType != KAD_AUTH_TYPE_NONE)
     {
         specifyAuthType = m_specifyAuthType;
@@ -315,4 +318,5 @@ void AuthController::onShowMessage(const QString& text, MessageType type)
     KLOG_DEBUG() << "auth controller message:" << type << text;
     emit showMessage(text, type);
 }
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

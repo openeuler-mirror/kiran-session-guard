@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2023 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "power.h"
 #include "auxiliary.h"
 #include "prefs.h"
@@ -21,7 +34,12 @@
 
 #define DBUS_PROXY_TIMEOUT_MSEC 300
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 Power::Power(Prefs* prefs, QObject* parent)
     : QObject(parent),
       m_prefs(prefs)
@@ -135,8 +153,10 @@ bool Power::reboot()
 bool Power::suspend()
 {
     RETURN_VAL_IF_FALSE(canSuspend() || m_loginProxy, false);
-    auto msg = m_loginProxy->call(QDBus::Block,"Suspend");
+    auto msg = m_loginProxy->call(QDBus::Block, "Suspend");
     return msg.type() == QDBusMessage::ReplyMessage;
 }
 
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

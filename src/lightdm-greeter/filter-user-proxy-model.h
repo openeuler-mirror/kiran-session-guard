@@ -13,9 +13,14 @@
  */
 #pragma once
 #include <QSortFilterProxyModel>
-#include "guard-global.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class FilterUserProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -31,4 +36,6 @@ protected:
 private:
     QStringList m_filterUsers;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

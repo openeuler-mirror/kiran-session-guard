@@ -12,14 +12,19 @@
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
+#include "user-item.h"
 #include <QPainter>
 #include "ui_user-item.h"
 #include "user-info.h"
-#include "user-item.h"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 UserItem::UserItem(QWidget *parent) : QWidget(parent),
-                                              ui(new Ui::UserItem)
+                                      ui(new Ui::UserItem)
 {
     ui->setupUi(this);
     setFocusPolicy(Qt::NoFocus);
@@ -66,4 +71,6 @@ void UserItem::paintEvent(QPaintEvent *e)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     QWidget::paintEvent(e);
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

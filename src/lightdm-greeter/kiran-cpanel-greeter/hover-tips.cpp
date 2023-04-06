@@ -32,7 +32,12 @@
                              "color:white;"                            \
                              "}"
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 HoverTips::HoverTips(QWidget *parent)
     : QWidget(parent)
 {
@@ -211,4 +216,6 @@ void HoverTips::stopHideTimer()
     killTimer(m_hideTimerID);
     m_hideTimerID = -1;
 }
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

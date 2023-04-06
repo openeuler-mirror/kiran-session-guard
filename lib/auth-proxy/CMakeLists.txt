@@ -1,21 +1,10 @@
 set (TARGET_NAME auth-proxy)
 
-find_package(PkgConfig REQUIRED)
-find_package(Qt5 COMPONENTS Core DBus)
-pkg_search_module(KIRANLOG REQUIERD klog-qt5)
-pkg_search_module(LIGHTDM_QT5 REQUIRED liblightdm-qt5-3)
-
-# Qt编译设置
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
-
-#生成使用的DBus接口源文件
 set(DBUS_INTERFACE_SRC "")
-qt5_add_dbus_interface(DBUS_INTERFACE_SRC data/com.kylinsec.Kiran.SystemDaemon.Authentication.xml kiran_authentication)
-foreach(interface_item ${DBUS_INTERFACE_SRC})
-    set_property(SOURCE ${interface_item} PROPERTY SKIP_AUTOGEN ON)
-endforeach()
+kiran_qt5_add_dbus_interface_ex(DBUS_INTERFACE_SRC 
+        data/com.kylinsec.Kiran.SystemDaemon.Authentication.xml
+        kiran_authentication
+        KiranAuthentication)
 
 file(GLOB_RECURSE ALL_FILES ./*.h ./*.cpp)
 file(GLOB_RECURSE CHECK_PASS_COMMON_SRC ../../checkpass-common/*.cpp ../../checkpass-common/*.h)
@@ -26,11 +15,9 @@ add_library(${TARGET_NAME} STATIC
         ${DBUS_INTERFACE_SRC})
 
 target_include_directories(${TARGET_NAME} PRIVATE
-        ../../checkpass-common
         ${PROJECT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_BINARY_DIR}
-        ${KIRANLOG_INCLUDE_DIRS}
-        ${LIGHTDM_QT5_INCLUDE_DIRS})
+        ${KLOG_QT5_INCLUDE_DIRS})
 
 target_include_directories(${TARGET_NAME} INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR})
@@ -38,7 +25,5 @@ target_include_directories(${TARGET_NAME} INTERFACE
 target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::Core
         Qt5::DBus
-        ${KIRANLOG_LIBRARIES}
-        ${LIGHTDM_QT5_LIBRARIES}
-        kiran-authentication-service)
+        ${KLOG_QT5_LIBRARIES})
 

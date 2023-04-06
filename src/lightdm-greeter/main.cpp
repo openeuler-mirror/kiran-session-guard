@@ -17,7 +17,6 @@
 #include <QApplication>
 #include <QTranslator>
 
-#include "guard-global.h"
 #include "cursor-helper.h"
 #include "keyboard-monitor.h"
 #include "prefs.h"
@@ -26,17 +25,15 @@
 #include "term-signal-handler.h"
 #include "virtual-keyboard.h"
 
-
 #define DEFAULT_STYLE_FILE ":/greeter/stylesheets/lightdm-kiran-greeter-normal.qss"
 
-GUARD_USEING_NAMESPACE
-GUARD_GREEETER_USING_NAMESPACE
+using namespace ::Kiran::SessionGuard;
+using namespace ::Kiran::SessionGuard::Greeter;
 
 // 根据配置项,调整缩放率
 void adjustScaleFactor(Prefs* prefs)
 {
     /// 设置缩放比
-    double scaled_factor = 0.0;
     switch (prefs->scale_mode())
     {
     case GREETER_SCALING_MODE_AUTO:
@@ -47,7 +44,6 @@ void adjustScaleFactor(Prefs* prefs)
     case GREETER_SCALING_MODE_MANUAL:
     {
         double scaleFcator = prefs->scale_factor();
-        scaled_factor = scaleFcator;
         ScalingHelper::set_scale_factor(scaleFcator);
         break;
     }
@@ -73,19 +69,20 @@ bool loadStyleSheet()
     {
         KLOG_WARNING() << "load stylesheet failed!";
     }
-    return false;
+    return bRes;
 }
 
 // 根据当前语言环境加载翻译
 bool loadTranslator()
 {
     bool bRes = false;
-    QTranslator translator;
+    auto translator = new QTranslator();
     QString translationFileDir = QString("/usr/share/%1/translations/").arg(qAppName());
-    if (translator.load(QLocale(), qAppName(), ".", translationFileDir, ".qm"))
+    if (translator->load(QLocale(), qAppName(), ".", translationFileDir, ".qm"))
     {
-        QApplication::installTranslator(&translator);
+        QApplication::installTranslator(translator);
         bRes = true;
+        KLOG_INFO() << "loaded translator" << translator->filePath();
     }
     else
     {
@@ -100,7 +97,7 @@ void setCursor(Prefs* prefs)
     // 光标放大
     if (!CursorHelper::setDefaultCursorSize(prefs->scale_factor()))
     {
-        KLOG_ERROR("set default cursor size for factor %lf failed!", prefs->scale_factor());
+        KLOG_ERROR("set default cursor size for factor %d failed!", prefs->scale_factor());
     }
 
     // 登录成功和进入桌面的间隔会显示根窗口，为了避免显示根窗口时光标显示为"X",需设置ROOT窗口光标

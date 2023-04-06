@@ -15,9 +15,14 @@
 #include "auth-lightdm.h"
 #include <qt5-log-i.h>
 
-GUARD_USEING_NAMESPACE
+using namespace ::Kiran::SessionGuard;
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 AuthLightdm::AuthLightdm(QSharedPointer<QLightDM::Greeter> greeterAuth, QObject *parent)
     : QObject(parent),
       AuthBase(),
@@ -32,7 +37,7 @@ AuthLightdm::~AuthLightdm()
 {
 }
 
-bool AuthLightdm::init(AuthControllerInterface* controllerInterface)
+bool AuthLightdm::init(AuthControllerInterface *controllerInterface)
 {
     bool bRes = m_greeterPtr->connectSync();
     if (!bRes)
@@ -89,4 +94,6 @@ void AuthLightdm::onGreeterAuthComplete()
     m_interface->onAuthComplete();
 }
 
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

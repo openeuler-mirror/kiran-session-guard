@@ -17,9 +17,12 @@
 #include <QLabel>
 #include <QObject>
 #include <QPointF>
-#include "guard-global.h"
 
-GUARD_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
 class ShadowLabel : public QLabel
 {
     Q_OBJECT
@@ -57,4 +60,5 @@ private:
     qreal m_shadowOffsetX;
     qreal m_shadowOffsetY;
 };
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran

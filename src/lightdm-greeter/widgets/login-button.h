@@ -16,14 +16,18 @@
 #include <QFont>
 #include <QLabel>
 #include <QWidget>
-#include "guard-global.h"
 
 namespace Ui
 {
 class LoginButton;
 }
 
-GUARD_GREETER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 class LoginButton : public QWidget
 {
     Q_OBJECT
@@ -33,7 +37,7 @@ class LoginButton : public QWidget
 public:
     explicit LoginButton(QWidget *parent = nullptr);
     ~LoginButton();
-    bool    pressed() const;
+    bool pressed() const;
     QPixmap icon() const;
 
 public slots:
@@ -51,7 +55,9 @@ protected:
 
 private:
     Ui::LoginButton *ui;
-    bool             m_pressed;
-    QPixmap          m_icon;
+    bool m_pressed;
+    QPixmap m_icon;
 };
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

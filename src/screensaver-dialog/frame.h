@@ -14,7 +14,7 @@
 #pragma once
 #include <kiran-screensaver/locker-interface.h>
 #include "auth-base.h"
-#include "guard-global.h"
+
 #include "login-frame.h"
 
 // clang-format off
@@ -29,14 +29,23 @@ class QGraphicsOpacityEffect;
 class QToolButton;
 QT_END_NAMESPACE
 
-GUARD_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
 class AuthProxy;
 class VirtualKeyboard;
-GUARD_END_NAMESPACE
+}  // namespace SessionGuard
+}  // namespace Kiran
 
 class GnomeSMProxy;
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 class Prefs;
 class Power;
 class Frame : public LoginFrame, public Kiran::ScreenSaver::LockerInterface
@@ -96,4 +105,6 @@ private:
     int m_fadeInDurationMs = 0;
     int m_fadeOutDurationMs = 0;
 };
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran

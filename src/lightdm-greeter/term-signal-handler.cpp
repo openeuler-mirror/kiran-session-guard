@@ -22,8 +22,12 @@
 #include <QApplication>
 #include <QSocketNotifier>
 
-GUARD_GREETER_BEGIN_NAMESPACE
-
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Greeter
+{
 int TermSignalHandler::sigTermFd[2] = {0, 0};
 TermSignalHandler::TermSignalHandler(QObject *parent) : QObject(parent)
 {
@@ -40,13 +44,13 @@ bool TermSignalHandler::init()
 {
     struct sigaction term;
     term.sa_handler = TermSignalHandler::termCallback;
-    
+
     sigemptyset(&term.sa_mask);
 
     term.sa_flags = 0;
     term.sa_flags |= SA_RESTART;
 
-    if ( sigaction(SIGTERM, &term, 0) != 0 )
+    if (sigaction(SIGTERM, &term, 0) != 0)
     {
         KLOG_WARNING() << "can't install signal-catching function:" << strerror(errno);
         return false;
@@ -58,7 +62,8 @@ bool TermSignalHandler::init()
 void TermSignalHandler::termCallback(int unused)
 {
     char a = 1;
-    ::write(sigTermFd[0], &a, sizeof(a));
+    auto size = ::write(sigTermFd[0], &a, sizeof(a));
+    Q_UNUSED(size);
 }
 
 void TermSignalHandler::handlerSigTerm()
@@ -66,8 +71,11 @@ void TermSignalHandler::handlerSigTerm()
     // 异步处理SIGTERM
     m_termNotifier->setEnabled(false);
     char tmp;
-    ::read(sigTermFd[1], &tmp, sizeof(tmp));
+    auto size = ::read(sigTermFd[1], &tmp, sizeof(tmp));
+    Q_UNUSED(size);
     qApp->quit();
 }
 
-GUARD_GREETER_END_NAMESPACE
+}  // namespace Greeter
+}  // namespace SessionGuard
+}  // namespace Kiran

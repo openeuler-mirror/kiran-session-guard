@@ -13,9 +13,14 @@
  */
 #pragma once
 #include <QString>
-#include "guard-global.h"
 
-GUARD_LOCKER_BEGIN_NAMESPACE
+
+namespace Kiran
+{
+namespace SessionGuard
+{
+namespace Locker
+{
 class GSettingsHelper
 {
 private:
@@ -25,4 +30,6 @@ public:
     static QString getBackgrountPath();
     static int getMateScalingFactor();
 };
-GUARD_LOCKER_END_NAMESPACE
+}  // namespace Locker
+}  // namespace SessionGuard
+}  // namespace Kiran
