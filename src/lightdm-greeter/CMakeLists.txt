@@ -12,9 +12,10 @@ set(LIGHTDM_GREETER_TRANSLATOR_SOURCE
         ${PROJECT_SOURCE_DIR}/lib/login-frame/
         ${PROJECT_SOURCE_DIR}/lib/auth-proxy/
         ${PROJECT_SOURCE_DIR}/lib/common-widgets/)
+file(GLOB GREETER_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/lightdm-kiran-greeter.*.ts)
 qt5_create_translation(GREETER_QM_FILES   
                        ${LIGHTDM_GREETER_TRANSLATOR_SOURCE}
-                       ${CMAKE_SOURCE_DIR}/translations/lightdm-kiran-greeter.zh_CN.ts
+                       ${GREETER_TRANSLATION}
                        OPTIONS -I ${LIGHTDM_GREETER_TRANSLATOR_SOURCE})
 
 add_executable(${TARGET_NAME}

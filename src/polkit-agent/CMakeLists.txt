@@ -12,9 +12,10 @@ set(POLKIT_AGENT_TRANSLATOR_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}                
         ${PROJECT_SOURCE_DIR}/lib/common-widgets/
         ${PROJECT_SOURCE_DIR}/lib/auth-proxy/)
+file(GLOB POLKIT_AGENT_TRANSLATION ${CMAKE_SOURCE_DIR}/translations/kiran-polkit-agent*.ts)
 qt5_create_translation(POLKIT_AGENT_QM_FILES   
                        ${POLKIT_AGENT_TRANSLATOR_SOURCE}
-                       ${CMAKE_SOURCE_DIR}/translations/kiran-polkit-agent.zh_CN.ts
+                       ${POLKIT_AGENT_TRANSLATION}
                        OPTIONS -I ${POLKIT_AGENT_TRANSLATOR_SOURCE})
 
 add_executable(${TARGET_NAME} 
