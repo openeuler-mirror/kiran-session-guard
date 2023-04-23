@@ -82,7 +82,6 @@ bool loadTranslator()
     {
         QApplication::installTranslator(translator);
         bRes = true;
-        KLOG_INFO() << "loaded translator" << translator->filePath();
     }
     else
     {

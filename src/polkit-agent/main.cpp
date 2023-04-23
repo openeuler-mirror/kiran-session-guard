@@ -44,7 +44,6 @@ int main(int argc, char* argv[])
     else
     {
         app.installTranslator(translatorPointer.data());
-        KLOG_DEBUG() << "load translator:" << translatorPointer->filePath();
     }
 
     PolkitQt1::UnixSessionSubject session(app.applicationPid());
