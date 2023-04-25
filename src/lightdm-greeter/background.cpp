@@ -122,6 +122,7 @@ void Background::resizeEvent(QResizeEvent *event)
 void Background::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
     if (!m_scaledBackground.isNull())
     {
         painter.drawPixmap(this->rect(), m_scaledBackground, m_scaledBackground.rect());
