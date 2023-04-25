@@ -408,10 +408,25 @@ void Frame::onUserSelected(const QString& name)
 
     QString userSession = UserManager::getUserLastSession(name);
     KLOG_DEBUG() << "user session:" << name << userSession;
+
     if (!userSession.isEmpty() && m_sessionItemMap.contains(userSession))
     {
+        // 默认选择用户上次进入的桌面环境
         auto sessionItem = m_sessionItemMap[userSession];
         sessionItem->setChecked(true);
+    }
+    else if (!m_sessionItemMap.isEmpty())
+    {
+        // 该用户未登录过桌面环境
+        auto kiranSession = m_sessionItemMap.find("kiran");
+        if (kiranSession != m_sessionItemMap.end())
+        {
+            (*kiranSession)->setChecked(true);
+        }
+        else
+        {
+            m_sessionItemMap.first()->setChecked(true);
+        }
     }
 
     if (name == m_greeter->autologinUserHint())
