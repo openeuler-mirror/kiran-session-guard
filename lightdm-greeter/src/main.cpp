@@ -29,6 +29,7 @@
 #include "kiran-greeter-prefs.h"
 #include "scaling-helper.h"
 #include "sync-lock-status.h"
+#include "app-native-event-filter.h"
 
 static int sigtermFd[2];
 
@@ -95,6 +96,17 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    //监听x11事件，处理屏幕从无到有，并配置屏幕
+    AppNativeEventFilter appNativeEventFilter;
+    if( appNativeEventFilter.init() )
+    {
+        a.installNativeEventFilter(&appNativeEventFilter);
+    }
+    else
+    {
+        KLOG_ERROR() << "can't install app native event filter!";
+    }
 
     // 处理SIGTERM信号
     if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd))
