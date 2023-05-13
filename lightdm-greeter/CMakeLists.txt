@@ -40,7 +40,9 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(LIGHTDM_QT5 REQUIRED liblightdm-qt5-3)
 pkg_search_module(XTST REQUIRED xtst)
 pkg_search_module(X11 REQUIRED x11)
+pkg_search_module(XCB REQUIRED xcb)
 pkg_search_module(XRANDR REQUIRED xrandr)
+pkg_search_module(XCB_RANDR REQUIRED xcb-randr)
 pkg_search_module(XCURSOR REQUIRED xcursor)
 pkg_search_module(XFIXES REQUIRED xfixes)
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
@@ -84,6 +86,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ./src/auth/
         ${LIGHTDM_QT5_INCLUDE_DIRS}
         ${KLOG_QT5_INCLUDE_DIRS}
+        ${XCB_INCLUDE_DIRS}
+        ${XCB_RANDR_INCLUDE_DIRS}
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}
@@ -101,6 +105,8 @@ target_link_libraries(${PROJECT_NAME}
         ${XCURSOR_LIBRARIES}
         ${XFIXES_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
+        ${XCB_LIBRARIES}
+        ${XCB_RANDR_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
 
 #是否添加虚拟键盘
