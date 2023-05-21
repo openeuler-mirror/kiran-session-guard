@@ -315,7 +315,13 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
 
     ui->tips->clear();
 
-    if (type == KAD_AUTH_TYPE_FINGERPRINT || type == KAD_AUTH_TYPE_FINGERVEIN)
+    static QSet<KADAuthType> emptyControlAuthType= {
+        KAD_AUTH_TYPE_FINGERPRINT,
+        KAD_AUTH_TYPE_FINGERVEIN,
+        KAD_AUTH_TYPE_IRIS,
+        KAD_AUTH_TYPE_FACE
+    };
+    if ( emptyControlAuthType.contains(type) )
     {
         switchControlPage(CONTROL_PAGE_EMPTY);
     }
