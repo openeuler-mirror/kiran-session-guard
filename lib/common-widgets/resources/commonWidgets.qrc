@@ -6,7 +6,9 @@
         <file>common-widgets-images/face-auth.svg</file>
         <file>common-widgets-images/finger-auth.svg</file>
         <file>common-widgets-images/passwd-auth.svg</file>
+        <file>common-widgets-images/iris-auth.svg</file>
+        <file>common-widgets-images/ukey-auth.svg</file>
         <file>common-widgets-images/fingervein-auth.svg</file>
-        <file>common-widgets-images/loginbutton-arrow.png</file>
+        <file>common-widgets-images/arrow.svg</file>
     </qresource>
 </RCC>

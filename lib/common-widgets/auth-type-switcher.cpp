@@ -6,7 +6,7 @@
 
 #include <QTimer>
 
-#define SHRINK_ICON ":/common-widgets-images/loginbutton-arrow.svg"
+#define SHRINK_ICON ":/common-widgets-images/arrow.svg"
 
 namespace Kiran
 {
@@ -55,7 +55,9 @@ void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
             {KAD_AUTH_TYPE_FACE, {":/common-widgets-images/face-auth.svg",tr("face auth")}},
             {KAD_AUTH_TYPE_FINGERPRINT,{":/common-widgets-images/finger-auth.svg",tr("finger auth")}},
             {KAD_AUTH_TYPE_PASSWORD,{":/common-widgets-images/passwd-auth.svg",tr("password auth")}},
-            {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}}
+            {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}},
+            {KAD_AUTH_TYPE_IRIS,{":/common-widgets-images/iris-auth.svg",tr("iris auth")}},
+            {KAD_AUTH_TYPE_UKEY,{":/common-widgets-images/ukey-auth.svg",tr("ukey auth")}},
         };
     // clang-format on
 
@@ -116,7 +118,19 @@ void AuthTypeSwitcher::paintEvent(QPaintEvent* event)
 
     if (m_isExpanded)
     {
-        pixmap = QPixmap(SHRINK_ICON);
+        QIcon icon(SHRINK_ICON);
+        pixmap = icon.pixmap(14,14);
+
+        QTransform transform;
+        if( m_drawer->getDirection() == EXPAND_DIRECTION_BOTTOM )
+        {
+            transform.rotate(180);
+        }
+        else
+        {
+            transform.rotate(90);
+        }
+        pixmap = pixmap.transformed(transform,Qt::SmoothTransformation);
     }
     else
     {

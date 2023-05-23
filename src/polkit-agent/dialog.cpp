@@ -58,7 +58,7 @@ Dialog::Dialog(QWidget* parent)
     : KiranTitlebarWindow(parent),
       ui(new Ui::Dialog)
 {
-    ui->setupUi(getWindowContentWidget());
+ui->setupUi(getWindowContentWidget());
     resize(408, 290);
     initUI();
 }

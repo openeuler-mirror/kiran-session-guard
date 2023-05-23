@@ -179,6 +179,11 @@ void AuthTypeDrawer::updateExpandProgress(double progress)
     m_expandProgress = progress;
 }
 
+AuthTypeDrawerExpandDirection AuthTypeDrawer::getDirection() const
+{
+    return m_direction;
+}
+
 QColor AuthTypeDrawer::specifyBorderColor()
 {
     return m_borderColor;

@@ -60,6 +60,8 @@ public:
     void setSpecifyBackgroundColor(QColor background);
     QColor specifyBackgroundColor();
 
+    AuthTypeDrawerExpandDirection getDirection() const;
+
 signals:
     void authTypeClicked(int authType);
     void expandedStatusChanged(bool isExpanded);
