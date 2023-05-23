@@ -16,7 +16,6 @@
 #include "auxiliary.h"
 #include "kiran_authentication.h"
 
-#include <kiran-pam-msg.h>
 #include <qt5-log-i.h>
 #include <QDBusConnection>
 #include <QJsonDocument>
