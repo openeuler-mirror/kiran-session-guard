@@ -284,11 +284,13 @@ void LoginFrame::onAuthComplete(bool authRes)
     }
     else
     {
+        #if 0
         if (m_prompted)
         {
             startAuthUser(m_authController->authenticationUser());
         }
         else
+        #endif
         {
             // 未存在prompt消息,应切换至显示重新认真按钮,点击重新认证按钮再开始认证
             switchControlPage(CONTROL_PAGE_REAUTH);
