@@ -79,7 +79,12 @@ void AuthController::authenticate(const QString& username)
     m_canSwitchAuthType = false;
     m_supportedAuthType.clear();
     m_userName = username;
-    m_currentAuthType = m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+    m_currentAuthType = KAD_AUTH_TYPE_NONE;
+
+    if( username != m_userName )
+    {
+        m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+    }
 
     m_authInterface->authenticate(username);
 }
@@ -229,9 +234,20 @@ void AuthController::onRequestLoginUserSwitchable()
 void AuthController::onNotifySupportAuthType(QList<KADAuthType> authTypes)
 {
     KLOG_DEBUG() << "notify support auth type:" << authTypes;
-    if (m_canSwitchAuthType && m_specifyAuthType == KAD_AUTH_TYPE_NONE)
+    if ( m_canSwitchAuthType 
+        /*&& m_specifyAuthType == KAD_AUTH_TYPE_NONE*/ )
     {
         m_supportedAuthType = authTypes;
+
+        // 指定的认证类型，已不在最新的认证列表之中，更新为默认值
+        if( m_specifyAuthType != KAD_AUTH_TYPE_NONE )
+        {
+            if( !m_supportedAuthType.contains(m_specifyAuthType) )
+            {
+                m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+            }
+        }
+        
         emit supportedAuthTypeChanged(m_supportedAuthType);
     }
 }
