@@ -278,11 +278,9 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
 void LoginFrame::onAuthComplete(bool authRes)
 {
     KLOG_DEBUG() << "auth complete" << authRes;
-    if (authRes)
-    {
-        authenticateComplete(authRes, m_authController->authenticationUser());
-    }
-    else
+    authenticateComplete(authRes, m_authController->authenticationUser());
+
+    if( !authRes )
     {
         #if 0
         if (m_prompted)
