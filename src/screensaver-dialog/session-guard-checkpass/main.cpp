@@ -201,9 +201,7 @@ int main(int argc, char *argv[])
         KLOG_WARNING() << "failed to start pam:" << pam_strerror(pamh, ret);
         return EXIT_FAILURE;
     }
-
-    pam_set_item(pamh, PAM_FAIL_DELAY, (void *)no_fail_delay);
-
+    
     int authRes = PAM_SUCCESS;
     authRes = pam_authenticate(pamh, 0);
     const char *newUserName;
