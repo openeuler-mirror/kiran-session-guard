@@ -58,7 +58,7 @@ Dialog::Dialog(QWidget* parent)
     : KiranTitlebarWindow(parent),
       ui(new Ui::Dialog)
 {
-ui->setupUi(getWindowContentWidget());
+    ui->setupUi(getWindowContentWidget());
     resize(408, 290);
     initUI();
 }
@@ -119,24 +119,44 @@ void Dialog::initUI()
     layout()->setSizeConstraint(QLayout::SetFixedSize);
     ui->label_tips->setWordWrap(true);
     Kiran::StylePropertyHelper::setButtonType(ui->btn_ok, Kiran::BUTTON_Default);
+    Kiran::StylePropertyHelper::setButtonType(ui->btn_reauth, Kiran::BUTTON_Default);
 
+    switchButtonLayout(BUTTON_LAYOUT_NORMAL);
+    
     m_switcher = new AuthTypeSwitcher(EXPAND_DIRECTION_BOTTOM, 4, this);
     m_switcher->setAdjustColorToTheme(true);
     m_switcher->setFixedSize(QSize(42, 36));
     m_switcher->setVisible(false);
     ui->layout_edit->addWidget(m_switcher);
-    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, this, &Dialog::onCurrentAuthTypeChanged);
+    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, this, &Dialog::onSwitcherAuthTypeChanged);
 
     connect(ui->btn_cancel, &QPushButton::clicked, this, &Dialog::onCancelClicked);
     connect(ui->btn_ok, &QPushButton::clicked, this, &Dialog::onOkClicked);
+    connect(ui->btn_reauth,&QPushButton::clicked,this,&Dialog::onReauthClicked);
     connect(ui->edit->lineEdit(), &QLineEdit::returnPressed, this, &Dialog::onOkClicked);
     connect(ui->combobox_user, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Dialog::onCurrentUserChanged);
+}
+
+void Dialog::switchButtonLayout(ButtonLayout layout)
+{
+    switch (layout)
+    {
+    case BUTTON_LAYOUT_NORMAL:
+        ui->btn_reauth->setVisible(false);
+        ui->btn_ok->setVisible(true);
+        break;
+    case BUTTON_LAYOUT_REAUTH:
+        ui->btn_reauth->setVisible(true);
+        ui->btn_ok->setVisible(false);
+        break;
+    default:
+        break;
+    }
 }
 
 void Dialog::startAuth(const QString& userName)
 {
     m_havePrompt = false;
-    m_triesCount++;
 
     if (m_authController->inAuthentication())
     {
@@ -171,29 +191,19 @@ void Dialog::onOkClicked()
     ui->btn_ok->setEnabled(false);
 }
 
+void Dialog::onReauthClicked()
+{
+    startAuth(ui->combobox_user->currentText());
+}
+
 void Dialog::onCurrentUserChanged(int idx)
 {
     startAuth(ui->combobox_user->currentText());
 }
 
-void Dialog::onCurrentAuthTypeChanged(KADAuthType authType)
+void Dialog::onSwitcherAuthTypeChanged(KADAuthType authType)
 {
-    QMap<KADAuthType, QString> authTypeDesc = {
-        {KAD_AUTH_TYPE_FINGERPRINT, tr("fingerprint auth")},
-        {KAD_AUTH_TYPE_FACE, tr("face auth")},
-        {KAD_AUTH_TYPE_FINGERVEIN, tr("fingervein auth")}};
-
-    ui->label_tips->setText("");
     m_authController->switchAuthType(authType);
-    ui->edit->setEnabled(false);
-    ui->btn_ok->setEnabled(false);
-    ui->edit->lineEdit()->clear();
-    ui->edit->lineEdit()->setPlaceholderText("");
-
-    if (authTypeDesc.contains(authType))
-    {
-        ui->edit->lineEdit()->setPlaceholderText(authTypeDesc[authType]);
-    }
 }
 
 void Dialog::onNotifyAuthMode(KADAuthMode mode)
@@ -208,7 +218,29 @@ void Dialog::onSupportedAuthTypeChanged(QList<KADAuthType> authTypes)
 
 void Dialog::onNotifyAuthTypeChanged(KADAuthType authType)
 {
-    m_switcher->setCurrentAuthType(authType);
+    if( authType != m_switcher->getCurrentAuthType() )
+    {
+        QSignalBlocker blocker(m_switcher);
+        m_switcher->setCurrentAuthType(authType);
+    }
+
+    QMap<KADAuthType, QString> authTypeDesc = {
+        {KAD_AUTH_TYPE_FINGERPRINT, tr("fingerprint auth")},
+        {KAD_AUTH_TYPE_FACE, tr("face auth")},
+        {KAD_AUTH_TYPE_FINGERVEIN, tr("fingervein auth")},
+        {KAD_AUTH_TYPE_IRIS,tr("iris auth")}};
+
+    switchButtonLayout(BUTTON_LAYOUT_NORMAL);
+    ui->label_tips->setText("");
+    ui->edit->setEnabled(false);
+    ui->btn_ok->setEnabled(false);
+    ui->edit->lineEdit()->clear();
+    ui->edit->lineEdit()->setPlaceholderText("");
+
+    if (authTypeDesc.contains(authType))
+    {
+        ui->edit->lineEdit()->setPlaceholderText(authTypeDesc[authType]);
+    }
 }
 
 void Dialog::onAuthComplete(bool success)
@@ -219,21 +251,13 @@ void Dialog::onAuthComplete(bool success)
         this->close();
         return;
     }
-
-    if (m_havePrompt && (m_triesCount < MAX_ERROR_COUNT))
-    {
-        onAuthShowMessage("Authentication error, please authenticate again.", MessageTypeInfo);
-        startAuth(ui->combobox_user->currentText());
-    }
     else
     {
-        if (m_triesCount == MAX_ERROR_COUNT)
-        {
-            onAuthShowMessage("Authentication error", MessageTypeError);
-        }
-        ui->btn_ok->setEnabled(false);
+        onAuthShowMessage("Authentication error", MessageTypeError);
+
         ui->edit->lineEdit()->clear();
         ui->edit->setEnabled(false);
+        switchButtonLayout(BUTTON_LAYOUT_REAUTH);
     }
 }
 
@@ -256,7 +280,6 @@ void Dialog::onAuthShowMessage(const QString& text, MessageType msgType)
 
     ui->label_tips->setText(tips);
 }
-
 }  // namespace PolkitAgent
 }  // namespace SessionGuard
 }  // namespace Kiran

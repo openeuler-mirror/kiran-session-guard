@@ -41,11 +41,16 @@
     </message>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="238"/>
+        <source>Recertification</source>
+        <translation>重新认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.ui" line="263"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.ui" line="279"/>
+        <location filename="../src/polkit-agent/dialog.ui" line="304"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -69,7 +74,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="275"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="290"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -96,6 +101,16 @@
         <source>finger vein auth</source>
         <translation>指静脉认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="59"/>
+        <source>iris auth</source>
+        <translation>虹膜认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="60"/>
+        <source>ukey auth</source>
+        <translation>UKey认证</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>
@@ -105,17 +120,17 @@
         <translation>认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="182"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="187"/>
         <source>fingerprint auth</source>
         <translation>指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="183"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="188"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="184"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="189"/>
         <source>fingervein auth</source>
         <translation>指静脉认证</translation>
     </message>

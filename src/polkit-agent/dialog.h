@@ -64,6 +64,11 @@ public:
 class Dialog : public KiranTitlebarWindow
 {
     Q_OBJECT
+    enum ButtonLayout
+    {
+        BUTTON_LAYOUT_NORMAL,
+        BUTTON_LAYOUT_REAUTH
+    };
 public:
     explicit Dialog(QWidget* parent = nullptr);
     ~Dialog();
@@ -77,14 +82,16 @@ signals:
 
 private:
     void initUI();
+    void switchButtonLayout(ButtonLayout layout);
     bool setAuthInfo(const AuthInfo& authInfo);
     void startAuth(const QString& userName);
 
 private slots:
     void onCancelClicked();
     void onOkClicked();
+    void onReauthClicked();
     void onCurrentUserChanged(int idx);
-    void onCurrentAuthTypeChanged(KADAuthType authType);
+    void onSwitcherAuthTypeChanged(KADAuthType authType);
 
     void onNotifyAuthMode(KADAuthMode mode);
     void onSupportedAuthTypeChanged(QList<KADAuthType> authTypes);
@@ -102,7 +109,7 @@ private:
     AuthController* m_authController;
     AuthTypeSwitcher* m_switcher;
     bool m_havePrompt = false;
-    int m_triesCount = 0;
+    ButtonLayout m_buttonLayout = BUTTON_LAYOUT_NORMAL;
 };
 }  // namespace PolkitAgent
 }  // namespace SessionGuard
