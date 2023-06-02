@@ -34,6 +34,9 @@ public:
     ~AuthLightdm() override;
 
     bool init(AuthControllerInterface* controllerInterface) override;
+
+    bool loginUserSwitchable() override { return true; };
+
     bool authenticate(const QString& userName) override;
     void cancelAuthentication() override;
 
