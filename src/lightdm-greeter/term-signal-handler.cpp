@@ -22,6 +22,7 @@
 #include <QApplication>
 #include <QSocketNotifier>
 
+//FIXME：该种方式退出时,可能会有线程阻塞在xcb_wait_for_reply
 namespace Kiran
 {
 namespace SessionGuard

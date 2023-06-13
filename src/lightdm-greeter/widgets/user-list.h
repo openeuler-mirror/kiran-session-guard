@@ -61,6 +61,7 @@ private slots:
     void onUserItemActivated();
     void onModelRowsRemoved(const QModelIndex &parent, int first, int last);
     void onModelRowsInserted(const QModelIndex &parent, int first, int last);
+    void onAppFocusChanged(QWidget* oldFocus,QWidget* newFocus);
 
 Q_SIGNALS:
     void userActivated(const UserInfo &userInfo);
