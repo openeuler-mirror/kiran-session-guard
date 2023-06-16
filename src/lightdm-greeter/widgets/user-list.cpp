@@ -42,6 +42,7 @@ UserList::UserList(QWidget *parent)
 
 UserList::~UserList()
 {
+    disconnect(qApp, &QApplication::focusChanged,this,&UserList::onAppFocusChanged);
     delete ui;
 }
 
@@ -137,25 +138,7 @@ void UserList::initUI()
     /// 连接QApplication的焦点切换信号
     /// 处理ListWidget内部焦点切换或焦点切换出ListWidge，滑动条特殊处理
     /// 处理当焦点从外部到UserItem时，应默认到当前行
-    connect(qApp, &QApplication::focusChanged, [this](QWidget *oldWidget, QWidget *newWidget)
-            {
-                bool oldFocusInList = oldWidget == nullptr ? false : oldWidget->objectName() == USERITEM_OBJ_NAME;
-                bool newFocusInList = newWidget == nullptr ? false : newWidget->objectName() == USERITEM_OBJ_NAME;
-                if (!oldFocusInList && !newFocusInList)
-                {
-                    return;
-                }
-                else if (newFocusInList)
-                {  ///UserItem->UserItem,滚动到焦点行
-                    UserItem *userItem = dynamic_cast<UserItem *>(newWidget);
-                    const QListWidgetItem *listItem = userItem->getListItem();
-                    ui->userList->scrollToItem(listItem);
-                }
-                else if (oldFocusInList)
-                {  ///UserItem->外部，滚动到当前行
-                    ui->userList->scrollToItem(ui->userList->currentItem());
-                }
-            });
+    connect(qApp, &QApplication::focusChanged,this,&UserList::onAppFocusChanged);
 }
 
 void UserList::loadUserList()
@@ -374,6 +357,27 @@ void UserList::onModelRowsInserted(const QModelIndex &parent, int first, int las
                  << "cout[" << ui->userList->count() << "]";
     updateGeometry();
     emit userCountChanged(oldCount, newCount);
+}
+
+void UserList::onAppFocusChanged(QWidget *oldFocus, QWidget *newFocus)
+{
+    bool oldFocusInList = oldFocus == nullptr ? false : oldFocus->objectName() == USERITEM_OBJ_NAME;
+    bool newFocusInList = newFocus == nullptr ? false : newFocus->objectName() == USERITEM_OBJ_NAME;
+
+    if (!oldFocusInList && !newFocusInList)
+    {
+        return;
+    }
+    else if (newFocusInList)
+    {  /// UserItem->UserItem,滚动到焦点行
+        UserItem *userItem = dynamic_cast<UserItem *>(newFocus);
+        const QListWidgetItem *listItem = userItem->getListItem();
+        ui->userList->scrollToItem(listItem);
+    }
+    else if (oldFocusInList)
+    {  /// UserItem->外部，滚动到当前行
+        ui->userList->scrollToItem(ui->userList->currentItem());
+    }
 }
 
 QSize UserList::sizeHint() const
