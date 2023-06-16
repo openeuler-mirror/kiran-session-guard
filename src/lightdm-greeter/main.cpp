@@ -122,9 +122,6 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    TermSignalHandler signalHandler;
-    signalHandler.init();
-
     Prefs::globalInit();
     auto prefs = Prefs::getInstance();
 
