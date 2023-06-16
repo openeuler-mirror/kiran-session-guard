@@ -31,33 +31,7 @@
 #include "sync-lock-status.h"
 #include "app-native-event-filter.h"
 
-static int sigtermFd[2];
-
 #define DEFAULT_STYLE_FILE ":/themes/lightdm-kiran-greeter-normal.qss"
-
-void termSignalHandler(int unused)
-{
-    char a = 1;
-    if(write(sigtermFd[0], &a, sizeof(a)) < 1)
-    {
-        qWarning("Failed to handle term signal.");
-    }
-}
-
-void setup_unix_signal_handlers()
-{
-    struct sigaction term;
-    term.sa_handler = termSignalHandler;
-    term.sa_flags = 0;
-    term.sa_flags = SA_RESTART;
-
-    sigemptyset(&term.sa_mask);
-    int iRet = sigaction(SIGTERM, &term, 0);
-    if (iRet != 0)
-    {
-        KLOG_WARNING("set sigaction failed,%s", strerror(iRet));
-    }
-}
 
 int main(int argc, char *argv[])
 {
@@ -108,15 +82,6 @@ int main(int argc, char *argv[])
         KLOG_ERROR() << "can't install app native event filter!";
     }
 
-    // 处理SIGTERM信号
-    if (::socketpair(AF_UNIX, SOCK_STREAM, 0, sigtermFd))
-    {
-        KLOG_WARNING() << "Couldn't create TERM socketpair";
-    }
-    QSocketNotifier *snTerm = new QSocketNotifier(sigtermFd[1], QSocketNotifier::Read, &a);
-    QObject::connect(snTerm, SIGNAL(activated(int)), &a, SLOT(quit()));
-    setup_unix_signal_handlers();
-
     ///依据登陆器整体缩放比例，设置默认光标大小
     if (!CursorHelper::setDefaultCursorSize(scaled_factor))
     {
@@ -160,9 +125,5 @@ int main(int argc, char *argv[])
     screenManager.init();
 
     int res = a.exec();
-
-    close(sigtermFd[0]);
-    close(sigtermFd[1]);
-
     return res;
 }
