@@ -87,13 +87,14 @@ private:
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString& userName) = 0;
 
-private:
+private slots:
     void onShowMessage(const QString& text, MessageType type);
     void onShowPrmpt(const QString& text, PromptType type);
     void onAuthComplete(bool authRes);
     void onNotifyAuthMode(KADAuthMode mode);
     void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
     void onAuthTypeChanged(KADAuthType type);
+    void onAuthUserPropertyChanged();
 
 private:
     Ui::LoginFrame* ui;
