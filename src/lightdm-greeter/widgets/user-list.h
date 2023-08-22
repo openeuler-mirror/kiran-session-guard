@@ -62,6 +62,7 @@ private slots:
     void onModelRowsRemoved(const QModelIndex &parent, int first, int last);
     void onModelRowsInserted(const QModelIndex &parent, int first, int last);
     void onAppFocusChanged(QWidget* oldFocus,QWidget* newFocus);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> roles);
 
 Q_SIGNALS:
     void userActivated(const UserInfo &userInfo);

@@ -31,10 +31,16 @@ UserAvatar::UserAvatar(QWidget *parent) : QWidget(parent)
     setDefaultImage();
 }
 
+QString UserAvatar::getCurrentImage()
+{
+    return m_pixmapPath;
+}
+
 void UserAvatar::setImage(const QString &path)
 {
     if (m_pixmap.load(path))
     {
+        m_pixmap = path;
         m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     else
@@ -95,6 +101,7 @@ void UserAvatar::setDefaultImage()
         KLOG_WARNING() << "user avatar load default avatar failed";
         return;
     }
+    m_pixmapPath = DEFAULT_USER_AVATAR;
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     update();
 }

@@ -42,7 +42,7 @@ UserList::UserList(QWidget *parent)
 
 UserList::~UserList()
 {
-    disconnect(qApp, &QApplication::focusChanged,this,&UserList::onAppFocusChanged);
+    disconnect(qApp, &QApplication::focusChanged, this, &UserList::onAppFocusChanged);
     delete ui;
 }
 
@@ -138,7 +138,7 @@ void UserList::initUI()
     /// 连接QApplication的焦点切换信号
     /// 处理ListWidget内部焦点切换或焦点切换出ListWidge，滑动条特殊处理
     /// 处理当焦点从外部到UserItem时，应默认到当前行
-    connect(qApp, &QApplication::focusChanged,this,&UserList::onAppFocusChanged);
+    connect(qApp, &QApplication::focusChanged, this, &UserList::onAppFocusChanged);
 }
 
 void UserList::loadUserList()
@@ -162,6 +162,7 @@ void UserList::loadUserList()
 
     connect(&m_filterModel, &QLightDM::UsersModel::rowsRemoved, this, &UserList::onModelRowsRemoved);
     connect(&m_filterModel, &QLightDM::UsersModel::rowsInserted, this, &UserList::onModelRowsInserted);
+    connect(&m_filterModel, &QLightDM::UsersModel::dataChanged, this, &UserList::onDataChanged);
 }
 
 bool UserList::getCurrentSelected(UserInfo &userInfo)
@@ -377,6 +378,45 @@ void UserList::onAppFocusChanged(QWidget *oldFocus, QWidget *newFocus)
     else if (oldFocusInList)
     {  /// UserItem->外部，滚动到当前行
         ui->userList->scrollToItem(ui->userList->currentItem());
+    }
+}
+
+void UserList::onDataChanged(const QModelIndex &topLeft,
+                             const QModelIndex &bottomRight,
+                             const QVector<int> roles)
+{
+    auto userInfoUpdateFunc = [this](const UserInfo &newInfo) -> void
+    {
+        for (int i = 0; i < ui->userList->count(); i++)
+        {
+            auto item = ui->userList->item(i);
+            auto userItem = dynamic_cast<UserItem *>(ui->userList->itemWidget(item));
+            auto itemUserInfo = userItem->getUserInfo();
+            if (newInfo.name != itemUserInfo.name)
+            {
+                continue;
+            }
+
+            if (itemUserInfo.imagePath != newInfo.imagePath ||
+                itemUserInfo.loggedIn != newInfo.loggedIn)
+            {
+                itemUserInfo.imagePath = newInfo.imagePath;
+                itemUserInfo.loggedIn = newInfo.loggedIn;
+                userItem->setUserInfo(itemUserInfo);
+            }
+            break;
+        }
+    };
+    int startRow = topLeft.row();
+    int endRow = topLeft.row();
+
+    // FIXME: QLightdDM此处信号发出时roles为默认参数, 无法判断数据变化范围
+    // 检查图片更新,用户列表中的顺序可能和用户不一致
+    for (int i = startRow; i <= endRow; i++)
+    {
+        UserInfo userInfo;
+        getUserInfoFromModel(i, userInfo);
+        userInfoUpdateFunc(userInfo);
     }
 }
 

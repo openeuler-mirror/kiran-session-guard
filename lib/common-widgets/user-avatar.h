@@ -26,6 +26,7 @@ class UserAvatar : public QWidget
 public:
     explicit UserAvatar(QWidget *parent = nullptr);
 
+    QString getCurrentImage();
     void setImage(const QString &path);
     void setDefaultImage();
 
@@ -37,6 +38,7 @@ private:
     QPixmap scalePixmapAdjustSize(const QPixmap &pixmap);
 
 private:
+    QString m_pixmapPath;
     QPixmap m_scaledPixmap;
     QPixmap m_pixmap;
 };
