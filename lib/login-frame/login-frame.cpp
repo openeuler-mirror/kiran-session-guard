@@ -26,6 +26,7 @@
 #include <QTime>
 #include <QTimer>
 #include <QToolButton>
+#include <QDBusConnection>
 
 namespace Kiran
 {
@@ -184,9 +185,18 @@ void LoginFrame::initUI()
             respond(text);
         }
     });
-    connect(ui->btn_reAuth, &QPushButton::clicked, [this]{ 
+    connect(ui->btn_reAuth, &QPushButton::clicked, [this]{
         startAuthUser(m_specifyUser);
     });
+
+    // 连接至AccountServce, 处理用户属性变更信号,用于更新正在登录用户头像
+    auto connected = QDBusConnection::systemBus().connect("", "", "org.freedesktop.Accounts.User",
+                                                          "Changed", this,
+                                                          SLOT(onAuthUserPropertyChanged()));
+    if (!connected)
+    {
+        KLOG_WARNING() << "login frame: can not connect to user property changed!";
+    }
     // clang-format on
 
     QBoxLayout* centerBottomLayout = qobject_cast<QBoxLayout*>(ui->center_bottom->layout());
@@ -280,15 +290,15 @@ void LoginFrame::onAuthComplete(bool authRes)
     KLOG_DEBUG() << "auth complete" << authRes;
     authenticateComplete(authRes, m_authController->authenticationUser());
 
-    if( !authRes )
+    if (!authRes)
     {
-        #if 0
+#if 0
         if (m_prompted)
         {
             startAuthUser(m_authController->authenticationUser());
         }
         else
-        #endif
+#endif
         {
             // 未存在prompt消息,应切换至显示重新认真按钮,点击重新认证按钮再开始认证
             switchControlPage(CONTROL_PAGE_REAUTH);
@@ -306,6 +316,25 @@ void LoginFrame::onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes)
     m_switcher->setAuthTypes(supportedTypes);
 }
 
+//  检查当前认证的用户头像变更
+void LoginFrame::onAuthUserPropertyChanged()
+{
+    if (m_specifyUser.isEmpty())
+    {
+        return;
+    }
+
+    QString imagePath = UserManager::getUserIcon(m_specifyUser);
+    QString currentImagePath = ui->avatar->getCurrentImage();
+    if (imagePath == currentImagePath)
+    {
+        return;
+    }
+
+    ui->avatar->setImage(imagePath);
+    return;
+}
+
 void LoginFrame::onAuthTypeChanged(KADAuthType type)
 {
     if (m_switcher->getCurrentAuthType() != type)
@@ -315,13 +344,12 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
 
     ui->tips->clear();
 
-    static QSet<KADAuthType> emptyControlAuthType= {
+    static QSet<KADAuthType> emptyControlAuthType = {
         KAD_AUTH_TYPE_FINGERPRINT,
         KAD_AUTH_TYPE_FINGERVEIN,
         KAD_AUTH_TYPE_IRIS,
-        KAD_AUTH_TYPE_FACE
-    };
-    if ( emptyControlAuthType.contains(type) )
+        KAD_AUTH_TYPE_FACE};
+    if (emptyControlAuthType.contains(type))
     {
         switchControlPage(CONTROL_PAGE_EMPTY);
     }

@@ -48,7 +48,7 @@ void AuthInfo::dump()
         qDebug() << "detail key:" << key << "value:" << value;
     }
     qDebug() << "cookie:    " << cookie;
-    for (const PolkitQt1::Identity identity : identities)
+    for (const PolkitQt1::Identity& identity : identities)
     {
         qDebug() << "identity:  " << identity.toString();
     }
@@ -122,7 +122,7 @@ void Dialog::initUI()
     Kiran::StylePropertyHelper::setButtonType(ui->btn_reauth, Kiran::BUTTON_Default);
 
     switchButtonLayout(BUTTON_LAYOUT_NORMAL);
-    
+
     m_switcher = new AuthTypeSwitcher(EXPAND_DIRECTION_BOTTOM, 4, this);
     m_switcher->setAdjustColorToTheme(true);
     m_switcher->setFixedSize(QSize(42, 36));
