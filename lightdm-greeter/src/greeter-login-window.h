@@ -114,6 +114,7 @@ private slots:
     void slotShowMessage(QString text, Kiran::MessageType type);
     void slotShowprompt(QString text, Kiran::PromptType type);
     void slotAuthenticationComplete(bool sucess);
+    void slotUserInfoChanged();
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) override;

@@ -25,6 +25,7 @@
 #include <QSessionManager>
 #include <QTimer>
 #include <QWidgetAction>
+#include <QDBusConnection>
 
 #include "auth-lightdm.h"
 #include "auth-msg-queue.h"
@@ -34,6 +35,7 @@
 #include "kiran-greeter-prefs.h"
 #include "ui_greeterloginwindow.h"
 #include "virtual-keyboard.h"
+#include "common/dbusapi.h"
 
 Q_DECLARE_METATYPE(UserInfo);
 using namespace QLightDM;
@@ -225,6 +227,13 @@ void GreeterLoginWindow::initUI()
 
         m_powerMenu->popup(menuLeftTop);
     });
+    auto connected = QDBusConnection::systemBus().connect("", "", "org.freedesktop.Accounts.User",
+                                                          "Changed", this,
+                                                          SLOT(slotUserInfoChanged()));
+    if (!connected)
+    {
+        KLOG_WARNING() << "login frame: can not connect to user property changed!";
+    }
 
     if (!KiranGreeterPrefs::instance()->canHibernate() &&
         !KiranGreeterPrefs::instance()->canSuspend() &&
@@ -836,6 +845,34 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success)
             switchToReAuthentication();
         }
     }
+}
+
+//NOTE:此处图标应从AccountService之中进行获取
+// 由于Root不在QLightDM提供的model之中,并且该槽连接的是AccountService
+// 触发时可能QLightDM未更新model
+void GreeterLoginWindow::slotUserInfoChanged()
+{
+    QString currentUser = ui->label_userName->text();
+
+    if (currentUser.isEmpty())
+    {
+        return;
+    }
+
+    QString imagePath;
+    if( !DBusApi::AccountsService::getIconFileProperty(currentUser,imagePath) )
+    {
+        KLOG_WARNING() << "can't get current auth user icon";
+        return;
+    }
+
+    QString currentImagePath = ui->loginAvatar->getImagePath();
+    if (imagePath != currentImagePath)
+    {
+        ui->loginAvatar->setImage(imagePath);
+    }
+
+    return;
 }
 
 void GreeterLoginWindow::setCurrentAuthType(AuthType type)

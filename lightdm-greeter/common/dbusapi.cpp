@@ -173,22 +173,25 @@ bool DBusApi::AccountsService::getUserObjectIconFileProperty(const QString &obj,
                        iconFile);
 }
 
-bool DBusApi::AccountsService::getRootIconFileProperty(QString &iconFile)
+bool DBusApi::AccountsService::getIconFileProperty(const QString& name, QString& iconFile)
 {
-    QDBusObjectPath rootObj;
-
-    if (!findUserByName("root", rootObj))
+    QDBusObjectPath userObjectPath;
+    if (!findUserByName(name, userObjectPath) )
     {
-        KLOG_WARNING() << __FUNCTION__ << "findUserByName root failed";
+        KLOG_WARNING() << "get" << name << "object path failed";
         return false;
     }
 
-    if (!getUserObjectIconFileProperty(rootObj, iconFile))
+    if (!getUserObjectIconFileProperty(userObjectPath.path(),iconFile))
     {
-        KLOG_WARNING() << __FUNCTION__ << "getUserObjectIconFileProperty"
-                        << rootObj.path() << "failed";
+        KLOG_WARNING() << "get" << userObjectPath.path() << "icon file property failed";
         return false;
     }
 
     return true;
+}
+
+bool DBusApi::AccountsService::getRootIconFileProperty(QString &iconFile)
+{
+    return  getIconFileProperty("root",iconFile);
 }

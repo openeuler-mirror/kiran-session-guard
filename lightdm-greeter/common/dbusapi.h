@@ -36,7 +36,7 @@ bool getUserObjectUserNameProperty(const QString& obj, QString& userName);
 
 bool getUserObjectIconFileProperty(const QDBusObjectPath& userObj, QString& iconFile);
 bool getUserObjectIconFileProperty(const QString& obj, QString& iconFile);
-
+bool getIconFileProperty(const QString& name, QString& iconFile);
 bool getRootIconFileProperty(QString& iconFile);
 }  // namespace AccountsService
 }  // namespace DBusApi

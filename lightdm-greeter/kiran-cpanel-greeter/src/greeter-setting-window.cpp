@@ -13,7 +13,7 @@
  */
 
 #include "greeter-setting-window.h"
-#include "dbusapi.h"
+#include "../common/dbusapi.h"
 #include "define.h"
 #include "hover-tips.h"
 #include "kiran-greeter-prefs.h"
@@ -664,7 +664,7 @@ void GreeterSettingWindow::resetAutoLoginSettings()
 {
     GreeterSettingInfo::AutoLoginSetting autoLoginSetting = getAutologinSettingInfoFromBackend();
     m_autologinSwitch->setChecked(autoLoginSetting.autoLoginUser.size());
-    
+
     m_autologinComboWidget->setVisible(autoLoginSetting.autoLoginUser.size());
     if( !autoLoginSetting.autoLoginUser.isEmpty() )
     {

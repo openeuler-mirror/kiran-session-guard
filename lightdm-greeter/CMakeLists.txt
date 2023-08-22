@@ -64,6 +64,7 @@ file(GLOB_RECURSE SRC_CPP "src/*.cpp")
 file(GLOB_RECURSE SRC_HEADER "src/*.h")
 
 file(GLOB_RECURSE SRC_FORMS "src/*.ui")
+file(GLOB GREETER_COMMON_SRC "common/*.cpp" "common/*.h")
 
 # 资源文件
 file(GLOB_RECURSE RESOURCES "resources/*.qrc")
@@ -79,6 +80,7 @@ add_executable(${PROJECT_NAME}
         ${SRC_CPP}
         ${SRC_HEADER}
         ${SRC_FORMS}
+        ${GREETER_COMMON_SRC}
         ${QM_FILES}
         ${RESOURCES})
 
