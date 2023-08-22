@@ -33,14 +33,14 @@ class UserListWidget : public QWidget
 public:
     explicit UserListWidget(QWidget *parent = nullptr);
     ~UserListWidget();
-    void    loadUserList();
-    bool    getCurrentSelected(UserInfo &userInfo);
-    void    setRow0();
-    void    JustForTest(int count);
+    void loadUserList();
+    bool getCurrentSelected(UserInfo &userInfo);
+    void setRow0();
+    void JustForTest(int count);
     QString getIconByUserName(const QString &userName);
     UserInfo getUserInfoByUserName(const QString &userName);
-    bool    eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
-    int     userCount();
+    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+    int userCount();
 
 private:
     void initUI();
@@ -53,17 +53,19 @@ private slots:
     void slotUserItemActivated();
     void slotRowsRemoved(const QModelIndex &parent, int first, int last);
     void slotRowsInserted(const QModelIndex &parent, int first, int last);
+    void slotDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                         const QVector<int> roles);
 
 Q_SIGNALS:
     void userActivated(const UserInfo &userInfo);
-    ///请求登录窗口重置窗口
+    /// 请求登录窗口重置窗口
     void sigRequestResetUI();
 
 protected:
     virtual QSize sizeHint() const override;
 
 private:
-    Ui::UserListWidget * ui;
+    Ui::UserListWidget *ui;
     QLightDM::UsersModel m_usersModel;
     FilterUserProxyModel m_filterModel;
 };

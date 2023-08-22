@@ -30,6 +30,7 @@
 #include <QWindow>
 #include <QtDBus>
 #include <QApplication>
+#include <QDBusConnection>
 #include <kiran-screensaver/interface.h>
 
 #include "auth-msg-queue.h"
@@ -401,6 +402,14 @@ void ScreenSaverDialog::initUI()
         startAuth();
     });
 
+    auto connected = QDBusConnection::systemBus().connect("", "", "org.freedesktop.Accounts.User",
+                                                          "Changed", this,
+                                                          SLOT(slotUserInfoChanged()));
+    if (!connected)
+    {
+        KLOG_WARNING() << "login frame: can not connect to user property changed!";
+    }
+
     //　默认禁用输入框，等待prompt消息再启用
     ui->promptEdit->setEnabled(false);
     ui->btn_switchuser->setVisible(false);
@@ -521,6 +530,18 @@ void ScreenSaverDialog::slotAuthenticationComplete(bool authRes)
         ui->promptEdit->setHasError(false);
         m_ksInterface->authenticationPassed();
     }
+}
+
+void ScreenSaverDialog::slotUserInfoChanged()
+{
+    QString imagePath = DBusApi::AccountService::getUserIconFilePath(m_userName);
+    QString currentImagePath = ui->loginAvatar->getImagePath();
+    if (imagePath != currentImagePath)
+    {
+        ui->loginAvatar->setImage(imagePath);
+    }
+
+    return;
 }
 
 void ScreenSaverDialog::slotShowPrompt(QString text, Kiran::PromptType promptType)

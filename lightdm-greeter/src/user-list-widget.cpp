@@ -41,7 +41,7 @@ UserListWidget::~UserListWidget()
 
 bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
 {
-    ///因QListWidget的上下键直接修改当前行，通过屏蔽上下键盘事件修改成切换焦点
+    /// 因QListWidget的上下键直接修改当前行，通过屏蔽上下键盘事件修改成切换焦点
     if (obj == ui->userList)
     {
         switch (event->type())
@@ -81,7 +81,7 @@ bool UserListWidget::eventFilter(QObject *obj, QEvent *event)
         }
     }
 
-    ///聚焦在Item上按Tab直接跳出，不在用户列表上切换
+    /// 聚焦在Item上按Tab直接跳出，不在用户列表上切换
     if (obj != nullptr && obj->objectName() == USERITEM_OBJ_NAME)
     {
         switch (event->type())
@@ -131,7 +131,8 @@ void UserListWidget::initUI()
     /// 连接QApplication的焦点切换信号
     /// 处理ListWidget内部焦点切换或焦点切换出ListWidge，滑动条特殊处理
     /// 处理当焦点从外部到UserItem时，应默认到当前行
-    connect(qApp, &QApplication::focusChanged, [this](QWidget *oldWidget, QWidget *newWidget) {
+    connect(qApp, &QApplication::focusChanged, [this](QWidget *oldWidget, QWidget *newWidget)
+            {
         bool oldFocusInList = oldWidget == nullptr ? false : oldWidget->objectName() == USERITEM_OBJ_NAME;
         bool newFocusInList = newWidget == nullptr ? false : newWidget->objectName() == USERITEM_OBJ_NAME;
         if (!oldFocusInList && !newFocusInList)
@@ -147,8 +148,7 @@ void UserListWidget::initUI()
         else if (oldFocusInList)
         {  ///UserItem->外部，滚动到当前行
             ui->userList->scrollToItem(ui->userList->currentItem());
-        }
-    });
+        } });
 }
 
 void UserListWidget::loadUserList()
@@ -162,16 +162,18 @@ void UserListWidget::loadUserList()
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);
-        if( hiddenUsers.contains(userInfo.name) ){
+        if (hiddenUsers.contains(userInfo.name))
+        {
             continue;
         }
         appendItem(userInfo);
     }
 
     KLOG_INFO() << "connect UserModel RowRemoved:  "
-                 << connect(&m_filterModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
+                << connect(&m_filterModel, &QLightDM::UsersModel::rowsRemoved, this, &UserListWidget::slotRowsRemoved);
     KLOG_INFO() << "connect UserModel RowInserted: "
-                 << connect(&m_filterModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
+                << connect(&m_filterModel, &QLightDM::UsersModel::rowsInserted, this, &UserListWidget::slotRowsInserted);
+    connect(&m_filterModel, &QLightDM::UsersModel::dataChanged, this, &UserListWidget::slotDataChanged);
 }
 
 bool UserListWidget::getCurrentSelected(UserInfo &userInfo)
@@ -382,6 +384,43 @@ void UserListWidget::slotRowsRemoved(const QModelIndex &parent, int first, int l
     updateGeometry();
 }
 
+void UserListWidget::slotDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,const QVector<int> roles)
+{
+    auto userInfoUpdateFunc = [this](const UserInfo &newInfo) -> void
+    {
+        for (int i = 0; i < ui->userList->count(); i++)
+        {
+            auto item = ui->userList->item(i);
+            auto userItem = dynamic_cast<UserListItem *>(ui->userList->itemWidget(item));
+            auto itemUserInfo = userItem->getUserInfo();
+            if (newInfo.name != itemUserInfo.name)
+            {
+                continue;
+            }
+
+            if (itemUserInfo.imagePath != newInfo.imagePath ||
+                itemUserInfo.loggedIn != newInfo.loggedIn)
+            {
+                itemUserInfo.imagePath = newInfo.imagePath;
+                itemUserInfo.loggedIn = newInfo.loggedIn;
+                userItem->setUserInfo(itemUserInfo);
+            }
+            break;
+        }
+    };
+
+    // FIXME: QLightdDM此处信号发出时roles为默认参数,无法判断数据变化范围,只能通过遍历检查数据是否变更
+    // 检查图片更新,用户列表中的顺序可能和用户不一致
+    int startRow = topLeft.row();
+    int endRow = topLeft.row();
+    for (int i = startRow; i <= endRow; i++)
+    {
+        UserInfo userInfo;
+        getUserInfoFromModel(i, userInfo);
+        userInfoUpdateFunc(userInfo);
+    }
+}
+
 void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int last)
 {
     for (int i = first; i <= last; i++)
@@ -397,7 +436,7 @@ void UserListWidget::slotRowsInserted(const QModelIndex &parent, int first, int 
     }
 
     KLOG_DEBUG() << "row inserted: "
-                  << "cout[" << ui->userList->count() << "]";
+                 << "cout[" << ui->userList->count() << "]";
     updateGeometry();
 }
 

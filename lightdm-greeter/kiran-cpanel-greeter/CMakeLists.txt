@@ -54,9 +54,8 @@ add_library(${PROJECT_NAME} SHARED
         ${SETTINGS_SRC_HEADER}
         ${SETTINGS_SRC_FORMS}
         ${SETTINGS_RESOURCES}
+        ${GREETER_COMMON_SRC}
         ${GREETER_SETTINS_QM_FILES})
-
-include_directories("${CMAKE_BINARY_DIR}")
 
 target_include_directories(${PROJECT_NAME} PRIVATE
         ../public

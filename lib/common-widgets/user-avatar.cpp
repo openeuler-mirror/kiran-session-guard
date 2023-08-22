@@ -1,14 +1,14 @@
 /**
- * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd. 
+ * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd.
  * kiran-session-guard is licensed under Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2. 
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
- *          http://license.coscl.org.cn/MulanPSL2 
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, 
- * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, 
- * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.  
- * See the Mulan PSL v2 for more details.  
- * 
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
 
@@ -27,12 +27,18 @@ UserAvatar::UserAvatar(QWidget *parent) : QWidget(parent)
     setDefaultImage();
 }
 
+QString UserAvatar::getImagePath()
+{
+    return m_pixmapPath;
+}
+
 void UserAvatar::setImage (const QString &path)
 {
     QFile file(path);
     if (m_pixmap.load(path))
     {
-        KLOG_WARNING() << "UserAvatar: load file " << path << "successed";
+        KLOG_DEBUG() << "UserAvatar: load file " << path << "successed";
+        m_pixmapPath = path;
         m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     }
     else
@@ -90,6 +96,7 @@ void UserAvatar::setDefaultImage ()
         KLOG_WARNING() << "UserAvatar: " << "load default avatar failed.";
         return;
     }
+    m_pixmapPath = DEFAULT_USER_AVATAR;
     m_scaledPixmap = scalePixmapAdjustSize(m_pixmap);
     update();
 }

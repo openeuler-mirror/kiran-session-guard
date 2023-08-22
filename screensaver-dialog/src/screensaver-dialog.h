@@ -85,6 +85,7 @@ private slots:
     void slotShowMessage(QString text, Kiran::MessageType messageType);
     void slotShowPrompt(QString text, Kiran::PromptType promptType);
     void slotAuthenticationComplete(bool authRes);
+    void slotUserInfoChanged();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
