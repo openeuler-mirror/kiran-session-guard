@@ -145,7 +145,12 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
     auto cmdStr = msg.midRef(strlen(KAP_PROTO_JSON_PREFIX), -1);
     QJsonDocument jsonDoc = QJsonDocument::fromJson(cmdStr.toUtf8());
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
     int protoID = jsonDoc[KAP_PJK_KEY_HEAD][KAP_PJK_KEY_CMD].toInt(-1);
+#else
+    QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_HEAD];
+    int protoID = val.toObject()[KAP_PJK_KEY_CMD].toInt(-1);
+#endif
     if (protoID == -1)
     {
         return false;
@@ -155,7 +160,12 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
     {
     case KAP_REQ_CMD_NOTIFY_AUTH_MODE:
     {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
         auto authMode = jsonDoc[KAP_PJK_KEY_BODY][KAP_PJK_KEY_AUTH_MODE].toInt(-1);
+#else
+        QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
+        auto authMode = val.toObject()[KAP_PJK_KEY_AUTH_MODE].toInt(-1);
+#endif
         if (authMode < KAD_AUTH_MODE_NONE || authMode > KAD_AUTH_MODE_LAST)
         {
             KLOG_WARNING() << "invalid auth mode" << authMode;
@@ -171,7 +181,13 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
     }
     case KAP_REQ_CMD_NOTIFY_SUPPORT_AUTH_TYPE:
     {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
         auto authTypesArray = jsonDoc[KAP_PJK_KEY_BODY][KAP_PJK_KEY_AUTH_TYPES].toArray(QJsonArray());
+#else
+        QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
+        const QJsonObject object =  val.toObject();
+        auto authTypesArray = object[KAP_PJK_KEY_AUTH_TYPES].toArray(QJsonArray());
+#endif
         if (authTypesArray.isEmpty())
         {
             KLOG_WARNING() << "invalid auth types";
@@ -202,7 +218,12 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
     }
     case KAP_REQ_CMD_NOTIFY_AUTH_TYPE:
     {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
         auto authType = jsonDoc[KAP_PJK_KEY_BODY][KAP_PJK_KEY_AUTH_TYPE].toInt(-1);
+#else
+        QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
+        auto authType = val.toObject()[KAP_PJK_KEY_AUTH_TYPES].toInt(-1);
+#endif
         if (authType <= KAD_AUTH_TYPE_NONE || authType >= KAD_AUTH_TYPE_LAST)
         {
             KLOG_WARNING() << "invalid auth types";
