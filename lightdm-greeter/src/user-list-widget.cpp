@@ -24,6 +24,7 @@
 #include "ui_user-list-widget.h"
 #include "user-info.h"
 #include "user-list-item.h"
+#include "styled-item-delegate.h"
 
 using namespace QLightDM;
 
@@ -119,6 +120,7 @@ int UserListWidget::userCount()
 void UserListWidget::initUI()
 {
     setAttribute(Qt::WA_Hover, true);
+    ui->userList->setItemDelegate(new StyledItemDelegate(this));
     ui->userList->setFocusPolicy(Qt::ClickFocus);
     ui->userList->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->userList->setSelectionMode(QAbstractItemView::SingleSelection);
