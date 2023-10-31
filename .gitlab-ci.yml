@@ -4,7 +4,8 @@ variables:
                    name=KiranBase2.4
                    gpgcheck=0
                    baseurl=http://192.168.120.71/kojifiles/repos/KY3.5-1-Kiran-base-2.4-build/latest/x86_64/
-  RPM_BUILD_REQUIRES: 'gcc-c++ cmake libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel lightdm-qt5-devel pam-devel  qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel qt5-qtsvg-devel gsettings-qt-devel  kiran-widgets-qt5-devel kiran-log-qt5-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-cc-daemon-devel kiran-control-panel-devel kiran-qt5-integration-devel kiran-screensaver-devel'
+  RPM_BUILD_REQUIRES: 'gcc-c++ cmake libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel lightdm-qt5-devel pam-devel  qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel qt5-qtsvg-devel gsettings-qt-devel  kiran-widgets-qt5-devel kiran-log-qt5-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-cc-daemon-devel kiran-control-panel-devel kiran-qt5-integration-devel kiran-screensaver-devel kiran-qdbusxml2cpp polkit-qt5-1-devel kiran-authentication-service-devel libxkbcommon-devel'
+  IMAGE: 'kylinsec-3.4-5-gc'
 
 include:
   - project: 'os/gitlab-ci'
