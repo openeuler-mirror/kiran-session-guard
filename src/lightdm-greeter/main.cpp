@@ -119,13 +119,13 @@ int main(int argc, char* argv[])
         qWarning() << "init kiran-log failed";
     }
 
+    Prefs::globalInit();
+    auto prefs = Prefs::getInstance();
+    adjustScaleFactor(prefs);
+
     QApplication app(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    Prefs::globalInit();
-    auto prefs = Prefs::getInstance();
-
-    adjustScaleFactor(prefs);
     setCursor(prefs);
     loadTranslator();
     loadStyleSheet();
