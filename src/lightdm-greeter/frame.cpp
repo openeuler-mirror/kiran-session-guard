@@ -155,7 +155,7 @@ void Frame::initMenus()
         // clang-format off
         connect(itemWidget, &GreeterMenuItem::sigChecked, [this](QString action){
             m_specifiedSession = action;
-            m_sessionMenu->hide(); 
+            m_sessionMenu->hide();
         });
         // clang-format on
     }
@@ -316,6 +316,7 @@ void Frame::initAuth()
 {
     AuthLightdm* auth = new AuthLightdm(m_greeter);
     LoginFrame::initAuth(auth);
+    connect(m_greeter.data(),&QLightDM::Greeter::autologinTimerExpired,this,&Frame::onAutoLoginTimeout);
 }
 
 void Frame::initConnection()
@@ -325,8 +326,8 @@ void Frame::initConnection()
     connect(m_userList, &UserList::userCountChanged, this, &Frame::onUserListUserCountChanged);
     connect(m_userList, &UserList::userRemoved,this,&Frame::onUserListUserRemoved);
     connect(m_btnLoginOther, &QToolButton::clicked, this, &Frame::onLoginOtherClicked);
-    connect(m_btnAutoLogin, &LoginButton::sigClicked, [this](){ 
-        startAuthUser(m_userName); 
+    connect(m_btnAutoLogin, &LoginButton::sigClicked, [this](){
+        startAuthUser(m_userName);
     });
     // clang-format on
 }
@@ -497,6 +498,69 @@ void Frame::onLoginOtherClicked()
         break;
     }
 }
+
+static bool getIsLoggedIn(const QString& userName)
+{
+    bool res = false;
+
+    QDBusInterface dmInterface("org.freedesktop.DisplayManager",
+                               "/org/freedesktop/DisplayManager",
+                               "org.freedesktop.DisplayManager",
+                               QDBusConnection::systemBus());
+    QVariant sessionsVar = dmInterface.property("Sessions");
+    if (!sessionsVar.isValid())
+    {
+        KLOG_ERROR("can't get display manager property 'sessions'");
+        return res;
+    }
+
+    QList<QDBusObjectPath> sessions = sessionsVar.value<QList<QDBusObjectPath>>();
+    KLOG_DEBUG() << "sessions:" << sessions.count();
+    for (const auto& session : sessions)
+    {
+        KLOG_DEBUG() << "\t-" << session.path();
+    }
+    foreach (const auto& session, sessions)
+    {
+        QDBusInterface sessionInterface("org.freedesktop.DisplayManager",
+                                        session.path(),
+                                        "org.freedesktop.DisplayManager.Session",
+                                        QDBusConnection::systemBus());
+        QVariant userNameVar = sessionInterface.property("UserName");
+        if (!userNameVar.isValid())
+        {
+            KLOG_ERROR("can't get display manager session property 'UserName'");
+            continue;
+        }
+
+        QString sessionUser = userNameVar.toString();
+        if (sessionUser.compare(userName) == 0)
+        {
+            res = true;
+            break;
+        }
+    }
+
+    return res;
+}
+
+void Frame::onAutoLoginTimeout()
+{
+    if (m_greeter->autologinUserHint().isEmpty())
+    {
+        return;
+    }
+
+    // NOTE:修复#52982问题，若自动登录用户已存在不自动触发延时自动登录
+    bool isLogged = getIsLoggedIn(m_greeter->autologinUserHint());
+    if (isLogged)
+    {
+        return;
+    }
+
+    startAuthUser(m_greeter->autologinUserHint());
+}
+
 }  // namespace Greeter
 }  // namespace SessionGuard
 }  // namespace Kiran

@@ -72,6 +72,7 @@ private slots:
     void onUserListUserCountChanged(int oldCount, int newCount);
     void onUserListUserRemoved(const QString& name);
     void onLoginOtherClicked();
+    void onAutoLoginTimeout();
 
 private:
     Prefs* m_prefs;
