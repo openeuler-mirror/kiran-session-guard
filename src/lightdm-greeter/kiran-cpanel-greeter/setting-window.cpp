@@ -154,7 +154,7 @@ QWidget *SettingWindow::initPageAutoLogin()
     auto pageAutoLogin = new QWidget(this);
 
     auto mainLayout = new QVBoxLayout(pageAutoLogin);
-    mainLayout->setContentsMargins(12, 24, 12, 0);
+    mainLayout->setContentsMargins(16, 16, 16, 0);
     mainLayout->setSpacing(0);
 
     /* 自动登录用户总开关 */
@@ -263,11 +263,16 @@ QWidget *SettingWindow::initPageGeneralSettings()
 {
     auto pageGeneralSettings = new QWidget(this);
     auto mainLayout = new QVBoxLayout(pageGeneralSettings);
-    mainLayout->setContentsMargins(12, 24, 12, 0);
+    mainLayout->setContentsMargins(16, 16, 16, 0);
     mainLayout->setSpacing(0);
 
     /* 外观设置 */
     /* 图片选择控件 */
+    auto titleLabel = new QLabel(this);
+    titleLabel->setText(tr("login background setting"));
+    mainLayout->addWidget(titleLabel);
+    mainLayout->addSpacerItem(new QSpacerItem(10,10,QSizePolicy::Minimum,QSizePolicy::Fixed));
+
     m_imageSelector = new KiranImageSelector(this);
     m_imageSelector->setFixedHeight(148);
     mainLayout->addWidget(m_imageSelector);
