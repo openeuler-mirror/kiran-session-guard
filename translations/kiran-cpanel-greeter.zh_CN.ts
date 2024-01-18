@@ -110,84 +110,89 @@ Select discard to discard the modification and reload the new configuration</sou
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="235"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="394"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="399"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="249"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="408"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="413"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="284"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="272"/>
+        <source>login background setting</source>
+        <translation>登录背景设置</translation>
+    </message>
+    <message>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="289"/>
         <source>Scale Mode</source>
         <translation>缩放模式</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="295"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="300"/>
         <source>auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="296"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="301"/>
         <source>manual</source>
         <translation>手动</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="297"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="302"/>
         <source>disable</source>
         <translation>禁用</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="303"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="308"/>
         <source>Scale Factor</source>
         <translation>缩放比例</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="328"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="333"/>
         <source>Enable manual input user login</source>
         <translation>允许手动输入用户名登录</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="353"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="358"/>
         <source>Show User List</source>
         <translation>显示用户列表</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="460"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="536"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="465"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="541"/>
         <source>Configuration changed</source>
         <translation>配置已改变</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="461"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="537"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="466"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="542"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation>配置文件已被修改，如果继续保存所有额外的修改将会被覆盖，选择丢弃将丢弃所有的修改并重新加载新的配置文件</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="514"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="584"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="519"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="589"/>
         <source>Save failed, reload</source>
         <translation>保存失败，已重新加载</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="518"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="594"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="523"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="599"/>
         <source>Saved successfully</source>
         <translation>保存成功</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="588"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="593"/>
         <source>Save failed: %1</source>
         <translation>保存失败: %1</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="713"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="718"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation>请确保两个选项之一被打开!</translation>
     </message>
