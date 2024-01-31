@@ -33,14 +33,14 @@ void Prefs::init()
     ///power
     settings.beginGroup("Power");
 
-    auto canPowerOff = settings.value("can-poweroff");
-    m_canPowerOff = canPowerOff.toBool();
+    auto powerOffEnable = settings.value("can-poweroff");
+    m_canPowerOff = powerOffEnable.toBool();
 
-    auto canReboot = settings.value("can-reboot");
-    m_canReboot = canReboot.toBool();
+    auto rebootEnable = settings.value("can-reboot");
+    m_canReboot = rebootEnable.toBool();
 
-    auto canSuspend = settings.value("can-suspend");
-    m_canSuspend = canSuspend.toBool();
+    auto suspendEnable = settings.value("can-suspend");
+    m_canSuspend = suspendEnable.toBool();
 }
 
 Prefs::~Prefs()

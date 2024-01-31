@@ -51,31 +51,31 @@ void Prefs::init()
     /// common
     settings.beginGroup("Common");
 
-    auto hiddenSession = settings.value("hidden-sessions");
+    auto hiddenSession = settings.value("hidden-sessions","");
     m_hiddenSessions = hiddenSession.toStringList();
 
-    auto hiddenUsers = settings.value("hide-users");
-    m_hiddenUsers = hiddenUsers.toStringList();
+    auto needHideUsers = settings.value("hide-users","");
+    m_hiddenUsers = needHideUsers.toStringList();
 
-    auto numlockInitState = settings.value("numlock-init-state");
-    m_numlockInitState = numlockInitState.toBool();
+    auto numInitState = settings.value("numlock-init-state");
+    m_numlockInitState = numInitState.toBool();
 
     settings.endGroup();
 
     /// power
     settings.beginGroup("Power");
 
-    auto canPowerOff = settings.value("can-poweroff");
-    m_canPowerOff = canPowerOff.toBool();
+    auto powerOffEnable = settings.value("can-poweroff");
+    m_canPowerOff = powerOffEnable.toBool();
 
-    auto canReboot = settings.value("can-reboot");
-    m_canReboot = canReboot.toBool();
+    auto rebootEnable = settings.value("can-reboot");
+    m_canReboot = rebootEnable.toBool();
 
-    auto canSuspend = settings.value("can-suspend");
-    m_canSuspend = canSuspend.toBool();
+    auto suspendEnable = settings.value("can-suspend");
+    m_canSuspend = suspendEnable.toBool();
 
-    auto canHibernate = settings.value("can-hibernate");
-    m_canHibernate = canHibernate.toBool();
+    auto hibernateEnable = settings.value("can-hibernate");
+    m_canHibernate = hibernateEnable.toBool();
 }
 
 Prefs::~Prefs()

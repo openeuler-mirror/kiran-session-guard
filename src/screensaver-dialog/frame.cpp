@@ -50,9 +50,9 @@ Frame::Frame(Kiran::ScreenSaver::Interface* ksinterface, Power* power, QWidget* 
       m_power(power),
       m_keyboard(nullptr),
       m_ksInterface(ksinterface),
+      m_userName(UserManager::getCurrentUser()),
       m_authProxy(nullptr)
 {
-    m_userName = UserManager::getCurrentUser();
     KLOG_DEBUG() << "locker create for" << m_userName;
     initMenus();
     initUI();
@@ -102,9 +102,9 @@ void Frame::initUI()
 {
     // 初始化添加右下控件
     // 获取菜单弹出坐标,按钮和触发菜单右对齐
-    // FIXME: Qt在特定虚拟机环境下QMenu::popup传入正确的pos时,QMenu通过Pos找到screen,但screen的大小错误(为调整分辨率之前的分辨率)
+    // NOTE: Qt在特定虚拟机环境下QMenu::popup传入正确的pos时,QMenu通过Pos找到screen,但screen的大小错误(为调整分辨率之前的分辨率)
     // 导致popup pos被修改成在错误的屏幕范围内
-    auto getMenuPopupPos = [this](QMenu* menu, const QToolButton* triggerBtn) -> QPoint
+    auto getMenuPopupPos = [](QMenu* menu, const QToolButton* triggerBtn) -> QPoint
     {
         QSize menuSize = menu->actions().count() == 0 ? QSize(92, 10) : menu->sizeHint();
         QPoint btnRightTopPos = triggerBtn->mapToGlobal(QPoint(triggerBtn->width(), 0));
@@ -137,7 +137,7 @@ void Frame::initUI()
     };
 
     // clang-format off
-    m_btnSwitchToGreeter = createActionButton("btn_switchuser", tr("switch to greeter"), [](){ 
+    m_btnSwitchToGreeter = createActionButton("btn_switchuser", tr("switch to greeter"), [](){
         KLOG_DEBUG() << "switch to greeter clicked";
         UserManager::switchToGreeter();
     });
@@ -159,7 +159,7 @@ void Frame::initUI()
             return;
         }
         QPoint pos = getMenuPopupPos(m_powerMenu,m_btnPower);
-        m_powerMenu->popup(pos); 
+        m_powerMenu->popup(pos);
     });
     // clang-format on
 

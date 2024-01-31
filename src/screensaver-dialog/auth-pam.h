@@ -60,7 +60,7 @@ private:
     void handleChildExit();
 
 private:
-    AuthControllerInterface* m_interface;
+    AuthControllerInterface* m_interface = nullptr;
     QString m_userName;
 
     bool m_isAuthenticated = false;

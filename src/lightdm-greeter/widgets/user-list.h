@@ -64,7 +64,7 @@ private slots:
     void onAppFocusChanged(QWidget* oldFocus,QWidget* newFocus);
     void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> roles);
 
-Q_SIGNALS:
+signals:
     void userActivated(const UserInfo &userInfo);
     void userCountChanged(int oldCount, int newCount);
     void userRemoved(const QString &userName);

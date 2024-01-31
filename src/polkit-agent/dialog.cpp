@@ -247,7 +247,7 @@ void Dialog::onAuthComplete(bool success)
 {
     if (m_authController->isAuthenticated())
     {
-        emit completed(true);
+        emit this->completed(true);
         this->close();
         return;
     }

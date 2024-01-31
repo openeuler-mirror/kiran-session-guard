@@ -280,8 +280,8 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
     ui->edit->setPlaceHolderText(text);
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
     ui->edit->setEchoMode(type == PromptTypeSecret ? QLineEdit::Password : QLineEdit::Normal);
-    /// FIXME:需要延时设置输入焦点到输入框，不然又会被置回UserItem
     m_prompted = true;
+    /// NOTE:需要延时设置输入焦点到输入框，不然又会被置回UserItem
     setEditFocus(200);
 }
 
