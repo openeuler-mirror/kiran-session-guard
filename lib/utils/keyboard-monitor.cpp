@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 namespace Kiran
 {
@@ -36,61 +37,39 @@ int KeyboardMonitor::getXiMajorVersion(Display *display)
     XExtensionVersion *version;
     static int vers = -1;
 
-    if (vers != -1) return vers;
+    if (vers != -1)
+    {
+        return vers;
+    }
 
     version = XGetExtensionVersion(display, INAME);
-
-    if (version && (version != (XExtensionVersion *)NoSuchExtension))
+    if (!version || (version ==  reinterpret_cast<XExtensionVersion *>(NoSuchExtension)))
     {
-        vers = version->major_version;
-        XFree(version);
+        vers = 0;
+        return vers;
     }
 
-    /* Announce our supported version so the server treats us correctly. */
-    if (vers >= XI_2_Major)
-    {
-        const char *forced_version;
-        int maj = 2, min = 2;
-
-        forced_version = getenv("XINPUT_XI2_VERSION");
-        if (forced_version)
-        {
-            if (sscanf(forced_version, "%d.%d", &maj, &min) != 2)
-            {
-                fprintf(stderr,
-                        "Invalid format of XINPUT_XI2_VERSION "
-                        "environment variable. Need major.minor\n");
-                exit(1);
-            }
-            printf("Overriding XI2 version to: %d.%d\n", maj, min);
-        }
-
-        XIQueryVersion(display, &maj, &min);
-    }
-
+    vers = version->major_version;
+    XFree(version);
     return vers;
 }
 
 void KeyboardMonitor::selectEvents(Display *display)
 {
-    XIEventMask m;
-    m.deviceid = XIAllMasterDevices;
-    m.mask_len = XIMaskLen(XI_LASTEVENT);
-    m.mask = (unsigned char *)calloc(m.mask_len, sizeof(char));
+    XIEventMask evmask;
+    unsigned char mask[XIMaskLen(XI_LASTEVENT)] = {0};
 
-    XISetMask(m.mask, XI_RawKeyRelease);
-    //    XISetMask(m.mask, XI_RawKeyPress);
-    //    XISetMask(m.mask, XI_RawButtonPress);
-    //    XISetMask(m.mask, XI_RawButtonRelease);
-    //    XISetMask(m.mask, XI_RawMotion);
-    //    XISetMask(m.mask, XI_RawTouchBegin);
-    //    XISetMask(m.mask, XI_RawTouchUpdate);
-    //    XISetMask(m.mask, XI_RawTouchEnd);
+    memset(&evmask, 0, sizeof(evmask));
+    memset(mask, 0, sizeof(mask));
 
-    XISelectEvents(display, DefaultRootWindow(display), &m, 1);
+    XISetMask(mask, XI_RawKeyRelease);
 
-    free(m.mask);
-    XSync(display, False);
+    evmask.deviceid = XIAllMasterDevices;
+    evmask.mask_len = sizeof(mask);
+    evmask.mask = mask;
+
+    XISelectEvents(display, DefaultRootWindow(display), &evmask, 1);
+    XFlush(display);
 }
 
 int KeyboardMonitor::listenXiEvent(Display *display)
@@ -118,7 +97,7 @@ int KeyboardMonitor::listenXiEvent(Display *display)
                 }
                 else if (sym == XKB_KEY_Num_Lock)
                 {
-                    emit numlockStatusChanged(isNumlockOn());
+                    emit this->numlockStatusChanged(isNumlockOn());
                 }
                 break;
             }

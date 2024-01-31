@@ -59,7 +59,7 @@ private slots:
     void handleSessionShowInfo(const QString& text);
 
 private:
-    AuthControllerInterface* m_controllerInterface;
+    AuthControllerInterface* m_controllerInterface = nullptr;
     QString m_cookie;
     PolkitQt1::Agent::Session* m_session = nullptr;
     PolkitQt1::Identity m_identity;

@@ -44,8 +44,8 @@ private slots:
     void slotReadyReadStandardOutput();
 
 private:
-    QWidget *m_keyboardWidget;
-    QProcess *m_process;
+    QWidget *m_keyboardWidget = nullptr;
+    QProcess *m_process = nullptr;
     QWidget *m_keyboardEmbed = nullptr;
 };
 }  // namespace SessionGuard

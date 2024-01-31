@@ -24,9 +24,10 @@ namespace SessionGuard
 {
 namespace Greeter
 {
-LoginButton::LoginButton(QWidget *parent) : QWidget(parent),
-                                            ui(new Ui::LoginButton),
-                                            m_pressed(false)
+LoginButton::LoginButton(QWidget *parent)
+    : QWidget(parent),
+      ui(new Ui::LoginButton),
+      m_pressed(false)
 {
     ui->setupUi(this);
     ui->label_text->setText(tr("login"));

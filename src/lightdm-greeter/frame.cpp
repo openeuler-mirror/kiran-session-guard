@@ -110,7 +110,7 @@ void Frame::initMenus()
     auto setMenuAttributes = [](QMenu* menu)
     {
         menu->setAttribute(Qt::WA_TranslucentBackground);  // 透明必需
-        // FIXME:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
+        // NOTE:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
         // 控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
         menu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  // 透明必需
         menu->setContentsMargins(0, 0, 0, 0);
@@ -165,7 +165,7 @@ void Frame::initUI()
 {
     resize(1024, 768);
 
-    /// FIXME:因弹出窗口不是作为新的窗口，而是作为一个控件，需要我们去做隐藏
+    /// NOTE:因弹出窗口不是作为新的窗口，而是作为一个控件，需要我们去做隐藏
     /// 开始监听整个应用程序事件，在窗口点击事件中判断隐藏菜单
     qApp->installEventFilter(this);
 
@@ -205,7 +205,7 @@ void Frame::initUI()
 
     // 初始化添加右下控件
     // 获取菜单弹出坐标,按钮和触发菜单右对齐
-    // FIXME: Qt在特定虚拟机环境下QMenu::popup传入正确的pos时,QMenu通过Pos找到screen,但screen的大小错误(为调整分辨率之前的分辨率)
+    // NOTE: Qt在特定虚拟机环境下QMenu::popup传入正确的pos时,QMenu通过Pos找到screen,但screen的大小错误(为调整分辨率之前的分辨率)
     // 导致popup pos被修改成在错误的屏幕范围内
     auto getMenuPopupPos = [this](QMenu* menu, const QToolButton* triggerBtn) -> QPoint
     {
