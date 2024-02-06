@@ -253,7 +253,7 @@ void Dialog::onAuthComplete(bool success)
     }
     else
     {
-        onAuthShowMessage("Authentication error", MessageTypeError);
+        onAuthShowMessage(tr("Authentication error"), MessageTypeError);
 
         ui->edit->lineEdit()->clear();
         ui->edit->setEnabled(false);
