@@ -22,6 +22,7 @@
 #include <QMutex>
 #include <QScopedPointer>
 #include <QScreen>
+#include <QFileInfo>
 
 #define ONBOARD_LAYOUT "Compact"
 #define ONBOARD_THEME "Blackboard"
@@ -61,10 +62,18 @@ VirtualKeyboard::~VirtualKeyboard()
 
 bool VirtualKeyboard::init(QWidget *parent)
 {
+    if( !QFileInfo::exists("/usr/bin/onboard") )
+    {
+        m_isSupported = false;
+        return false;
+    }
+
     if (m_keyboardWidget != nullptr)
     {
         return false;
     }
+
+    m_isSupported = true;
     m_process = new QProcess(this);
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &VirtualKeyboard::slot_finished);
@@ -96,6 +105,11 @@ bool VirtualKeyboard::init(QWidget *parent)
                                               << "-t" ONBOARD_THEME << "-l" ONBOARD_LAYOUT << "-d"
                                               << "all");
     return true;
+}
+
+bool VirtualKeyboard::isSupported()
+{
+    return m_isSupported;
 }
 
 bool VirtualKeyboard::isVisible()

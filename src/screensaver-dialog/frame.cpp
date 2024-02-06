@@ -175,7 +175,14 @@ void Frame::initUI()
 
     rbBtnLayout->addItem(rbBtnLayoutItem);
     rbBtnLayout->addWidget(m_btnSwitchToGreeter, 1);
-    rbBtnLayout->addWidget(m_btnKeyboard, 1);
+    if( VirtualKeyboard::instance()->isSupported() )
+    {
+        rbBtnLayout->addWidget(m_btnKeyboard, 1);
+    }
+    else
+    {
+        m_btnKeyboard->setVisible(false);
+    }
     rbBtnLayout->addWidget(m_btnPower, 1);
     setRightBottomWidget(rbBtnWidget);
 
