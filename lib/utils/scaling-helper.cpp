@@ -23,12 +23,12 @@ namespace Kiran
 {
 namespace SessionGuard
 {
-void ScalingHelper::set_scale_factor(double factor)
+void ScalingHelper::set_scale_factor(qreal factor)
 {
     qputenv("QT_SCALE_FACTOR", QString::number(factor).toUtf8());
 }
 
-void ScalingHelper::auto_calculate_screen_scaling()
+qreal ScalingHelper::auto_calculate_screen_scaling()
 {
     Display *display = nullptr;
     XRRScreenResources *resources = nullptr;
@@ -40,7 +40,7 @@ void ScalingHelper::auto_calculate_screen_scaling()
     {
         KLOG_WARNING("auto_calculate_screen_scaling failed,set QT_AUTO_SCREEN_SCALE_FACTOR=1");
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
-        return;
+        return scale_factor;
     }
 
     resources = XRRGetScreenResourcesCurrent(display, DefaultRootWindow(display));
@@ -59,7 +59,7 @@ void ScalingHelper::auto_calculate_screen_scaling()
         }
         KLOG_WARNING("auto_calculate_screen_scaling failed,set QT_AUTO_SCREEN_SCALE_FACTOR=1");
         qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
-        return;
+        return scale_factor;
     }
 
     for (int i = 0; i < resources->noutput; i++)
@@ -132,7 +132,7 @@ void ScalingHelper::auto_calculate_screen_scaling()
         KLOG_WARNING() << "set scale factor failed.";
     }
 
-    return;
+    return scale_factor;
 }
 
 }  // namespace SessionGuard
