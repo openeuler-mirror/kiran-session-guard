@@ -306,7 +306,14 @@ void Frame::initUI()
 
     rbBtnLayout->addItem(rbBtnLayoutItem);
     rbBtnLayout->addWidget(m_btnSession, 1);
-    rbBtnLayout->addWidget(m_btnKeyboard, 1);
+    if( VirtualKeyboard::instance()->isSupported() )
+    {
+        rbBtnLayout->addWidget(m_btnKeyboard, 1);
+    }
+    else
+    {
+        m_btnKeyboard->setVisible(false);
+    }
     rbBtnLayout->addWidget(m_btnPower, 1);
 
     setRightBottomWidget(rbBtnWidget);
@@ -316,7 +323,7 @@ void Frame::initAuth()
 {
     AuthLightdm* auth = new AuthLightdm(m_greeter);
     LoginFrame::initAuth(auth);
-    connect(m_greeter.data(),&QLightDM::Greeter::autologinTimerExpired,this,&Frame::onAutoLoginTimeout);
+    connect(m_greeter.data(), &QLightDM::Greeter::autologinTimerExpired, this, &Frame::onAutoLoginTimeout);
 }
 
 void Frame::initConnection()
