@@ -1,3 +1,16 @@
+/**
+ * Copyright (c) 2020 ~ 2024 KylinSec Co., Ltd.
+ * kiran-session-guard is licensed under Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *          http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+ * EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ *
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
+ */
 #include "auth-type-switcher.h"
 #include <qt5-log-i.h>
 #include <QDebug>
@@ -21,9 +34,9 @@ AuthTypeSwitcher::AuthTypeSwitcher(AuthTypeDrawerExpandDirection direction, int 
     m_drawer = new AuthTypeDrawer(direction, radius, parent, this);
     connect(m_drawer, &AuthTypeDrawer::authTypeClicked, this, &AuthTypeSwitcher::onAuthTypeChanged);
     // clang-format off
-    connect(m_drawer, &AuthTypeDrawer::expandedStatusChanged, [this](bool expaned){ 
+    connect(m_drawer, &AuthTypeDrawer::expandedStatusChanged, [this](bool expaned){
         m_isExpanded = expaned;
-        update(); 
+        update();
     });
     // clang-format on
 }

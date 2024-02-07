@@ -65,14 +65,6 @@
             </arg>
         </method>
 
-        <!--<method name="SetGlobalAuthModes">
-            <arg name="auth_modes" direction="in" type="i">
-                <description>Bitwise OR the enabled authorization mode.</description>
-            </arg>>
-            <description>Set the global enabled authentication modes. It will reset to all users using the auth_modes
-            and also use the auth_modes when user is added.</description>
-        </method>-->
-
         <property name="rsa_public_key" type="s" access="read">
             <description>The RSA public key.</description>
         </property>

@@ -74,7 +74,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="290"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="311"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -82,32 +82,32 @@
 <context>
     <name>Kiran::SessionGuard::AuthTypeSwitcher</name>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="55"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="68"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="56"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="69"/>
         <source>finger auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="57"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="70"/>
         <source>password auth</source>
         <translation>密码认证</translation>
     </message>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="58"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="71"/>
         <source>finger vein auth</source>
         <translation>指静脉认证</translation>
     </message>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="59"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="72"/>
         <source>iris auth</source>
         <translation>虹膜认证</translation>
     </message>
     <message>
-        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="60"/>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="73"/>
         <source>ukey auth</source>
         <translation>UKey认证</translation>
     </message>
@@ -120,28 +120,43 @@
         <translation>认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="187"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="228"/>
         <source>fingerprint auth</source>
         <translation>指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="188"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="229"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="189"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="230"/>
         <source>fingervein auth</source>
         <translation>指静脉认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="231"/>
+        <source>iris auth</source>
+        <translation>虹膜认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="256"/>
+        <source>Authentication error</source>
+        <translation>认证错误</translation>
     </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Listener</name>
     <message>
-        <location filename="../src/polkit-agent/listener.cpp" line="51"/>
-        <location filename="../src/polkit-agent/listener.cpp" line="72"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="73"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="94"/>
         <source>Existing authentication is in progress, please try again later</source>
         <translation>已存在正在进行的认证，请稍后再进行尝试</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/listener.cpp" line="150"/>
+        <source>Authentication Error</source>
+        <translation>认证错误</translation>
     </message>
 </context>
 <context>

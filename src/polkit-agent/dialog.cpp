@@ -247,13 +247,13 @@ void Dialog::onAuthComplete(bool success)
 {
     if (m_authController->isAuthenticated())
     {
-        emit completed(true);
+        emit this->completed(true);
         this->close();
         return;
     }
     else
     {
-        onAuthShowMessage("Authentication error", MessageTypeError);
+        onAuthShowMessage(tr("Authentication error"), MessageTypeError);
 
         ui->edit->lineEdit()->clear();
         ui->edit->setEnabled(false);

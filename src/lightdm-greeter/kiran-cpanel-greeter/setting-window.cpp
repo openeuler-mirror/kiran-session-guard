@@ -435,7 +435,6 @@ void SettingWindow::initUserComboBox(QComboBox *combo)
             iconFile.clear();
         }
     };
-    QVector<UserInfo> userInfoVector;
 
     QStringList users = UserManager::getCachedUsers();
     users.append("root");

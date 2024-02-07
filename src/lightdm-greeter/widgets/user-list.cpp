@@ -281,8 +281,9 @@ QString UserList::getIconByUserName(const QString &userName)
 UserInfo UserList::getUserInfoByUserName(const QString &userName)
 {
     UserInfo info;
+    int rowCout = m_filterModel.rowCount(QModelIndex());
 
-    for (int i = 0; i < m_filterModel.rowCount(QModelIndex()); i++)
+    for (int i = 0; i < rowCout; i++)
     {
         UserInfo userInfo;
         getUserInfoFromModel(i, userInfo);
@@ -339,10 +340,10 @@ void UserList::onModelRowsRemoved(const QModelIndex &parent, int first, int last
         const QString userName = item->text();
         QListWidgetItem *removedItem = ui->userList->takeItem(i);
         delete removedItem;
-        emit userRemoved(userName);
+        emit this->userRemoved(userName);
     }
     int newCount = userCount();
-    emit userCountChanged(oldCount, newCount);
+    emit this->userCountChanged(oldCount, newCount);
     updateGeometry();
 }
 
@@ -359,7 +360,7 @@ void UserList::onModelRowsInserted(const QModelIndex &parent, int first, int las
     KLOG_DEBUG() << "row inserted: "
                  << "cout[" << ui->userList->count() << "]";
     updateGeometry();
-    emit userCountChanged(oldCount, newCount);
+    emit this->userCountChanged(oldCount, newCount);
 }
 
 void UserList::onAppFocusChanged(QWidget *oldFocus, QWidget *newFocus)
@@ -409,10 +410,10 @@ void UserList::onDataChanged(const QModelIndex &topLeft,
             break;
         }
     };
-    int startRow = topLeft.row();
-    int endRow = topLeft.row();
 
-    // FIXME: QLightdDM此处信号发出时roles为默认参数, 无法判断数据变化范围
+    int startRow = topLeft.row();
+    int endRow = bottomRight.row();
+    // NOTE: QLightdDM此处信号发出时roles为默认参数, 无法判断数据变化范围
     // 检查图片更新,用户列表中的顺序可能和用户不一致
     for (int i = startRow; i <= endRow; i++)
     {

@@ -31,20 +31,22 @@ using namespace ::Kiran::SessionGuard;
 using namespace ::Kiran::SessionGuard::Greeter;
 
 // 根据配置项,调整缩放率
-void adjustScaleFactor(Prefs* prefs)
+qreal adjustScaleFactor(Prefs* prefs)
 {
+    qreal factor = 1.0;
+
     /// 设置缩放比
     switch (prefs->scale_mode())
     {
     case GREETER_SCALING_MODE_AUTO:
     {
-        ScalingHelper::auto_calculate_screen_scaling();
+        factor = ScalingHelper::auto_calculate_screen_scaling();
         break;
     }
     case GREETER_SCALING_MODE_MANUAL:
     {
-        double scaleFcator = prefs->scale_factor();
-        ScalingHelper::set_scale_factor(scaleFcator);
+        factor = prefs->scale_factor();
+        ScalingHelper::set_scale_factor(factor);
         break;
     }
     case GREETER_SCALING_MODE_DISABLE:
@@ -53,6 +55,8 @@ void adjustScaleFactor(Prefs* prefs)
         KLOG_ERROR("enable-scaling: unsupported options %d", prefs->scale_mode());
         break;
     }
+
+    return factor;
 }
 
 // 加载样式表
@@ -91,12 +95,12 @@ bool loadTranslator()
 }
 
 // 设置当前光标缩放,以及Root窗口光标避免开始会话到进入会话之中的空窗期光标错误显示
-void setCursor(Prefs* prefs)
+void setCursor(qreal factor)
 {
     // 光标放大
-    if (!CursorHelper::setDefaultCursorSize(prefs->scale_factor()))
+    if (!CursorHelper::setDefaultCursorSize(factor))
     {
-        KLOG_ERROR("set default cursor size for factor %d failed!", prefs->scale_factor());
+        KLOG_ERROR("set default cursor size for factor %f failed!", factor);
     }
 
     // 登录成功和进入桌面的间隔会显示根窗口，为了避免显示根窗口时光标显示为"X",需设置ROOT窗口光标
@@ -121,12 +125,12 @@ int main(int argc, char* argv[])
 
     Prefs::globalInit();
     auto prefs = Prefs::getInstance();
-    adjustScaleFactor(prefs);
+    qreal factor = adjustScaleFactor(prefs);
 
     QApplication app(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    setCursor(prefs);
+    setCursor(factor);
     loadTranslator();
     loadStyleSheet();
 
