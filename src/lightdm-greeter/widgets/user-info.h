@@ -24,6 +24,8 @@ namespace Greeter
 {
 struct UserInfo
 {
+    UserInfo():uid(0),hasMessage(false),loggedIn(false)
+    {};
     QString name;
     QString realName;
     QString session;

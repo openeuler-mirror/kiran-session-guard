@@ -1,12 +1,23 @@
 variables:
   EXTRA_DNF_REPOS: |
-                   [KiranBase2.4]
-                   name=KiranBase2.4
+                   [Kiran2.6]
+                   name=Kiran2.6
                    gpgcheck=0
-                   baseurl=http://192.168.120.71/kojifiles/repos/KY3.5-1-Kiran-base-2.4-build/latest/x86_64/
-  RPM_BUILD_REQUIRES: 'gcc-c++ cmake libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel lightdm-qt5-devel pam-devel  qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel qt5-qtsvg-devel gsettings-qt-devel  kiran-widgets-qt5-devel kiran-log-qt5-devel kiran-biometrics-devel kiran-authentication-service-devel kiran-cc-daemon-devel kiran-control-panel-devel kiran-qt5-integration-devel kiran-screensaver-devel'
-
+                   baseurl=http://build.kylinsec.com.cn:82/KylinSec:/3.5.2:/Customize:/Kiran2.6/standard_x86_64/
+                   [KylinSec_3.5.2_Epol]
+                   name=KylinSec 3.5.2 (standard_x86_64)
+                   baseurl=http://build.kylinsec.com.cn:82/KylinSec:/3.5.2:/Epol/standard_x86_64/
+                   enabled=1
+                   gpgcheck=0
+                   [KylinSec_3.5.2_Mainline]
+                   name=KylinSec 3.5.2 (standard_x86_64)
+                   baseurl=http://build.kylinsec.com.cn:82/KylinSec:/3.5.2:/Mainline/standard_x86_64/
+                   gpgcheck=0
+                   gpgkey=http://build.kylinsec.com.cn:82/KylinSec:/3.5.2:/Mainline/standard_x86_64/repodata/repomd.xml.key
+                   enabled=1
+  RPM_BUILD_REQUIRES: 'cmake gcc-c++ libXtst-devel libX11-devel libXrandr-devel libXcursor-devel libXfixes-devel glib2-devel lightdm-qt5-devel pam-devel libxkbcommon-devel qt5-qtbase-devel qt5-linguist qt5-qtx11extras-devel qt5-qtsvg-devel gsettings-qt-devel kiran-widgets-qt5-devel kiran-log-qt5-devel kiran-authentication-service-devel kiran-cc-daemon-devel kiran-control-panel-devel kiran-qt5-integration-devel kiran-qdbusxml2cpp kiran-screensaver-devel polkit-qt5-1-devel'
 include:
-  - project: 'os/gitlab-ci'
+  - project: 'os/ks-devops'
     ref: main
-    file: '/cmake/cxx.gitlab-ci.yml'
+    file: '/entrypoint/develop/cmake.yml'
+

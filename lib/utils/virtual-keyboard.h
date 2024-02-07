@@ -29,8 +29,9 @@ public:
     ~VirtualKeyboard();
 
     static VirtualKeyboard *instance();
-
     bool init(QWidget *parent = nullptr);
+    bool isSupported();
+
     void hide();
     bool isVisible();
     void showAdjustSize(QWidget *parent = nullptr);
@@ -39,13 +40,13 @@ public:
 
 public slots:
     void slot_finished(int exitCode, QProcess::ExitStatus exitStatus);
-
 private slots:
     void slotReadyReadStandardOutput();
 
 private:
-    QWidget *m_keyboardWidget;
-    QProcess *m_process;
+    bool m_isSupported = false;
+    QWidget *m_keyboardWidget = nullptr;
+    QProcess *m_process = nullptr;
     QWidget *m_keyboardEmbed = nullptr;
 };
 }  // namespace SessionGuard

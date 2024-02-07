@@ -43,12 +43,12 @@ bool kiran_pam_message_send(int fd, QJsonDocument& content)
     QByteArray qByteArray = content.toJson();
     uint32_t contentLength = qByteArray.length();
 
-    if (sendStream.writeRawData((const char*)&contentLength, sizeof(contentLength)) == -1)
+    if (sendStream.writeRawData(reinterpret_cast<const char*>(&contentLength), sizeof(contentLength)) == -1)
     {
         return false;
     }
 
-    if (sendStream.writeRawData((const char*)qByteArray.data(), qByteArray.length()) == -1)
+    if (sendStream.writeRawData(const_cast<const char*>(qByteArray.data()), qByteArray.length()) == -1)
     {
         return false;
     }

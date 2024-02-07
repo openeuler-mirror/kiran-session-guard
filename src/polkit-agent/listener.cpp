@@ -147,7 +147,7 @@ void Listener::onAuthDialogCompleted(bool isSuccess)
 {
     if (!isSuccess)
     {
-        m_result->setError("Authentication Error");
+        m_result->setError(tr("Authentication Error"));
     }
     m_inProcess = false;
 

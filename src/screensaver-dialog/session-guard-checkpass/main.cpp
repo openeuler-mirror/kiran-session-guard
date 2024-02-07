@@ -33,7 +33,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
     struct pam_response *reply = NULL;
     char *username = nullptr;
 
-    reply = (struct pam_response *)calloc(num_msg, sizeof(*reply));
+    reply = static_cast<pam_response *>(calloc(num_msg, sizeof(pam_response)));
     if (reply == nullptr)
     {
         KLOG_ERROR() << "can't malloc memory for replies,return PAM_CONV_ERR";
@@ -56,14 +56,14 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
 
             if (!kiran_pam_message_send_event(CHANNEL_WRITE, &event))
             {
-                //发送消息失败
+                // 发送消息失败
                 KLOG_DEBUG() << "send pam message to parent process failed!";
                 replyRet = PAM_CONV_ERR;
             }
             else
             {
                 PamEvent *recvReply = nullptr;
-                //接收消息失败
+                // 接收消息失败
                 if (!kiran_pam_message_recv_event(CHANNEL_READ, &recvReply))
                 {
                     KLOG_ERROR() << "recv pam prompt reply failed";
@@ -71,7 +71,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                 }
                 else
                 {
-                    //消息类型不正确
+                    // 消息类型不正确
                     if (recvReply->type() != PamEvent::PromptReply)
                     {
                         KLOG_ERROR() << "recv event is not reply!";
@@ -80,8 +80,8 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                     else
                     {
                         auto replyEvent = dynamic_cast<PromptReplyEvent *>(recvReply);
-                        //KLOG_DEBUG() << "recv prompt reply:" << replyEvent->result() << replyEvent->text();
-                        //消息返回失败
+                        // KLOG_DEBUG() << "recv prompt reply:" << replyEvent->result() << replyEvent->text();
+                        // 消息返回失败
                         if (!replyEvent->result())
                         {
                             replyRet = PAM_CONV_ERR;
@@ -89,8 +89,10 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                         else
                         {
                             reply[i].resp_retcode = PAM_SUCCESS;
-                            reply[i].resp = (char *)calloc(1, replyEvent->text().length() + 1);
-                            strcpy(reply[i].resp, replyEvent->text().toStdString().c_str());
+                            reply[i].resp = static_cast<char *>(calloc(1, replyEvent->text().length() + 1));
+                            strncpy(reply[i].resp,
+                                    replyEvent->text().toStdString().c_str(),
+                                    replyEvent->text().length());
                         }
                     }
                 }
@@ -103,7 +105,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
             MessageEvent messageEvent(msg->msg_style == PAM_ERROR_MSG, msg->msg);
             if (!kiran_pam_message_send_event(CHANNEL_WRITE, &messageEvent))
             {
-                //发送消息失败
+                // 发送消息失败
                 KLOG_DEBUG() << "send pam message to parent process failed!";
                 replyRet = PAM_CONV_ERR;
             }
@@ -141,7 +143,7 @@ int main(int argc, char *argv[])
                   "kiran-screensaver-dialog",
                   "kiran-session-guard-checkpass");
 
-    ///判断参数合法性
+    /// 判断参数合法性
     if (argc != 3)
     {
         KLOG_ERROR() << "usage: pam-authproxy-checkpass READFD WRITEFD USERNAME";
@@ -172,8 +174,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    ///安全性
-    //可以参考lightdm session-child
+    /// 安全性
+    // 可以参考lightdm session-child
     /* Protect memory from being paged to disk, as we deal with passwords */
     mlockall(MCL_CURRENT | MCL_FUTURE);
 
@@ -187,7 +189,7 @@ int main(int argc, char *argv[])
                  << "\t write fd:      " << CHANNEL_WRITE << "\n"
                  << "\t authproxy user name:" << userName;
 
-    ///开始pam认证
+    /// 开始pam认证
     // clang-format off
     struct pam_conv conv = {
         .conv = &conversation,
@@ -201,7 +203,7 @@ int main(int argc, char *argv[])
         KLOG_WARNING() << "failed to start pam:" << pam_strerror(pamh, ret);
         return EXIT_FAILURE;
     }
-    
+
     int authRes = PAM_SUCCESS;
     authRes = pam_authenticate(pamh, 0);
     const char *newUserName;

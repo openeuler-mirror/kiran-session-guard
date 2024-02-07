@@ -27,17 +27,13 @@ namespace SessionGuard
 namespace PolkitAgent
 {
 MoreInfoButton::MoreInfoButton(QWidget* parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      m_expandPix(style()->standardPixmap(QStyle::SP_ArrowUp)),
+      m_shrinkPix(style()->standardPixmap(QStyle::SP_ArrowRight)),
+      m_iconSize(QSize(16, 16)),
+      m_text(QString("more info"))
 {
-    m_shrinkPix = style()->standardPixmap(QStyle::SP_ArrowRight);
-    m_expandPix = style()->standardPixmap(QStyle::SP_ArrowUp);
-
-    m_iconSize = QSize(16, 16);
-
-    // m_shrinkPix = m_shrinkPix.scaled(m_iconSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    // m_expandPix = m_expandPix.scaled(m_iconSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-
-    setText("more info");
+    setText(m_text);
 }
 
 MoreInfoButton::~MoreInfoButton()

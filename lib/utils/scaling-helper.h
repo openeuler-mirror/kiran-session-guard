@@ -13,15 +13,15 @@
  */
 
 #pragma once
-
+#include <QtMath>
 namespace Kiran
 {
 namespace SessionGuard
 {
 namespace ScalingHelper
 {
-void auto_calculate_screen_scaling();
-void set_scale_factor(double factor);
+qreal auto_calculate_screen_scaling();
+void set_scale_factor(qreal factor);
 }  // namespace ScalingHelper
 
 }  // namespace SessionGuard
