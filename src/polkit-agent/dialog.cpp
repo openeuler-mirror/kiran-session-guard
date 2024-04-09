@@ -163,7 +163,11 @@ void Dialog::startAuth(const QString& userName)
         m_authController->cancelAuthentication();
     }
 
+    ui->btn_ok->setVisible(true);
     ui->btn_ok->setEnabled(false);
+
+    ui->btn_reauth->setVisible(false);
+
     ui->edit->setEnabled(false);
     ui->edit->lineEdit()->setPlaceholderText("");
     ui->edit->lineEdit()->clear();
