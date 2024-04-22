@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020 ~ 2021 KylinSec Co., Ltd.
+ * Copyright (c) 2020 ~ 2024 KylinSec Co., Ltd.
  * kiran-session-guard is licensed under Mulan PSL v2.
  * You can use this software according to the terms and conditions of the Mulan PSL v2.
  * You may obtain a copy of Mulan PSL v2 at:
@@ -9,34 +9,35 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
  */
+#include "greeter-interface.h"
+#include "greeter-subitem.h"
 
-#include "kcp-interface.h"
-#include "setting-window.h"
-
-#include <qt5-log-i.h>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QTranslator>
-
-#define KCP_SUBITEM_GREETER_ID "Greeter"
+#include <QLocale>
+#include <qt5-log-i.h>
 
 namespace Kiran
 {
 namespace SessionGuard
 {
-namespace Greeter
+GreeterInterface::GreeterInterface(QObject* parent)
+    :QObject()
 {
-KcpInterface::KcpInterface()
-{
+
 }
 
-KcpInterface::~KcpInterface()
+GreeterInterface::~GreeterInterface()
 {
+
 }
 
-int KcpInterface::init()
+int GreeterInterface::init(KiranControlPanel::PanelInterface* interface)
 {
+    m_panelInterface = interface;
+
     if (m_translator != nullptr)
     {
         QCoreApplication::removeTranslator(m_translator);
@@ -51,7 +52,7 @@ int KcpInterface::init()
                             "/usr/share/lightdm-kiran-greeter/translations",
                             ".qm"))
     {
-        KLOG_ERROR() << "load translator failed!";
+        KLOG_ERROR() << "greeter plugin load translator failed!";
         m_translator->deleteLater();
         m_translator = nullptr;
     }
@@ -60,32 +61,23 @@ int KcpInterface::init()
         QCoreApplication::installTranslator(m_translator);
     }
 
+    m_subitem.reset(new GreeterSubItem(interface, this));
     return 0;
 }
 
-void KcpInterface::uninit()
+void GreeterInterface::uninit()
 {
-}
-QWidget* KcpInterface::getSubItemWidget(QString subItemName)
-{
-    QWidget* widget = nullptr;
-    if (subItemName == KCP_SUBITEM_GREETER_ID)
+    if (m_translator != nullptr)
     {
-        widget = new SettingWindow;
+        qApp->removeTranslator(m_translator);
+        m_translator->deleteLater();
+        m_translator = nullptr;
     }
-    m_currentWidget = widget;
-    return m_currentWidget;
 }
 
-bool KcpInterface::haveUnsavedOptions()
+QVector<KiranControlPanel::SubItemPtr> GreeterInterface::getSubItems()
 {
-    return false;
+    return {m_subitem};
 }
-
-QStringList KcpInterface::visibleSubItems()
-{
-    return QStringList() << KCP_SUBITEM_GREETER_ID;
 }
-}  // namespace Greeter
-}  // namespace SessionGuard
-}  // namespace Kiran
+}
