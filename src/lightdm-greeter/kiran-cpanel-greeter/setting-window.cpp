@@ -39,6 +39,9 @@
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 
+#define ITEM_GENERAL_SETTINGS    QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","general settings")
+#define ITEM_AUTO_LOGIN_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","autologin")
+
 enum GreeterSettingsPageEnum
 {
     GreeterSettings_Appearance,
@@ -91,11 +94,11 @@ void SettingWindow::initUI()
     layoutSideWidget->addWidget(m_sidebarWidget);
 
     QListWidgetItem *item;
-    item = new QListWidgetItem(tr("general settings"), m_sidebarWidget);
+    item = new QListWidgetItem(tr(ITEM_GENERAL_SETTINGS), m_sidebarWidget);
     item->setIcon(QIcon(":/kcp-greeter/images/appearance_setting.png"));
     m_sidebarWidget->addItem(item);
 
-    item = new QListWidgetItem(tr("autologin"), m_sidebarWidget);
+    item = new QListWidgetItem(tr(ITEM_AUTO_LOGIN_SETTINGS), m_sidebarWidget);
     item->setIcon(QIcon(":/kcp-greeter/images/user_login_setting.png"));
     m_sidebarWidget->addItem(item);
 
@@ -701,6 +704,27 @@ GreeterSettingInfo::AutoLoginSetting SettingWindow::getAutologinSettingInfoFromB
 QSize SettingWindow::sizeHint() const
 {
     return {940, 653};
+}
+
+QVector<QPair<QString,QString>> SettingWindow::getSearchKeys()
+{
+    QVector<QPair<QString,QString>> searchEntries = {
+        {tr(ITEM_GENERAL_SETTINGS),tr(ITEM_GENERAL_SETTINGS)},
+        {tr(ITEM_AUTO_LOGIN_SETTINGS),tr(ITEM_AUTO_LOGIN_SETTINGS)}
+    };
+
+    return searchEntries;
+}
+
+void SettingWindow::jumpToSearchKey(const QString& subItem)
+{
+    auto resList = m_sidebarWidget->findItems(subItem,Qt::MatchFixedString);
+    if( resList.isEmpty() )
+    {
+        KLOG_ERROR() << "greeter plugin can't find SubItem:" << subItem;
+        return;
+    }
+    m_sidebarWidget->setCurrentItem(resList.at(0));
 }
 
 void SettingWindow::onLoginOptionsChanged()

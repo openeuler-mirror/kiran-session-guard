@@ -99,6 +99,9 @@ public:
 
     QSize sizeHint() const override;
 
+    static QVector<QPair<QString,QString>> getSearchKeys();
+    void jumpToSearchKey(const QString& subItem);
+
 private:
     void initUI();
 
