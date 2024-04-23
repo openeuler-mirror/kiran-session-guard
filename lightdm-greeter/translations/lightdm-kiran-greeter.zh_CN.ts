@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AuthProxy</name>
     <message>
@@ -28,68 +28,72 @@
     </message>
     <message>
         <location filename="../src/greeterloginwindow.ui" line="665"/>
-        <location filename="../src/greeter-login-window.cpp" line="529"/>
+        <location filename="../src/greeter-login-window.cpp" line="584"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="93"/>
+        <location filename="../src/greeter-login-window.cpp" line="138"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="94"/>
+        <location filename="../src/greeter-login-window.cpp" line="139"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="95"/>
+        <location filename="../src/greeter-login-window.cpp" line="140"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="144"/>
+        <location filename="../src/greeter-login-window.cpp" line="189"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="150"/>
+        <location filename="../src/greeter-login-window.cpp" line="195"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="156"/>
+        <location filename="../src/greeter-login-window.cpp" line="201"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="162"/>
+        <location filename="../src/greeter-login-window.cpp" line="207"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="576"/>
-        <location filename="../src/greeter-login-window.cpp" line="739"/>
+        <location filename="../src/greeter-login-window.cpp" line="631"/>
+        <location filename="../src/greeter-login-window.cpp" line="794"/>
         <source>Return</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="588"/>
+        <location filename="../src/greeter-login-window.cpp" line="643"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="623"/>
-        <source>dddd MMM HH:mm</source>
+        <location filename="../src/greeter-login-window.cpp" line="678"/>
+        <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="794"/>
+        <source>dddd MMM HH:mm</source>
+        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
+    </message>
+    <message>
+        <location filename="../src/greeter-login-window.cpp" line="849"/>
         <source>Start face authentication</source>
         <translation>开始人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/greeter-login-window.cpp" line="805"/>
+        <location filename="../src/greeter-login-window.cpp" line="860"/>
         <source>Start fingerprint authentication</source>
         <translation>开始指纹认证</translation>
     </message>
