@@ -675,7 +675,7 @@ QString GreeterLoginWindow::getCurrentDateTime()
 {
     QDateTime dateTime = QDateTime::currentDateTime();
     //tr : MM月MM日 dddd HH:mm
-    QString res = dateTime.toString(tr("dddd MMM HH:mm"));
+    QString res = dateTime.toString(tr("ddd MMM dd HH:mm"));
     return res;
 }
 
