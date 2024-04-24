@@ -39,8 +39,8 @@
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 
-#define ITEM_GENERAL_SETTINGS    QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","general settings")
-#define ITEM_AUTO_LOGIN_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","autologin")
+#define ITEM_GENERAL_SETTINGS    QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","General")
+#define ITEM_AUTO_LOGIN_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","Autologin")
 
 enum GreeterSettingsPageEnum
 {

@@ -89,13 +89,21 @@ Select discard to discard the modification and reload the new configuration</sou
 <context>
     <name>Kiran::SessionGuard::Greeter::SettingWindow</name>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="42"/>
         <source>general settings</source>
+        <translation type="vanished">登录选项</translation>
+    </message>
+    <message>
+        <source>autologin</source>
+        <translation type="vanished">自动登录</translation>
+    </message>
+    <message>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="42"/>
+        <source>General</source>
         <translation>登录选项</translation>
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="43"/>
-        <source>autologin</source>
+        <source>Autologin</source>
         <translation>自动登录</translation>
     </message>
     <message>
@@ -192,7 +200,7 @@ Select discard to discard the modification and reload the new configuration</sou
         <translation>保存失败: %1</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="730"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="741"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation>请确保两个选项之一被打开!</translation>
     </message>
