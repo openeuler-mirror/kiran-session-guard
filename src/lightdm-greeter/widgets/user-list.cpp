@@ -185,6 +185,20 @@ void UserList::setRow0()
     setCurrentRow(0);
 }
 
+bool UserList::setCurrentRow(const QString &userName)
+{
+    auto matchRes = m_filterModel.match(m_filterModel.index(0,0),
+                    UsersModel::NameRole,userName,
+                    1,Qt::MatchExactly);
+    if(matchRes.size() == 0)
+    {
+        return false;
+    }
+
+    setCurrentRow(matchRes.at(0).row());
+    return true;
+}
+
 bool UserList::getUserInfoFromModel(int row, UserInfo &userInfo)
 {
     QVariant value;

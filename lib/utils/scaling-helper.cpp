@@ -43,6 +43,20 @@ qreal ScalingHelper::auto_calculate_screen_scaling()
         return scale_factor;
     }
 
+    int event_base = 0, error_base = 0;
+    int version_major = 0, version_minor = 0;
+    if (!XRRQueryExtension(display, &event_base, &error_base) ||
+        !XRRQueryVersion(display, &version_major, &version_minor))
+    {
+        KLOG_WARNING("XRRQueryExtension|XRRQueryVersion failed!");
+        return scale_factor;
+    }
+    if( version_minor < 3 )
+    {
+        KLOG_WARNING("Xorg RANDR version < 1.3!");
+        return scale_factor;
+    }
+
     resources = XRRGetScreenResourcesCurrent(display, DefaultRootWindow(display));
     if (!resources)
     {

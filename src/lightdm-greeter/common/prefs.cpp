@@ -60,6 +60,9 @@ void Prefs::init()
     auto numInitState = settings.value("numlock-init-state");
     m_numlockInitState = numInitState.toBool();
 
+    auto defaultLoginUser = settings.value("default-login-user","");
+    m_defaultLoginUser = defaultLoginUser.toString();
+
     settings.endGroup();
 
     /// power
@@ -100,6 +103,11 @@ QStringList Prefs::hiddenSessions()
 QStringList Prefs::hiddenUsers()
 {
     return m_hiddenUsers;
+}
+
+QString Prefs::getDefaultLoginUser()
+{
+    return m_defaultLoginUser;
 }
 
 bool Prefs::canPowerOff()
