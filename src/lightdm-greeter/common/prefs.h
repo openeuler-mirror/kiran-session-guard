@@ -32,6 +32,7 @@ public:
 
     QStringList hiddenSessions();
     QStringList hiddenUsers();
+    QString getDefaultLoginUser();
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
@@ -52,6 +53,7 @@ private:
     static Prefs* m_instance;
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
+    QString m_defaultLoginUser;
     bool m_numlockInitState = true;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
