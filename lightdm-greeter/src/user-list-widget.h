@@ -36,6 +36,7 @@ public:
     void loadUserList();
     bool getCurrentSelected(UserInfo &userInfo);
     void setRow0();
+    bool setCurrentRow(const QString &userName);
     void JustForTest(int count);
     QString getIconByUserName(const QString &userName);
     UserInfo getUserInfoByUserName(const QString &userName);

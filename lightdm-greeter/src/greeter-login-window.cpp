@@ -616,15 +616,23 @@ void GreeterLoginWindow::resetUIForUserListLogin()
 
     setCurrentAuthType(AUTH_TYPE_PASSWD);
 
-    UserInfo userinfo;
-    if (ui->userlist->getCurrentSelected(userinfo))
+    auto defaultLoginUser = KiranGreeterPrefs::instance()->getDefaultLoginUser();
+    if (!defaultLoginUser.isEmpty())
     {
-        slotUserActivated(userinfo);
+        if( !ui->userlist->setCurrentRow(defaultLoginUser) )
+        {
+            KLOG_WARNING() << "default login user:" << defaultLoginUser << "not found";
+            ui->userlist->setRow0();
+        }
     }
     else
     {
         ui->userlist->setRow0();
     }
+
+    UserInfo userinfo;
+    ui->userlist->getCurrentSelected(userinfo);
+    slotUserActivated(userinfo);
 }
 
 void GreeterLoginWindow::resetUIForManualLogin()
