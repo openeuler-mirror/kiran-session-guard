@@ -44,6 +44,8 @@ public:
     bool getCurrentSelected(UserInfo &userInfo);
 
     void setRow0();
+    bool setCurrentRow(const QString &userName);
+
     QString getIconByUserName(const QString &userName);
     UserInfo getUserInfoByUserName(const QString &userName);
     int userCount();

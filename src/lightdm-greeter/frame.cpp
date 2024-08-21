@@ -356,8 +356,21 @@ void Frame::reset(State state)
         m_btnLoginOther->setVisible(m_allowManualLogin);
         m_btnLoginOther->setText(tr("login other user"));
 
+        QString defaultLoginUser = m_prefs->getDefaultLoginUser();
+        if( !defaultLoginUser.isEmpty() )
+        {
+            if( !m_userList->setCurrentRow(defaultLoginUser) )
+            {
+                KLOG_WARNING() << "default login user" << defaultLoginUser << "is not exist";
+                m_userList->setRow0();
+            }
+        }
+        else
+        {
+            m_userList->setRow0();
+        }
+
         UserInfo info;
-        m_userList->setRow0();
         m_userList->getCurrentSelected(info);
         onUserSelected(info.name);
         break;
