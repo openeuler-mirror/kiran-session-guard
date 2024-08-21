@@ -59,6 +59,9 @@ KiranGreeterPrefs::KiranGreeterPrefs()
     auto numlockInitState = settings.value("numlock-init-state");
     m_numlockInitState = numlockInitState.toBool();
 
+    auto defaultLoginUser = settings.value("default-login-user","");
+    m_defaultLoginUser = defaultLoginUser.toString();
+
     settings.endGroup();
 
     ///power
@@ -99,6 +102,11 @@ QStringList KiranGreeterPrefs::hiddenSessions()
 QStringList KiranGreeterPrefs::hiddenUsers()
 {
     return m_hiddenUsers;
+}
+
+QString KiranGreeterPrefs::getDefaultLoginUser()
+{
+    return m_defaultLoginUser;
 }
 
 bool KiranGreeterPrefs::canPowerOff()
