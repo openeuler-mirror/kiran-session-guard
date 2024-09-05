@@ -26,7 +26,11 @@ using namespace ::Kiran::SessionGuard::PolkitAgent;
 int main(int argc, char* argv[])
 {
     Q_INIT_RESOURCE(commonWidgets);
-
+    // 用户内单例可能存在同一用户登录多个图形会话（本地+远程）
+    // 加入DISPLAY信息一起做进程单例的判断，确保一个会话内只存在一个。
+    // XDG_SESSION_ID不可用，部分图形会话可能不会新创建。
+    // 后续新版本，应将该方法内置到KiranSingleApplication。
+    KiranSingleApplication::addApplicationIDUserData(qgetenv("DISPLAY"));
     KiranSingleApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
 
