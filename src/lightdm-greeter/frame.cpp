@@ -314,8 +314,14 @@ void Frame::initUI()
     {
         m_btnKeyboard->setVisible(false);
     }
-    rbBtnLayout->addWidget(m_btnPower, 1);
 
+    if( m_prefs->canPowerOff() ||
+        m_prefs->canReboot() ||
+        m_prefs->canSuspend() ||
+        m_prefs->canHibernate() )
+    {
+        rbBtnLayout->addWidget(m_btnPower, 1);
+    }
     setRightBottomWidget(rbBtnWidget);
 }
 
