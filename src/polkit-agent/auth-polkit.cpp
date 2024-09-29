@@ -112,6 +112,7 @@ void AuthPolkit::handleSessionCompleted(bool gainedAuthorization)
 {
     m_gainedAuthorization = gainedAuthorization;
 
+    m_session->blockSignals(true);
     m_session->cancel();
     m_session->deleteLater();
     m_session = nullptr;
