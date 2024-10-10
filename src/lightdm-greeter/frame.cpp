@@ -322,6 +322,10 @@ void Frame::initUI()
     {
         rbBtnLayout->addWidget(m_btnPower, 1);
     }
+    else
+    {
+        m_btnPower->setVisible(false);
+    }
     setRightBottomWidget(rbBtnWidget);
 }
 
