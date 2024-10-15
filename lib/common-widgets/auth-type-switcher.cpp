@@ -34,8 +34,8 @@ AuthTypeSwitcher::AuthTypeSwitcher(AuthTypeDrawerExpandDirection direction, int 
     m_drawer = new AuthTypeDrawer(direction, radius, parent, this);
     connect(m_drawer, &AuthTypeDrawer::authTypeClicked, this, &AuthTypeSwitcher::onAuthTypeChanged);
     // clang-format off
-    connect(m_drawer, &AuthTypeDrawer::expandedStatusChanged, [this](bool expaned){
-        m_isExpanded = expaned;
+    connect(m_drawer, &AuthTypeDrawer::expandedStatusChanged, [this](bool expanded){
+        m_isExpanded = expanded;
         update();
     });
     // clang-format on
