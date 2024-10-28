@@ -1,6 +1,8 @@
 set(TARGET_NAME lightdm-kiran-greeter)
 
 pkg_search_module(LIGHTDM_QT5 REQUIRED liblightdm-qt5-3)
+pkg_search_module(XCB REQUIRED xcb)
+pkg_search_module(XCB_RANDR REQUIRED xcb-randr)
 
 file(GLOB COMMON_SRC  "common/*.cpp" "common/*.h")
 file(GLOB WIDGETS_SRC "widgets/*.cpp" "widgets/*.h" "widgets/*.ui")
@@ -30,6 +32,8 @@ target_include_directories(${TARGET_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
         ./common
         ./src/
+        ${XCB_INCLUDE_DIRS}
+        ${XCB_RANDR_INCLUDE_DIRS}
         ${LIGHTDM_QT5_INCLUDE_DIRS}
         ${KLOG_QT5_INCLUDE_DIRS}
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
@@ -44,6 +48,8 @@ target_link_libraries(${TARGET_NAME}
         Qt5::DBus
         Qt5::X11Extras
         pthread
+        ${XCB_LIBRARIES}
+        ${XCB_RANDR_LIBRARIES}
         ${LIGHTDM_QT5_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
