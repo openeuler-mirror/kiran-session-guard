@@ -24,6 +24,7 @@
 #include "screen-manager.h"
 #include "term-signal-handler.h"
 #include "virtual-keyboard.h"
+#include "app-native-event-filter.h"
 
 #define DEFAULT_STYLE_FILE ":/greeter/stylesheets/lightdm-kiran-greeter-normal.qss"
 
@@ -129,6 +130,17 @@ int main(int argc, char* argv[])
 
     QApplication app(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    //监听x11事件，处理屏幕从无到有，并配置屏幕
+    AppNativeEventFilter appNativeEventFilter;
+    if( appNativeEventFilter.init() )
+    {
+        a.installNativeEventFilter(&appNativeEventFilter);
+    }
+    else
+    {
+        KLOG_ERROR() << "can't install app native event filter!";
+    }
 
     setCursor(factor);
     loadTranslator();
