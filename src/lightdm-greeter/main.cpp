@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     AppNativeEventFilter appNativeEventFilter;
     if( appNativeEventFilter.init() )
     {
-        a.installNativeEventFilter(&appNativeEventFilter);
+        app.installNativeEventFilter(&appNativeEventFilter);
     }
     else
     {
