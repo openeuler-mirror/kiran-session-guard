@@ -175,7 +175,11 @@ void Frame::initUI()
 
     rbBtnLayout->addItem(rbBtnLayoutItem);
     rbBtnLayout->addWidget(m_btnSwitchToGreeter, 1);
-    if( VirtualKeyboard::instance()->isSupported() )
+
+    // 初始化虚拟键盘
+    m_keyboard = new VirtualKeyboard(this);
+    m_keyboard->init();
+    if( m_keyboard->isSupported() )
     {
         rbBtnLayout->addWidget(m_btnKeyboard, 1);
     }
@@ -183,6 +187,7 @@ void Frame::initUI()
     {
         m_btnKeyboard->setVisible(false);
     }
+
     rbBtnLayout->addWidget(m_btnPower, 1);
     setRightBottomWidget(rbBtnWidget);
 
@@ -191,10 +196,6 @@ void Frame::initUI()
     {
         m_btnPower->setVisible(false);
     }
-
-    // 初始化虚拟键盘
-    m_keyboard = VirtualKeyboard::instance();
-    m_keyboard->init();
 
     // 加载样式表
     QFile file(DEFAULT_STYLE_PATH);
