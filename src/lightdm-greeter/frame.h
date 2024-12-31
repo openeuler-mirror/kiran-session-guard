@@ -66,7 +66,7 @@ private:
     void authUserInputed(const QString& userName) override;
     // 认证用户认证完成
     void authenticateComplete(bool authRes, const QString& userName) override;
-
+    bool shouldShowFullName() override;
 private slots:
     void onUserSelected(const QString& name);
     void onUserListUserCountChanged(int oldCount, int newCount);

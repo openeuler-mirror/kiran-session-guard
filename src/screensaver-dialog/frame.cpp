@@ -242,6 +242,11 @@ void Frame::authenticateComplete(bool authRes, const QString& userName)
     }
 }
 
+bool Frame::shouldShowFullName()
+{
+    return Prefs::getInstance()->showFullName();
+}
+
 QWidget* Frame::get_widget_ptr()
 {
     return this;
