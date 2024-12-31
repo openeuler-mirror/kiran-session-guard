@@ -52,6 +52,7 @@ else()
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
+        common
         common-widgets
         scaling-helper
         auth-proxy

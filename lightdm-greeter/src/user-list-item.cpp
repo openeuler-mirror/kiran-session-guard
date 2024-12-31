@@ -14,6 +14,7 @@
 
 #include "user-list-item.h"
 #include <QPainter>
+#include "kiran-greeter-prefs.h"
 #include "ui_user-list-item.h"
 #include "user-info.h"
 
@@ -34,7 +35,14 @@ void UserListItem::setUserInfo(const UserInfo &userInfo)
 {
     m_userInfo = userInfo;
     ui->avatar->setImage(userInfo.imagePath);
-    ui->label_username->setText(userInfo.name);
+
+    QString displayName = userInfo.name;
+    if (KiranGreeterPrefs::instance()->showFullName() && !userInfo.realName.isEmpty())
+    {
+        displayName = userInfo.realName;
+    }
+    ui->label_username->setText(displayName);
+
     if (userInfo.loggedIn)
     {
         ui->label_logined->setPixmap(QPixmap(":/images/checked.png"));

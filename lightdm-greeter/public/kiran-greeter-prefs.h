@@ -27,6 +27,7 @@ public:
     QStringList hiddenSessions();
     QStringList hiddenUsers();
     QString getDefaultLoginUser();
+    bool showFullName();
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
@@ -46,6 +47,7 @@ private:
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
     QString m_defaultLoginUser;
+    bool m_showFullName = false;
     bool m_numlockInitState = true;
     
     bool m_canPowerOff = true;
