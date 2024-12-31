@@ -272,7 +272,6 @@ void GreeterLoginWindow::initUI()
     ///切换模式按钮和返回按钮
     connect(ui->btn_notListAndCancel, &QToolButton::pressed,
             this, &GreeterLoginWindow::slotButtonClicked);
-#ifdef VIRTUAL_KEYBOARD
     connect(ui->btn_keyboard, &QToolButton::pressed, [this] {
         VirtualKeyboard *keyboard = VirtualKeyboard::instance();
         if (keyboard->isVisible())
@@ -285,9 +284,12 @@ void GreeterLoginWindow::initUI()
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
-#else
-    ui->btn_keyboard->setVisible(false);
-#endif
+    if (!VirtualKeyboard::instance()->isSupported())
+    {
+        ui->btn_keyboard->setVisible(false);
+    }
+    
+
     ///用户列表请求重置用户选择登录界面
     connect(ui->userlist, &UserListWidget::sigRequestResetUI, [this] {
         Q_ASSERT(m_loginMode == LOGIN_MODE_USER_LIST);
@@ -478,8 +480,7 @@ void GreeterLoginWindow::initSettings()
 void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
-#ifdef VIRTUAL_KEYBOARD
-    if (!event->isAccepted())
+    if (VirtualKeyboard::instance()->isSupported() && !event->isAccepted())
     {
         if (VirtualKeyboard::instance()->getKeyboard() != nullptr &&
             VirtualKeyboard::instance()->getKeyboard()->isVisible())
@@ -487,7 +488,6 @@ void GreeterLoginWindow::mousePressEvent(QMouseEvent *event)
             VirtualKeyboard::instance()->getKeyboard()->hide();
         }
     }
-#endif
 }
 
 /**
@@ -826,16 +826,6 @@ void GreeterLoginWindow::slotAuthenticationComplete(bool success)
 {
     if (success)
     {
-#ifdef VIRTUAL_KEYBOARD
-        //在关闭时若虚拟键盘的副窗口设置为当前窗口的话，则更改父窗口,避免释放相关X资源导致onboard释放出错，导致onboard崩溃
-        if (VirtualKeyboard::instance()->getKeyboard())
-        {
-            if (VirtualKeyboard::instance()->getKeyboard()->parentWidget() == this)
-            {
-                VirtualKeyboard::instance()->getKeyboard()->setParent(nullptr);
-            }
-        }
-#endif
         if (!m_greeterPtr->startSessionSync(m_session))
         {
             KLOG_WARNING() << "start session failed,session:" << m_session;

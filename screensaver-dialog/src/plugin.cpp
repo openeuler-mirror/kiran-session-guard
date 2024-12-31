@@ -46,6 +46,7 @@ int KSPlugin::init(Interface* ksInterface)
     {
         KLOG_WARNING() << "can't load kiran-screensaver-dialog translator";
     }
+
     return 0;
 }
 

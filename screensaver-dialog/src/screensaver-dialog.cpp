@@ -102,17 +102,11 @@ ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface* ksInterface,
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
-#ifdef VIRTUAL_KEYBOARD
-    if( m_keyboard )
+    if( m_keyboard->isSupported() && m_keyboard->isVisible() )
     {
-        auto keyboardWidget = m_keyboard->getKeyboard();
-        if (m_keyboard->getKeyboard() && m_keyboard->getKeyboard()->parentWidget()==this)
-        {
-            m_keyboard->getKeyboard()->setParent(nullptr);
-        }
+        m_keyboard->getKeyboard()->setParent(nullptr);
     }
-#endif
-        delete ui;
+    delete ui;
 }
 
 QWidget *ScreenSaverDialog::get_widget_ptr()
@@ -233,6 +227,9 @@ bool ScreenSaverDialog::fadeOut()
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 void ScreenSaverDialog::init()
 {
+    m_keyboard = new VirtualKeyboard(this);
+    m_keyboard->init();
+
     initAuth();
     initUI();
     initAnimation();
@@ -285,14 +282,6 @@ void ScreenSaverDialog::initUI()
         m_authProxy->respond(ui->promptEdit->getText());
     });
 
-
-#ifdef VIRTUAL_KEYBOARD
-    m_keyboard = new VirtualKeyboard(this);
-
-    if (!m_keyboard->init())
-    {
-        KLOG_WARNING() << "init virtual keyboard failed!";
-    }
     connect(ui->btn_keyboard, &QToolButton::pressed, this, [this] {
         if (m_keyboard->isVisible())
         {
@@ -305,9 +294,10 @@ void ScreenSaverDialog::initUI()
         }
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
-#else
-    ui->btn_keyboard->setVisible(false);
-#endif
+    if( !m_keyboard->isSupported() )
+    {
+        ui->btn_keyboard->setVisible(false);
+    }
 
     // 切换用户按钮
     connect(ui->btn_switchuser, &QToolButton::pressed, this, [=] {

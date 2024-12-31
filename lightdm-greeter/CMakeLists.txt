@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lightdm-kiran-greeter)
 
-#是否开启虚拟键盘
-option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
-
 #登录中隐藏的用户列表，以‘，’分割
 set(HIDDEN_USER "" CACHE STRING "hidden user list,separated by commas")
 
@@ -113,11 +110,6 @@ target_link_libraries(${PROJECT_NAME}
         ${XCB_LIBRARIES}
         ${XCB_RANDR_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES})
-
-#是否添加虚拟键盘
-if (SHOW_VIRTUAL_KEYBOARD)
-    add_definitions(-DVIRTUAL_KEYBOARD)
-endif()
 
 #安装lightdm-kiran-greeter
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_SBINDIR})
