@@ -36,12 +36,13 @@ public:
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
-
+    bool showFullName();
 private:
     static Prefs* m_instance;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;
+    bool m_showFullName = false;
 };
 }  // namespace Locker
 }  // namespace SessionGuard

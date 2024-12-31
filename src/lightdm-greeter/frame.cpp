@@ -430,6 +430,11 @@ void Frame::authenticateComplete(bool authRes, const QString& userName)
     }
 }
 
+bool Frame::shouldShowFullName()
+{
+    return m_prefs->showFullName();
+}
+
 void Frame::onUserSelected(const QString& name)
 {
     RETURN_IF_FALSE(name != m_userName);

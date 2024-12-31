@@ -16,6 +16,7 @@
 #include <QMutex>
 #include <QScopedPointer>
 #include <QSettings>
+#include <QDebug>
 
 namespace Kiran
 {
@@ -29,10 +30,10 @@ Prefs::Prefs()
 
 void Prefs::init()
 {
-    QSettings settings("/usr/share/kiran-session-guard/screensaver-dialog.ini", QSettings::IniFormat);
-    ///power
-    settings.beginGroup("Power");
+    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver-dialog.ini", QSettings::IniFormat);
 
+    //power
+    settings.beginGroup("Power");
     auto powerOffEnable = settings.value("can-poweroff");
     m_canPowerOff = powerOffEnable.toBool();
 
@@ -41,6 +42,12 @@ void Prefs::init()
 
     auto suspendEnable = settings.value("can-suspend");
     m_canSuspend = suspendEnable.toBool();
+    settings.endGroup();
+
+    //common
+    settings.beginGroup("Common");
+    auto showFullName = settings.value("show-fullname",false);
+    m_showFullName = showFullName.toBool();
 }
 
 Prefs::~Prefs()
@@ -67,6 +74,11 @@ bool Prefs::canReboot()
 bool Prefs::canSuspend()
 {
     return m_canSuspend;
+}
+
+bool Prefs::showFullName()
+{
+    return m_showFullName;
 }
 
 }  // namespace Locker

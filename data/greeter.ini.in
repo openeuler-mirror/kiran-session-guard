@@ -12,6 +12,9 @@ numlock-init-state=@NUMLOCK_INIT_STATE@
 #指定登录界面默认的登录用户
 #default-login-user=
 
+#登录界面是否显示FullName
+show-fullname=@SHOW_FULLNAME@
+
 [Power]
 ##以下选项由logind配置文件共同决定
 ##若都为开启则登录界面进行显示

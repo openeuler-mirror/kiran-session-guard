@@ -65,7 +65,7 @@ private:
     virtual void authUserInputed(const QString &userName){};
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString &userName);
-
+    virtual bool shouldShowFullName() override;
 public:
     // override LockerInterface
     QWidget *get_widget_ptr() override;

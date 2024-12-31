@@ -16,6 +16,7 @@
 #include <QPainter>
 #include "ui_user-item.h"
 #include "user-info.h"
+#include "prefs.h"
 
 namespace Kiran
 {
@@ -40,7 +41,15 @@ void UserItem::setUserInfo(const UserInfo &userInfo)
 {
     m_userInfo = userInfo;
     ui->avatar->setImage(userInfo.imagePath);
-    ui->label_username->setText(userInfo.name);
+
+    QString displayName = userInfo.name;
+    if (Prefs::getInstance()->showFullName() && !userInfo.realName.isEmpty())
+    {
+        displayName = userInfo.realName;
+    }
+
+    ui->label_username->setText(displayName);
+
     if (userInfo.loggedIn)
     {
         ui->label_logined->setPixmap(QPixmap(":/greeter/images/checked.png"));
