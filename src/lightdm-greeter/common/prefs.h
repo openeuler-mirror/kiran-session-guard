@@ -38,6 +38,7 @@ public:
     bool canSuspend();
     bool canHibernate();
     bool numlockInitState();
+    bool showFullName();
 
 private:
     Prefs();
@@ -54,6 +55,7 @@ private:
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
     QString m_defaultLoginUser;
+    bool m_showFullName = false;
     bool m_numlockInitState = true;
     bool m_canPowerOff = true;
     bool m_canReboot = true;

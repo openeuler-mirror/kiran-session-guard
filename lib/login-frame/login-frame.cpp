@@ -90,7 +90,22 @@ void LoginFrame::setAuthUserInfo(const QString& userName)
 {
     QString icon = UserManager::getUserIcon(userName);
     ui->avatar->setImage(icon);
-    ui->userName->setText(userName);
+
+    QString displayName = userName;
+    if( shouldShowFullName() )
+    {
+        QString fullName = UserManager::getUserRealName(userName);
+        if( !fullName.isEmpty() )
+        {
+            KLOG_DEBUG() << userName << "show full name:" << fullName;
+            displayName = fullName;
+        }
+        else
+        {
+            KLOG_DEBUG() << userName << "full name empty";
+        }
+    }
+    ui->userName->setText(displayName);
 }
 
 void LoginFrame::startAuthUser(const QString& userName)
