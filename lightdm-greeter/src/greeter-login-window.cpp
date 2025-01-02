@@ -36,6 +36,7 @@
 #include "ui_greeterloginwindow.h"
 #include "virtual-keyboard.h"
 #include "common/dbusapi.h"
+#include "user-utils.h"
 
 Q_DECLARE_METATYPE(UserInfo);
 using namespace QLightDM;
@@ -557,7 +558,16 @@ void GreeterLoginWindow::startAuthUser(const QString &username, QString userIcon
 
     m_havePrompted = false;
 
-    ui->label_userName->setText(username);
+    auto displayName = username;
+    if( KiranGreeterPrefs::instance()->showFullName() )
+    {
+        auto fullName = UserUtils::getUserFullName(username);
+        if( !fullName.isEmpty() )
+        {
+            displayName = fullName;
+        }
+    }
+    ui->label_userName->setText(displayName);
     ui->loginAvatar->setImage(userIcon);
 
     if (username == m_greeterPtr->autologinUserHint())
@@ -802,10 +812,10 @@ void GreeterLoginWindow::slotShowprompt(QString text, Kiran::PromptType type)
     //用户手动登录，需要设置用户名
     if (m_loginMode == LOGIN_MODE_MANUAL)
     {
-        if (m_authProxy->authenticationUser() != ui->label_userName->text())
-        {
-            ui->label_userName->setText(m_authProxy->authenticationUser());
-        }
+        // if (m_authProxy->authenticationUser() != ui->label_userName->text())
+        // {
+        //     ui->label_userName->setText(m_authProxy->authenticationUser());
+        // }
         //显示返回按钮
         m_buttonType = BUTTON_RETURN;
         ui->btn_notListAndCancel->setText(tr("Return"));

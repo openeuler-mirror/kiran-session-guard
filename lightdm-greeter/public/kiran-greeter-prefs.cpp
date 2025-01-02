@@ -62,6 +62,9 @@ KiranGreeterPrefs::KiranGreeterPrefs()
     auto defaultLoginUser = settings.value("default-login-user","");
     m_defaultLoginUser = defaultLoginUser.toString();
 
+    auto showFullName = settings.value("show-fullname",false);
+    m_showFullName = showFullName.toBool();
+
     settings.endGroup();
 
     ///power
@@ -107,6 +110,11 @@ QStringList KiranGreeterPrefs::hiddenUsers()
 QString KiranGreeterPrefs::getDefaultLoginUser()
 {
     return m_defaultLoginUser;
+}
+
+bool KiranGreeterPrefs::showFullName()
+{
+    return m_showFullName;
 }
 
 bool KiranGreeterPrefs::canPowerOff()
