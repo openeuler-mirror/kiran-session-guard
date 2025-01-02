@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(kiran-screensaver-dialog)
 
-option(SHOW_VIRTUAL_KEYBOARD "show virtual keyboard" OFF)
-
 #是否显示关机选项
 set(CAN_POWER_OFF true CACHE BOOL "shutdown button display")
 #是否显示重启选项
@@ -47,10 +45,6 @@ file(GLOB_RECURSE RESOURCES "resources/*.qrc")
 set( TS_FILES "translations/kiran-screensaver-dialog.zh_CN.ts" )
 file(GLOB_RECURSE AUTH_PROXY_SRC ../lib/auth-proxy/*.cpp ../lib/auth-proxy/*.h ../lib/auth-proxy/*.ui)
 qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES} ${AUTH_PROXY_SRC} )
-
-if(SHOW_VIRTUAL_KEYBOARD)
-    add_definitions(-DVIRTUAL_KEYBOARD)
-endif()
 
 if(BUILD_SCREENSAVER_PLUGIN)
     add_library(${PROJECT_NAME} SHARED ${SRC} ${RESOURCES} ${QM_FILES})
