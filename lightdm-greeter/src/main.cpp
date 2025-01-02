@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "../../lib/common-widgets/virtual-keyboard.h"
+#include "virtual-keyboard.h"
 #include "cursor-helper.h"
 #include "greeter-login-window.h"
 #include "greeter-screen-manager.h"
@@ -149,10 +149,8 @@ int main(int argc, char *argv[])
         KLOG_ERROR("load style sheet failed!");
     }
 
-#ifdef VIRTUAL_KEYBOARD
     ///初始键盘配置
     VirtualKeyboard::instance()->init();
-#endif
 
     ///初始化屏幕管理,在屏幕管理中创建背景窗口和登录窗口，负责处理屏幕增加删除的情况
     GreeterScreenManager screenManager;

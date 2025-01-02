@@ -21,6 +21,7 @@ public:
     static Prefs* instance();
     ~Prefs();
 
+    bool showFullName();
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
@@ -29,6 +30,7 @@ private:
     Prefs();
 
 private:
+    bool m_showFullName = false;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;

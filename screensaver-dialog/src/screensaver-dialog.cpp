@@ -14,23 +14,23 @@
 
 #include "screensaver-dialog.h"
 
-#include <qt5-log-i.h>
 #include <pwd.h>
+#include <qt5-log-i.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <iostream>
 
 #include <QDebug>
 #include <QFile>
-//#include <QGraphicsDropShadowEffect>
+// #include <QGraphicsDropShadowEffect>
+#include <kiran-screensaver/interface.h>
+#include <QApplication>
 #include <QMenu>
 #include <QMetaObject>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QWindow>
 #include <QtDBus>
-#include <QApplication>
-#include <kiran-screensaver/interface.h>
 
 #include "auth-msg-queue.h"
 #include "auth-pam.h"
@@ -40,6 +40,7 @@
 #include "prefs.h"
 #include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
+#include "user-utils.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
@@ -48,49 +49,8 @@ QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-QString get_current_user()
-{
-    uid_t uid = getuid();
-    KLOG_INFO() << "current uid:" << uid;
 
-    long bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (bufSize == -1)
-    {
-        KLOG_WARNING() << "autodetect getpw_r bufsize failed.";
-        return QString("");
-    }
-
-    std::vector<char> buf(bufSize);
-    struct passwd pwd;
-    struct passwd *pResult = nullptr;
-    int iRet = 0;
-
-    do
-    {
-        iRet = getpwuid_r(uid, &pwd, &buf[0], bufSize, &pResult);
-        if (iRet == ERANGE)
-        {
-            bufSize *= 2;
-            buf.resize(bufSize);
-        }
-    } while ((iRet == EINTR) || (iRet == ERANGE));
-
-    if (iRet != 0)
-    {
-        KLOG_ERROR() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
-        return QString("");
-    }
-
-    if (pResult == nullptr)
-    {
-        KLOG_ERROR() << "getpwuid_r no matching password record was found";
-        return QString("");
-    }
-
-    return pResult->pw_name;
-}
-
-ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface* ksInterface,QWidget *parent)
+ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface *ksInterface, QWidget *parent)
     : QWidget(parent),
       m_ksInterface(ksInterface),
       ui(new Ui::ScreenSaverDialog)
@@ -101,17 +61,14 @@ ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface* ksInterface,
 
 ScreenSaverDialog::~ScreenSaverDialog()
 {
-#ifdef VIRTUAL_KEYBOARD
-    if( m_keyboard )
+    if (m_keyboard->isSupported() &&
+        m_keyboard->isVisible() &&
+        m_keyboard->getKeyboard())
     {
-        auto keyboardWidget = m_keyboard->getKeyboard();
-        if (m_keyboard->getKeyboard() && m_keyboard->getKeyboard()->parentWidget()==this)
-        {
-            m_keyboard->getKeyboard()->setParent(nullptr);
-        }
+        m_keyboard->getKeyboard()->setParent(nullptr);
     }
-#endif
-        delete ui;
+
+    delete ui;
 }
 
 QWidget *ScreenSaverDialog::get_widget_ptr()
@@ -153,7 +110,7 @@ void ScreenSaverDialog::setAnimationDuration(int fadeInMs, int fadeOutMs)
         if (m_animation.state() == QPropertyAnimation::Running &&
             m_animation.direction() == QPropertyAnimation::Forward)
         {
-            //QVariantAnimation会自动计算更新当前剩余时间
+            // QVariantAnimation会自动计算更新当前剩余时间
             m_animation.setDuration(fadeInMs);
         }
         m_fadeInDurationMs = fadeInMs;
@@ -177,21 +134,20 @@ bool ScreenSaverDialog::fadeVisible()
 
 bool ScreenSaverDialog::fadeIn()
 {
-    if(m_fadeVisible)
+    if (m_fadeVisible)
     {
         return true;
     }
 
     m_fadeVisible = true;
 
-    if(m_fadeDelayTimer!=0)
+    if (m_fadeDelayTimer != 0)
     {
         killTimer(m_fadeDelayTimer);
         m_fadeDelayTimer = 0;
     }
 
-
-    if(m_animationEnabled)
+    if (m_animationEnabled)
     {
         m_fadeDelayTimer = startTimer(m_fadeInDelayMs);
     }
@@ -205,20 +161,20 @@ bool ScreenSaverDialog::fadeIn()
 
 bool ScreenSaverDialog::fadeOut()
 {
-    if(!m_fadeVisible)
+    if (!m_fadeVisible)
     {
         return true;
     }
 
     m_fadeVisible = false;
 
-    if(m_fadeDelayTimer!=0)
+    if (m_fadeDelayTimer != 0)
     {
         killTimer(m_fadeDelayTimer);
         m_fadeDelayTimer = 0;
     }
 
-    if(m_animationEnabled)
+    if (m_animationEnabled)
     {
         m_fadeDelayTimer = startTimer(m_fadeOutDelayMs);
     }
@@ -232,6 +188,9 @@ bool ScreenSaverDialog::fadeOut()
 #define DEFAULT_STYLE_PATH ":/styles/kiran-screensaver-dialog-normal.qss"
 void ScreenSaverDialog::init()
 {
+    m_keyboard = new VirtualKeyboard(this);
+    m_keyboard->init();
+
     initAuth();
     initUI();
     initAnimation();
@@ -280,19 +239,11 @@ void ScreenSaverDialog::initAuth()
 void ScreenSaverDialog::initUI()
 {
     // 输入框回车或点击解锁按钮时，回复给认证接口
-    connect(ui->promptEdit, &PromptEdit::textConfirmed, this, [=] {
-        m_authProxy->respond(ui->promptEdit->getText());
-    });
+    connect(ui->promptEdit, &PromptEdit::textConfirmed, this, [=]
+            { m_authProxy->respond(ui->promptEdit->getText()); });
 
-
-#ifdef VIRTUAL_KEYBOARD
-    m_keyboard = new VirtualKeyboard(this);
-
-    if (!m_keyboard->init())
-    {
-        KLOG_WARNING() << "init virtual keyboard failed!";
-    }
-    connect(ui->btn_keyboard, &QToolButton::pressed, this, [this] {
+    connect(ui->btn_keyboard, &QToolButton::pressed, this, [this]
+            {
         if (m_keyboard->isVisible())
         {
             m_keyboard->hide();
@@ -302,77 +253,87 @@ void ScreenSaverDialog::initUI()
             //虚拟键盘通过传入的父窗口调整大小并进行显示
             m_keyboard->showAdjustSize(this);
         }
-        this->window()->windowHandle()->setKeyboardGrabEnabled(true);
-    });
-#else
-    ui->btn_keyboard->setVisible(false);
-#endif
+        this->window()->windowHandle()->setKeyboardGrabEnabled(true); });
+    if( !m_keyboard->isSupported() )
+    {
+        ui->btn_keyboard->setVisible(false);
+    }
 
     // 切换用户按钮
-    connect(ui->btn_switchuser, &QToolButton::pressed, this, [=] {
+    connect(ui->btn_switchuser, &QToolButton::pressed, this, [=]
+            {
         QTimer::singleShot(2000, this, SLOT(responseCancelAndQuit()));
         if (!DBusApi::DisplayManager::switchToGreeter())
         {
             KLOG_WARNING() << "call SwitchToGreeter failed.";
-        }
-    });
+        } });
 
     // 设置阴影
-//    QGraphicsDropShadowEffect *labelTextShadowEffect2 = new QGraphicsDropShadowEffect(ui->btn_cancel);
-//    labelTextShadowEffect2->setColor(QColor(0, 0, 0, 255 * 0.1));
-//    labelTextShadowEffect2->setBlurRadius(0);
-//    labelTextShadowEffect2->setOffset(2, 2);
-//    ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
+    //    QGraphicsDropShadowEffect *labelTextShadowEffect2 = new QGraphicsDropShadowEffect(ui->btn_cancel);
+    //    labelTextShadowEffect2->setColor(QColor(0, 0, 0, 255 * 0.1));
+    //    labelTextShadowEffect2->setBlurRadius(0);
+    //    labelTextShadowEffect2->setOffset(2, 2);
+    //    ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
 
     // 用户
-    m_userName = get_current_user();
-    ui->label_userName->setText(m_userName);
+    m_userName = UserUtils::getCurrentUser();
+
+    QString displayName = m_userName; 
+    if ( Prefs::instance()->showFullName() )
+    {
+        auto fullName = UserUtils::getUserFullName(m_userName);
+        if( !fullName.isEmpty() )
+        {
+            displayName = fullName;
+        }
+    }
+    ui->label_userName->setText(displayName);
 
     // 电源菜单
     m_powerMenu = new QMenu(this);
     m_powerMenu->setAttribute(Qt::WA_TranslucentBackground);  // 透明必需
-    //NOTE:QMenu不能为窗口，只能为子控件，不然透明效果依赖于窗口管理器混成特效与显卡
-    //控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
+    // NOTE:QMenu不能为窗口，只能为子控件，不然透明效果依赖于窗口管理器混成特效与显卡
+    // 控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
     m_powerMenu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  // 透明必需
     m_powerMenu->setFixedWidth(92);
     m_powerMenu->hide();
 
     if (Prefs::instance()->canReboot())
     {
-        m_powerMenu->addAction(tr("reboot"), this, [=] {
+        m_powerMenu->addAction(tr("reboot"), this, [=]
+                               {
             if (!DBusApi::SessionManager::reboot())
             {
                 KLOG_WARNING() << "call reboot failed";
-            }
-        });
+            } });
     }
 
     if (Prefs::instance()->canPowerOff())
     {
-        m_powerMenu->addAction(tr("shutdown"), this, [=] {
+        m_powerMenu->addAction(tr("shutdown"), this, [=]
+                               {
             if (!DBusApi::SessionManager::shutdown())
             {
                 KLOG_WARNING() << "call shutdown failed";
-            }
-        });
+            } });
     }
 
     if (Prefs::instance()->canSuspend())
     {
-        m_powerMenu->addAction(tr("suspend"), this, [=] {
+        m_powerMenu->addAction(tr("suspend"), this, [=]
+                               {
             if (!DBusApi::SessionManager::suspend())
             {
                 KLOG_WARNING() << "call suspend failed";
-            }
-        });
+            } });
     }
 
-    connect(m_powerMenu, &QMenu::triggered, this, [=] {
-        m_powerMenu->hide();
-    });
+    connect(m_powerMenu, &QMenu::triggered, this, [=]
+            { m_powerMenu->hide(); });
 
     // 电源按钮
-    connect(ui->btn_power, &QToolButton::pressed, this, [=] {
+    connect(ui->btn_power, &QToolButton::pressed, this, [=]
+            {
         if (m_powerMenu->isVisible())
         {
             m_powerMenu->hide();
@@ -389,19 +350,17 @@ void ScreenSaverDialog::initUI()
         menuLeftTop.setX(btnRightTopPos.x() - menuSize.width());
         menuLeftTop.setY(btnRightTopPos.y() - 4 - menuSize.height());
 
-        m_powerMenu->popup(menuLeftTop);
-    });
+        m_powerMenu->popup(menuLeftTop); });
     if (m_powerMenu->isEmpty())
     {
         ui->btn_power->setVisible(false);
     }
 
     // 重新认证按钮
-    connect(ui->btn_reAuth, &QPushButton::clicked, this, [=] {
-        startAuth();
-    });
+    connect(ui->btn_reAuth, &QPushButton::clicked, this, [=]
+            { startAuth(); });
 
-    //　默认禁用输入框，等待prompt消息再启用
+    // 　默认禁用输入框，等待prompt消息再启用
     ui->promptEdit->setEnabled(false);
     ui->btn_switchuser->setVisible(false);
     ui->loginAvatar->setImage(DBusApi::AccountService::getUserIconFilePath(m_userName));
@@ -591,10 +550,10 @@ bool ScreenSaverDialog::enableSwitch()
 
 void ScreenSaverDialog::timerEvent(QTimerEvent *event)
 {
-    if(event->timerId() == m_fadeDelayTimer)
+    if (event->timerId() == m_fadeDelayTimer)
     {
-        m_animation.setDirection(m_fadeVisible?QPropertyAnimation::Forward:QPropertyAnimation::Backward);
-        m_animation.setDuration(m_fadeVisible?m_fadeInDurationMs:m_fadeOutDurationMs);
+        m_animation.setDirection(m_fadeVisible ? QPropertyAnimation::Forward : QPropertyAnimation::Backward);
+        m_animation.setDuration(m_fadeVisible ? m_fadeInDurationMs : m_fadeOutDurationMs);
         m_animation.start();
     }
 

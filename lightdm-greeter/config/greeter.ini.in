@@ -6,6 +6,9 @@ hidden-sessions = xinit-compat
 #以英文逗号分割，区分大小写
 hide-users=@HIDDEN_USER@
 
+#登录界面是否显示FullName
+show-fullname=@SHOW_FULLNAME@
+
 [Power]
 ##以下选项由logind配置文件共同决定
 ##若都为开启则登录界面进行显示
