@@ -86,6 +86,8 @@ private:
     virtual void authUserInputed(const QString& userName) = 0;
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString& userName) = 0;
+    // 认证头像下方是否显示FullName
+    virtual bool shouldShowFullName() = 0;
 
 private slots:
     void onShowMessage(const QString& text, MessageType type);

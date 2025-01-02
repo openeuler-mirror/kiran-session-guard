@@ -128,6 +128,41 @@ QString getUserLastSession(const QString& name)
     return session;
 }
 
+QString getUserRealName(const QString& name)
+{
+    struct passwd pwdBuffer;
+    struct passwd* resultPwd = nullptr;
+    std::vector<char> bufferArray;
+    
+    auto bufferSize = sysconf(_SC_GETPW_R_SIZE_MAX);
+    if (bufferSize == -1)
+    {
+        bufferSize = 16384;
+    }
+    bufferArray.resize(bufferSize);
+
+    auto iRes = getpwnam_r(name.toStdString().c_str(), &pwdBuffer,
+                           &bufferArray[0], bufferArray.size(),
+                           &resultPwd);
+    if (iRes != 0 ||
+        resultPwd == nullptr ||
+        resultPwd->pw_gecos == nullptr)
+    {
+        return QString();
+    }
+
+    // pw_gecos为为段以','分割的字符串,存储用户全名/办公室/电话等信息
+    QString gecosInfo = resultPwd->pw_gecos;
+    auto gecosSplitRes = gecosInfo.split(',');
+    if (gecosSplitRes.size() < 1)
+    {
+        return QString();
+    }
+    QString realName = gecosSplitRes.at(0);
+
+    return realName;
+}
+
 QStringList getCachedUsers()
 {
     QDBusMessage msgMethodCall = QDBusMessage::createMethodCall(ACCOUNT_SERVICE_DBUS,

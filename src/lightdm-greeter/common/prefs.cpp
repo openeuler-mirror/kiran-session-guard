@@ -63,6 +63,9 @@ void Prefs::init()
     auto defaultLoginUser = settings.value("default-login-user","");
     m_defaultLoginUser = defaultLoginUser.toString();
 
+    auto showFullName = settings.value("show-fullname",false);
+    m_showFullName = showFullName.toBool();
+
     settings.endGroup();
 
     /// power
@@ -133,6 +136,11 @@ bool Prefs::canHibernate()
 bool Prefs::numlockInitState()
 {
     return m_numlockInitState;
+}
+
+bool Prefs::showFullName()
+{
+    return m_showFullName;
 }
 }  // namespace Greeter
 }  // namespace SessionGuard

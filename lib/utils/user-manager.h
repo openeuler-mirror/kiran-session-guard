@@ -24,10 +24,10 @@ namespace UserManager
 {
 QString getUserIcon(const QString& name);
 QString getUserLastSession(const QString& name);
+QString getUserRealName(const QString& name);
 QStringList getCachedUsers();
 QString getCurrentUser();
 bool switchToGreeter();
 };  // namespace UserManager
-
 }  // namespace SessionGuard
 }  // namespace Kiran

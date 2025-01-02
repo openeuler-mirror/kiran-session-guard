@@ -29,6 +29,8 @@ set(CAN_SUSPEND true CACHE BOOL "suspend button display")
 set(CAN_HIBERNATE true CACHE BOOL "hibernate button display")
 #NumLock初始化状态,是否点亮NumLock，true点亮NumLock,false不处理
 set(NUMLOCK_INIT_STATE true CACHE BOOL "NumLock initialization status")
+#是否使用FullName用于替代用户名
+set(SHOW_FULLNAME false CACHE BOOL "Whether to use FullName to replace the username")
 
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets X11Extras DBus LinguistTools)
