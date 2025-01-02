@@ -37,9 +37,14 @@ Prefs::~Prefs()
 {
 }
 
+bool Prefs::showFullName()
+{
+    return m_showFullName;
+}
+
 Prefs::Prefs()
 {
-    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver-dialog.ini",QSettings::IniFormat);
+    QSettings settings("/usr/share/kiran-screensaver-dialog/screensaver.ini",QSettings::IniFormat);
     ///power
     settings.beginGroup("Power");
 
@@ -51,6 +56,13 @@ Prefs::Prefs()
 
     auto canSuspend = settings.value("can-suspend");
     m_canSuspend = canSuspend.toBool();
+    settings.endGroup();
+    
+    ///common
+    settings.beginGroup("Common");
+    auto showFullName = settings.value("show-fullname",false);
+    m_showFullName = showFullName.toBool();
+    settings.endGroup();
 }
 
 bool Prefs::canPowerOff()

@@ -40,6 +40,7 @@
 #include "prefs.h"
 #include "ui_screensaver-dialog.h"
 #include "virtual-keyboard.h"
+#include "user-utils.h"
 
 #define SYSTEM_DEFAULT_BACKGROUND "/usr/share/backgrounds/default.jpg"
 #define DEFAULT_BACKGROUND ":/images/default_background.jpg"
@@ -48,47 +49,6 @@ QT_BEGIN_NAMESPACE
 Q_WIDGETS_EXPORT void qt_blurImage(QPainter *p, QImage &blurImage, qreal radius, bool quality, bool alphaOnly, int transposed = 0);
 QT_END_NAMESPACE
 
-QString get_current_user()
-{
-    uid_t uid = getuid();
-    KLOG_INFO() << "current uid:" << uid;
-
-    long bufSize = sysconf(_SC_GETPW_R_SIZE_MAX);
-    if (bufSize == -1)
-    {
-        KLOG_WARNING() << "autodetect getpw_r bufsize failed.";
-        return QString("");
-    }
-
-    std::vector<char> buf(bufSize);
-    struct passwd pwd;
-    struct passwd *pResult = nullptr;
-    int iRet = 0;
-
-    do
-    {
-        iRet = getpwuid_r(uid, &pwd, &buf[0], bufSize, &pResult);
-        if (iRet == ERANGE)
-        {
-            bufSize *= 2;
-            buf.resize(bufSize);
-        }
-    } while ((iRet == EINTR) || (iRet == ERANGE));
-
-    if (iRet != 0)
-    {
-        KLOG_ERROR() << "getpwuid_r failed,error: [" << iRet << "]" << strerror(iRet);
-        return QString("");
-    }
-
-    if (pResult == nullptr)
-    {
-        KLOG_ERROR() << "getpwuid_r no matching password record was found";
-        return QString("");
-    }
-
-    return pResult->pw_name;
-}
 
 ScreenSaverDialog::ScreenSaverDialog(Kiran::ScreenSaver::Interface *ksInterface, QWidget *parent)
     : QWidget(parent),
@@ -316,8 +276,18 @@ void ScreenSaverDialog::initUI()
     //    ui->btn_cancel->setGraphicsEffect(labelTextShadowEffect2);
 
     // 用户
-    m_userName = get_current_user();
-    ui->label_userName->setText(m_userName);
+    m_userName = UserUtils::getCurrentUser();
+
+    QString displayName = m_userName; 
+    if ( Prefs::instance()->showFullName() )
+    {
+        auto fullName = UserUtils::getUserFullName(m_userName);
+        if( !fullName.isEmpty() )
+        {
+            displayName = fullName;
+        }
+    }
+    ui->label_userName->setText(displayName);
 
     // 电源菜单
     m_powerMenu = new QMenu(this);

@@ -55,7 +55,9 @@ KiranGreeterPrefs::KiranGreeterPrefs()
 
     auto hiddenUsers = settings.value("hide-users");
     m_hiddenUsers = hiddenUsers.toStringList();
-
+    
+    auto showFullName = settings.value("show-fullname",false);
+    m_showFullName = showFullName.toBool();
     settings.endGroup();
 
     ///power
@@ -96,6 +98,11 @@ QStringList KiranGreeterPrefs::hiddenSessions()
 QStringList KiranGreeterPrefs::hiddenUsers()
 {
     return m_hiddenUsers;
+}
+
+bool KiranGreeterPrefs::showFullName()
+{
+    return m_showFullName;
 }
 
 bool KiranGreeterPrefs::canPowerOff()

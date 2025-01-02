@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-
-
 project(kiran-screensaver-dialog)
-
-#是否显示关机选项
-set(CAN_POWER_OFF true CACHE BOOL "shutdown button display")
-#是否显示重启选项
-set(CAN_REBOOT true CACHE BOOL "reboot button display")
-#是否显示挂起选项
-set(CAN_SUSPEND true CACHE BOOL "suspend button display")
 
 #构建为kiran-screensaver插件
 set(BUILD_SCREENSAVER_PLUGIN true CACHE BOOL "build libray as kiran-screensaver plugin")
@@ -53,6 +44,7 @@ else()
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
+        common
         common-widgets
         scaling-helper
         auth-proxy

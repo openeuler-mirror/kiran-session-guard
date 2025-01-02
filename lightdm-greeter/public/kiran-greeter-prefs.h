@@ -26,6 +26,7 @@ public:
 
     QStringList hiddenSessions();
     QStringList hiddenUsers();
+    bool showFullName();
     bool canPowerOff();
     bool canReboot();
     bool canSuspend();
@@ -43,6 +44,7 @@ private Q_SLOTS:
 private:
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
+    bool m_showFullName = false;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;

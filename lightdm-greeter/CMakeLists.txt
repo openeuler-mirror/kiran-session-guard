@@ -2,21 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(lightdm-kiran-greeter)
 
-#登录中隐藏的用户列表，以‘，’分割
-set(HIDDEN_USER "" CACHE STRING "hidden user list,separated by commas")
-
-#是否显示关机选项
-set(CAN_POWER_OFF true CACHE BOOL "shutdown button display")
-
-#是否显示重启选项
-set(CAN_REBOOT true CACHE BOOL "reboot button display")
-
-#是否显示挂起选项
-set(CAN_SUSPEND true CACHE BOOL "suspend button display")
-
-#是否显示休眠选项
-set(CAN_HIBERNATE true CACHE BOOL "hibernate button display")
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -88,6 +73,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME}
+        common
         common-widgets
         scaling-helper
         auth-proxy

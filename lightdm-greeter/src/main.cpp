@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "../../lib/common-widgets/virtual-keyboard.h"
+#include "virtual-keyboard.h"
 #include "cursor-helper.h"
 #include "greeter-login-window.h"
 #include "greeter-screen-manager.h"
