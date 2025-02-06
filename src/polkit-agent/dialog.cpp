@@ -17,10 +17,11 @@
 #include "auth-type-switcher.h"
 #include "auxiliary.h"
 #include "ui_dialog.h"
-
+#include <palette.h>
+#include <style-helper.h>
+#include <kiran-push-button.h>
 #include <kiran-passwd-edit.h>
 #include <qt5-log-i.h>
-#include <style-property.h>
 #include <QComboBox>
 #include <QDebug>
 #include <QGridLayout>
@@ -118,8 +119,8 @@ void Dialog::initUI()
     setTitlebarColorBlockEnable(true);
     layout()->setSizeConstraint(QLayout::SetFixedSize);
     ui->label_tips->setWordWrap(true);
-    Kiran::StylePropertyHelper::setButtonType(ui->btn_ok, Kiran::BUTTON_Default);
-    Kiran::StylePropertyHelper::setButtonType(ui->btn_reauth, Kiran::BUTTON_Default);
+    KiranPushButton::setButtonType(ui->btn_ok, KiranPushButton::BUTTON_Default);
+    KiranPushButton::setButtonType(ui->btn_reauth, KiranPushButton::BUTTON_Default);
 
     switchButtonLayout(BUTTON_LAYOUT_NORMAL);
 

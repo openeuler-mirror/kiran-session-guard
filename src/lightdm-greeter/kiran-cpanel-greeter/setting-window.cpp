@@ -18,7 +18,8 @@
 #include "hover-tips.h"
 #include "user-manager.h"
 
-#include <style-property.h>
+#include <style-helper.h>
+#include <kiran-push-button.h>
 #include <QApplication>
 #include <QComboBox>
 #include <QDir>
@@ -39,8 +40,8 @@
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"
 
-#define ITEM_GENERAL_SETTINGS    QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","General")
-#define ITEM_AUTO_LOGIN_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow","Autologin")
+#define ITEM_GENERAL_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow", "General")
+#define ITEM_AUTO_LOGIN_SETTINGS QT_TRANSLATE_NOOP("Kiran::SessionGuard::Greeter::SettingWindow", "Autologin")
 
 enum GreeterSettingsPageEnum
 {
@@ -145,8 +146,7 @@ void SettingWindow::initUI()
                 }
 
                 /* 隐藏悬浮提示 */
-                m_hoverTips->hide();
-            });
+                m_hoverTips->hide(); });
     m_sidebarWidget->setCurrentRow(0);
     resetGeneralSettings();
     resetAutoLoginSettings();
@@ -236,7 +236,7 @@ QWidget *SettingWindow::initPageAutoLogin()
     btn_save->setObjectName("btn_saveAutoLogin");
     btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
-    Kiran::StylePropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
+    KiranPushButton::setButtonType(btn_save,KiranPushButton::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
     connect(btn_save, &QPushButton::clicked, [this]()
             { saveAutoLoginSettings(); });
@@ -274,7 +274,7 @@ QWidget *SettingWindow::initPageGeneralSettings()
     auto titleLabel = new QLabel(this);
     titleLabel->setText(tr("login background setting"));
     mainLayout->addWidget(titleLabel);
-    mainLayout->addSpacerItem(new QSpacerItem(10,10,QSizePolicy::Minimum,QSizePolicy::Fixed));
+    mainLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
     m_imageSelector = new KiranImageSelector(this);
     m_imageSelector->setFixedHeight(148);
@@ -400,7 +400,7 @@ QWidget *SettingWindow::initPageGeneralSettings()
     btn_save->setObjectName("btn_saveGeneralSettings");
     btn_save->setFixedSize(110, 40);
     btn_save->setText(tr("Save"));
-    Kiran::StylePropertyHelper::setButtonType(btn_save, Kiran::BUTTON_Default);
+    KiranPushButton::setButtonType(btn_save, KiranPushButton::BUTTON_Default);
     layoutButtonBox->addWidget(btn_save);
     connect(btn_save, &QPushButton::clicked, [this]()
             { saveGeneralSettings(); });
@@ -706,20 +706,19 @@ QSize SettingWindow::sizeHint() const
     return {940, 653};
 }
 
-QVector<QPair<QString,QString>> SettingWindow::getSearchKeys()
+QVector<QPair<QString, QString>> SettingWindow::getSearchKeys()
 {
-    QVector<QPair<QString,QString>> searchEntries = {
-        {tr(ITEM_GENERAL_SETTINGS),tr(ITEM_GENERAL_SETTINGS)},
-        {tr(ITEM_AUTO_LOGIN_SETTINGS),tr(ITEM_AUTO_LOGIN_SETTINGS)}
-    };
+    QVector<QPair<QString, QString>> searchEntries = {
+        {tr(ITEM_GENERAL_SETTINGS), tr(ITEM_GENERAL_SETTINGS)},
+        {tr(ITEM_AUTO_LOGIN_SETTINGS), tr(ITEM_AUTO_LOGIN_SETTINGS)}};
 
     return searchEntries;
 }
 
-void SettingWindow::jumpToSearchKey(const QString& subItem)
+void SettingWindow::jumpToSearchKey(const QString &subItem)
 {
-    auto resList = m_sidebarWidget->findItems(subItem,Qt::MatchFixedString);
-    if( resList.isEmpty() )
+    auto resList = m_sidebarWidget->findItems(subItem, Qt::MatchFixedString);
+    if (resList.isEmpty())
     {
         KLOG_ERROR() << "greeter plugin can't find SubItem:" << subItem;
         return;
