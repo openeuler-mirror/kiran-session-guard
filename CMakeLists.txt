@@ -35,7 +35,7 @@ set(SHOW_FULLNAME false CACHE BOOL "Whether to use FullName to replace the usern
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets X11Extras DBus LinguistTools)
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
-pkg_search_module(KIRAN_STYLE_HELPER REQUIRED kiran-style-helper)
+pkg_search_module(KIRAN_INTEGRATION_THEME REQUIRED kiran-integration-theme)
 pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
 pkg_search_module(KIRANWIDGETS_QT5 REQUIRED kiranwidgets-qt5)
 

@@ -79,12 +79,19 @@ signals:
     void authTypeClicked(int authType);
     void expandedStatusChanged(bool isExpanded);
 
+private slots:
+    void onThemeChanged();
+
 private:
     void init();
     void clear();
     void updateValidSizeHint();
+    /**
+     * @brief AuthTypeDrawer::updateExpandProgress
+     * 由于该控件使用场景比较特殊，登录/锁屏独立于桌面环境不跟随主题变化，只有polkit-agent在桌面会话内
+     * 所以手动处理主题变化，手动翻转图标颜色
+     */
     void updateButtonIconColor();
-    void onThemeChanged();
 
     virtual void paintEvent(QPaintEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;

@@ -12,9 +12,8 @@
  * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
  */
 #include "auth-type-drawer.h"
-#include "style-palette.h"
-
-#include <kiran-style/style-palette.h>
+#include <style-helper.h>
+#include <palette.h>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QDebug>
@@ -30,6 +29,8 @@
 #include <QTimer>
 #include <QToolButton>
 
+using namespace Kiran::Theme;
+
 namespace Kiran
 {
 namespace SessionGuard
@@ -41,9 +42,7 @@ AuthTypeDrawer::AuthTypeDrawer(AuthTypeDrawerExpandDirection direction, int radi
       m_radius(radius)
 {
     init();
-
-    auto kiranPalette = Kiran::StylePalette::instance();
-    connect(kiranPalette, &Kiran::StylePalette::themeChanged, this, &AuthTypeDrawer::onThemeChanged);
+    connect(DEFAULT_PALETTE(), &Palette::baseColorsChanged, this, &AuthTypeDrawer::onThemeChanged);
 }
 
 AuthTypeDrawer::~AuthTypeDrawer()
@@ -99,7 +98,6 @@ void AuthTypeDrawer::setAuthTypes(QList<std::tuple<int, QString, QString>> authT
     }
 
     updateValidSizeHint();
-
     if (m_adjustColorToTheme)
     {
         updateButtonIconColor();
@@ -330,13 +328,14 @@ void AuthTypeDrawer::updateValidSizeHint()
 
 void AuthTypeDrawer::updateButtonIconColor()
 {
-    auto kiranPalette = Kiran::StylePalette::instance();
+    auto styleHelper = StyleHelper::getDefault();
+    auto paletteType = styleHelper->paletteType();
 
     for (auto buttonInfo : m_buttonMap)
     {
         QIcon icon(buttonInfo.m_icon);
         auto pixmap = icon.pixmap(QSize(16, 16));
-        if (kiranPalette->paletteType() == Kiran::PALETTE_LIGHT)
+        if (paletteType == PALETTE_LIGHT)
         {
             auto image = pixmap.toImage();
             image.invertPixels(QImage::InvertRgb);
@@ -369,17 +368,16 @@ void AuthTypeDrawer::paintEvent(QPaintEvent* event)
         return;
     }
 
-    auto stylePalette = Kiran::StylePalette::instance();
-    QColor background = m_backgroundColor;
-    QColor border = m_borderColor;
-
+    auto background = m_backgroundColor;
     if (!m_backgroundColor.isValid())
     {
-        background = stylePalette->color(Kiran::StylePalette::Normal, Kiran::StylePalette::Window, Kiran::StylePalette::Background);
+        background = DEFAULT_PALETTE()->getColor(Palette::NORMAL,Palette::WINDOW);
     }
+
+    auto border = m_borderColor;
     if (!m_borderColor.isValid())
     {
-        border = stylePalette->color(Kiran::StylePalette::Normal, Kiran::StylePalette::Window, Kiran::StylePalette::Border);
+        border = DEFAULT_PALETTE()->getColor(Palette::NORMAL,Palette::BORDER);
     }
 
     QPainterPath painterPath;

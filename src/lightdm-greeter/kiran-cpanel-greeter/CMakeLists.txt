@@ -30,7 +30,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
         ${KLOG_QT5_INCLUDE_DIRS}
         ${KIRAN_CC_DAEMON_INCLUDE_DIRS}
         ${KIRAN_CONTROL_PANEL_INCLUDE_DIRS}
-        ${KIRAN_STYLE_HELPER_INCLUDE_DIRS})
+        ${KIRAN_INTEGRATION_THEME_INCLUDE_DIRS})
 
 target_link_libraries(${TARGET_NAME}
         Qt5::Widgets
@@ -42,7 +42,7 @@ target_link_libraries(${TARGET_NAME}
         ${KIRANWIDGETS_QT5_LIBRARIES}
         ${KLOG_QT5_LIBRARIES}
         ${KIRAN_CC_DAEMON_LIBRARIES}
-        ${KIRAN_STYLE_HELPER_LIBRARIES})
+        ${KIRAN_INTEGRATION_THEME_LIBRARIES})
 
 # 安装
 #安装插件
