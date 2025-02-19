@@ -87,7 +87,6 @@ void SettingWindow::initUI()
     layoutSideWidget->setMargin(0);
 
     m_sidebarWidget = new KiranSidebarWidget(this);
-    m_sidebarWidget->setInvertIconPixelsEnable(true);
     m_sidebarWidget->setFrameShape(QFrame::NoFrame);
     m_sidebarWidget->setObjectName("SidebarTabListWidget");
     m_sidebarWidget->setIconSize(QSize(16, 16));
@@ -96,11 +95,11 @@ void SettingWindow::initUI()
 
     QListWidgetItem *item;
     item = new QListWidgetItem(tr(ITEM_GENERAL_SETTINGS), m_sidebarWidget);
-    item->setIcon(QIcon(":/kcp-greeter/images/appearance_setting.png"));
+    item->setIcon(QIcon::fromTheme("ksvg-greeter-appearance"));
     m_sidebarWidget->addItem(item);
 
     item = new QListWidgetItem(tr(ITEM_AUTO_LOGIN_SETTINGS), m_sidebarWidget);
-    item->setIcon(QIcon(":/kcp-greeter/images/user_login_setting.png"));
+    item->setIcon(QIcon::fromTheme("ksvg-greeter-login"));
     m_sidebarWidget->addItem(item);
 
     /* 堆叠区域控件 */
