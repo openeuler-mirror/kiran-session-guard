@@ -49,7 +49,7 @@ VirtualKeyboard *VirtualKeyboard::instance()
 
 VirtualKeyboard::~VirtualKeyboard()
 {
-    if (m_process->state() != QProcess::NotRunning)
+    if (m_process && m_process->state() != QProcess::NotRunning)
     {
         m_process->terminate();
         m_process->waitForFinished();
