@@ -53,7 +53,7 @@ VirtualKeyboard *VirtualKeyboard::instance()
 
 VirtualKeyboard::~VirtualKeyboard()
 {
-    if (m_process->state() != QProcess::NotRunning)
+    if (m_process && (m_process->state() != QProcess::NotRunning))
     {
         m_process->terminate();
         m_process->waitForFinished();
@@ -62,7 +62,7 @@ VirtualKeyboard::~VirtualKeyboard()
 
 bool VirtualKeyboard::init(QWidget *parent)
 {
-    if( !QFileInfo::exists("/usr/bin/onboard") )
+    if (!QFileInfo::exists("/usr/bin/onboard"))
     {
         m_isSupported = false;
         return false;
@@ -99,8 +99,7 @@ bool VirtualKeyboard::init(QWidget *parent)
                 m_keyboardWidget->setParent(parent);
                 m_keyboardWidget->setFocusPolicy(Qt::NoFocus);
                 m_keyboardWidget->raise();
-                KLOG_INFO("greeter keyboard init finish.");
-            });
+                KLOG_INFO("greeter keyboard init finish."); });
     m_process->start("onboard", QStringList() << "--xid"
                                               << "-t" ONBOARD_THEME << "-l" ONBOARD_LAYOUT << "-d"
                                               << "all");
