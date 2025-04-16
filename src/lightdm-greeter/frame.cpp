@@ -50,7 +50,6 @@ Frame::Frame(Prefs* prefs, QWidget* parent)
     initUI();
     initAuth();
     initConnection();
-
     if (m_showUserList && m_userList->userCount() > 0)
     {
         reset(STATE_USER_LIST_LOGIN);
@@ -110,8 +109,8 @@ void Frame::initMenus()
     auto setMenuAttributes = [](QMenu* menu)
     {
         menu->setAttribute(Qt::WA_TranslucentBackground);  // 透明必需
-        // NOTE:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成特效与显卡
-        // 控件的话QMenu显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
+        // NOTE:QMenu不能为窗口，只能为控件，不然透明效果依赖于窗口管理器混成
+        // QMenu作为控件显示出来的话，不能点击其他区域隐藏窗口，需要手动隐藏
         menu->setWindowFlags(Qt::FramelessWindowHint | Qt::Widget);  // 透明必需
         menu->setContentsMargins(0, 0, 0, 0);
         menu->hide();
@@ -204,14 +203,16 @@ void Frame::initUI()
     m_autloginIdx = appendControlPage(controlPage);
 
     // 初始化添加右下控件
-    // 获取菜单弹出坐标,按钮和触发菜单右对齐
-    // NOTE: Qt在特定虚拟机环境下QMenu::popup传入正确的pos时,QMenu通过Pos找到screen,但screen的大小错误(为调整分辨率之前的分辨率)
-    // 导致popup pos被修改成在错误的屏幕范围内
+    // 获取菜单弹出坐标,触发按钮和菜单右对齐
     auto getMenuPopupPos = [this](QMenu* menu, const QToolButton* triggerBtn) -> QPoint
     {
         QSize menuSize = menu->actions().count() == 0 ? QSize(92, 10) : menu->sizeHint();
-        QPoint btnRightTopPos = triggerBtn->mapToGlobal(QPoint(triggerBtn->width(), 0));
-        QPoint menuLeftTopPos(btnRightTopPos.x() - menuSize.width(), btnRightTopPos.y() - 4 - menuSize.height());
+
+        // 获取Menu弹出坐标时，由于setMenuAttributes方法设置Menu已并非窗口
+        // 坐标转换只需要从triggerBtn转换为Frame坐标
+        QPoint btnRightTopInFramePos = triggerBtn->mapTo(this, QPoint(triggerBtn->width(), 0));
+        QPoint menuLeftTopPos(btnRightTopInFramePos.x() - menuSize.width(), btnRightTopInFramePos.y() - 4 - menuSize.height());
+
         return menuLeftTopPos;
     };
     // 创建初始化右下角按钮
@@ -249,6 +250,7 @@ void Frame::initUI()
         auto pos = getMenuPopupPos(m_sessionMenu,m_btnSession);
         m_powerMenu->close();
         m_sessionMenu->popup(pos);
+        KLOG_INFO() << "show session menu" << pos;
     });
     m_btnPower = createActionButton("btn_power",tr("power menu"),[this,getMenuPopupPos]{
         if( m_powerMenu->isVisible() )
@@ -283,6 +285,7 @@ void Frame::initUI()
         }
         auto pos = getMenuPopupPos(m_powerMenu,m_btnPower);
         m_powerMenu->popup(pos);
+        KLOG_INFO() << "show power menu" << pos;
     });
     m_btnKeyboard = createActionButton("btn_keyboard",tr("virtual keyboard"),[this]{
         auto keyboard = VirtualKeyboard::instance();
