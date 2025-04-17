@@ -241,10 +241,24 @@ int LoginFrame::appendControlPage(QWidget* controlWidget)
     return ui->stackedWidget->addWidget(controlWidget);
 }
 
+// 切换控制页面(界面中间认证流程控件，包含输入框，重新认证按钮，空页面等)
 void LoginFrame::switchControlPage(int pageIdx)
 {
     RETURN_IF_TRUE(pageIdx < 0 || pageIdx >= ui->stackedWidget->count());
     ui->stackedWidget->setCurrentIndex(pageIdx);
+
+    // 切换控件时，将焦点给需要焦点的控件，便于用户操作
+    auto widget = ui->stackedWidget->widget(pageIdx);
+    auto edit = widget->findChild<QLineEdit*>();
+    auto button = widget->findChild<QPushButton*>();
+    if( edit )
+    {
+        edit->setFocus();
+    }
+    else if (button)
+    {
+        button->setFocus();
+    }
 }
 
 void LoginFrame::startUpdateTimeTimer()
