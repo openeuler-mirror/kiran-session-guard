@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
     Q_INIT_RESOURCE(loginFrame);
 
     if (klog_qt5_init("/usr/share/lightdm-kiran-greeter/zlog.conf",
-                      "kylinsec-nologin",
+                      "kylinsec-greeter",
                       "kiran-session-guard",
                       "lightdm-kiran-greeter"))
     {
