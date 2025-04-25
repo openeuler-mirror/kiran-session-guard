@@ -326,6 +326,8 @@ bool Frame::fadeIn()
         m_opacityEffect->setOpacity(1);
     }
 
+    // 屏保切换解锁框，淡入时输入框丢失焦点。将焦点置回输入框
+    setEditFocus(m_fadeInDelayMs);
     return true;
 }
 

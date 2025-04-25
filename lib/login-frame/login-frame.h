@@ -71,6 +71,9 @@ public:
     int appendControlPage(QWidget* controlWidget);
     void switchControlPage(int pageIdx);
 
+protected:
+    void setEditFocus(int delayMs = 0);
+
 private:
     void initUI();
     void respond(const QString& response);
@@ -80,8 +83,6 @@ private:
     Q_INVOKABLE void updateTimeLabel();
 
     void capsLockStatusChanged(bool on);
-    void setEditFocus(int delayMs = 0);
-
     // 需认证用的户名输入完成,子类对认证用户名进行判断,是否调用开始认证
     virtual void authUserInputed(const QString& userName) = 0;
     // 认证完成,子类根据认证结果以及用户名执行各自操作
