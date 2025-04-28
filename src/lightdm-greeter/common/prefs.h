@@ -39,6 +39,7 @@ public:
     bool canHibernate();
     bool numlockInitState();
     bool showFullName();
+    bool monitorAlwaysOn();
 
 private:
     Prefs();
@@ -57,6 +58,7 @@ private:
     QString m_defaultLoginUser;
     bool m_showFullName = false;
     bool m_numlockInitState = true;
+    bool m_monitorAlwaysOn = true;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;
