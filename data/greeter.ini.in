@@ -15,6 +15,9 @@ numlock-init-state=@NUMLOCK_INIT_STATE@
 #登录界面是否显示FullName
 show-fullname=@SHOW_FULLNAME@
 
+#登录阶段，显示器常亮
+monitor-always-on=true
+
 [Power]
 ##以下选项由logind配置文件共同决定
 ##若都为开启则登录界面进行显示
