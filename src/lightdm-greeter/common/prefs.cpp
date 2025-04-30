@@ -66,6 +66,9 @@ void Prefs::init()
     auto showFullName = settings.value("show-fullname",false);
     m_showFullName = showFullName.toBool();
 
+    auto monitorAlwaysOn = settings.value("monitor-always-on",true);
+    m_monitorAlwaysOn = monitorAlwaysOn.toBool();
+
     settings.endGroup();
 
     /// power
@@ -141,6 +144,11 @@ bool Prefs::numlockInitState()
 bool Prefs::showFullName()
 {
     return m_showFullName;
+}
+
+bool Prefs::monitorAlwaysOn()
+{
+    return m_monitorAlwaysOn;
 }
 }  // namespace Greeter
 }  // namespace SessionGuard
