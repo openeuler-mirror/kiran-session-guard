@@ -16,6 +16,7 @@
 
 #include <QApplication>
 #include <QTranslator>
+#include <QProcess>
 
 #include "cursor-helper.h"
 #include "keyboard-monitor.h"
@@ -140,6 +141,16 @@ int main(int argc, char* argv[])
     else
     {
         KLOG_ERROR() << "can't install app native event filter!";
+    }
+
+    if( prefs->monitorAlwaysOn() )
+    {
+        // 登录界面阶段不熄灭屏幕
+        KLOG_INFO() << "set screen saver off!";
+        QProcess::startDetached("xset", {"s","0","0"});
+    
+        KLOG_INFO() << "set dpms off!";
+        QProcess::startDetached("xset",{"dpms","0","0","0"});
     }
 
     setCursor(factor);
