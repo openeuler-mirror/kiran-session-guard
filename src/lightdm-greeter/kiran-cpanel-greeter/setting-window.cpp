@@ -447,7 +447,7 @@ void SettingWindow::initUserComboBox(QComboBox *combo)
         QPixmap pixmap;
         if (iconFile.isEmpty() || !pixmap.load(iconFile))
         {
-            iconFile = ":/kcp-greeter-images/user_180.png";
+            iconFile = ":/kcp-greeter/images/user_180.png";
         }
         combo->addItem(QIcon(iconFile), user);
     }
