@@ -62,6 +62,7 @@ void HoverTips::show(HoverTipsTypeEnum typeEnum, const QString &msg)
     m_iconLabel->setPixmap(pixmapPath);
     m_textLabel->setText(msg);
 
+    QWidget::raise();
     QWidget::show();
 
     startHideTimer();
