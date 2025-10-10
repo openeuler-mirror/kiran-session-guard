@@ -215,7 +215,7 @@ void ScreenSaverDialog::init()
 void ScreenSaverDialog::initAuth()
 {
     AuthBase *authPam = new AuthPam(this);
-    AuthMsgQueueBase *msgQueue = new AuthMsgQueue(this);
+    // AuthMsgQueueBase *msgQueue = new AuthMsgQueue(this);
     m_authProxy = new AuthProxy(authPam, this);
 
     if (!m_authProxy->init())
@@ -223,7 +223,7 @@ void ScreenSaverDialog::initAuth()
         KLOG_ERROR() << "auth proxy can't init";
     }
     m_authProxy->setSessionAuthType(SESSION_AUTH_TYPE_TOGETHER_WITH_USER);
-    m_authProxy->setMsgQueue(msgQueue);
+    // m_authProxy->setMsgQueue(msgQueue);
 
     if (!connect(m_authProxy, &AuthProxy::showMessage,
                  this, &ScreenSaverDialog::slotShowMessage) ||

@@ -351,13 +351,13 @@ void GreeterLoginWindow::initMenu()
 void GreeterLoginWindow::initLightdmGreeter()
 {
     AuthBase *authInterface = new AuthLightdm(m_greeterPtr);
-    AuthMsgQueue *msgQueue = new AuthMsgQueue();
+    // AuthMsgQueue *msgQueue = new AuthMsgQueue();
 
     m_authProxy = new AuthProxy(authInterface, this);
     authInterface->setParent(m_authProxy);
-    msgQueue->setParent(m_authProxy);
+    // msgQueue->setParent(m_authProxy);
 
-    m_authProxy->setMsgQueue(msgQueue);
+    // m_authProxy->setMsgQueue(msgQueue);
     m_authProxy->setSessionAuthType(SESSION_AUTH_TYPE_TOGETHER);
     if (!m_authProxy->init())
     {
