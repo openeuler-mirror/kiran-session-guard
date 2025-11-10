@@ -90,11 +90,21 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                         {
                             reply[i].resp_retcode = PAM_SUCCESS;
                             reply[i].resp = static_cast<char *>(calloc(1, replyEvent->text().length() + 1));
-                            strncpy(reply[i].resp,
-                                    replyEvent->text().toStdString().c_str(),
-                                    replyEvent->text().length());
+                            if (reply[i].resp == nullptr)
+                            {
+                                KLOG_ERROR() << "can't malloc memory for reply text";
+                                replyRet = PAM_CONV_ERR;
+                            }
+                            else
+                            {
+                                strncpy(reply[i].resp,
+                                        replyEvent->text().toStdString().c_str(),
+                                        replyEvent->text().length());
+                                reply[i].resp[replyEvent->text().length()] = '\0';
+                            }
                         }
                     }
+                    kiran_pam_message_free(&recvReply);
                 }
             }
             break;
@@ -109,6 +119,7 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
                 KLOG_DEBUG() << "send pam message to parent process failed!";
                 replyRet = PAM_CONV_ERR;
             }
+            break;
         }
         default:
             break;
@@ -120,14 +131,20 @@ int conversation(int num_msg, const pam_message **msgs, pam_response **resp, voi
         }
         else
         {
+            // 错误时清理已分配的内存
             for (int j = 0; j <= i; j++)
             {
-                if (reply[i].resp != nullptr)
-                    free(reply[i].resp);
+                if (reply[j].resp != nullptr)
+                {
+                    free(reply[j].resp);
+                    reply[j].resp = nullptr;
+                }
             }
             free(reply);
+            reply = nullptr;
         }
     }
+    
     *resp = reply;
     return replyRet;
 }
