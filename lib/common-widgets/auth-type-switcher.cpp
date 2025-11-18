@@ -71,9 +71,9 @@ void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
             {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}},
             {KAD_AUTH_TYPE_IRIS,{":/common-widgets-images/iris-auth.svg",tr("iris auth")}},
             {KAD_AUTH_TYPE_UKEY,{":/common-widgets-images/ukey-auth.svg",tr("ukey auth")}},
+            {(1 << 6),{":/common-widgets-images/virtual-face-auth.svg",tr("virtual face auth")}}
         };
     // clang-format on
-
     clear();
 
     QList<std::tuple<int, QString, QString>> authTypeInfoList;
