@@ -2,32 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>AuthController</name>
-    <message>
-        <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
-    </message>
-</context>
-<context>
-    <name>AuthTypeSwitcher</name>
-    <message>
-        <source>face auth</source>
-        <translation type="vanished">人脸认证</translation>
-    </message>
-    <message>
-        <source>finger auth</source>
-        <translation type="vanished">人脸认证</translation>
-    </message>
-    <message>
-        <source>password auth</source>
-        <translation type="vanished">密码认证</translation>
-    </message>
-    <message>
-        <source>finger vein auth</source>
-        <translation type="vanished">指静脉认证</translation>
-    </message>
-</context>
-<context>
     <name>Dialog</name>
     <message>
         <location filename="../src/polkit-agent/dialog.ui" line="14"/>
@@ -53,22 +27,6 @@
         <location filename="../src/polkit-agent/dialog.ui" line="304"/>
         <source>Cancel</source>
         <translation>取消</translation>
-    </message>
-    <message>
-        <source>authorization</source>
-        <translation type="vanished">认证</translation>
-    </message>
-    <message>
-        <source>fingerprint auth</source>
-        <translation type="vanished">指纹认证</translation>
-    </message>
-    <message>
-        <source>face auth</source>
-        <translation type="vanished">人脸认证</translation>
-    </message>
-    <message>
-        <source>fingervein auth</source>
-        <translation type="vanished">指静脉认证</translation>
     </message>
 </context>
 <context>
@@ -111,6 +69,11 @@
         <source>ukey auth</source>
         <translation>UKey认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="74"/>
+        <source>virtual face auth</source>
+        <translation>远程人脸认证</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>
@@ -120,27 +83,32 @@
         <translation>认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="228"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="232"/>
         <source>fingerprint auth</source>
         <translation>指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="229"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="233"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="230"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="234"/>
         <source>fingervein auth</source>
         <translation>指静脉认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="231"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="235"/>
         <source>iris auth</source>
         <translation>虹膜认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="256"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="236"/>
+        <source>virtual face auth</source>
+        <translation>远程人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/dialog.cpp" line="261"/>
         <source>Authentication error</source>
         <translation>认证错误</translation>
     </message>
@@ -157,13 +125,6 @@
         <location filename="../src/polkit-agent/listener.cpp" line="150"/>
         <source>Authentication Error</source>
         <translation>认证错误</translation>
-    </message>
-</context>
-<context>
-    <name>Listener</name>
-    <message>
-        <source>Existing authentication is in progress, please try again later</source>
-        <translation type="vanished">已存在正在进行的认证，请稍后再进行尝试</translation>
     </message>
 </context>
 </TS>

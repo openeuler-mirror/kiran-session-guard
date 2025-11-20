@@ -2,52 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>AuthController</name>
-    <message>
-        <source>Failed to authenticate</source>
-        <translation type="vanished">认证失败</translation>
-    </message>
-</context>
-<context>
-    <name>Frame</name>
-    <message>
-        <source>login other user</source>
-        <translation type="vanished">登录其他用户</translation>
-    </message>
-    <message>
-        <source>session menu</source>
-        <translation type="vanished">会话菜单</translation>
-    </message>
-    <message>
-        <source>power menu</source>
-        <translation type="vanished">电源菜单</translation>
-    </message>
-    <message>
-        <source>hibernate</source>
-        <translation type="vanished">休眠</translation>
-    </message>
-    <message>
-        <source>suspend</source>
-        <translation type="vanished">待机</translation>
-    </message>
-    <message>
-        <source>restart</source>
-        <translation type="vanished">重启</translation>
-    </message>
-    <message>
-        <source>shutdown</source>
-        <translation type="vanished">关机</translation>
-    </message>
-    <message>
-        <source>virtual keyboard</source>
-        <translation type="vanished">虚拟键盘</translation>
-    </message>
-    <message>
-        <source>return</source>
-        <translation type="vanished">返回</translation>
-    </message>
-</context>
-<context>
     <name>GreeterSubItem</name>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/greeter-subitem.cpp" line="36"/>
@@ -95,53 +49,58 @@
         <source>ukey auth</source>
         <translation>UKey认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="74"/>
+        <source>virtual face auth</source>
+        <translation>远程人脸认证</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::Greeter::Frame</name>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="189"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="357"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="188"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="370"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="242"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="243"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="253"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="255"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="262"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="264"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="268"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="270"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="274"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="276"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="280"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="282"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="287"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="290"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="374"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="384"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="400"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="410"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
@@ -158,12 +117,12 @@
     <name>Kiran::SessionGuard::Greeter::SettingWindow</name>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="42"/>
-        <source>general settings</source>
+        <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="43"/>
-        <source>autologin</source>
+        <source>Autologin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -273,13 +232,9 @@ Select discard to discard the modification and reload the new configuration</sou
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="247"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="276"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
-    </message>
-    <message>
-        <source>dddd MMM HH:mm</source>
-        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
     </message>
 </context>
 <context>
@@ -293,10 +248,6 @@ Select discard to discard the modification and reload the new configuration</sou
         <location filename="../src/lightdm-greeter/widgets/login-button.ui" line="51"/>
         <source>TextLabel</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>login</source>
-        <translation type="vanished">登录</translation>
     </message>
 </context>
 <context>
@@ -317,22 +268,14 @@ Select discard to discard the modification and reload the new configuration</sou
         <translation>重新认证</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.ui" line="471"/>
+        <location filename="../lib/login-frame/login-frame.ui" line="477"/>
         <source>tips</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.ui" line="491"/>
+        <location filename="../lib/login-frame/login-frame.ui" line="497"/>
         <source>xxxx-xx-xx xxx xxxx</source>
         <translation></translation>
-    </message>
-    <message>
-        <source>Entry your name</source>
-        <translation type="vanished">请输入用户名</translation>
-    </message>
-    <message>
-        <source>dddd MMM HH:mm</source>
-        <translation type="vanished">MM月dd日 dddd HH:mm</translation>
     </message>
 </context>
 <context>
