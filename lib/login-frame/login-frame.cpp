@@ -378,7 +378,7 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
         KAD_AUTH_TYPE_FINGERVEIN,
         KAD_AUTH_TYPE_IRIS,
         KAD_AUTH_TYPE_FACE,
-        KAD_AUTH_TYPE_VIRTUAL_FACE};
+        (1 << 6)};
     if (emptyControlAuthType.contains(type))
     {
         switchControlPage(CONTROL_PAGE_EMPTY);
