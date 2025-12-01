@@ -20,6 +20,7 @@
 
 #include "dialog.h"
 #include "listener.h"
+#include "tray.h"
 
 using namespace ::Kiran::SessionGuard::PolkitAgent;
 
@@ -57,6 +58,7 @@ int main(int argc, char* argv[])
         KLOG_WARNING() << "register listener failed!";
         return EXIT_FAILURE;
     }
+    Tray tray(session);
 
     return app.exec();
 }
