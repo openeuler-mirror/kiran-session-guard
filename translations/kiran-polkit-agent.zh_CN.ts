@@ -115,32 +115,32 @@
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="111"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="112"/>
         <source>authorization</source>
         <translation>认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="228"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="233"/>
         <source>fingerprint auth</source>
         <translation>指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="229"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="234"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="230"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="235"/>
         <source>fingervein auth</source>
         <translation>指静脉认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="231"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="236"/>
         <source>iris auth</source>
         <translation>虹膜认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="256"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="261"/>
         <source>Authentication error</source>
         <translation>认证错误</translation>
     </message>
@@ -157,6 +157,24 @@
         <location filename="../src/polkit-agent/listener.cpp" line="150"/>
         <source>Authentication Error</source>
         <translation>认证错误</translation>
+    </message>
+</context>
+<context>
+    <name>Kiran::SessionGuard::PolkitAgent::Tray</name>
+    <message>
+        <location filename="../src/polkit-agent/tray.cpp" line="44"/>
+        <source>Revoke All Temporary Authorizations</source>
+        <translation>撤销所有临时授权</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/tray.cpp" line="49"/>
+        <source>Temporary Authorization</source>
+        <translation>临时授权</translation>
+    </message>
+    <message>
+        <location filename="../src/polkit-agent/tray.cpp" line="95"/>
+        <source>Temporary Authorization (%1)</source>
+        <translation>临时授权 (%1)</translation>
     </message>
 </context>
 <context>
