@@ -51,6 +51,7 @@ void Tray::init()
 
     m_updateTemporaryAuthorizationIconTimer = new QTimer(this);
     m_updateTemporaryAuthorizationIconTimer->setInterval(200);
+    m_updateTemporaryAuthorizationIconTimer->setSingleShot(true);
     connect(m_updateTemporaryAuthorizationIconTimer, &QTimer::timeout, this, &Tray::enumerateTemporaryAuth);
 
     auto authority = PolkitQt1::Authority::instance();
