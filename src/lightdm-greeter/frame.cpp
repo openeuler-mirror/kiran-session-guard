@@ -22,12 +22,14 @@
 #include "widgets/login-button.h"
 #include "widgets/user-list.h"
 
+#include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QSpacerItem>
 #include <QStateMachine>
+#include <QTimer>
 #include <QToolButton>
 #include <QWidgetAction>
 #include <QWindow>
@@ -295,6 +297,36 @@ void Frame::initUI()
             keyboard->showAdjustSize(this);
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
+
+    // 弹窗来源：kiran-authentication-service/src/driver/virtual/czht
+    QString authCodeRequestPath = "/usr/bin/kiran-auth-code-request";
+    m_btnRequestAuthCodeButton = createActionButton("btn_request_auth_code",tr("request auth code"),[this,authCodeRequestPath]{
+        KLOG_INFO() << "request auth code button clicked";
+        QProcess* process = new QProcess(this);
+        // 使用信号槽机制，进程结束时自动恢复焦点
+        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus){
+            Q_UNUSED(exitCode);
+            Q_UNUSED(exitStatus);
+            // 进程结束后，先激活窗口，再设置焦点到输入框
+            // 使用 QTimer::singleShot(0) 确保在事件循环中执行，让窗口系统有时间处理窗口关闭事件
+            QTimer::singleShot(0, this, [this](){
+                this->window()->activateWindow();
+                QApplication::processEvents();
+                this->setEditFocus(0);
+            });
+            process->deleteLater();
+        });
+        process->start(authCodeRequestPath, QStringList());
+    });
+    if (QFile::exists(authCodeRequestPath))
+    {
+        m_btnRequestAuthCodeButton->setVisible(true);
+    }
+    else
+    {
+        m_btnRequestAuthCodeButton->setVisible(false);
+    }
     // clang-format on
 
     auto rbBtnWidget = new QWidget(this);
@@ -329,6 +361,9 @@ void Frame::initUI()
     {
         m_btnPower->setVisible(false);
     }
+
+    rbBtnLayout->addWidget(m_btnRequestAuthCodeButton, 1);
+
     setRightBottomWidget(rbBtnWidget);
 }
 

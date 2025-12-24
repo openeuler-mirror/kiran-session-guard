@@ -74,6 +74,11 @@
         <source>virtual face auth</source>
         <translation>远程人脸认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="75"/>
+        <source>virtual code auth</source>
+        <translation>授权码认证</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>

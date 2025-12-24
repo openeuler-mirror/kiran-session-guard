@@ -228,7 +228,7 @@ void Dialog::onNotifyAuthTypeChanged(KADAuthType authType)
         m_switcher->setCurrentAuthType(authType);
     }
 
-    QMap<KADAuthType, QString> authTypeDesc = {
+    QMap<int, QString> authTypeDesc = {
         {KAD_AUTH_TYPE_FINGERPRINT, tr("fingerprint auth")},
         {KAD_AUTH_TYPE_FACE, tr("face auth")},
         {KAD_AUTH_TYPE_FINGERVEIN, tr("fingervein auth")},

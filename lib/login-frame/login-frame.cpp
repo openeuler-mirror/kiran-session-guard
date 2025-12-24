@@ -373,7 +373,7 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
 
     ui->tips->clear();
 
-    static QSet<KADAuthType> emptyControlAuthType = {
+    static QSet<int> emptyControlAuthType = {
         KAD_AUTH_TYPE_FINGERPRINT,
         KAD_AUTH_TYPE_FINGERVEIN,
         KAD_AUTH_TYPE_IRIS,
