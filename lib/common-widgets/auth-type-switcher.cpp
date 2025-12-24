@@ -64,14 +64,15 @@ void AuthTypeSwitcher::setAdjustColorToTheme(bool enable)
 void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
 {
     // clang-format off
-        const QMap<KADAuthType, QPair<QString, QString> > AuthTypeIconMap {
+        const QMap<int, QPair<QString, QString> > AuthTypeIconMap {
             {KAD_AUTH_TYPE_FACE, {":/common-widgets-images/face-auth.svg",tr("face auth")}},
             {KAD_AUTH_TYPE_FINGERPRINT,{":/common-widgets-images/finger-auth.svg",tr("finger auth")}},
             {KAD_AUTH_TYPE_PASSWORD,{":/common-widgets-images/passwd-auth.svg",tr("password auth")}},
             {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}},
             {KAD_AUTH_TYPE_IRIS,{":/common-widgets-images/iris-auth.svg",tr("iris auth")}},
             {KAD_AUTH_TYPE_UKEY,{":/common-widgets-images/ukey-auth.svg",tr("ukey auth")}},
-            {(1 << 6),{":/common-widgets-images/virtual-face-auth.svg",tr("virtual face auth")}}
+            {(1 << 6),{":/common-widgets-images/virtual-face-auth.svg",tr("virtual face auth")}},
+            {(1 << 7),{":/common-widgets-images/code-auth.svg",tr("virtual code auth")}}
         };
     // clang-format on
     clear();

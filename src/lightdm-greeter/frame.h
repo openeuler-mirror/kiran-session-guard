@@ -91,6 +91,7 @@ private:
     QToolButton* m_btnPower;
     QToolButton* m_btnKeyboard;
     QToolButton* m_btnLoginOther;
+    QToolButton* m_btnRequestAuthCodeButton;
     UserList* m_userList;
 
     QLightDM::PowerInterface m_powerIface;
