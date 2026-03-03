@@ -15,7 +15,8 @@ set(SCREENSAVER_DIALOG_RESOURCE
 
 set(SCREENSAVER_DIALOG_TRANSLATOR_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/lib/login-frame/
-    ${PROJECT_SOURCE_DIR}/lib/auth-proxy/)
+    ${PROJECT_SOURCE_DIR}/lib/auth-proxy/
+    ${PROJECT_SOURCE_DIR}/lib/common-widgets/)
 
 # 定义翻译源文件列表
 set(SCREENSAVER_DIALOG_QM_FILES "")

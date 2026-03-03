@@ -10,6 +10,49 @@
     </message>
 </context>
 <context>
+    <name>Kiran::SessionGuard::AuthTypeSwitcher</name>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="68"/>
+        <source>face auth</source>
+        <translation>人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="69"/>
+        <source>finger auth</source>
+        <translation>指纹认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="70"/>
+        <source>password auth</source>
+        <translation>密码认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="71"/>
+        <source>finger vein auth</source>
+        <translation>指静脉认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="72"/>
+        <source>iris auth</source>
+        <translation>虹膜认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="73"/>
+        <source>ukey auth</source>
+        <translation>UKey认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="74"/>
+        <source>virtual face auth</source>
+        <translation>远程人脸认证</translation>
+    </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="75"/>
+        <source>virtual code auth</source>
+        <translation>授权码认证</translation>
+    </message>
+</context>
+<context>
     <name>Kiran::SessionGuard::Locker::Frame</name>
     <message>
         <location filename="../src/screensaver-dialog/frame.cpp" line="87"/>
@@ -52,7 +95,7 @@
     <message>
         <location filename="../lib/login-frame/login-frame.cpp" line="276"/>
         <source>ddd MMM dd HH:mm</source>
-        <translation type="unfinished"></translation>
+        <translation>MM月dd日 dddd HH:mm</translation>
     </message>
 </context>
 <context>
