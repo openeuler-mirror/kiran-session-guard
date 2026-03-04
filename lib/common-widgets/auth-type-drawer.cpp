@@ -229,7 +229,7 @@ void AuthTypeDrawer::init()
     stackUnder(m_switcher);
 
     // 初始化动画
-    m_animation = new QPropertyAnimation(this, "expandProgress");
+    m_animation = new QPropertyAnimation(this, "expandProgress",this);
     m_animation->setDuration(300);
     m_animation->setDirection(QPropertyAnimation::Forward);
     m_animation->setEasingCurve(QEasingCurve::OutQuad);

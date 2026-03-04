@@ -67,6 +67,7 @@ Dialog::Dialog(QWidget* parent)
 Dialog::~Dialog()
 {
     m_authController->cancelAuthentication();
+    delete ui;
 }
 
 bool Dialog::setAuthInfo(const AuthInfo& authInfo)
