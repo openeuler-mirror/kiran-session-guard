@@ -60,6 +60,7 @@ static QScreen *screenAt(const QPoint &point)
 #endif
 
 
+//FIXME: PolkitQt1::Agent::AsyncResult存在泄漏，需跟进社区修复情况
 void Listener::initiateAuthentication(const QString &actionId,
                                       const QString &message,
                                       const QString &iconName,
