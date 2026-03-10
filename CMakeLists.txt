@@ -17,6 +17,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
+# 定义支持的语言列表
+set(LANGUAGES zh_CN) # 可以添加更多语言  # set(LANGUAGES zh_CN bo_CN ug_CN mn_MN ky_KG
+                     # kk_KZ)
+
 #登录中隐藏的用户列表，以‘，’分割
 set(HIDDEN_USER "" CACHE STRING "hidden user list,separated by commas")
 #是否显示关机选项
