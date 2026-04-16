@@ -14,6 +14,7 @@
 #include "frame.h"
 #include "auth-lightdm.h"
 #include "auxiliary.h"
+#include "face-preview-widget.h"
 #include "prefs.h"
 #include "qt5-log-i.h"
 #include "user-manager.h"
@@ -365,6 +366,17 @@ void Frame::initUI()
     rbBtnLayout->addWidget(m_btnRequestAuthCodeButton, 1);
 
     setRightBottomWidget(rbBtnWidget);
+
+    if (m_prefs->facePreviewEnabled())
+    {
+        auto* facePreview = new FacePreviewWidget(this);
+        setLeftTopWidget(facePreview);
+        KLOG_INFO() << "greeter: face preview mounted (VideoInfo; system bus)";
+    }
+    else
+    {
+        KLOG_INFO() << "greeter: face preview disabled (set face-preview-enabled=true in greeter.ini)";
+    }
 }
 
 void Frame::initAuth()

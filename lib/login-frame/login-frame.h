@@ -36,6 +36,7 @@ class AuthController;
 class UserListWidget;
 class AuthBase;
 class AuthTypeSwitcher;
+class FaceDaemonSignalListener;
 class LoginFrame : public QWidget
 {
     Q_OBJECT
@@ -98,8 +99,12 @@ private slots:
     void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
     void onAuthTypeChanged(KADAuthType type);
     void onAuthUserPropertyChanged();
+    void onFaceLeaveDetected(QString json);
 
 private:
+    void updateFacePreviewVisibility();
+    bool isFaceAuthType(KADAuthType type) const;
+
     Ui::LoginFrame* ui;
     QWidget* m_leftTopWidget = nullptr;
     QWidget* m_leftBottomWidget = nullptr;
@@ -110,6 +115,9 @@ private:
     bool m_prompted = false;
     QString m_specifyUser;
     AuthTypeSwitcher* m_switcher = nullptr;
+    FaceDaemonSignalListener* m_faceDaemonSignals = nullptr;
+    KADAuthType m_lastAuthType = KAD_AUTH_TYPE_NONE;
+    bool m_facePreviewSuppressedByLeave = false;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

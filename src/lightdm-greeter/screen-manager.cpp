@@ -51,16 +51,32 @@ ScreenManager::~ScreenManager()
 void ScreenManager::init(Prefs *prefs)
 {
     m_prefs = prefs;
-    for (QScreen *screen : qApp->screens())
+    int created = 0;
+    QList<QScreen*> fallbackScreens;
+
+    // 第一轮：优先使用 physicalSize 有效的屏幕创建背景（保留 #36459 的保护语义）。
+    for (QScreen* screen : qApp->screens())
     {
-        // fix #36459,避免错误的数据,导致显示的问题
         if (screen->physicalSize().isEmpty())
         {
-            KLOG_WARNING() << screen->name() << "physical size is invalid,ignore it!";
+            KLOG_WARNING() << screen->name() << "physical size is invalid, defer background creation";
+            fallbackScreens << screen;
             continue;
         }
         KLOG_DEBUG() << "create background window for" << screen;
         newScreenBackgroundWidget(screen);
+        created++;
+    }
+
+    // 第二轮（兜底）：第一轮一个都没创建时，才对 fallbackScreens 放宽条件创建，避免登录界面不显示。
+    if (created == 0 && !fallbackScreens.isEmpty())
+    {
+        KLOG_WARNING() << "no valid physical size screens, fallback to create background by geometry";
+        for (QScreen* screen : fallbackScreens)
+        {
+            KLOG_DEBUG() << "fallback create background window for" << screen;
+            newScreenBackgroundWidget(screen);
+        }
     }
 
     m_greeterFrame = new Frame(prefs);

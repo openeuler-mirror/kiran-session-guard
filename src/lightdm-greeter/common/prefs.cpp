@@ -69,6 +69,8 @@ void Prefs::init()
     auto monitorAlwaysOn = settings.value("monitor-always-on",true);
     m_monitorAlwaysOn = monitorAlwaysOn.toBool();
 
+    m_facePreviewEnabled = settings.value("face-preview-enabled", true).toBool();
+
     settings.endGroup();
 
     /// power
@@ -149,6 +151,11 @@ bool Prefs::showFullName()
 bool Prefs::monitorAlwaysOn()
 {
     return m_monitorAlwaysOn;
+}
+
+bool Prefs::facePreviewEnabled() const
+{
+    return m_facePreviewEnabled;
 }
 }  // namespace Greeter
 }  // namespace SessionGuard
