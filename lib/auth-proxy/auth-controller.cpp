@@ -20,6 +20,7 @@
 #include <QDBusConnection>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTimer>
 
 namespace Kiran
 {
@@ -73,7 +74,15 @@ QString AuthController::authenticationUser() const
 
 void AuthController::authenticate(const QString& username)
 {
-    KLOG_DEBUG() << "start auth" << username;
+    ++m_authSeq;
+
+    KLOG_INFO() << "AuthController: authenticate requested"
+                << "user=" << username
+                << "seq=" << m_authSeq;
+    m_promptsWaiting = 0;
+    m_hasQueuedResponse = false;
+    m_queuedResponseSeq = 0;
+    m_queuedResponse.clear();
 
     m_haveErrorMsg = false;
     m_canSwitchAuthType = false;
@@ -91,8 +100,29 @@ void AuthController::authenticate(const QString& username)
 
 void AuthController::respond(const QString& response)
 {
-    RETURN_IF_FALSE(m_authInterface->inAuthentication());
-    KLOG_DEBUG() << "respond";
+    const bool authReady = m_authInterface->inAuthentication();
+    const bool promptWaiting = m_promptsWaiting > 0;
+    if (!authReady || !promptWaiting)
+    {
+        m_hasQueuedResponse = true;
+        m_queuedResponseSeq = m_authSeq;
+        m_queuedResponse = response;
+        KLOG_INFO() << "AuthController: respond queued"
+                    << "authReady=" << authReady
+                    << "promptWaiting=" << promptWaiting
+                    << "seq=" << m_queuedResponseSeq
+                    << "len=" << response.size();
+        return;
+    }
+
+    KLOG_INFO() << "AuthController: respond forwarded"
+                << "seq=" << m_authSeq
+                << "len=" << response.size()
+                << "promptsWaitingBefore=" << m_promptsWaiting;
+    m_promptsWaiting = qMax(0, m_promptsWaiting - 1);
+    m_hasQueuedResponse = false;
+    m_queuedResponseSeq = 0;
+    m_queuedResponse.clear();
     m_authInterface->respond(response);
 }
 
@@ -100,6 +130,10 @@ void AuthController::cancelAuthentication()
 {
     RETURN_IF_FALSE(m_authInterface->inAuthentication());
     KLOG_DEBUG() << "cancel auth";
+    m_promptsWaiting = 0;
+    m_hasQueuedResponse = false;
+    m_queuedResponseSeq = 0;
+    m_queuedResponse.clear();
     m_authInterface->cancelAuthentication();
 }
 
@@ -113,6 +147,20 @@ void AuthController::switchAuthType(KADAuthType authType)
     RETURN_IF_FALSE(m_canSwitchAuthType);
     RETURN_IF_FALSE(m_supportedAuthType.contains(authType));
     RETURN_IF_FALSE(m_currentAuthType != authType);
+
+    KLOG_INFO() << "AuthController: switchAuthType requested"
+                << "authType=" << (int)authType
+                << "inAuth=" << inAuthentication()
+                << "currentAuthType=" << (int)m_currentAuthType
+                << "seqBefore=" << m_authSeq;
+
+    ++m_authSeq;
+    KLOG_INFO() << "AuthController: switchAuthType seq start"
+                << "seq=" << m_authSeq;
+    m_promptsWaiting = 0;
+    m_hasQueuedResponse = false;
+    m_queuedResponseSeq = 0;
+    m_queuedResponse.clear();
 
     m_specifyAuthType = authType;
     if (inAuthentication())
@@ -156,6 +204,10 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
         return false;
     }
 
+    KLOG_INFO() << "AuthController: daemonCmd recv"
+                << "protoID=" << protoID
+                << "seq=" << m_authSeq;
+
     switch (protoID)
     {
     case KAP_REQ_CMD_NOTIFY_AUTH_MODE:
@@ -166,17 +218,24 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
         QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
         auto authMode = val.toObject()[KAP_PJK_KEY_AUTH_MODE].toInt(-1);
 #endif
+        KLOG_INFO() << "AuthController: daemonCmd notify authMode"
+                    << "authMode=" << authMode
+                    << "seq=" << m_authSeq;
         if (authMode < KAD_AUTH_MODE_NONE || authMode > KAD_AUTH_MODE_LAST)
         {
             KLOG_WARNING() << "invalid auth mode" << authMode;
             return false;
         }
         onNotifyAuthMode((KADAuthMode)authMode);
+        KLOG_INFO() << "AuthController: daemonCmd handled"
+                    << "protoID=" << protoID;
         return true;
     }
     case KAP_REQ_CMD_LOGIN_USER_SWITCHABLE:
     {
         onRequestLoginUserSwitchable();
+        KLOG_INFO() << "AuthController: daemonCmd handled"
+                    << "protoID=" << protoID;
         return true;
     }
     case KAP_REQ_CMD_NOTIFY_SUPPORT_AUTH_TYPE:
@@ -207,13 +266,21 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
             }
             supportAuthTypes << (KADAuthType)authType;
         }
+        KLOG_INFO() << "AuthController: daemonCmd notify supportAuthTypes"
+                    << "count=" << supportAuthTypes.size()
+                    << "types=" << supportAuthTypes
+                    << "seq=" << m_authSeq;
 
         onNotifySupportAuthType(supportAuthTypes);
+        KLOG_INFO() << "AuthController: daemonCmd handled"
+                    << "protoID=" << protoID;
         return true;
     }
     case KAP_REQ_CMD_AUTH_TYPE:
     {
         onRequestAuthType();
+        KLOG_INFO() << "AuthController: daemonCmd handled"
+                    << "protoID=" << protoID;
         return true;
     }
     case KAP_REQ_CMD_NOTIFY_AUTH_TYPE:
@@ -230,6 +297,8 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
             return false;
         }
         onNotifyAuthType((KADAuthType)authType);
+        KLOG_INFO() << "AuthController: daemonCmd handled"
+                    << "protoID=" << protoID;
         return true;
     }
     default:
@@ -249,7 +318,11 @@ void AuthController::onNotifyAuthMode(KADAuthMode mode)
 void AuthController::onRequestLoginUserSwitchable()
 {
     QJsonDocument jsonRspDoc{QJsonObject{{KAP_PJK_KEY_BODY, QJsonObject{{KAP_PJK_KEY_LOGIN_USER_SWITCHABLE, m_authInterface->loginUserSwitchable()}}}}};
-    respond(jsonRspDoc.toJson(QJsonDocument::Compact));
+    // 协议应答必须立即送达，不能走 prompt-wait 排队（否则 OR 模式/支持类型通知不到）。
+    RETURN_IF_FALSE(m_authInterface->inAuthentication());
+    KLOG_INFO() << "AuthController: daemonCmd respond loginUserSwitchable"
+                << "seq=" << m_authSeq;
+    m_authInterface->respond(jsonRspDoc.toJson(QJsonDocument::Compact));
 }
 
 void AuthController::onNotifySupportAuthType(QList<KADAuthType> authTypes)
@@ -293,12 +366,19 @@ void AuthController::onRequestAuthType()
     }
     KLOG_DEBUG() << "request auth type:" << specifyAuthType;
     QJsonDocument jsonRspDoc{QJsonObject{{KAP_PJK_KEY_BODY, QJsonObject{{KAP_PJK_KEY_AUTH_TYPE, specifyAuthType}}}}};
-    respond(jsonRspDoc.toJson(QJsonDocument::Compact));
+    // 协议应答必须立即送达，不能走 prompt-wait 排队。
+    RETURN_IF_FALSE(m_authInterface->inAuthentication());
+    KLOG_INFO() << "AuthController: daemonCmd respond authType"
+                << "specifyAuthType=" << (int)specifyAuthType
+                << "seq=" << m_authSeq;
+    m_authInterface->respond(jsonRspDoc.toJson(QJsonDocument::Compact));
 }
 
 void AuthController::onAuthComplete()
 {
-    KLOG_DEBUG() << "auth controller auth complete";
+    KLOG_INFO() << "AuthController: authComplete"
+                << "seq=" << m_authSeq
+                << "success=" << m_authInterface->isAuthenticated();
 
     // 认证完成并且失败时，检查认证过程中是否存在过错误消息
     // 如果没存在过错误消息，编造一个错误消息
@@ -324,6 +404,8 @@ void AuthController::onShowPrompt(const QString& text, PromptType type)
 {
     if (type == PromptTypeQuestion && isAuthDaemonCommand(text))
     {
+        KLOG_INFO() << "AuthController: onShowPrompt daemonCmd"
+                    << "seq=" << m_authSeq;
         if (!processAuthDaemonCommand(text))
         {
             KLOG_WARNING() << "Error processing authentication service command" << text;
@@ -331,8 +413,42 @@ void AuthController::onShowPrompt(const QString& text, PromptType type)
         return;
     }
 
-    KLOG_DEBUG() << "auth controller prompt:" << type << text;
+    KLOG_INFO() << "AuthController: onShowPrompt"
+                << "type=" << (int)type
+                << "inAuth=" << inAuthentication()
+                << "promptsWaitingBefore=" << m_promptsWaiting
+                << "seq=" << m_authSeq;
+    m_promptsWaiting++;
     emit showPrompt(text, type);
+
+    if (m_hasQueuedResponse && m_queuedResponseSeq == m_authSeq && m_promptsWaiting > 0)
+    {
+        const auto seq = m_queuedResponseSeq;
+        QTimer::singleShot(0, this, [this, seq]() {
+            if (!m_hasQueuedResponse || m_queuedResponseSeq != seq)
+            {
+                return;
+            }
+            if (!m_authInterface || !m_authInterface->inAuthentication())
+            {
+                return;
+            }
+            if (m_promptsWaiting <= 0)
+            {
+                return;
+            }
+            KLOG_INFO() << "AuthController: respond flush on prompt"
+                        << "seq=" << seq
+                        << "len=" << m_queuedResponse.size()
+                        << "promptsWaitingBefore=" << m_promptsWaiting;
+            const QString rsp = m_queuedResponse;
+            m_promptsWaiting = qMax(0, m_promptsWaiting - 1);
+            m_hasQueuedResponse = false;
+            m_queuedResponseSeq = 0;
+            m_queuedResponse.clear();
+            m_authInterface->respond(rsp);
+        });
+    }
 }
 
 void AuthController::onShowMessage(const QString& text, MessageType type)

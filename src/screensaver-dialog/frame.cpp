@@ -17,6 +17,7 @@
 #include "auth-pam.h"
 #include "auxiliary.h"
 #include "power.h"
+#include "face-preview-widget.h"
 #include "prefs.h"
 #include "user-manager.h"
 #include "virtual-keyboard.h"
@@ -190,6 +191,17 @@ void Frame::initUI()
 
     rbBtnLayout->addWidget(m_btnPower, 1);
     setRightBottomWidget(rbBtnWidget);
+
+    if (Prefs::getInstance()->facePreviewEnabled())
+    {
+        auto* facePreview = new FacePreviewWidget(this);
+        setLeftTopWidget(facePreview);
+        KLOG_INFO() << "locker: face preview mounted (VideoInfo; system bus)";
+    }
+    else
+    {
+        KLOG_INFO() << "locker: face preview disabled (set face-preview-enabled=true in screensaver-dialog.ini)";
+    }
 
     m_btnSwitchToGreeter->setVisible(false);
     if (m_powerMenu->actions().size() == 0)

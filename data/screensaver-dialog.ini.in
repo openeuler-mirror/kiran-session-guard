@@ -11,3 +11,6 @@ can-suspend=@CAN_SUSPEND@
 [Common]
 #解锁界面是否显示FullName
 show-fullname=@SHOW_FULLNAME@
+
+#是否显示人脸的摄像头预览,人脸识别登录时配置生效
+face-preview-enabled=true
