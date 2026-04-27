@@ -96,16 +96,6 @@ private:
     KADAuthType m_specifyAuthType = KAD_AUTH_TYPE_NONE;
     KADAuthType m_currentAuthType = KAD_AUTH_TYPE_NONE;
     QList<KADAuthType> m_supportedAuthType;
-
-    // 会话边界与 prompt-wait（避免在无 prompt 时向 PAM 送答导致 LightDM 断言；支持用户先于 prompt 提交时暂存再转发）。
-    // m_authSeq：每次 authenticate / switchAuthType 递增，用于丢弃旧会话上的排队回复、与排队内容配对。
-    quint64 m_authSeq = 0;
-    // m_promptsWaiting：尚未向下游转发的 UI prompt 计数，与底层一问一答对齐后才允许 respond。
-    int m_promptsWaiting = 0;
-    // m_hasQueuedResponse / m_queuedResponseSeq / m_queuedResponse：尚无可用 prompt 时缓存用户输入，onShowPrompt 时再 flush。
-    bool m_hasQueuedResponse = false;
-    quint64 m_queuedResponseSeq = 0;
-    QString m_queuedResponse;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

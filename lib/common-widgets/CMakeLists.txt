@@ -16,7 +16,6 @@ target_include_directories(${TARGET_NAME} INTERFACE
 
 target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::Core
-        Qt5::DBus
         Qt5::Widgets
         ${KIRAN_STYLE_HELPER_LIBRARIES}
         ${KLOG_QT5_LIBRARIES})

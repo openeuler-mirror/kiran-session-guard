@@ -16,22 +16,17 @@
 #include "auth-controller.h"
 #include "auth-type-switcher.h"
 #include "auxiliary.h"
-#include "face-daemon-signal-listener.h"
-#include "face-preview-widget.h"
 #include "ui_login-frame.h"
 #include "user-manager.h"
 
 #include <qt5-log-i.h>
 #include <QBoxLayout>
 #include <QDebug>
-#include <QDateTime>
 #include <QFile>
 #include <QTime>
 #include <QTimer>
 #include <QToolButton>
 #include <QDBusConnection>
-#include <QJsonDocument>
-#include <QJsonObject>
 
 namespace Kiran
 {
@@ -43,8 +38,6 @@ LoginFrame::LoginFrame(QWidget* parent)
       m_authController(new AuthController(this))
 {
     ui->setupUi(this);
-    m_faceDaemonSignals = new FaceDaemonSignalListener(this);
-    connect(m_faceDaemonSignals, &FaceDaemonSignalListener::leaveDetected, this, &LoginFrame::onFaceLeaveDetected);
     initUI();
 }
 
@@ -152,9 +145,6 @@ void LoginFrame::setLeftTopWidget(QWidget* w)
     }
     m_leftTopWidget = w;
     ui->left_top->layout()->addWidget(m_leftTopWidget);
-    KLOG_INFO() << "LoginFrame: setLeftTopWidget"
-                << "widget=" << (m_leftTopWidget ? m_leftTopWidget->metaObject()->className() : "null");
-    updateFacePreviewVisibility();
 }
 
 void LoginFrame::setLeftBottomWidget(QWidget* w)
@@ -201,12 +191,6 @@ void LoginFrame::initUI()
 {
     // clang-format off
     connect(ui->edit, &PromptEdit::textConfirmed, [this](const QString& text){
-        KLOG_INFO() << "LoginFrame: textConfirmed"
-                    << "editMode=" << (int)m_editMode
-                    << "prompted=" << m_prompted
-                    << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
-                    << "len=" << text.size()
-                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         if( m_editMode == EDIT_MODE_USER_NAME )
         {
             authUserInputed(text);
@@ -239,39 +223,8 @@ void LoginFrame::initUI()
     centerBottomLayout->insertSpacerItem(3, spacer);
 
     m_switcher->setVisible(false);
-    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType) {
-        KLOG_INFO() << "LoginFrame: switcher authTypeChanged"
-                    << "authType=" << (int)authType
-                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
-        // UI 侧先行更新控件页与输入框状态，避免等待后端通知导致“切换后无输入框/不可输入”。
-        static QSet<int> emptyControlAuthType = {
-            KAD_AUTH_TYPE_FINGERPRINT,
-            KAD_AUTH_TYPE_FINGERVEIN,
-            KAD_AUTH_TYPE_IRIS,
-            KAD_AUTH_TYPE_FACE,
-            (1 << 6)};
-        if (emptyControlAuthType.contains(authType))
-        {
-            switchControlPage(CONTROL_PAGE_EMPTY);
-        }
-        else
-        {
-            switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
-            ui->edit->reset();
-            ui->edit->setEnabled(true);
-            ui->edit->setEchoMode(authType == KAD_AUTH_TYPE_PASSWORD ? QLineEdit::Password : QLineEdit::Normal);
-
-            setEditFocus(0);
-            m_prompted = false;
-            m_editMode = EDIT_MODE_PROMPT_RESPOSE;
-            ui->tips->clear();
-        }
-
-        // UI 侧立即更新预览显隐，避免等待认证服务通知导致残留。
-        m_lastAuthType = authType;
-        updateFacePreviewVisibility();
-        this->m_authController->switchAuthType(authType);
-    });
+    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType)
+            { this->m_authController->switchAuthType(authType); });
 
     switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
     startUpdateTimeTimer();
@@ -352,11 +305,6 @@ void LoginFrame::onShowMessage(const QString& text, MessageType type)
 
 void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
 {
-    KLOG_INFO() << "LoginFrame: onShowPrompt"
-                << "type=" << (int)type
-                << "promptedBefore=" << m_prompted
-                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
-                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     ui->edit->reset();
     ui->edit->setPlaceHolderText(text);
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
@@ -418,8 +366,6 @@ void LoginFrame::onAuthUserPropertyChanged()
 
 void LoginFrame::onAuthTypeChanged(KADAuthType type)
 {
-    KLOG_INFO() << "LoginFrame: onAuthTypeChanged authType=" << (int)type;
-    m_lastAuthType = type;
     if (m_switcher->getCurrentAuthType() != type)
     {
         m_switcher->setCurrentAuthType(type);
@@ -440,96 +386,6 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
     else
     {
         switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
-    }
-
-    updateFacePreviewVisibility();
-}
-
-bool LoginFrame::isFaceAuthType(KADAuthType type) const
-{
-    return type == KAD_AUTH_TYPE_VIRTUAL_FACE || type == KAD_AUTH_TYPE_VIRTUAL_CODE;
-}
-
-void LoginFrame::updateFacePreviewVisibility()
-{
-    auto* facePreview = qobject_cast<FacePreviewWidget*>(m_leftTopWidget);
-    if (!facePreview)
-    {
-        m_facePreviewSuppressedByLeave = false;
-        if (m_faceDaemonSignals)
-        {
-            m_faceDaemonSignals->disconnectLeaveDetected();
-        }
-        return;
-    }
-
-    // 仅对虚拟人脸/虚拟授权码显示；同时要求 D-Bus 服务存在。
-    const bool isVirtual = isFaceAuthType(m_lastAuthType);
-    const bool daemonOk = FacePreviewWidget::isFaceDaemonAvailable();
-    const bool shouldShow = isVirtual && daemonOk;
-    KLOG_INFO() << "LoginFrame: face preview visibility decision"
-                << "authType=" << (int)m_lastAuthType
-                << "isVirtual=" << isVirtual
-                << "faceDaemonAvailable=" << daemonOk
-                << "visible=" << shouldShow;
-    facePreview->setVisible(shouldShow);
-
-    if (!m_faceDaemonSignals)
-    {
-        return;
-    }
-
-    if (shouldShow)
-    {
-        m_faceDaemonSignals->connectLeaveDetected();
-    }
-    else
-    {
-        m_faceDaemonSignals->disconnectLeaveDetected();
-    }
-}
-
-void LoginFrame::onFaceLeaveDetected(QString json)
-{
-    const QJsonDocument doc = QJsonDocument::fromJson(json.toUtf8());
-    const QJsonObject obj = doc.object();
-    const int code = obj.value(QStringLiteral("code")).toInt(-1);
-    const QString businessId = obj.value(QStringLiteral("business_id")).toString();
-    const int personId = obj.value(QStringLiteral("person_id")).toInt(-1);
-    const int leaveTime = obj.value(QStringLiteral("leave_time")).toInt(-1);
-    const int presenceTime = obj.value(QStringLiteral("presence_time")).toInt(-1);
-    const int faceCount = obj.value(QStringLiteral("face_count")).toInt(-1);
-
-    KLOG_INFO() << "LoginFrame: LeaveDetected received"
-                << "code=" << code
-                << "business_id=" << businessId
-                << "person_id=" << personId
-                << "leave_time=" << leaveTime
-                << "presence_time=" << presenceTime
-                << "face_count=" << faceCount
-                << "json=" << json;
-
-    // 容错：仅当服务端明确成功，且“离开时人脸数量为 0”时，才触发隐藏。
-    if (code != 0)
-    {
-        return;
-    }
-    if (faceCount != 0)
-    {
-        return;
-    }
-
-    auto* facePreview = qobject_cast<FacePreviewWidget*>(m_leftTopWidget);
-    if (!facePreview)
-    {
-        return;
-    }
-
-    m_facePreviewSuppressedByLeave = true;
-    facePreview->setVisible(false);
-    if (m_faceDaemonSignals)
-    {
-        m_faceDaemonSignals->disconnectLeaveDetected();
     }
 }
 

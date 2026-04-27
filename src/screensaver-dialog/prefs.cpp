@@ -48,9 +48,6 @@ void Prefs::init()
     settings.beginGroup("Common");
     auto showFullName = settings.value("show-fullname",false);
     m_showFullName = showFullName.toBool();
-
-    m_facePreviewEnabled = settings.value("face-preview-enabled", true).toBool();
-    settings.endGroup();
 }
 
 Prefs::~Prefs()
@@ -82,11 +79,6 @@ bool Prefs::canSuspend()
 bool Prefs::showFullName()
 {
     return m_showFullName;
-}
-
-bool Prefs::facePreviewEnabled() const
-{
-    return m_facePreviewEnabled;
 }
 
 }  // namespace Locker
