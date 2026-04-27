@@ -40,7 +40,6 @@ public:
     bool numlockInitState();
     bool showFullName();
     bool monitorAlwaysOn();
-    bool facePreviewEnabled() const;
 
 private:
     Prefs();
@@ -60,7 +59,6 @@ private:
     bool m_showFullName = false;
     bool m_numlockInitState = true;
     bool m_monitorAlwaysOn = true;
-    bool m_facePreviewEnabled = false;
     bool m_canPowerOff = true;
     bool m_canReboot = true;
     bool m_canSuspend = true;
