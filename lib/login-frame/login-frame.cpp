@@ -360,7 +360,13 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
     ui->edit->reset();
     ui->edit->setPlaceHolderText(text);
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
-    ui->edit->setEchoMode(type == PromptTypeSecret ? QLineEdit::Password : QLineEdit::Normal);
+    // 授权码输入框需明文便于核对
+    const bool fromSwitcher =
+        m_switcher && (m_switcher->getCurrentAuthType() == static_cast<int>(KAD_AUTH_TYPE_VIRTUAL_CODE));
+    const bool virtualAuthCode =
+        (m_lastAuthType == KAD_AUTH_TYPE_VIRTUAL_CODE) || fromSwitcher;
+    const bool useSecretEcho = (type == PromptTypeSecret) && !virtualAuthCode;
+    ui->edit->setEchoMode(useSecretEcho ? QLineEdit::Password : QLineEdit::Normal);
     m_prompted = true;
     /// NOTE:需要延时设置输入焦点到输入框，不然又会被置回UserItem
     setEditFocus(200);
