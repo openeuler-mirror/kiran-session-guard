@@ -289,7 +289,7 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
         auto authType = jsonDoc[KAP_PJK_KEY_BODY][KAP_PJK_KEY_AUTH_TYPE].toInt(-1);
 #else
         QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
-        auto authType = val.toObject()[KAP_PJK_KEY_AUTH_TYPES].toInt(-1);
+        auto authType = val.toObject()[KAP_PJK_KEY_AUTH_TYPE].toInt(-1);
 #endif
         if (authType <= KAD_AUTH_TYPE_NONE || authType >= KAD_AUTH_TYPE_LAST)
         {
