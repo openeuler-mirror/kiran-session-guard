@@ -27,6 +27,26 @@ namespace SessionGuard
 {
 namespace Locker
 {
+// Qt 5.6.1：fromJson 无法解析 JSON 字符串内的中文，text字段改为Base64
+// https://forum.qt.io/topic/70312/qjsondocument-fromjson-fails-on-foreign-characters
+// NOTE: qt官网的讨论中，centos6+qt5.6.1存在该问题，需要深入研究，如升级qt或qt的json插件可能能解决这个问题
+// 所有的变体写法都没有用
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 1)
+QString encodePamJsonTextField(const QString& text)
+{
+    QByteArray ba;
+    ba.append(text);
+    return ba.toBase64();
+}
+
+QString decodePamJsonTextField(const QString& field)
+{
+    QByteArray ba;
+    ba.append(field);
+    return QByteArray::fromBase64(ba);
+}
+#endif
+
 bool kiran_pam_message_send(int fd, QJsonDocument& content);
 bool kiran_pam_message_recv(int fd, QJsonDocument& content);
 
@@ -103,7 +123,11 @@ bool kiran_pam_message_send_event(int fd, PamEvent* event)
     QJsonObject jsonObject;
 
     jsonObject["event"] = type;
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 1)
+    jsonObject["text"] = encodePamJsonTextField(event->text());
+#else
     jsonObject["text"] = event->text();
+#endif
     switch (type)
     {
     case PamEvent::Error:
@@ -155,7 +179,11 @@ bool kiran_pam_message_recv_event(int fd, PamEvent** event)
         return false;
     }
 
+#if QT_VERSION <= QT_VERSION_CHECK(5, 6, 1)
+    QString textInfo = decodePamJsonTextField(jsonObject["text"].toString());
+#else
     QString textInfo = jsonObject["text"].toString();
+#endif
     switch (eventType)
     {
     case PamEvent::Error:
