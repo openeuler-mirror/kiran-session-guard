@@ -236,7 +236,11 @@ void Frame::initUI()
         sizePolicy.setVerticalPolicy(QSizePolicy::Preferred);
 
         button->setSizePolicy(sizePolicy);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 9, 0))
+        // 在Qt5.9+版本中，支持setTabletTracking，触控笔相关功能
+        // FIXME:后续如果遇到需要在低版本qt中支持，需要解析XInput事件
         button->setTabletTracking(true);
+#endif
         button->setSizeIncrement(QSize(0, 0));
         button->setCursor(QCursor(Qt::PointingHandCursor));
         connect(button, &QToolButton::pressed, triggerSlot);
@@ -305,8 +309,13 @@ void Frame::initUI()
         KLOG_INFO() << "request auth code button clicked";
         QProcess* process = new QProcess(this);
         // 使用信号槽机制，进程结束时自动恢复焦点
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
         connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 this, [this, process](int exitCode, QProcess::ExitStatus exitStatus){
+#else
+        connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus){
+#endif
             Q_UNUSED(exitCode);
             Q_UNUSED(exitStatus);
             // 进程结束后，先激活窗口，再设置焦点到输入框

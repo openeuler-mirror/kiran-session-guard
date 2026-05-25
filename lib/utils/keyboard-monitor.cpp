@@ -22,7 +22,9 @@
 #include <X11/extensions/XI2proto.h>
 #include <X11/extensions/XInput.h>
 #include <X11/extensions/XInput2.h>
-#include <xkbcommon/xkbcommon-keysyms.h>
+// xkbcommon 在老旧系统上没有，使用更底层的keysym.h
+// #include <xkbcommon/xkbcommon-keysyms.h>
+#include <X11/keysym.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,11 +93,11 @@ int KeyboardMonitor::listenXiEvent(Display *display)
             case XI_RawKeyRelease:
             {
                 KeySym sym = XkbKeycodeToKeysym(display, event->detail, 0, 0);
-                if (sym == XKB_KEY_Caps_Lock)
+                if (sym == XK_Caps_Lock)
                 {
                     emit capslockStatusChanged(isCapslockOn());
                 }
-                else if (sym == XKB_KEY_Num_Lock)
+                else if (sym == XK_Num_Lock)
                 {
                     emit this->numlockStatusChanged(isNumlockOn());
                 }

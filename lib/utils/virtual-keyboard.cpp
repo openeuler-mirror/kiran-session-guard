@@ -75,8 +75,13 @@ bool VirtualKeyboard::init(QWidget *parent)
 
     m_isSupported = true;
     m_process = new QProcess(this);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &VirtualKeyboard::slot_finished);
+#else
+    connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, &VirtualKeyboard::slot_finished);
+#endif
     connect(m_process, &QProcess::readyReadStandardOutput, this, [this, parent]
             {
                 QString stdoutput;
@@ -94,7 +99,12 @@ bool VirtualKeyboard::init(QWidget *parent)
                 xid = stdoutput.toULongLong();
                 KLOG_DEBUG() << "foreign virtual keyboard window id:" << xid;
                 foreignWindow = QWindow::fromWinId(xid);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 9, 0))
                 foreignWindow->setFlag(Qt::ForeignWindow);
+#else
+                foreignWindow->setFlags(foreignWindow->flags() | Qt::ForeignWindow);
+#endif
+
                 m_keyboardWidget = QWidget::createWindowContainer(foreignWindow, nullptr);
                 m_keyboardWidget->setParent(parent);
                 m_keyboardWidget->setFocusPolicy(Qt::NoFocus);

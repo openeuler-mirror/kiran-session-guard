@@ -130,7 +130,11 @@ void Frame::initUI()
         sizePolicy.setVerticalPolicy(QSizePolicy::Preferred);
 
         button->setSizePolicy(sizePolicy);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 9, 0))
+        // 在Qt5.9+版本中，支持setTabletTracking，触控笔相关功能
+        // FIXME:后续如果遇到需要在低版本qt中支持，需要解析XInput事件
         button->setTabletTracking(true);
+#endif
         button->setSizeIncrement(QSize(0, 0));
         button->setCursor(QCursor(Qt::PointingHandCursor));
         connect(button, &QToolButton::pressed, triggerSlot);
