@@ -135,7 +135,11 @@ void Dialog::initUI()
     connect(ui->btn_ok, &QPushButton::clicked, this, &Dialog::onOkClicked);
     connect(ui->btn_reauth,&QPushButton::clicked,this,&Dialog::onReauthClicked);
     connect(ui->edit->lineEdit(), &QLineEdit::returnPressed, this, &Dialog::onOkClicked);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     connect(ui->combobox_user, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &Dialog::onCurrentUserChanged);
+#else
+    connect(ui->combobox_user, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &Dialog::onCurrentUserChanged);
+#endif
 }
 
 void Dialog::switchButtonLayout(ButtonLayout layout)

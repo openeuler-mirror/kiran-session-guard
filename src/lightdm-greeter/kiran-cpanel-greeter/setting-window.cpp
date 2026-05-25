@@ -305,8 +305,11 @@ QWidget *SettingWindow::initPageGeneralSettings()
     m_comboScaleMode->addItem(tr("disable"), GreeterScalingMode::GREETER_SCALING_MODE_DISABLE);
     mainLayout->addWidget(m_comboScaleMode, 0);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
     connect(m_comboScaleMode, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &SettingWindow::onScaleModeChanged);
-
+#else
+    connect(m_comboScaleMode, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SettingWindow::onScaleModeChanged);
+#endif
     /* 缩放倍率 */
     auto labelScaleFactor = new QLabel(tr("Scale Factor"), this);
     labelScaleFactor->setObjectName("label_ScaleFactor");
