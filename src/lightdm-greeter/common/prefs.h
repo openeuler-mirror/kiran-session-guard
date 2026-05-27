@@ -14,6 +14,9 @@
 #pragma once
 
 #include "ksd_greeter_proxy.h"
+#include <QFileSystemWatcher>
+#include <QSettings>
+#include <QTimer>
 
 namespace Kiran
 {
@@ -42,6 +45,15 @@ public:
     bool monitorAlwaysOn();
     bool facePreviewEnabled() const;
 
+    /// Inherited from KSDGreeterProxy, falls back to greeter.ini when service unavailable
+    QString background();
+    QString autologin_user();
+    qulonglong autologin_timeout();
+    bool allow_manual_login();
+    bool hide_user_list();
+    quint16 scale_mode();
+    quint16 scale_factor();
+
 private:
     Prefs();
     void init();
@@ -51,9 +63,16 @@ signals:
 
 private slots:
     void onPropertyChanged(QDBusMessage messsage);
+    void handleIniFileChanged();
+private:
+    void initFromSettings();
+    void setupSettingsFileWatcher();
 
 private:
     static Prefs* m_instance;
+    QSettings* m_iniSettings;
+    QFileSystemWatcher* m_iniFileWatcher;
+
     QStringList m_hiddenSessions;
     QStringList m_hiddenUsers;
     QString m_defaultLoginUser;
@@ -65,6 +84,17 @@ private:
     bool m_canReboot = true;
     bool m_canSuspend = true;
     bool m_canHibernate = true;
+
+    // 用于 com.kylinsec.Kiran.SystemDaemon.Greeter 不存在时使用
+    // 特别是低版本系统上没有适配com.kylinsec.Kiran.SystemDaemon.Greeter时
+    bool m_ksdServiceAvailable = false;
+    QString m_background;
+    QString m_autologinUser;
+    qulonglong m_autologinTimeout = 0;
+    bool m_allowManualLogin = true;
+    bool m_hideUserList = false;
+    quint16 m_scaleMode = 0;
+    quint16 m_scaleFactor = 1;
 };
 }  // namespace Greeter
 }  // namespace SessionGuard
