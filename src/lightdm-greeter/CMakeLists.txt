@@ -46,8 +46,7 @@ target_include_directories(
           ${XCB_INCLUDE_DIRS}
           ${XCB_RANDR_INCLUDE_DIRS}
           ${LIGHTDM_QT5_INCLUDE_DIRS}
-          ${KLOG_QT5_INCLUDE_DIRS}
-          ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
+          ${KLOG_QT5_INCLUDE_DIRS})
 
 target_link_libraries(
   ${TARGET_NAME}
@@ -63,8 +62,13 @@ target_link_libraries(
   ${XCB_LIBRARIES}
   ${XCB_RANDR_LIBRARIES}
   ${LIGHTDM_QT5_LIBRARIES}
-  ${KLOG_QT5_LIBRARIES}
-  ${KIRAN_CC_DAEMON_LIBRARIES})
+  ${KLOG_QT5_LIBRARIES})
+        
+if(KIRAN_CC_DAEMON_FOUND)
+    target_compile_definitions(${TARGET_NAME} PRIVATE HAVE_KIRAN_CC_DAEMON)
+    target_include_directories(${TARGET_NAME} PRIVATE ${KIRAN_CC_DAEMON_INCLUDE_DIRS})
+    target_link_libraries(${TARGET_NAME} PRIVATE ${KIRAN_CC_DAEMON_LIBRARIES})
+endif()
 
 # 安装lightdm-kiran-greeter
 install(TARGETS ${TARGET_NAME}
@@ -110,4 +114,6 @@ install(
               WORLD_WRITE)
 
 # 登录设置
-add_subdirectory(kiran-cpanel-greeter)
+if(ENABLE_KIRAN_CPANEL_GREETER)
+  add_subdirectory(kiran-cpanel-greeter)
+endif()

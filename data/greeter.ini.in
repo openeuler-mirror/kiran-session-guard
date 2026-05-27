@@ -36,3 +36,13 @@ can-suspend=@CAN_SUSPEND@
 
 #是否提供休眠选项
 can-hibernate=@CAN_HIBERNATE@
+
+[Greeter]
+#greeter DBus服务配置，当DBus服务不可用时从此处读取，适用于低版本系统
+background=
+autologin_user=
+autologin_timeout=0
+allow_manual_login=true
+hide_user_list=false
+scale_mode=0
+scale_factor=1

@@ -17,6 +17,7 @@
 #include "../common/prefs.h"
 #include "hover-tips.h"
 #include "user-manager.h"
+#include "greeter-define.h"
 
 #include <style-property.h>
 #include <QApplication>
@@ -34,7 +35,6 @@
 #include <kiran-message-box.h>
 #include <kiran-sidebar-widget.h>
 #include <kiran-switch-button.h>
-#include <kiran-system-daemon/greeter-i.h>
 #include <qt5-log-i.h>
 
 #define BACKGROUND_SAVE_LOCATION "/usr/share/lightdm-kiran-greeter/background"

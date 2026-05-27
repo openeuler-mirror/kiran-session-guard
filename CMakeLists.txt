@@ -54,8 +54,18 @@ find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets X11Extras DBus LinguistTools)
 pkg_search_module(KLOG_QT5 REQUIRED klog-qt5)
 pkg_search_module(KIRAN_STYLE_HELPER REQUIRED kiran-style-helper)
-pkg_search_module(KIRAN_CC_DAEMON REQUIRED kiran-cc-daemon)
+# 适配低版本系统，不强制依赖kiran-cc-daemon
+pkg_search_module(KIRAN_CC_DAEMON kiran-cc-daemon)
+if(NOT KIRAN_CC_DAEMON_FOUND)
+    message(WARNING "kiran-cc-daemon not found, this feature will be disabled on low version systems")
+endif()
 pkg_search_module(KIRANWIDGETS_QT5 REQUIRED kiranwidgets-qt5)
+
+# 组件编译选项，用于支持低版本系统不需要个别组件的情况
+set(ENABLE_LIGHTDM_GREETER true CACHE BOOL "Enable lightdm-kiran-greeter")
+set(ENABLE_SCREENSAVER_DIALOG true CACHE BOOL "Enable screensaver-dialog")
+set(ENABLE_POLKIT_AGENT true CACHE BOOL "Enable polkit-agent")
+set(ENABLE_KIRAN_CPANEL_GREETER true CACHE BOOL "Enable kiran-cpanel-greeter")
 
 add_subdirectory(./lib)
 add_subdirectory(./src)

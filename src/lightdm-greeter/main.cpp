@@ -11,7 +11,7 @@
  *
  * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
  */
-#include <kiran-system-daemon/greeter-i.h>
+#include "greeter-define.h"
 #include <qt5-log-i.h>
 
 #include <QApplication>
