@@ -238,7 +238,7 @@ void Dialog::onNotifyAuthTypeChanged(KADAuthType authType)
         {KAD_AUTH_TYPE_FACE, tr("face auth")},
         {KAD_AUTH_TYPE_FINGERVEIN, tr("fingervein auth")},
         {KAD_AUTH_TYPE_IRIS,tr("iris auth")},
-        {(1 << 6),tr("virtual face auth")}};
+        {KAD_AUTH_TYPE_VIRTUAL_FACE,tr("virtual face auth")}};
 
     switchButtonLayout(BUTTON_LAYOUT_NORMAL);
     ui->label_tips->setText("");

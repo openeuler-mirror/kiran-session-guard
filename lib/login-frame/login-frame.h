@@ -102,8 +102,13 @@ private slots:
     void onFaceLeaveDetected(QString json);
 
 private:
+    // 按认证类型显示控制页面
+    void updateControlPageForAuthType(KADAuthType authType);
+    // 判断认证类型是否需要输入框
+    bool isEmptyControlAuthType(KADAuthType type) const;
     void updateFacePreviewVisibility();
     bool isFaceAuthType(KADAuthType type) const;
+    bool isVirtualCodeAuthType(KADAuthType type) const;
 
     Ui::LoginFrame* ui;
     QWidget* m_leftTopWidget = nullptr;

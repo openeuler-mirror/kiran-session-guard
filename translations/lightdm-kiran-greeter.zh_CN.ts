@@ -12,7 +12,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="311"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="391"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -59,58 +59,63 @@
         <source>virtual code auth</source>
         <translation>授权码认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="76"/>
+        <source>virtual code auth no camera</source>
+        <translation>授权码认证(无摄像头)</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::Greeter::Frame</name>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="190"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="405"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="191"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="426"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="245"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="250"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="257"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="262"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="266"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="271"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="272"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="277"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="278"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="283"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="284"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="289"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="292"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="297"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="303"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="308"/>
         <source>request auth code</source>
         <translation>申请授权码</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="435"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="445"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="456"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="466"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
@@ -147,13 +152,13 @@
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="238"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="402"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="405"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="252"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="416"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="419"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
@@ -183,53 +188,53 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="311"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="314"/>
         <source>Scale Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="336"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="339"/>
         <source>Enable manual input user login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="361"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="364"/>
         <source>Show User List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="467"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="543"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="470"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="546"/>
         <source>Configuration changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="468"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="544"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="471"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="547"/>
         <source>The external configuration file has changed
 If you choose to save, all external changes will be overwritten
 Select discard to discard the modification and reload the new configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="521"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="591"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="524"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="594"/>
         <source>Save failed, reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="525"/>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="601"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="528"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="604"/>
         <source>Saved successfully</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="595"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="598"/>
         <source>Save failed: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="741"/>
+        <location filename="../src/lightdm-greeter/kiran-cpanel-greeter/setting-window.cpp" line="744"/>
         <source>Please ensure that one of the two options is turned on!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -237,12 +242,12 @@ Select discard to discard the modification and reload the new configuration</sou
 <context>
     <name>Kiran::SessionGuard::LoginFrame</name>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="85"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="92"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="276"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="323"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
