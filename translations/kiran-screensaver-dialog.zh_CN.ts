@@ -4,7 +4,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="311"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="391"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -51,36 +51,41 @@
         <source>virtual code auth</source>
         <translation>授权码认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="76"/>
+        <source>virtual code auth no camera</source>
+        <translation>授权码认证(无摄像头)</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::Locker::Frame</name>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="87"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="88"/>
         <source>reboot</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="91"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="92"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="95"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="96"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="140"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="145"/>
         <source>switch to greeter</source>
         <translation>切换用户</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="144"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="149"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="154"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="159"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
@@ -88,12 +93,12 @@
 <context>
     <name>Kiran::SessionGuard::LoginFrame</name>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="85"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="92"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="276"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="323"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>

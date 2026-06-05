@@ -244,28 +244,7 @@ void LoginFrame::initUI()
                     << "authType=" << (int)authType
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         // UI 侧先行更新控件页与输入框状态，避免等待后端通知导致“切换后无输入框/不可输入”。
-        static QSet<int> emptyControlAuthType = {
-            KAD_AUTH_TYPE_FINGERPRINT,
-            KAD_AUTH_TYPE_FINGERVEIN,
-            KAD_AUTH_TYPE_IRIS,
-            KAD_AUTH_TYPE_FACE,
-            (1 << 6)};
-        if (emptyControlAuthType.contains(authType))
-        {
-            switchControlPage(CONTROL_PAGE_EMPTY);
-        }
-        else
-        {
-            switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
-            ui->edit->reset();
-            ui->edit->setEnabled(true);
-            ui->edit->setEchoMode(authType == KAD_AUTH_TYPE_PASSWORD ? QLineEdit::Password : QLineEdit::Normal);
-
-            setEditFocus(0);
-            m_prompted = false;
-            m_editMode = EDIT_MODE_PROMPT_RESPOSE;
-            ui->tips->clear();
-        }
+        updateControlPageForAuthType(authType);
 
         // UI 侧立即更新预览显隐，避免等待认证服务通知导致残留。
         m_lastAuthType = authType;
@@ -361,10 +340,8 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
     ui->edit->setPlaceHolderText(text);
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
     // 授权码输入框需明文便于核对
-    const bool fromSwitcher =
-        m_switcher && (m_switcher->getCurrentAuthType() == static_cast<int>(KAD_AUTH_TYPE_VIRTUAL_CODE));
-    const bool virtualAuthCode =
-        (m_lastAuthType == KAD_AUTH_TYPE_VIRTUAL_CODE) || fromSwitcher;
+    const bool fromSwitcher = m_switcher && isVirtualCodeAuthType((KADAuthType)m_switcher->getCurrentAuthType());
+    const bool virtualAuthCode = isVirtualCodeAuthType(m_lastAuthType) || fromSwitcher;
     const bool useSecretEcho = (type == PromptTypeSecret) && !virtualAuthCode;
     ui->edit->setEchoMode(useSecretEcho ? QLineEdit::Password : QLineEdit::Normal);
     m_prompted = true;
@@ -431,24 +408,43 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
         m_switcher->setCurrentAuthType(type);
     }
 
-    ui->tips->clear();
+    updateControlPageForAuthType(type);
+    updateFacePreviewVisibility();
+}
 
-    static QSet<int> emptyControlAuthType = {
+bool LoginFrame::isEmptyControlAuthType(KADAuthType type) const
+{
+    static const QSet<int> emptyControlAuthType = {
         KAD_AUTH_TYPE_FINGERPRINT,
         KAD_AUTH_TYPE_FINGERVEIN,
         KAD_AUTH_TYPE_IRIS,
         KAD_AUTH_TYPE_FACE,
-        (1 << 6)};
-    if (emptyControlAuthType.contains(type))
+        KAD_AUTH_TYPE_VIRTUAL_FACE};
+    return emptyControlAuthType.contains(type);
+}
+
+void LoginFrame::updateControlPageForAuthType(KADAuthType authType)
+{
+    if (isEmptyControlAuthType(authType))
     {
         switchControlPage(CONTROL_PAGE_EMPTY);
-    }
-    else
-    {
-        switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
+        ui->tips->clear();
+        return;
     }
 
-    updateFacePreviewVisibility();
+    switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
+    ui->edit->reset();
+    ui->edit->setEnabled(true);
+    ui->edit->setEchoMode(authType == KAD_AUTH_TYPE_PASSWORD ? QLineEdit::Password : QLineEdit::Normal);
+    setEditFocus(0);
+    m_prompted = false;
+    m_editMode = EDIT_MODE_PROMPT_RESPOSE;
+    ui->tips->clear();
+}
+
+bool LoginFrame::isVirtualCodeAuthType(KADAuthType type) const
+{
+    return type == KAD_AUTH_TYPE_VIRTUAL_CODE || type == KAD_AUTH_TYPE_VIRTUAL_CODE_NO_CAMERA;
 }
 
 bool LoginFrame::isFaceAuthType(KADAuthType type) const
