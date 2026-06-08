@@ -17,6 +17,7 @@
 #include <security/pam_appl.h>
 #include <sys/mman.h>
 #include <iostream>
+#include <libintl.h>
 
 #include "../checkpass-common/pam-message.h"
 
@@ -179,6 +180,7 @@ int main(int argc, char *argv[])
         qputenv("LANG", newLangEnv.toUtf8());
     }
     setlocale(LC_ALL, "");
+    bind_textdomain_codeset("Linux-PAM", "UTF-8");
 
     CHANNEL_READ = atoi(argv[0]);
     CHANNEL_WRITE = atoi(argv[1]);
