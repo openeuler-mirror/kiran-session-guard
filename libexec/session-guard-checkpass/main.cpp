@@ -17,6 +17,7 @@
 #include <security/pam_appl.h>
 #include <sys/mman.h>
 #include <iostream>
+#include <libintl.h>
 #include "pam-message.h"
 
 #define PAM_SERVICE_NAME "kiran-screensaver"
@@ -170,13 +171,13 @@ int main(int argc, char *argv[])
 
     QString langEnv = qgetenv("LANG");
     QStringList langSplitRes = langEnv.split(".");
-    if(langSplitRes.size() == 2 && langSplitRes.at(1).compare("UTF-8")!=0)
+    if( langSplitRes.size() == 1 || (langSplitRes.size() == 2 && langSplitRes.at(1).compare("UTF-8")!=0) )
     {
-        langSplitRes.replace(1,"UTF-8");
-        QString newLangEnv = langSplitRes.join(".");
-        qputenv("LANG",newLangEnv.toLatin1());
+        QString newLangEnv = QString("%1.UTF-8").arg(langSplitRes.at(0));
+        qputenv("LANG", newLangEnv.toUtf8());
     }
     setlocale(LC_ALL,"");
+    bind_textdomain_codeset("Linux-PAM", "UTF-8");
 
     CHANNEL_READ = atoi(argv[0]);
     CHANNEL_WRITE = atoi(argv[1]);
