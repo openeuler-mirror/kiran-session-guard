@@ -12,6 +12,7 @@
 #pragma once
 
 #include <QDBusConnection>
+#include <QTimer>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -25,34 +26,55 @@ namespace Kiran
 namespace SessionGuard
 {
 
-// 仅连接 com.czht.face.daemon 的 VideoInfo(JPEG)，并固定走 system bus。
+/**
+ * @brief 人脸预览控件
+ *
+ * 从 kiran-face-dbus-service 的 POSIX 共享内存 `/kiran_face_preview`
+ * 读取 JPEG 帧，渲染为预览画面。
+ *
+ * 原实现通过 D-Bus VideoInfo 信号接收帧，现改为通过 SHM 轮询。
+ */
 class FacePreviewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FacePreviewWidget(QWidget* parent = nullptr);
+    explicit FacePreviewWidget(QWidget *parent = nullptr);
     ~FacePreviewWidget() override;
 
-    // 判断人脸 D-Bus 服务是否存在（system bus 上 com.czht.face.daemon）。
+    /**
+     * @brief 判断 kiran 人脸 D-Bus 服务是否可用
+     * @return 若 com.kiran.face.service 已在 system bus 注册返回 true
+     */
     static bool isFaceDaemonAvailable();
 
 protected:
-    void showEvent(QShowEvent* event) override;
-    void hideEvent(QHideEvent* event) override;
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
 
 private slots:
-    void onVideoInfo(const QByteArray& jpegData);
+    /** SHM 定时刷新，读取共享内存中的 JPEG 帧并渲染 */
+    void onRefreshTimer();
 
 private:
-    void connectVideoInfo();
-    void disconnectVideoInfo();
+    /** 打开 POSIX 共享内存，key 来自 /tmp/kiran_face_preview_shm_key */
+    bool connectShm();
+    /** 关闭共享内存映射 */
+    void disconnectShm();
 
-    QLabel* m_label = nullptr;
-    QDBusConnection* m_signalBus = nullptr;
-    bool m_connected = false;
-    bool m_connectFailedLogged = false;
+    QLabel *m_label = nullptr;
+
+    QTimer *m_refreshTimer = nullptr;
+
+    /** 共享内存文件描述符 */
+    int m_shmFd = -1;
+    /** 共享内存映射地址 */
+    void *m_shmAddr = nullptr;
+    /** 共享内存大小（字节） */
+    size_t m_shmSize = 0;
+
     bool m_loggedFirstPayload = false;
     bool m_loggedFirstDecodeFail = false;
 };
+
 }  // namespace SessionGuard
 }  // namespace Kiran

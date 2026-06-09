@@ -79,6 +79,11 @@
         <source>virtual code auth</source>
         <translation>授权码认证</translation>
     </message>
+    <message>
+        <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="76"/>
+        <source>virtual code auth no camera</source>
+        <translation>无摄像头授权码认证</translation>
+    </message>
 </context>
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>

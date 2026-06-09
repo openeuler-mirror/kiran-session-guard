@@ -74,6 +74,7 @@ public:
 
 protected:
     void setEditFocus(int delayMs = 0);
+    virtual void onAuthTypeChanged(KADAuthType type);
 
 private:
     void initUI();
@@ -97,7 +98,6 @@ private slots:
     void onAuthComplete(bool authRes);
     void onNotifyAuthMode(KADAuthMode mode);
     void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
-    void onAuthTypeChanged(KADAuthType type);
     void onAuthUserPropertyChanged();
     void onFaceLeaveDetected(QString json);
 
