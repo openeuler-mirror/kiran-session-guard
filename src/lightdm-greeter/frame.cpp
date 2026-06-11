@@ -303,7 +303,7 @@ void Frame::initUI()
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
 
-    // 弹窗来源：kiran-authentication-service/src/driver/virtual/czht
+    // 弹窗来源：kiran-authentication-service（kiran gen-code dialog）
     QString authCodeRequestPath = "/usr/bin/kiran-auth-code-request";
     m_btnRequestAuthCodeButton = createActionButton("btn_request_auth_code",tr("request auth code"),[this,authCodeRequestPath]{
         KLOG_INFO() << "request auth code button clicked";
@@ -327,15 +327,21 @@ void Frame::initUI()
             });
             process->deleteLater();
         });
-        process->start(authCodeRequestPath, QStringList());
+        process->start(authCodeRequestPath, QStringList() << "--user-name" << m_userName);
     });
-    if (QFile::exists(authCodeRequestPath))
+    // 默认隐藏，显示授权码输入页面时由 authTypeChanged 信号控制显示
+    m_btnRequestAuthCodeButton->setVisible(false);
+
+    // 将授权码申请按钮插入 page_edit 布局，放在输入框后面，而非右下角按钮栏
+    // page_edit 布局: horizontalSpacer(0), label_spacer(1), edit(2), label_capslock(3), horizontalSpacer_2(4)
+    auto* pageEdit = findChild<QWidget*>("page_edit");
+    if (pageEdit)
     {
-        m_btnRequestAuthCodeButton->setVisible(true);
-    }
-    else
-    {
-        m_btnRequestAuthCodeButton->setVisible(false);
+        auto* pageEditLayout = qobject_cast<QHBoxLayout*>(pageEdit->layout());
+        if (pageEditLayout)
+        {
+            pageEditLayout->insertWidget(4, m_btnRequestAuthCodeButton);
+        }
     }
     // clang-format on
 
@@ -372,15 +378,13 @@ void Frame::initUI()
         m_btnPower->setVisible(false);
     }
 
-    rbBtnLayout->addWidget(m_btnRequestAuthCodeButton, 1);
-
     setRightBottomWidget(rbBtnWidget);
 
     if (m_prefs->facePreviewEnabled())
     {
         auto* facePreview = new FacePreviewWidget(this);
         setLeftTopWidget(facePreview);
-        KLOG_INFO() << "greeter: face preview mounted (VideoInfo; system bus)";
+        KLOG_INFO() << "greeter: face preview mounted (SHM; system bus)";
     }
     else
     {
@@ -591,6 +595,14 @@ void Frame::onLoginOtherClicked()
     default:
         break;
     }
+}
+
+void Frame::onAuthTypeChanged(KADAuthType type)
+{
+    LoginFrame::onAuthTypeChanged(type);
+    m_btnRequestAuthCodeButton->setVisible(
+        type == KAD_AUTH_TYPE_VIRTUAL_CODE
+        && QFile::exists("/usr/bin/kiran-auth-code-request"));
 }
 
 static bool getIsLoggedIn(const QString& userName)

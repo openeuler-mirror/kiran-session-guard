@@ -19,4 +19,5 @@ target_link_libraries(${TARGET_NAME} PUBLIC
         Qt5::DBus
         Qt5::Widgets
         ${KIRAN_STYLE_HELPER_LIBRARIES}
-        ${KLOG_QT5_LIBRARIES})
+        ${KLOG_QT5_LIBRARIES}
+        rt)

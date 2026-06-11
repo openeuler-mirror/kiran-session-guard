@@ -200,7 +200,7 @@ void Frame::initUI()
     {
         auto* facePreview = new FacePreviewWidget(this);
         setLeftTopWidget(facePreview);
-        KLOG_INFO() << "locker: face preview mounted (VideoInfo; system bus)";
+        KLOG_INFO() << "locker: face preview mounted (SHM; system bus)";
     }
     else
     {

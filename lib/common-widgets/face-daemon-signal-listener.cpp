@@ -11,9 +11,9 @@
 
 namespace
 {
-const QString kFaceService = QStringLiteral("com.czht.face.daemon");
-const QString kFacePath = QStringLiteral("/com/czht/face/daemon");
-const QString kFaceInterface = QStringLiteral("com.czht.face.daemon");
+const QString kFaceService = QStringLiteral("com.kiran.face.service");
+const QString kFacePath = QStringLiteral("/com/kiran/face/service");
+const QString kFaceInterface = QStringLiteral("com.kiran.face.service");
 }  // namespace
 
 namespace Kiran
