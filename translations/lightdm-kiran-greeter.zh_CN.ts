@@ -51,17 +51,17 @@
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="74"/>
-        <source>virtual face auth</source>
+        <source>soft face auth</source>
         <translation>远程人脸认证</translation>
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="75"/>
-        <source>virtual code auth</source>
+        <source>soft code auth</source>
         <translation>授权码认证</translation>
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="76"/>
-        <source>virtual code auth no camera</source>
+        <source>soft code auth no camera</source>
         <translation>授权码认证(无摄像头)</translation>
     </message>
 </context>
@@ -69,7 +69,7 @@
     <name>Kiran::SessionGuard::Greeter::Frame</name>
     <message>
         <location filename="../src/lightdm-greeter/frame.cpp" line="191"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="426"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="430"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
@@ -114,8 +114,8 @@
         <translation>申请授权码</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="456"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="466"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="460"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="470"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
@@ -247,7 +247,7 @@ Select discard to discard the modification and reload the new configuration</sou
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="323"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="302"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>

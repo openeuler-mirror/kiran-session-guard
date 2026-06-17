@@ -9,7 +9,7 @@
         <file>common-widgets-images/ukey-auth.svg</file>
         <file>common-widgets-images/fingervein-auth.svg</file>
         <file>common-widgets-images/arrow.svg</file>
-        <file>common-widgets-images/virtual-face-auth.svg</file>
+        <file>common-widgets-images/soft-face-auth.svg</file>
         <file>common-widgets-images/code-auth.svg</file>
     </qresource>
 </RCC>

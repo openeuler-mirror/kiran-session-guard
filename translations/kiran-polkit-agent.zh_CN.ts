@@ -71,17 +71,17 @@
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="74"/>
-        <source>virtual face auth</source>
+        <source>soft face auth</source>
         <translation>远程人脸认证</translation>
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="75"/>
-        <source>virtual code auth</source>
+        <source>soft code auth</source>
         <translation>授权码认证</translation>
     </message>
     <message>
         <location filename="../lib/common-widgets/auth-type-switcher.cpp" line="76"/>
-        <source>virtual code auth no camera</source>
+        <source>soft code auth no camera</source>
         <translation>无摄像头授权码认证</translation>
     </message>
 </context>
@@ -114,7 +114,7 @@
     </message>
     <message>
         <location filename="../src/polkit-agent/dialog.cpp" line="236"/>
-        <source>virtual face auth</source>
+        <source>soft face auth</source>
         <translation>远程人脸认证</translation>
     </message>
     <message>

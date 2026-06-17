@@ -71,9 +71,9 @@ void AuthTypeSwitcher::setAuthTypes(QList<KADAuthType> authtypes)
             {KAD_AUTH_TYPE_FINGERVEIN,{":/common-widgets-images/fingervein-auth.svg",tr("finger vein auth")}},
             {KAD_AUTH_TYPE_IRIS,{":/common-widgets-images/iris-auth.svg",tr("iris auth")}},
             {KAD_AUTH_TYPE_UKEY,{":/common-widgets-images/ukey-auth.svg",tr("ukey auth")}},
-            {KAD_AUTH_TYPE_VIRTUAL_FACE,{":/common-widgets-images/virtual-face-auth.svg",tr("virtual face auth")}},
-            {KAD_AUTH_TYPE_VIRTUAL_CODE,{":/common-widgets-images/code-auth.svg",tr("virtual code auth")},},
-            {KAD_AUTH_TYPE_VIRTUAL_CODE_NO_CAMERA,{":/common-widgets-images/code-auth.svg",tr("virtual code auth no camera")},}
+            {KAD_AUTH_TYPE_SOFT_FACE,{":/common-widgets-images/soft-face-auth.svg",tr("soft face auth")}},
+            {KAD_AUTH_TYPE_SOFT_CODE,{":/common-widgets-images/code-auth.svg",tr("soft code auth")},},
+            {KAD_AUTH_TYPE_SOFT_CODE_NO_CAMERA,{":/common-widgets-images/code-auth.svg",tr("soft code auth no camera")},}
         };
     // clang-format on
     clear();
