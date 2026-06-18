@@ -340,9 +340,9 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
     ui->edit->setPlaceHolderText(text);
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
     // 授权码输入框需明文便于核对
-    const bool fromSwitcher = m_switcher && isVirtualCodeAuthType((KADAuthType)m_switcher->getCurrentAuthType());
-    const bool virtualAuthCode = isVirtualCodeAuthType(m_lastAuthType) || fromSwitcher;
-    const bool useSecretEcho = (type == PromptTypeSecret) && !virtualAuthCode;
+    const bool fromSwitcher = m_switcher && isSoftCodeAuthType((KADAuthType)m_switcher->getCurrentAuthType());
+    const bool softAuthCode = isSoftCodeAuthType(m_lastAuthType) || fromSwitcher;
+    const bool useSecretEcho = (type == PromptTypeSecret) && !softAuthCode;
     ui->edit->setEchoMode(useSecretEcho ? QLineEdit::Password : QLineEdit::Normal);
     m_prompted = true;
     /// NOTE:需要延时设置输入焦点到输入框，不然又会被置回UserItem
@@ -419,7 +419,7 @@ bool LoginFrame::isEmptyControlAuthType(KADAuthType type) const
         KAD_AUTH_TYPE_FINGERVEIN,
         KAD_AUTH_TYPE_IRIS,
         KAD_AUTH_TYPE_FACE,
-        KAD_AUTH_TYPE_VIRTUAL_FACE};
+        KAD_AUTH_TYPE_SOFT_FACE};
     return emptyControlAuthType.contains(type);
 }
 
@@ -442,14 +442,14 @@ void LoginFrame::updateControlPageForAuthType(KADAuthType authType)
     ui->tips->clear();
 }
 
-bool LoginFrame::isVirtualCodeAuthType(KADAuthType type) const
+bool LoginFrame::isSoftCodeAuthType(KADAuthType type) const
 {
-    return type == KAD_AUTH_TYPE_VIRTUAL_CODE || type == KAD_AUTH_TYPE_VIRTUAL_CODE_NO_CAMERA;
+    return type == KAD_AUTH_TYPE_SOFT_CODE || type == KAD_AUTH_TYPE_SOFT_CODE_NO_CAMERA;
 }
 
 bool LoginFrame::isFaceAuthType(KADAuthType type) const
 {
-    return type == KAD_AUTH_TYPE_VIRTUAL_FACE || type == KAD_AUTH_TYPE_VIRTUAL_CODE;
+    return type == KAD_AUTH_TYPE_SOFT_FACE || type == KAD_AUTH_TYPE_SOFT_CODE;
 }
 
 void LoginFrame::updateFacePreviewVisibility()
@@ -465,13 +465,13 @@ void LoginFrame::updateFacePreviewVisibility()
         return;
     }
 
-    // 仅对虚拟人脸/虚拟授权码显示；同时要求 D-Bus 服务存在。
-    const bool isVirtual = isFaceAuthType(m_lastAuthType);
+    // 仅对软人脸/软授权码显示；同时要求 D-Bus 服务存在。
+    const bool isSoft = isFaceAuthType(m_lastAuthType);
     const bool daemonOk = FacePreviewWidget::isFaceDaemonAvailable();
-    const bool shouldShow = isVirtual && daemonOk;
+    const bool shouldShow = isSoft && daemonOk;
     KLOG_INFO() << "LoginFrame: face preview visibility decision"
                 << "authType=" << (int)m_lastAuthType
-                << "isVirtual=" << isVirtual
+                << "isSoft=" << isSoft
                 << "faceDaemonAvailable=" << daemonOk
                 << "visible=" << shouldShow;
     facePreview->setVisible(shouldShow);

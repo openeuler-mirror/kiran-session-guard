@@ -601,7 +601,7 @@ void Frame::onAuthTypeChanged(KADAuthType type)
 {
     LoginFrame::onAuthTypeChanged(type);
     m_btnRequestAuthCodeButton->setVisible(
-        type == KAD_AUTH_TYPE_VIRTUAL_CODE
+        type == KAD_AUTH_TYPE_SOFT_CODE
         && QFile::exists("/usr/bin/kiran-auth-code-request"));
 }
 

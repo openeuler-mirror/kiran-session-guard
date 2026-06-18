@@ -21,14 +21,14 @@
 #include <tuple>
 #include "auth-type-switcher-define.h"
 
-#ifndef KAD_AUTH_TYPE_VIRTUAL_FACE
-#define KAD_AUTH_TYPE_VIRTUAL_FACE (1 << 6)
+#ifndef KAD_AUTH_TYPE_SOFT_FACE
+#define KAD_AUTH_TYPE_SOFT_FACE (1 << 6)
 #endif
-#ifndef KAD_AUTH_TYPE_VIRTUAL_CODE
-#define KAD_AUTH_TYPE_VIRTUAL_CODE (1 << 7)
+#ifndef KAD_AUTH_TYPE_SOFT_CODE
+#define KAD_AUTH_TYPE_SOFT_CODE (1 << 7)
 #endif
-#ifndef KAD_AUTH_TYPE_VIRTUAL_CODE_NO_CAMERA
-#define KAD_AUTH_TYPE_VIRTUAL_CODE_NO_CAMERA (1 << 8)
+#ifndef KAD_AUTH_TYPE_SOFT_CODE_NO_CAMERA
+#define KAD_AUTH_TYPE_SOFT_CODE_NO_CAMERA (1 << 8)
 #endif
 
 namespace Kiran

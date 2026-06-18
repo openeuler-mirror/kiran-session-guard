@@ -108,7 +108,7 @@ private:
     bool isEmptyControlAuthType(KADAuthType type) const;
     void updateFacePreviewVisibility();
     bool isFaceAuthType(KADAuthType type) const;
-    bool isVirtualCodeAuthType(KADAuthType type) const;
+    bool isSoftCodeAuthType(KADAuthType type) const;
 
     Ui::LoginFrame* ui;
     QWidget* m_leftTopWidget = nullptr;

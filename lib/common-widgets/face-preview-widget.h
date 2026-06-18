@@ -54,12 +54,24 @@ protected:
 private slots:
     /** SHM 定时刷新，读取共享内存中的 JPEG 帧并渲染 */
     void onRefreshTimer();
+    /** 摄像头热插拔可用性变化 */
+    void onCameraAvailabilityChanged(bool available);
 
 private:
-    /** 打开 POSIX 共享内存，key 来自 /tmp/kiran_face_preview_shm_key */
+    /**
+     * @brief 打开 POSIX 共享内存，通过 D-Bus ControlStreamNode 获取 SHM 信息
+     * @return 成功返回 true
+     */
     bool connectShm();
-    /** 关闭共享内存映射 */
+    /** 关闭共享内存映射并停止 SHM 流 */
     void disconnectShm();
+
+    /**
+     * @brief 通过 D-Bus 调用 ControlStreamNode 启动或停止 SHM 预览流
+     * @param enable true 启动流，false 停止流
+     * @return SHM 大小（字节），失败返回 0
+     */
+    size_t callControlStreamNode(bool enable);
 
     QLabel *m_label = nullptr;
 
@@ -72,8 +84,15 @@ private:
     /** 共享内存大小（字节） */
     size_t m_shmSize = 0;
 
+    /** 业务标识，用于 D-Bus 调用 ControlStreamNode */
+    QString m_businessId = QStringLiteral("KylinsecOS");
+
     bool m_loggedFirstPayload = false;
     bool m_loggedFirstDecodeFail = false;
+    /** 是否已记录 SHM 保留流状态（code=7，流已在运行） */
+    bool m_loggedShmAlreadyStreaming = false;
+    /** 摄像头不可用时标记，待热插拔恢复后自动重连 */
+    bool m_cameraUnavailable = false;
 };
 
 }  // namespace SessionGuard
