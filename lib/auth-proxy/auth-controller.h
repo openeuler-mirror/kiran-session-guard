@@ -9,13 +9,15 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PSL v2 for more details.
  *
- * Author:     liuxinhao <liuxinhao@kylinos.com.cn>
+ * Author:     liuxinhao <liuxinhao@kylinsec.com.cn>
  */
 
 #pragma once
 
 #include <kiran-authentication-service/kas-authentication-i.h>
+#include <QDateTime>
 #include <QObject>
+#include <QTimer>
 #include "auth-base.h"
 
 /**
@@ -37,14 +39,16 @@ public:
     bool init(AuthBase* authInterface);
     bool isValid() const;
 
-    // 是否在认证中
+    // 是否在认证中（与底层 LightDM/PAM 状态一致）
     bool inAuthentication() const;
+    // 底层 LightDM/PAM 是否仍在认证（与 inAuthentication 等价，供 UI 显式区分语义）
+    bool underlyingInAuthentication() const;
     // 是否已经认证通过
     bool isAuthenticated() const;
     // 当前认证的用户
     QString authenticationUser() const;
-    // 开始认证
-    void authenticate(const QString& username);
+    // 开始认证；返回 false 表示未向底层发起新会话（合并或排队等待上一轮结束）
+    bool authenticate(const QString& username);
     // 回复prompt类型消息
     void respond(const QString& response);
     // 取消认证
@@ -65,6 +69,8 @@ signals:
     void showPrompt(QString text, PromptType type);
     // 认证完成结果
     void authenticationComplete(bool authRes);
+    // 已向底层 LightDM/PAM 发起认证
+    void authenticationStarted();
 
     // 认证模式通知信号,开始认证过后通知
     void notifyAuthMode(KADAuthMode authMode);
@@ -74,6 +80,9 @@ signals:
     void authTypeChanged(KADAuthType authType);
 
 private:
+    bool doAuthenticate(const QString& username);
+    void tryStartPendingAuthenticate();
+
     bool isAuthDaemonCommand(const QString& msg);
     bool processAuthDaemonCommand(const QString& msg);
     void onNotifyAuthMode(KADAuthMode mode);
@@ -106,6 +115,15 @@ private:
     bool m_hasQueuedResponse = false;
     quint64 m_queuedResponseSeq = 0;
     QString m_queuedResponse;
+
+    // 当前进行中的认证轮次；用于丢弃过期 authenticationComplete。
+    quint64 m_ongoingAuthSeq = 0;
+    quint64 m_completedAuthSeq = 0;
+
+    // 上一轮 PAM 未结束时排队启动的新认证
+    QString m_pendingAuthenticateUser;
+    QTimer* m_waitAuthEndTimer = nullptr;
+    int m_waitAuthEndPollCount = 0;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <QDateTime>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QSpacerItem>
@@ -416,6 +417,12 @@ void Frame::reset(State state)
 {
     RETURN_IF_FALSE(state != m_state);
 
+    KLOG_INFO() << "Frame: reset"
+                << "fromState=" << (int)m_state
+                << "toState=" << (int)state
+                << "userName=" << m_userName
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+
     switch (state)
     {
     case STATE_USER_LIST_LOGIN:
@@ -475,10 +482,18 @@ void Frame::reset(State state)
     }
 
     m_state = state;
+    KLOG_INFO() << "Frame: reset done"
+                << "state=" << (int)m_state
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 }
 
 void Frame::authUserInputed(const QString& userName)
 {
+    KLOG_INFO() << "Frame: authUserInputed"
+                << "user=" << userName
+                << "stateBefore=" << (int)m_state
+                << "userNameBefore=" << m_userName
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     // 手动输入用户名完成,切换状态,以及匹配的界面
     reset(STATE_MANUAL_LOGIN_AUTH);
     // 触发该用户登录
@@ -487,6 +502,12 @@ void Frame::authUserInputed(const QString& userName)
 
 void Frame::authenticateComplete(bool authRes, const QString& userName)
 {
+    KLOG_INFO() << "Frame: authenticateComplete"
+                << "success=" << authRes
+                << "user=" << userName
+                << "state=" << (int)m_state
+                << "session=" << m_specifiedSession
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     if (authRes)
     {
         m_greeter->startSessionSync(m_specifiedSession);

@@ -111,7 +111,25 @@ void AuthTypeSwitcher::setCurrentAuthType(int authType)
     {
         return;
     }
+    if (m_currentAuthType == authType)
+    {
+        return;
+    }
     onAuthTypeChanged(authType);
+}
+
+void AuthTypeSwitcher::setCurrentAuthTypeQuiet(int authType)
+{
+    if (m_authTypeMap.find((KADAuthType)authType) == m_authTypeMap.end())
+    {
+        return;
+    }
+    if (m_currentAuthType == authType)
+    {
+        return;
+    }
+    m_currentAuthType = authType;
+    update();
 }
 
 void AuthTypeSwitcher::onAuthTypeChanged(int authType)

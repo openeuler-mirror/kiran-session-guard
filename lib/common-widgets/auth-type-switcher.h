@@ -49,6 +49,8 @@ public:
     void setAuthTypes(QList<KADAuthType> authtypes);
     int getCurrentAuthType();
     void setCurrentAuthType(int authType);
+    /** 仅更新图标，不发射 authTypeChanged（后端通知认证类型时使用） */
+    void setCurrentAuthTypeQuiet(int authType);
 
 signals:
     void authTypeChanged(KADAuthType authType);

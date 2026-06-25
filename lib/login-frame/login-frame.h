@@ -109,6 +109,8 @@ private:
     void updateFacePreviewVisibility();
     bool isFaceAuthType(KADAuthType type) const;
     bool isSoftCodeAuthType(KADAuthType type) const;
+    bool canStartNewAuth() const;
+    void enableReAuthButton();
 
     Ui::LoginFrame* ui;
     QWidget* m_leftTopWidget = nullptr;
@@ -123,6 +125,7 @@ private:
     FaceDaemonSignalListener* m_faceDaemonSignals = nullptr;
     KADAuthType m_lastAuthType = KAD_AUTH_TYPE_NONE;
     bool m_facePreviewSuppressedByLeave = false;
+    bool m_inUiReset = false;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

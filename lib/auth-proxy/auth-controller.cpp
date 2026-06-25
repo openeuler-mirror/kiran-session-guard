@@ -18,6 +18,7 @@
 
 #include <qt5-log-i.h>
 #include <QDBusConnection>
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTimer>
@@ -60,6 +61,12 @@ bool AuthController::inAuthentication() const
     return m_authInterface->inAuthentication();
 }
 
+bool AuthController::underlyingInAuthentication() const
+{
+    RETURN_VAL_IF_FALSE(isValid(), false);
+    return m_authInterface->inAuthentication();
+}
+
 bool AuthController::isAuthenticated() const
 {
     RETURN_VAL_IF_FALSE(isValid(), false);
@@ -72,30 +79,145 @@ QString AuthController::authenticationUser() const
     return m_userName;
 }
 
-void AuthController::authenticate(const QString& username)
+bool AuthController::authenticate(const QString& username)
 {
-    ++m_authSeq;
-
-    KLOG_INFO() << "AuthController: authenticate requested"
-                << "user=" << username
-                << "seq=" << m_authSeq;
-    m_promptsWaiting = 0;
-    m_hasQueuedResponse = false;
-    m_queuedResponseSeq = 0;
-    m_queuedResponse.clear();
-
-    m_haveErrorMsg = false;
-    m_canSwitchAuthType = false;
-    m_supportedAuthType.clear();
-    m_userName = username;
-    m_currentAuthType = KAD_AUTH_TYPE_NONE;
-
-    if( username != m_userName )
+    if (m_authInterface && m_authInterface->inAuthentication())
     {
-        m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+        KLOG_INFO() << "AuthController: authenticate coalesced, session in progress"
+                    << "user=" << username
+                    << "seq=" << m_authSeq
+                    << "ongoingSeq=" << m_ongoingAuthSeq
+                    << "completedSeq=" << m_completedAuthSeq
+                    << "underlyingInAuth=" << underlyingInAuthentication()
+                    << "pendingUser=" << m_pendingAuthenticateUser
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return false;
     }
 
-    m_authInterface->authenticate(username);
+    KLOG_INFO() << "AuthController: authenticate enter"
+                << "user=" << username
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "pendingUser=" << m_pendingAuthenticateUser
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    return doAuthenticate(username);
+}
+
+bool AuthController::doAuthenticate(const QString& username)
+{
+    auto startNewAuth = [this, username]() {
+        ++m_authSeq;
+        m_ongoingAuthSeq = m_authSeq;
+        m_completedAuthSeq = 0;
+
+        KLOG_INFO() << "AuthController: authenticate requested"
+                    << "user=" << username
+                    << "seq=" << m_authSeq
+                    << "underlyingInAuth=" << m_authInterface->inAuthentication()
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        m_promptsWaiting = 0;
+        m_hasQueuedResponse = false;
+        m_queuedResponseSeq = 0;
+        m_queuedResponse.clear();
+
+        m_haveErrorMsg = false;
+        m_canSwitchAuthType = false;
+        m_supportedAuthType.clear();
+        m_userName = username;
+        m_currentAuthType = KAD_AUTH_TYPE_NONE;
+
+        if (username != m_userName)
+        {
+            m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+        }
+
+        // 必须在 authenticate() 之前发射 authenticationStarted，
+        // 避免底层认证同步完成时 authenticationComplete 先于
+        // authenticationStarted 到达，导致 UI 按钮状态永久卡住。
+        emit authenticationStarted();
+        m_authInterface->authenticate(username);
+    };
+
+    if (m_authInterface && m_authInterface->inAuthentication())
+    {
+        KLOG_INFO() << "AuthController: defer authenticate until prior session ends"
+                    << "user=" << username
+                    << "seq=" << m_authSeq
+                    << "ongoingSeq=" << m_ongoingAuthSeq
+                    << "completedSeq=" << m_completedAuthSeq
+                    << "underlyingInAuth=true"
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        m_pendingAuthenticateUser = username;
+        m_waitAuthEndPollCount = 0;
+        if (!m_waitAuthEndTimer)
+        {
+            m_waitAuthEndTimer = new QTimer(this);
+            m_waitAuthEndTimer->setInterval(50);
+            connect(m_waitAuthEndTimer, &QTimer::timeout, this, &AuthController::tryStartPendingAuthenticate);
+        }
+        if (!m_waitAuthEndTimer->isActive())
+        {
+            m_waitAuthEndTimer->start();
+        }
+        return false;
+    }
+
+    m_pendingAuthenticateUser.clear();
+    KLOG_INFO() << "AuthController: doAuthenticate start immediately"
+                << "user=" << username
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=false"
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    startNewAuth();
+    return true;
+}
+
+void AuthController::tryStartPendingAuthenticate()
+{
+    if (!m_authInterface)
+    {
+        return;
+    }
+    if (m_pendingAuthenticateUser.isEmpty())
+    {
+        if (m_waitAuthEndTimer)
+        {
+            m_waitAuthEndTimer->stop();
+        }
+        m_waitAuthEndPollCount = 0;
+        return;
+    }
+
+    if (m_authInterface->inAuthentication())
+    {
+        ++m_waitAuthEndPollCount;
+        if (m_waitAuthEndPollCount == 1 || (m_waitAuthEndPollCount % 10) == 0)
+        {
+            KLOG_INFO() << "AuthController: waiting prior session end"
+                        << "pendingUser=" << m_pendingAuthenticateUser
+                        << "seq=" << m_authSeq
+                        << "polls=" << m_waitAuthEndPollCount
+                        << "underlyingInAuth=true"
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        }
+        return;
+    }
+
+    const int pollsUsed = m_waitAuthEndPollCount;
+    if (m_waitAuthEndTimer)
+    {
+        m_waitAuthEndTimer->stop();
+    }
+    m_waitAuthEndPollCount = 0;
+    const QString user = m_pendingAuthenticateUser;
+    m_pendingAuthenticateUser.clear();
+    KLOG_INFO() << "AuthController: prior session ended, start pending authenticate"
+                << "user=" << user
+                << "seq=" << m_authSeq
+                << "pollsUsed=" << pollsUsed
+                << "underlyingInAuth=false"
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    doAuthenticate(user);
 }
 
 void AuthController::respond(const QString& response)
@@ -129,7 +251,15 @@ void AuthController::respond(const QString& response)
 void AuthController::cancelAuthentication()
 {
     RETURN_IF_FALSE(m_authInterface->inAuthentication());
-    KLOG_DEBUG() << "cancel auth";
+    const quint64 cancelledSeq = m_ongoingAuthSeq != 0 ? m_ongoingAuthSeq : m_authSeq;
+    KLOG_INFO() << "AuthController: cancelAuthentication"
+                << "cancelledSeq=" << cancelledSeq
+                << "currentSeq=" << m_authSeq
+                << "ongoingSeq=" << m_ongoingAuthSeq
+                << "completedSeq=" << m_completedAuthSeq
+                << "underlyingInAuth=true"
+                << "pendingUser=" << m_pendingAuthenticateUser
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_promptsWaiting = 0;
     m_hasQueuedResponse = false;
     m_queuedResponseSeq = 0;
@@ -155,6 +285,8 @@ void AuthController::switchAuthType(KADAuthType authType)
                 << "seqBefore=" << m_authSeq;
 
     ++m_authSeq;
+    m_ongoingAuthSeq = m_authSeq;
+    m_completedAuthSeq = 0;
     KLOG_INFO() << "AuthController: switchAuthType seq start"
                 << "seq=" << m_authSeq;
     m_promptsWaiting = 0;
@@ -348,7 +480,20 @@ void AuthController::onNotifySupportAuthType(QList<KADAuthType> authTypes)
 
 void AuthController::onNotifyAuthType(KADAuthType authType)
 {
-    KLOG_DEBUG() << "notify auth type:" << authType;
+    if (m_currentAuthType == authType)
+    {
+        KLOG_INFO() << "AuthController: skip duplicate notify auth type"
+                    << "authType=" << (int)authType
+                    << "seq=" << m_authSeq
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return;
+    }
+    KLOG_INFO() << "AuthController: notify auth type"
+                << "authType=" << (int)authType
+                << "prevAuthType=" << (int)m_currentAuthType
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_currentAuthType = authType;
     emit authTypeChanged(m_currentAuthType);
 }
@@ -376,9 +521,35 @@ void AuthController::onRequestAuthType()
 
 void AuthController::onAuthComplete()
 {
+    const quint64 completedSeq = m_ongoingAuthSeq;
+    if (completedSeq != 0 && completedSeq != m_authSeq)
+    {
+        KLOG_WARNING() << "AuthController: ignore stale authComplete"
+                       << "completedSeq=" << completedSeq
+                       << "currentSeq=" << m_authSeq;
+        return;
+    }
+    if (m_completedAuthSeq == m_authSeq)
+    {
+        KLOG_WARNING() << "AuthController: ignore duplicate authComplete seq=" << m_authSeq;
+        return;
+    }
+    m_ongoingAuthSeq = 0;
+    m_completedAuthSeq = m_authSeq;
+
     KLOG_INFO() << "AuthController: authComplete"
                 << "seq=" << m_authSeq
-                << "success=" << m_authInterface->isAuthenticated();
+                << "ongoingSeq=" << completedSeq
+                << "completedSeq=" << m_completedAuthSeq
+                << "success=" << m_authInterface->isAuthenticated()
+                << "haveErrorMsg=" << m_haveErrorMsg
+                << "inAuth=" << inAuthentication()
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "user=" << m_userName
+                << "currentAuthType=" << (int)m_currentAuthType
+                << "promptsWaiting=" << m_promptsWaiting
+                << "pendingUser=" << m_pendingAuthenticateUser
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 
     // 认证完成并且失败时，检查认证过程中是否存在过错误消息
     // 如果没存在过错误消息，编造一个错误消息
@@ -467,7 +638,14 @@ void AuthController::onShowMessage(const QString& text, MessageType type)
         m_haveErrorMsg = true;
     }
 
-    KLOG_DEBUG() << "auth controller message:" << type << text;
+    KLOG_INFO() << "AuthController: onShowMessage"
+                << "type=" << (int)type
+                << "seq=" << m_authSeq
+                << "haveErrorMsg=" << m_haveErrorMsg
+                << "inAuth=" << inAuthentication()
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "text=" << text
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     emit showMessage(text, type);
 }
 }  // namespace SessionGuard
