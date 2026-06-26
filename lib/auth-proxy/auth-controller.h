@@ -15,9 +15,7 @@
 #pragma once
 
 #include <kiran-authentication-service/kas-authentication-i.h>
-#include <QDateTime>
 #include <QObject>
-#include <QTimer>
 #include "auth-base.h"
 
 /**
@@ -81,7 +79,6 @@ signals:
 
 private:
     bool doAuthenticate(const QString& username);
-    void tryStartPendingAuthenticate();
 
     bool isAuthDaemonCommand(const QString& msg);
     bool processAuthDaemonCommand(const QString& msg);
@@ -119,11 +116,6 @@ private:
     // 当前进行中的认证轮次；用于丢弃过期 authenticationComplete。
     quint64 m_ongoingAuthSeq = 0;
     quint64 m_completedAuthSeq = 0;
-
-    // 上一轮 PAM 未结束时排队启动的新认证
-    QString m_pendingAuthenticateUser;
-    QTimer* m_waitAuthEndTimer = nullptr;
-    int m_waitAuthEndPollCount = 0;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

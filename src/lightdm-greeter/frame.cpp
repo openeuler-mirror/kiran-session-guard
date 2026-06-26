@@ -358,7 +358,7 @@ void Frame::initUI()
 
     rbBtnLayout->addItem(rbBtnLayoutItem);
     rbBtnLayout->addWidget(m_btnSession, 1);
-    if( VirtualKeyboard::instance()->isSupported() )
+    if (VirtualKeyboard::instance()->isSupported())
     {
         rbBtnLayout->addWidget(m_btnKeyboard, 1);
     }
@@ -367,10 +367,10 @@ void Frame::initUI()
         m_btnKeyboard->setVisible(false);
     }
 
-    if( m_prefs->canPowerOff() ||
+    if (m_prefs->canPowerOff() ||
         m_prefs->canReboot() ||
         m_prefs->canSuspend() ||
-        m_prefs->canHibernate() )
+        m_prefs->canHibernate())
     {
         rbBtnLayout->addWidget(m_btnPower, 1);
     }
@@ -429,6 +429,7 @@ void Frame::reset(State state)
     {
         LoginFrame::reset();
         m_userName.clear();
+        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(true);
         m_userList->setVisible(true);
@@ -437,9 +438,9 @@ void Frame::reset(State state)
         m_btnLoginOther->setText(tr("login other user"));
 
         QString defaultLoginUser = m_prefs->getDefaultLoginUser();
-        if( !defaultLoginUser.isEmpty() )
+        if (!defaultLoginUser.isEmpty())
         {
-            if( !m_userList->setCurrentRow(defaultLoginUser) )
+            if (!m_userList->setCurrentRow(defaultLoginUser))
             {
                 KLOG_WARNING() << "default login user" << defaultLoginUser << "is not exist";
                 m_userList->setRow0();
@@ -459,6 +460,7 @@ void Frame::reset(State state)
     {
         LoginFrame::reset();
         m_userName.clear();
+        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(false);
         m_userList->setVisible(false);
@@ -622,8 +624,7 @@ void Frame::onAuthTypeChanged(KADAuthType type)
 {
     LoginFrame::onAuthTypeChanged(type);
     m_btnRequestAuthCodeButton->setVisible(
-        type == KAD_AUTH_TYPE_SOFT_CODE
-        && QFile::exists("/usr/bin/kiran-auth-code-request"));
+        type == KAD_AUTH_TYPE_SOFT_CODE && QFile::exists("/usr/bin/kiran-auth-code-request"));
 }
 
 static bool getIsLoggedIn(const QString& userName)

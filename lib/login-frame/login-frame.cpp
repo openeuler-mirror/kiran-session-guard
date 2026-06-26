@@ -78,9 +78,8 @@ void LoginFrame::initAuth(AuthBase* auth)
     connect(m_authController, &AuthController::showMessage, this, &LoginFrame::onShowMessage);
     connect(m_authController, &AuthController::showPrompt, this, &LoginFrame::onShowPrmpt);
     connect(m_authController, &AuthController::authenticationComplete, this, &LoginFrame::onAuthComplete);
-    connect(m_authController, &AuthController::authenticationStarted, this, [this]() {
-        ui->btn_reAuth->setEnabled(false);
-    });
+    connect(m_authController, &AuthController::authenticationStarted, this, [this]()
+            { ui->btn_reAuth->setEnabled(false); });
 
     connect(m_authController, &AuthController::notifyAuthMode, this, &LoginFrame::onNotifyAuthMode);
     connect(m_authController, &AuthController::supportedAuthTypeChanged, this, &LoginFrame::onSupportedAuthTypeChanged);
@@ -139,10 +138,10 @@ void LoginFrame::setAuthUserInfo(const QString& userName)
     ui->avatar->setImage(icon);
 
     QString displayName = userName;
-    if( shouldShowFullName() )
+    if (shouldShowFullName())
     {
         QString fullName = UserManager::getUserRealName(userName);
-        if( !fullName.isEmpty() )
+        if (!fullName.isEmpty())
         {
             KLOG_DEBUG() << userName << "show full name:" << fullName;
             displayName = fullName;
@@ -204,21 +203,7 @@ void LoginFrame::startAuthUser(const QString& userName)
     // onAuthComplete → enableReAuthButton 启用按钮又被本行重新禁用。
     ui->btn_reAuth->setEnabled(false);
 
-    const bool authStarted = m_authController->authenticate(userName);
-    if (!authStarted)
-    {
-        KLOG_INFO() << "LoginFrame: startAuthUser auth not started, keep reauth UI"
-                    << "user=" << userName
-                    << "page=" << controlPageName(ui->stackedWidget->currentIndex())
-                    << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
-                    << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
-                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
-        if (pageBefore == CONTROL_PAGE_REAUTH)
-        {
-            ui->btn_reAuth->setEnabled(true);
-        }
-        return;
-    }
+    m_authController->authenticate(userName);
 
     KLOG_INFO() << "LoginFrame: startAuthUser auth started"
                 << "user=" << userName
@@ -353,7 +338,8 @@ void LoginFrame::initUI()
     centerBottomLayout->insertSpacerItem(3, spacer);
 
     m_switcher->setVisible(false);
-    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType) {
+    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType)
+            {
         KLOG_INFO() << "LoginFrame: switcher authTypeChanged"
                     << "authType=" << (int)authType
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
@@ -363,8 +349,7 @@ void LoginFrame::initUI()
         // UI 侧立即更新预览显隐，避免等待认证服务通知导致残留。
         m_lastAuthType = authType;
         updateFacePreviewVisibility();
-        this->m_authController->switchAuthType(authType);
-    });
+        this->m_authController->switchAuthType(authType); });
 
     switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
     startUpdateTimeTimer();
@@ -403,7 +388,7 @@ void LoginFrame::switchControlPage(int pageIdx)
     auto widget = ui->stackedWidget->widget(pageIdx);
     auto edit = widget->findChild<QLineEdit*>();
     auto button = widget->findChild<QPushButton*>();
-    if( edit )
+    if (edit)
     {
         edit->setFocus();
     }
@@ -724,15 +709,7 @@ void LoginFrame::onFaceLeaveDetected(QString json)
 
 bool LoginFrame::canStartNewAuth() const
 {
-    if (!m_authController)
-    {
-        return false;
-    }
-    if (m_authController->inAuthentication() || m_authController->underlyingInAuthentication())
-    {
-        return false;
-    }
-    return true;
+    return m_authController != nullptr;
 }
 
 void LoginFrame::enableReAuthButton()
