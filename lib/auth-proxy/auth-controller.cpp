@@ -18,6 +18,7 @@
 
 #include <qt5-log-i.h>
 #include <QDBusConnection>
+#include <QDateTime>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTimer>
@@ -60,6 +61,12 @@ bool AuthController::inAuthentication() const
     return m_authInterface->inAuthentication();
 }
 
+bool AuthController::underlyingInAuthentication() const
+{
+    RETURN_VAL_IF_FALSE(isValid(), false);
+    return m_authInterface->inAuthentication();
+}
+
 bool AuthController::isAuthenticated() const
 {
     RETURN_VAL_IF_FALSE(isValid(), false);
@@ -72,30 +79,69 @@ QString AuthController::authenticationUser() const
     return m_userName;
 }
 
-void AuthController::authenticate(const QString& username)
+bool AuthController::authenticate(const QString& username)
 {
-    ++m_authSeq;
-
-    KLOG_INFO() << "AuthController: authenticate requested"
+    KLOG_INFO() << "AuthController: authenticate enter"
                 << "user=" << username
-                << "seq=" << m_authSeq;
-    m_promptsWaiting = 0;
-    m_hasQueuedResponse = false;
-    m_queuedResponseSeq = 0;
-    m_queuedResponse.clear();
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    return doAuthenticate(username);
+}
 
-    m_haveErrorMsg = false;
-    m_canSwitchAuthType = false;
-    m_supportedAuthType.clear();
-    m_userName = username;
-    m_currentAuthType = KAD_AUTH_TYPE_NONE;
-
-    if( username != m_userName )
+bool AuthController::doAuthenticate(const QString& username)
+{
+    auto startNewAuth = [this, username]()
     {
-        m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+        ++m_authSeq;
+        m_ongoingAuthSeq = m_authSeq;
+        m_completedAuthSeq = 0;
+
+        KLOG_INFO() << "AuthController: authenticate requested"
+                    << "user=" << username
+                    << "seq=" << m_authSeq
+                    << "underlyingInAuth=" << m_authInterface->inAuthentication()
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        m_promptsWaiting = 0;
+        m_hasQueuedResponse = false;
+        m_queuedResponseSeq = 0;
+        m_queuedResponse.clear();
+
+        m_haveErrorMsg = false;
+        m_canSwitchAuthType = false;
+        m_supportedAuthType.clear();
+        m_currentAuthType = KAD_AUTH_TYPE_NONE;
+
+        if (username != m_userName)
+        {
+            m_specifyAuthType = KAD_AUTH_TYPE_NONE;
+        }
+        m_userName = username;
+
+        // 必须在 authenticate() 之前发射 authenticationStarted，
+        // 避免底层认证同步完成时 authenticationComplete 先于
+        // authenticationStarted 到达，导致 UI 按钮状态永久卡住。
+        emit authenticationStarted();
+        m_authInterface->authenticate(username);
+    };
+
+    if (m_authInterface && m_authInterface->inAuthentication())
+    {
+        KLOG_INFO() << "AuthController: cancel stuck underlying session before new auth"
+                    << "user=" << username
+                    << "seq=" << m_authSeq
+                    << "underlyingInAuth=true"
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        m_authInterface->cancelAuthentication();
     }
 
-    m_authInterface->authenticate(username);
+    KLOG_INFO() << "AuthController: doAuthenticate start immediately"
+                << "user=" << username
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=false"
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    startNewAuth();
+    return true;
 }
 
 void AuthController::respond(const QString& response)
@@ -129,12 +175,21 @@ void AuthController::respond(const QString& response)
 void AuthController::cancelAuthentication()
 {
     RETURN_IF_FALSE(m_authInterface->inAuthentication());
-    KLOG_DEBUG() << "cancel auth";
+    const quint64 cancelledSeq = m_ongoingAuthSeq != 0 ? m_ongoingAuthSeq : m_authSeq;
+    KLOG_INFO() << "AuthController: cancelAuthentication"
+                << "cancelledSeq=" << cancelledSeq
+                << "currentSeq=" << m_authSeq
+                << "ongoingSeq=" << m_ongoingAuthSeq
+                << "completedSeq=" << m_completedAuthSeq
+                << "underlyingInAuth=true"
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_promptsWaiting = 0;
     m_hasQueuedResponse = false;
     m_queuedResponseSeq = 0;
     m_queuedResponse.clear();
     m_authInterface->cancelAuthentication();
+    // 标记当前会话已取消，避免后续到来的 authenticationComplete 信号被当作有效完成处理
+    m_ongoingAuthSeq = 0;
 }
 
 bool AuthController::canSwitchAuthType()
@@ -155,6 +210,8 @@ void AuthController::switchAuthType(KADAuthType authType)
                 << "seqBefore=" << m_authSeq;
 
     ++m_authSeq;
+    m_ongoingAuthSeq = m_authSeq;
+    m_completedAuthSeq = 0;
     KLOG_INFO() << "AuthController: switchAuthType seq start"
                 << "seq=" << m_authSeq;
     m_promptsWaiting = 0;
@@ -244,7 +301,7 @@ bool AuthController::processAuthDaemonCommand(const QString& msg)
         auto authTypesArray = jsonDoc[KAP_PJK_KEY_BODY][KAP_PJK_KEY_AUTH_TYPES].toArray(QJsonArray());
 #else
         QJsonValue val = jsonDoc.object()[KAP_PJK_KEY_BODY];
-        const QJsonObject object =  val.toObject();
+        const QJsonObject object = val.toObject();
         auto authTypesArray = object[KAP_PJK_KEY_AUTH_TYPES].toArray(QJsonArray());
 #endif
         if (authTypesArray.isEmpty())
@@ -328,27 +385,40 @@ void AuthController::onRequestLoginUserSwitchable()
 void AuthController::onNotifySupportAuthType(QList<KADAuthType> authTypes)
 {
     KLOG_DEBUG() << "notify support auth type:" << authTypes;
-    if ( m_canSwitchAuthType 
-        /*&& m_specifyAuthType == KAD_AUTH_TYPE_NONE*/ )
+    if (m_canSwitchAuthType
+        /*&& m_specifyAuthType == KAD_AUTH_TYPE_NONE*/)
     {
         m_supportedAuthType = authTypes;
 
         // 指定的认证类型，已不在最新的认证列表之中，更新为默认值
-        if( m_specifyAuthType != KAD_AUTH_TYPE_NONE )
+        if (m_specifyAuthType != KAD_AUTH_TYPE_NONE)
         {
-            if( !m_supportedAuthType.contains(m_specifyAuthType) )
+            if (!m_supportedAuthType.contains(m_specifyAuthType))
             {
                 m_specifyAuthType = KAD_AUTH_TYPE_NONE;
             }
         }
-        
+
         emit supportedAuthTypeChanged(m_supportedAuthType);
     }
 }
 
 void AuthController::onNotifyAuthType(KADAuthType authType)
 {
-    KLOG_DEBUG() << "notify auth type:" << authType;
+    if (m_currentAuthType == authType)
+    {
+        KLOG_INFO() << "AuthController: skip duplicate notify auth type"
+                    << "authType=" << (int)authType
+                    << "seq=" << m_authSeq
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return;
+    }
+    KLOG_INFO() << "AuthController: notify auth type"
+                << "authType=" << (int)authType
+                << "prevAuthType=" << (int)m_currentAuthType
+                << "seq=" << m_authSeq
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_currentAuthType = authType;
     emit authTypeChanged(m_currentAuthType);
 }
@@ -376,9 +446,34 @@ void AuthController::onRequestAuthType()
 
 void AuthController::onAuthComplete()
 {
+    const quint64 completedSeq = m_ongoingAuthSeq;
+    if (completedSeq != 0 && completedSeq != m_authSeq)
+    {
+        KLOG_WARNING() << "AuthController: ignore stale authComplete"
+                       << "completedSeq=" << completedSeq
+                       << "currentSeq=" << m_authSeq;
+        return;
+    }
+    if (m_completedAuthSeq == m_authSeq)
+    {
+        KLOG_WARNING() << "AuthController: ignore duplicate authComplete seq=" << m_authSeq;
+        return;
+    }
+    m_ongoingAuthSeq = 0;
+    m_completedAuthSeq = m_authSeq;
+
     KLOG_INFO() << "AuthController: authComplete"
                 << "seq=" << m_authSeq
-                << "success=" << m_authInterface->isAuthenticated();
+                << "ongoingSeq=" << completedSeq
+                << "completedSeq=" << m_completedAuthSeq
+                << "success=" << m_authInterface->isAuthenticated()
+                << "haveErrorMsg=" << m_haveErrorMsg
+                << "inAuth=" << inAuthentication()
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "user=" << m_userName
+                << "currentAuthType=" << (int)m_currentAuthType
+                << "promptsWaiting=" << m_promptsWaiting
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 
     // 认证完成并且失败时，检查认证过程中是否存在过错误消息
     // 如果没存在过错误消息，编造一个错误消息
@@ -424,7 +519,8 @@ void AuthController::onShowPrompt(const QString& text, PromptType type)
     if (m_hasQueuedResponse && m_queuedResponseSeq == m_authSeq && m_promptsWaiting > 0)
     {
         const auto seq = m_queuedResponseSeq;
-        QTimer::singleShot(0, this, [this, seq]() {
+        QTimer::singleShot(0, this, [this, seq]()
+                           {
             if (!m_hasQueuedResponse || m_queuedResponseSeq != seq)
             {
                 return;
@@ -446,8 +542,7 @@ void AuthController::onShowPrompt(const QString& text, PromptType type)
             m_hasQueuedResponse = false;
             m_queuedResponseSeq = 0;
             m_queuedResponse.clear();
-            m_authInterface->respond(rsp);
-        });
+            m_authInterface->respond(rsp); });
     }
 }
 
@@ -467,7 +562,14 @@ void AuthController::onShowMessage(const QString& text, MessageType type)
         m_haveErrorMsg = true;
     }
 
-    KLOG_DEBUG() << "auth controller message:" << type << text;
+    KLOG_INFO() << "AuthController: onShowMessage"
+                << "type=" << (int)type
+                << "seq=" << m_authSeq
+                << "haveErrorMsg=" << m_haveErrorMsg
+                << "inAuth=" << inAuthentication()
+                << "underlyingInAuth=" << underlyingInAuthentication()
+                << "text=" << text
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     emit showMessage(text, type);
 }
 }  // namespace SessionGuard

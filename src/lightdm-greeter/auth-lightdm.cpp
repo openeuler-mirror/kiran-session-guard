@@ -14,6 +14,7 @@
 
 #include "auth-lightdm.h"
 #include <qt5-log-i.h>
+#include <QDateTime>
 
 using namespace ::Kiran::SessionGuard;
 
@@ -50,12 +51,19 @@ bool AuthLightdm::init(AuthControllerInterface *controllerInterface)
 
 bool AuthLightdm::authenticate(const QString &userName)
 {
+    KLOG_INFO() << "AuthLightdm: authenticate"
+                << "user=" << userName
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_greeterPtr->authenticate(userName);
     return true;
 }
 
 void AuthLightdm::cancelAuthentication()
 {
+    KLOG_INFO() << "AuthLightdm: cancelAuthentication"
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_greeterPtr->cancelAuthentication();
 }
 
@@ -76,21 +84,43 @@ QString AuthLightdm::authenticationUser() const
 
 void AuthLightdm::respond(const QString &response)
 {
+    KLOG_INFO() << "AuthLightdm: respond"
+                << "len=" << response.size()
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "user=" << m_greeterPtr->authenticationUser()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_greeterPtr->respond(response);
 }
 
 void AuthLightdm::onGreeterAuthShowPrompt(QString text, QLightDM::Greeter::PromptType type)
 {
+    KLOG_INFO() << "AuthLightdm: showPrompt"
+                << "type=" << (int)type
+                << "len=" << text.size()
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "user=" << m_greeterPtr->authenticationUser()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_interface->onShowPrompt(text, type == QLightDM::Greeter::PromptTypeSecret ? PromptTypeSecret : PromptTypeQuestion);
 }
 
 void AuthLightdm::onGreeterAuthShowMessage(QString text, QLightDM::Greeter::MessageType type)
 {
+    KLOG_INFO() << "AuthLightdm: showMessage"
+                << "type=" << (int)type
+                << "text=" << text
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "user=" << m_greeterPtr->authenticationUser()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_interface->onShowMessage(text, type == QLightDM::Greeter::MessageTypeInfo ? MessageTypeInfo : MessageTypeError);
 }
 
 void AuthLightdm::onGreeterAuthComplete()
 {
+    KLOG_INFO() << "AuthLightdm: authenticationComplete"
+                << "authenticated=" << m_greeterPtr->isAuthenticated()
+                << "inAuth=" << m_greeterPtr->inAuthentication()
+                << "user=" << m_greeterPtr->authenticationUser()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_interface->onAuthComplete();
 }
 

@@ -37,6 +37,24 @@ namespace Kiran
 {
 namespace SessionGuard
 {
+namespace
+{
+const char* controlPageName(int pageIdx)
+{
+    switch (pageIdx)
+    {
+    case 0:
+        return "PROMPT_EDIT";
+    case 1:
+        return "REAUTH";
+    case 2:
+        return "EMPTY";
+    default:
+        return "UNKNOWN";
+    }
+}
+}  // namespace
+
 LoginFrame::LoginFrame(QWidget* parent)
     : QWidget(parent),
       ui(new Ui::LoginFrame),
@@ -60,6 +78,8 @@ void LoginFrame::initAuth(AuthBase* auth)
     connect(m_authController, &AuthController::showMessage, this, &LoginFrame::onShowMessage);
     connect(m_authController, &AuthController::showPrompt, this, &LoginFrame::onShowPrmpt);
     connect(m_authController, &AuthController::authenticationComplete, this, &LoginFrame::onAuthComplete);
+    connect(m_authController, &AuthController::authenticationStarted, this, [this]()
+            { ui->btn_reAuth->setEnabled(false); });
 
     connect(m_authController, &AuthController::notifyAuthMode, this, &LoginFrame::onNotifyAuthMode);
     connect(m_authController, &AuthController::supportedAuthTypeChanged, this, &LoginFrame::onSupportedAuthTypeChanged);
@@ -68,8 +88,18 @@ void LoginFrame::initAuth(AuthBase* auth)
 
 void LoginFrame::reset()
 {
-    // 取消认证
-    if (m_authController->inAuthentication())
+    const int pageBefore = ui->stackedWidget->currentIndex();
+    const bool underlyingInAuth = m_authController && m_authController->underlyingInAuthentication();
+    KLOG_INFO() << "LoginFrame: reset enter"
+                << "pageBefore=" << controlPageName(pageBefore)
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << underlyingInAuth
+                << "specifyUser=" << m_specifyUser
+                << "lastAuthType=" << (int)m_lastAuthType
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    m_inUiReset = true;
+    // 用 cancel 结束会话，避免 abort 强制 complete 与 reset 切页竞态
+    if (underlyingInAuth)
     {
         m_authController->cancelAuthentication();
     }
@@ -82,8 +112,11 @@ void LoginFrame::reset()
     // 使用setText()重置文本
     ui->userName->setText("");
     ui->edit->reset();
+    ui->edit->setEnabled(true);
     ui->tips->clear();
     m_switcher->setVisible(false);
+    ui->btn_reAuth->setEnabled(true);
+    m_lastAuthType = KAD_AUTH_TYPE_NONE;
 
     m_editMode = EDIT_MODE_USER_NAME;
     m_prompted = false;
@@ -91,6 +124,12 @@ void LoginFrame::reset()
 
     ui->edit->setPlaceHolderText(tr("Entry your name"));
     setEditFocus();
+    m_inUiReset = false;
+    KLOG_INFO() << "LoginFrame: reset done"
+                << "pageAfter=" << controlPageName(ui->stackedWidget->currentIndex())
+                << "editEnabled=" << ui->edit->isEnabled()
+                << "btnReAuthEnabled=" << ui->btn_reAuth->isEnabled()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 }
 
 void LoginFrame::setAuthUserInfo(const QString& userName)
@@ -99,10 +138,10 @@ void LoginFrame::setAuthUserInfo(const QString& userName)
     ui->avatar->setImage(icon);
 
     QString displayName = userName;
-    if( shouldShowFullName() )
+    if (shouldShowFullName())
     {
         QString fullName = UserManager::getUserRealName(userName);
-        if( !fullName.isEmpty() )
+        if (!fullName.isEmpty())
         {
             KLOG_DEBUG() << userName << "show full name:" << fullName;
             displayName = fullName;
@@ -117,23 +156,61 @@ void LoginFrame::setAuthUserInfo(const QString& userName)
 
 void LoginFrame::startAuthUser(const QString& userName)
 {
-    KLOG_DEBUG() << "start auth:" << userName;
+    const int pageBefore = ui->stackedWidget->currentIndex();
+    if (!canStartNewAuth())
+    {
+        KLOG_INFO() << "LoginFrame: startAuthUser ignored"
+                    << "user=" << userName
+                    << "pageBefore=" << controlPageName(pageBefore)
+                    << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                    << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return;
+    }
+    KLOG_INFO() << "LoginFrame: startAuthUser"
+                << "user=" << userName
+                << "pageBefore=" << controlPageName(pageBefore)
+                << "prompted=" << m_prompted
+                << "lastAuthType=" << (int)m_lastAuthType
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     setAuthUserInfo(userName);
 
     m_editMode = EDIT_MODE_PROMPT_RESPOSE;
     m_prompted = false;
     m_specifyUser = userName;
 
+    // 从「重新认证」页再次发起时保留上一轮错误提示，直至本轮消息覆盖
+    if (pageBefore != CONTROL_PAGE_REAUTH)
+    {
+        ui->tips->clear();
+    }
+
     /// NOTE:为了解决在某些环境启动过快，导致的lightdm的认证回复prompt过慢几秒，
     ///      登录界面输入框未切换到密码模式,用户直接输入明文密码
     ///      暂时解决方案单独禁用输入框，等待lightdm的prompt消息会启用输入框
     ui->edit->reset();
     ui->edit->setEnabled(false);
-    ui->tips->clear();
     m_switcher->setVisible(false);
 
-    switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
+    if (!isEmptyControlAuthType(m_lastAuthType))
+    {
+        switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
+    }
+
+    // 必须在 authenticate() 之前禁用按钮，避免底层认证同步完成时
+    // onAuthComplete → enableReAuthButton 启用按钮又被本行重新禁用。
+    ui->btn_reAuth->setEnabled(false);
+
     m_authController->authenticate(userName);
+
+    KLOG_INFO() << "LoginFrame: startAuthUser auth started"
+                << "user=" << userName
+                << "editEnabled=" << ui->edit->isEnabled()
+                << "btnReAuthEnabled=" << ui->btn_reAuth->isEnabled()
+                << "page=" << controlPageName(ui->stackedWidget->currentIndex())
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 }
 
 void LoginFrame::setTips(MessageType type, const QString& text)
@@ -217,6 +294,28 @@ void LoginFrame::initUI()
         }
     });
     connect(ui->btn_reAuth, &QPushButton::clicked, [this]{
+        const bool underlyingInAuth = m_authController && m_authController->underlyingInAuthentication();
+        if (underlyingInAuth)
+        {
+            KLOG_INFO() << "LoginFrame: btn_reAuth ignored, underlying auth in progress"
+                        << "user=" << m_specifyUser
+                        << "page=" << controlPageName(ui->stackedWidget->currentIndex())
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+            return;
+        }
+        if (!canStartNewAuth())
+        {
+            KLOG_INFO() << "LoginFrame: btn_reAuth ignored"
+                        << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                        << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+            return;
+        }
+        KLOG_INFO() << "LoginFrame: btn_reAuth clicked"
+                    << "user=" << m_specifyUser
+                    << "page=" << controlPageName(ui->stackedWidget->currentIndex())
+                    << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         startAuthUser(m_specifyUser);
     });
 
@@ -239,7 +338,8 @@ void LoginFrame::initUI()
     centerBottomLayout->insertSpacerItem(3, spacer);
 
     m_switcher->setVisible(false);
-    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType) {
+    connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType)
+            {
         KLOG_INFO() << "LoginFrame: switcher authTypeChanged"
                     << "authType=" << (int)authType
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
@@ -249,8 +349,7 @@ void LoginFrame::initUI()
         // UI 侧立即更新预览显隐，避免等待认证服务通知导致残留。
         m_lastAuthType = authType;
         updateFacePreviewVisibility();
-        this->m_authController->switchAuthType(authType);
-    });
+        this->m_authController->switchAuthType(authType); });
 
     switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
     startUpdateTimeTimer();
@@ -271,13 +370,25 @@ int LoginFrame::appendControlPage(QWidget* controlWidget)
 void LoginFrame::switchControlPage(int pageIdx)
 {
     RETURN_IF_TRUE(pageIdx < 0 || pageIdx >= ui->stackedWidget->count());
+    const int pageBefore = ui->stackedWidget->currentIndex();
+    if (pageBefore != pageIdx)
+    {
+        KLOG_INFO() << "LoginFrame: switchControlPage"
+                    << "from=" << controlPageName(pageBefore)
+                    << "to=" << controlPageName(pageIdx)
+                    << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                    << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                    << "prompted=" << m_prompted
+                    << "lastAuthType=" << (int)m_lastAuthType
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    }
     ui->stackedWidget->setCurrentIndex(pageIdx);
 
     // 切换控件时，将焦点给需要焦点的控件，便于用户操作
     auto widget = ui->stackedWidget->widget(pageIdx);
     auto edit = widget->findChild<QLineEdit*>();
     auto button = widget->findChild<QPushButton*>();
-    if( edit )
+    if (edit)
     {
         edit->setFocus();
     }
@@ -326,6 +437,22 @@ void LoginFrame::setEditFocus(int delayMs)
 
 void LoginFrame::onShowMessage(const QString& text, MessageType type)
 {
+    KLOG_INFO() << "LoginFrame: onShowMessage"
+                << "type=" << (int)type
+                << "page=" << controlPageName(ui->stackedWidget->currentIndex())
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "text=" << text
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    if (type == MessageTypeInfo &&
+        ui->stackedWidget->currentIndex() == CONTROL_PAGE_REAUTH &&
+        text.contains(QStringLiteral("录入请求正在处理")))
+    {
+        KLOG_INFO() << "LoginFrame: ignore queued info on REAUTH page"
+                    << "text=" << text
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return;
+    }
     setTips(type, text);
 }
 
@@ -333,8 +460,11 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
 {
     KLOG_INFO() << "LoginFrame: onShowPrompt"
                 << "type=" << (int)type
+                << "page=" << controlPageName(ui->stackedWidget->currentIndex())
                 << "promptedBefore=" << m_prompted
                 << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "text=" << text
                 << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     ui->edit->reset();
     ui->edit->setPlaceHolderText(text);
@@ -351,7 +481,25 @@ void LoginFrame::onShowPrmpt(const QString& text, PromptType type)
 
 void LoginFrame::onAuthComplete(bool authRes)
 {
-    KLOG_DEBUG() << "auth complete" << authRes;
+    if (m_inUiReset)
+    {
+        KLOG_INFO() << "LoginFrame: onAuthComplete ignored during UI reset"
+                    << "success=" << authRes
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        return;
+    }
+    const int pageBefore = ui->stackedWidget->currentIndex();
+    KLOG_INFO() << "LoginFrame: onAuthComplete"
+                << "success=" << authRes
+                << "pageBefore=" << controlPageName(pageBefore)
+                << "prompted=" << m_prompted
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "lastAuthType=" << (int)m_lastAuthType
+                << "user=" << (m_authController ? m_authController->authenticationUser() : QString())
+                << "btnReAuthEnabled=" << ui->btn_reAuth->isEnabled()
+                << "editEnabled=" << ui->edit->isEnabled()
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     authenticateComplete(authRes, m_authController->authenticationUser());
 
     if (!authRes)
@@ -366,6 +514,10 @@ void LoginFrame::onAuthComplete(bool authRes)
         {
             // 未存在prompt消息,应切换至显示重新认真按钮,点击重新认证按钮再开始认证
             switchControlPage(CONTROL_PAGE_REAUTH);
+            enableReAuthButton();
+            KLOG_INFO() << "LoginFrame: onAuthComplete failed without prompt -> REAUTH page"
+                        << "btnReAuthEnabled=" << ui->btn_reAuth->isEnabled()
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         }
     }
 }
@@ -405,7 +557,7 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
     m_lastAuthType = type;
     if (m_switcher->getCurrentAuthType() != type)
     {
-        m_switcher->setCurrentAuthType(type);
+        m_switcher->setCurrentAuthTypeQuiet(type);
     }
 
     updateControlPageForAuthType(type);
@@ -425,10 +577,30 @@ bool LoginFrame::isEmptyControlAuthType(KADAuthType type) const
 
 void LoginFrame::updateControlPageForAuthType(KADAuthType authType)
 {
+    KLOG_INFO() << "LoginFrame: updateControlPageForAuthType"
+                << "authType=" << (int)authType
+                << "emptyControl=" << isEmptyControlAuthType(authType)
+                << "pageBefore=" << controlPageName(ui->stackedWidget->currentIndex())
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     if (isEmptyControlAuthType(authType))
     {
+        if (ui->stackedWidget->currentIndex() == CONTROL_PAGE_EMPTY && m_lastAuthType == authType)
+        {
+            KLOG_INFO() << "LoginFrame: skip redundant EMPTY page switch"
+                        << "authType=" << (int)authType;
+            return;
+        }
+        if (ui->stackedWidget->currentIndex() == CONTROL_PAGE_REAUTH)
+        {
+            KLOG_INFO() << "LoginFrame: keep REAUTH page during empty-control auth"
+                        << "authType=" << (int)authType
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+            return;
+        }
         switchControlPage(CONTROL_PAGE_EMPTY);
-        ui->tips->clear();
+        KLOG_INFO() << "LoginFrame: updateControlPageForAuthType switch to EMPTY page";
         return;
     }
 
@@ -533,6 +705,21 @@ void LoginFrame::onFaceLeaveDetected(QString json)
     {
         m_faceDaemonSignals->disconnectLeaveDetected();
     }
+}
+
+bool LoginFrame::canStartNewAuth() const
+{
+    return m_authController != nullptr;
+}
+
+void LoginFrame::enableReAuthButton()
+{
+    KLOG_INFO() << "LoginFrame: enableReAuthButton"
+                << "page=" << controlPageName(ui->stackedWidget->currentIndex())
+                << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
+                << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    ui->btn_reAuth->setEnabled(true);
 }
 
 }  // namespace SessionGuard

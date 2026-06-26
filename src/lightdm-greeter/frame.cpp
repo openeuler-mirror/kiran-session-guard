@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <QDateTime>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QSpacerItem>
@@ -357,7 +358,7 @@ void Frame::initUI()
 
     rbBtnLayout->addItem(rbBtnLayoutItem);
     rbBtnLayout->addWidget(m_btnSession, 1);
-    if( VirtualKeyboard::instance()->isSupported() )
+    if (VirtualKeyboard::instance()->isSupported())
     {
         rbBtnLayout->addWidget(m_btnKeyboard, 1);
     }
@@ -366,10 +367,10 @@ void Frame::initUI()
         m_btnKeyboard->setVisible(false);
     }
 
-    if( m_prefs->canPowerOff() ||
+    if (m_prefs->canPowerOff() ||
         m_prefs->canReboot() ||
         m_prefs->canSuspend() ||
-        m_prefs->canHibernate() )
+        m_prefs->canHibernate())
     {
         rbBtnLayout->addWidget(m_btnPower, 1);
     }
@@ -416,12 +417,19 @@ void Frame::reset(State state)
 {
     RETURN_IF_FALSE(state != m_state);
 
+    KLOG_INFO() << "Frame: reset"
+                << "fromState=" << (int)m_state
+                << "toState=" << (int)state
+                << "userName=" << m_userName
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+
     switch (state)
     {
     case STATE_USER_LIST_LOGIN:
     {
         LoginFrame::reset();
         m_userName.clear();
+        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(true);
         m_userList->setVisible(true);
@@ -430,9 +438,9 @@ void Frame::reset(State state)
         m_btnLoginOther->setText(tr("login other user"));
 
         QString defaultLoginUser = m_prefs->getDefaultLoginUser();
-        if( !defaultLoginUser.isEmpty() )
+        if (!defaultLoginUser.isEmpty())
         {
-            if( !m_userList->setCurrentRow(defaultLoginUser) )
+            if (!m_userList->setCurrentRow(defaultLoginUser))
             {
                 KLOG_WARNING() << "default login user" << defaultLoginUser << "is not exist";
                 m_userList->setRow0();
@@ -452,6 +460,7 @@ void Frame::reset(State state)
     {
         LoginFrame::reset();
         m_userName.clear();
+        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(false);
         m_userList->setVisible(false);
@@ -475,10 +484,18 @@ void Frame::reset(State state)
     }
 
     m_state = state;
+    KLOG_INFO() << "Frame: reset done"
+                << "state=" << (int)m_state
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 }
 
 void Frame::authUserInputed(const QString& userName)
 {
+    KLOG_INFO() << "Frame: authUserInputed"
+                << "user=" << userName
+                << "stateBefore=" << (int)m_state
+                << "userNameBefore=" << m_userName
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     // 手动输入用户名完成,切换状态,以及匹配的界面
     reset(STATE_MANUAL_LOGIN_AUTH);
     // 触发该用户登录
@@ -487,6 +504,12 @@ void Frame::authUserInputed(const QString& userName)
 
 void Frame::authenticateComplete(bool authRes, const QString& userName)
 {
+    KLOG_INFO() << "Frame: authenticateComplete"
+                << "success=" << authRes
+                << "user=" << userName
+                << "state=" << (int)m_state
+                << "session=" << m_specifiedSession
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     if (authRes)
     {
         m_greeter->startSessionSync(m_specifiedSession);
@@ -601,8 +624,7 @@ void Frame::onAuthTypeChanged(KADAuthType type)
 {
     LoginFrame::onAuthTypeChanged(type);
     m_btnRequestAuthCodeButton->setVisible(
-        type == KAD_AUTH_TYPE_SOFT_CODE
-        && QFile::exists("/usr/bin/kiran-auth-code-request"));
+        type == KAD_AUTH_TYPE_SOFT_CODE && QFile::exists("/usr/bin/kiran-auth-code-request"));
 }
 
 static bool getIsLoggedIn(const QString& userName)
