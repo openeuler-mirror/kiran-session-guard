@@ -313,11 +313,23 @@ void FacePreviewWidget::onRefreshTimer()
 {
     if (!m_shmAddr || m_shmAddr == MAP_FAILED || m_shmSize == 0)
     {
+        if (++m_diagShmAddrFail == 1 || (m_diagShmAddrFail <= 5) || (m_diagShmAddrFail % 200 == 0))
+        {
+            KLOG_WARNING() << "FacePreview: SHM addr invalid, failCount=" << m_diagShmAddrFail
+                           << "addr=" << (void *)m_shmAddr
+                           << "size=" << m_shmSize;
+        }
         return;
     }
 
     if (m_shmSize < kShmHeaderSize)
     {
+        if (++m_diagHeaderSizeFail == 1 || (m_diagHeaderSizeFail <= 5))
+        {
+            KLOG_WARNING() << "FacePreview: SHM size too small, failCount=" << m_diagHeaderSizeFail
+                           << "shmSize=" << m_shmSize
+                           << "minRequired=" << kShmHeaderSize;
+        }
         return;
     }
 
@@ -328,14 +340,31 @@ void FacePreviewWidget::onRefreshTimer()
     memcpy(&magic, data, sizeof(magic));
     if (magic != kShmMagic)
     {
+        if (++m_diagMagicFail == 1 || (m_diagMagicFail <= 5) || (m_diagMagicFail % 200 == 0))
+        {
+            KLOG_WARNING() << "FacePreview: SHM magic mismatch, failCount=" << m_diagMagicFail
+                           << "expected=0x" << hex << kShmMagic
+                           << "got=0x" << magic << dec;
+        }
         return;
     }
 
     // 校验有效帧标志
     uint16_t flags = 0;
     memcpy(&flags, data + kShmFlagsOffset, sizeof(flags));
+
+    // 读取 sequence（offset 4，uint64_t 小端）
+    uint64_t sequence = 0;
+    memcpy(&sequence, data + 4, sizeof(sequence));
+
     if (!(flags & kShmFlagValid))
     {
+        if (++m_diagFlagFail == 1 || (m_diagFlagFail <= 5) || (m_diagFlagFail % 200 == 0))
+        {
+            KLOG_WARNING() << "FacePreview: SHM frame flag not valid, failCount=" << m_diagFlagFail
+                           << "flags=0x" << hex << flags << dec
+                           << "sequence=" << sequence;
+        }
         return;
     }
 
@@ -345,6 +374,14 @@ void FacePreviewWidget::onRefreshTimer()
 
     if (frameLen == 0 || frameLen > m_shmSize - kShmHeaderSize)
     {
+        if (++m_diagFrameLenFail == 1 || (m_diagFrameLenFail <= 5) || (m_diagFrameLenFail % 200 == 0))
+        {
+            KLOG_WARNING() << "FacePreview: SHM frameLen out of range, failCount=" << m_diagFrameLenFail
+                           << "frameLen=" << frameLen
+                           << "shmSize=" << m_shmSize
+                           << "maxAllowed=" << (m_shmSize - kShmHeaderSize)
+                           << "sequence=" << sequence;
+        }
         return;
     }
 
@@ -353,20 +390,33 @@ void FacePreviewWidget::onRefreshTimer()
     if (!m_loggedFirstPayload)
     {
         m_loggedFirstPayload = true;
-        KLOG_INFO() << "FacePreview: first SHM payload, bytes=" << jpegData.size();
+        KLOG_INFO() << "FacePreview: first SHM payload, bytes=" << jpegData.size()
+                    << "sequence=" << sequence;
     }
 
     QPixmap pix;
     if (!pix.loadFromData(jpegData))
     {
-        if (!m_loggedFirstDecodeFail)
+        if (++m_diagDecodeFail == 1 || (m_diagDecodeFail <= 5) || (m_diagDecodeFail % 200 == 0))
         {
-            m_loggedFirstDecodeFail = true;
-            KLOG_INFO() << "FacePreview: loadFromData failed (payload not decodable as image), bytes="
-                         << jpegData.size();
+            KLOG_WARNING() << "FacePreview: loadFromData failed, failCount=" << m_diagDecodeFail
+                           << "bytes=" << jpegData.size()
+                           << "sequence=" << sequence;
         }
         return;
     }
+
+    if (++m_diagSuccess == 1 || (m_diagSuccess <= 5) || (m_diagSuccess % 100 == 0))
+    {
+        const bool seqGap = m_diagLastSequence >= 0 && sequence != static_cast<uint64_t>(m_diagLastSequence + 1);
+        KLOG_INFO() << "FacePreview: frame rendered, successCount=" << m_diagSuccess
+                    << "sequence=" << sequence
+                    << "prevSequence=" << m_diagLastSequence
+                    << "seqGap=" << seqGap
+                    << "bytes=" << jpegData.size();
+    }
+    m_diagLastSequence = static_cast<int64_t>(sequence);
+
     m_label->setPixmap(
         pix.scaled(kPreviewMaxW, kPreviewMaxH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
