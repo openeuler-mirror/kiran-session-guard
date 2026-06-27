@@ -311,6 +311,18 @@ void FacePreviewWidget::hideEvent(QHideEvent *event)
 
 void FacePreviewWidget::onRefreshTimer()
 {
+    ++m_diagTickCount;
+    if (m_diagTickCount <= 5 || m_diagTickCount % 67 == 0)
+    {
+        KLOG_INFO() << "FacePreview: timer tick #" << m_diagTickCount
+                    << "shmAddr=" << (void *)m_shmAddr
+                    << "shmSize=" << m_shmSize
+                    << "successCount=" << m_diagSuccess
+                    << "magicFail=" << m_diagMagicFail
+                    << "flagFail=" << m_diagFlagFail
+                    << "frameLenFail=" << m_diagFrameLenFail;
+    }
+
     if (!m_shmAddr || m_shmAddr == MAP_FAILED || m_shmSize == 0)
     {
         if (++m_diagShmAddrFail == 1 || (m_diagShmAddrFail <= 5) || (m_diagShmAddrFail % 200 == 0))

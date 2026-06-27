@@ -102,6 +102,7 @@ private:
     int m_diagDecodeFail = 0;
     int m_diagSuccess = 0;
     int64_t m_diagLastSequence = -1;
+    int64_t m_diagTickCount = 0;
 };
 
 }  // namespace SessionGuard
