@@ -118,16 +118,20 @@ FacePreviewWidget::~FacePreviewWidget()
 
 bool FacePreviewWidget::connectShm()
 {
-    if (m_shmFd >= 0)
-    {
-        return true;
-    }
-
+    /* 始终调用 ControlStreamNode 确保服务端推流存活；
+     * 仅在 SHM fd 无效时才打开/映射，避免每次 showEvent 都重复 shm_open+mmap。 */
     size_t shmSize = callControlStreamNode(true);
     if (shmSize == 0)
     {
         KLOG_WARNING() << "FacePreview: failed to start SHM preview via D-Bus";
         return false;
+    }
+
+    if (m_shmFd >= 0 && m_shmAddr && m_shmAddr != MAP_FAILED)
+    {
+        /* 已有有效映射：只确认服务端已恢复推流，不重复打开 SHM */
+        KLOG_INFO() << "FacePreview: SHM already mapped, server stream ensured";
+        return true;
     }
 
     m_shmFd = ::shm_open(kShmName, O_RDONLY, 0666);
@@ -311,37 +315,13 @@ void FacePreviewWidget::hideEvent(QHideEvent *event)
 
 void FacePreviewWidget::onRefreshTimer()
 {
-    ++m_diagTickCount;
-    if (m_diagTickCount <= 5 || m_diagTickCount % 67 == 0)
-    {
-        KLOG_INFO() << "FacePreview: timer tick #" << m_diagTickCount
-                    << "shmAddr=" << (void *)m_shmAddr
-                    << "shmSize=" << m_shmSize
-                    << "successCount=" << m_diagSuccess
-                    << "magicFail=" << m_diagMagicFail
-                    << "flagFail=" << m_diagFlagFail
-                    << "frameLenFail=" << m_diagFrameLenFail;
-    }
-
     if (!m_shmAddr || m_shmAddr == MAP_FAILED || m_shmSize == 0)
     {
-        if (++m_diagShmAddrFail == 1 || (m_diagShmAddrFail <= 5) || (m_diagShmAddrFail % 200 == 0))
-        {
-            KLOG_WARNING() << "FacePreview: SHM addr invalid, failCount=" << m_diagShmAddrFail
-                           << "addr=" << (void *)m_shmAddr
-                           << "size=" << m_shmSize;
-        }
         return;
     }
 
     if (m_shmSize < kShmHeaderSize)
     {
-        if (++m_diagHeaderSizeFail == 1 || (m_diagHeaderSizeFail <= 5))
-        {
-            KLOG_WARNING() << "FacePreview: SHM size too small, failCount=" << m_diagHeaderSizeFail
-                           << "shmSize=" << m_shmSize
-                           << "minRequired=" << kShmHeaderSize;
-        }
         return;
     }
 
@@ -352,31 +332,14 @@ void FacePreviewWidget::onRefreshTimer()
     memcpy(&magic, data, sizeof(magic));
     if (magic != kShmMagic)
     {
-        if (++m_diagMagicFail == 1 || (m_diagMagicFail <= 5) || (m_diagMagicFail % 200 == 0))
-        {
-            KLOG_WARNING() << "FacePreview: SHM magic mismatch, failCount=" << m_diagMagicFail
-                           << "expected=0x" << hex << kShmMagic
-                           << "got=0x" << magic << dec;
-        }
         return;
     }
 
     // 校验有效帧标志
     uint16_t flags = 0;
     memcpy(&flags, data + kShmFlagsOffset, sizeof(flags));
-
-    // 读取 sequence（offset 4，uint64_t 小端）
-    uint64_t sequence = 0;
-    memcpy(&sequence, data + 4, sizeof(sequence));
-
     if (!(flags & kShmFlagValid))
     {
-        if (++m_diagFlagFail == 1 || (m_diagFlagFail <= 5) || (m_diagFlagFail % 200 == 0))
-        {
-            KLOG_WARNING() << "FacePreview: SHM frame flag not valid, failCount=" << m_diagFlagFail
-                           << "flags=0x" << hex << flags << dec
-                           << "sequence=" << sequence;
-        }
         return;
     }
 
@@ -386,49 +349,16 @@ void FacePreviewWidget::onRefreshTimer()
 
     if (frameLen == 0 || frameLen > m_shmSize - kShmHeaderSize)
     {
-        if (++m_diagFrameLenFail == 1 || (m_diagFrameLenFail <= 5) || (m_diagFrameLenFail % 200 == 0))
-        {
-            KLOG_WARNING() << "FacePreview: SHM frameLen out of range, failCount=" << m_diagFrameLenFail
-                           << "frameLen=" << frameLen
-                           << "shmSize=" << m_shmSize
-                           << "maxAllowed=" << (m_shmSize - kShmHeaderSize)
-                           << "sequence=" << sequence;
-        }
         return;
     }
 
     QByteArray jpegData(data + kShmHeaderSize, static_cast<int>(frameLen));
 
-    if (!m_loggedFirstPayload)
-    {
-        m_loggedFirstPayload = true;
-        KLOG_INFO() << "FacePreview: first SHM payload, bytes=" << jpegData.size()
-                    << "sequence=" << sequence;
-    }
-
     QPixmap pix;
     if (!pix.loadFromData(jpegData))
     {
-        if (++m_diagDecodeFail == 1 || (m_diagDecodeFail <= 5) || (m_diagDecodeFail % 200 == 0))
-        {
-            KLOG_WARNING() << "FacePreview: loadFromData failed, failCount=" << m_diagDecodeFail
-                           << "bytes=" << jpegData.size()
-                           << "sequence=" << sequence;
-        }
         return;
     }
-
-    if (++m_diagSuccess == 1 || (m_diagSuccess <= 5) || (m_diagSuccess % 100 == 0))
-    {
-        const bool seqGap = m_diagLastSequence >= 0 && sequence != static_cast<uint64_t>(m_diagLastSequence + 1);
-        KLOG_INFO() << "FacePreview: frame rendered, successCount=" << m_diagSuccess
-                    << "sequence=" << sequence
-                    << "prevSequence=" << m_diagLastSequence
-                    << "seqGap=" << seqGap
-                    << "bytes=" << jpegData.size();
-    }
-    m_diagLastSequence = static_cast<int64_t>(sequence);
-
     m_label->setPixmap(
         pix.scaled(kPreviewMaxW, kPreviewMaxH, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

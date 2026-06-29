@@ -92,17 +92,6 @@ private:
     bool m_loggedShmAlreadyStreaming = false;
     /** 摄像头不可用时标记，待热插拔恢复后自动重连 */
     bool m_cameraUnavailable = false;
-
-    /* ── 诊断计数器（onRefreshTimer 守卫命中频次，定位帧丢弃根因）── */
-    int m_diagShmAddrFail = 0;
-    int m_diagHeaderSizeFail = 0;
-    int m_diagMagicFail = 0;
-    int m_diagFlagFail = 0;
-    int m_diagFrameLenFail = 0;
-    int m_diagDecodeFail = 0;
-    int m_diagSuccess = 0;
-    int64_t m_diagLastSequence = -1;
-    int64_t m_diagTickCount = 0;
 };
 
 }  // namespace SessionGuard
