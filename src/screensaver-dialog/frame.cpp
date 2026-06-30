@@ -245,6 +245,7 @@ void Frame::initAuth()
     setSpecifyUser(m_userName);
     setAuthUserInfo(m_userName);
     switchControlPage(LoginFrame::CONTROL_PAGE_REAUTH);
+    setTips(MessageTypeInfo, QString());
 
     /* 人脸预览。 */
     QTimer::singleShot(0, this, [this]()
