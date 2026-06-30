@@ -118,16 +118,20 @@ FacePreviewWidget::~FacePreviewWidget()
 
 bool FacePreviewWidget::connectShm()
 {
-    if (m_shmFd >= 0)
-    {
-        return true;
-    }
-
+    /* 始终调用 ControlStreamNode 确保服务端推流存活；
+     * 仅在 SHM fd 无效时才打开/映射，避免每次 showEvent 都重复 shm_open+mmap。 */
     size_t shmSize = callControlStreamNode(true);
     if (shmSize == 0)
     {
         KLOG_WARNING() << "FacePreview: failed to start SHM preview via D-Bus";
         return false;
+    }
+
+    if (m_shmFd >= 0 && m_shmAddr && m_shmAddr != MAP_FAILED)
+    {
+        /* 已有有效映射：只确认服务端已恢复推流，不重复打开 SHM */
+        KLOG_INFO() << "FacePreview: SHM already mapped, server stream ensured";
+        return true;
     }
 
     m_shmFd = ::shm_open(kShmName, O_RDONLY, 0666);
@@ -350,21 +354,9 @@ void FacePreviewWidget::onRefreshTimer()
 
     QByteArray jpegData(data + kShmHeaderSize, static_cast<int>(frameLen));
 
-    if (!m_loggedFirstPayload)
-    {
-        m_loggedFirstPayload = true;
-        KLOG_INFO() << "FacePreview: first SHM payload, bytes=" << jpegData.size();
-    }
-
     QPixmap pix;
     if (!pix.loadFromData(jpegData))
     {
-        if (!m_loggedFirstDecodeFail)
-        {
-            m_loggedFirstDecodeFail = true;
-            KLOG_INFO() << "FacePreview: loadFromData failed (payload not decodable as image), bytes="
-                         << jpegData.size();
-        }
         return;
     }
     m_label->setPixmap(

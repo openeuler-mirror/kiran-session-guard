@@ -40,6 +40,7 @@ class FaceDaemonSignalListener;
 class LoginFrame : public QWidget
 {
     Q_OBJECT
+protected:
     enum ControlPageEnum
     {
         CONTROL_PAGE_PROMPT_EDIT,  // 输入框模式
@@ -61,6 +62,7 @@ public:
 
     void startAuthUser(const QString& userName);
     void setAuthUserInfo(const QString& userName);
+    void setSpecifyUser(const QString& user) { m_specifyUser = user; }
     void setTips(MessageType type, const QString& text);
 
     void setLeftTopWidget(QWidget* w);

@@ -32,6 +32,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
+#include <QTimer>
 #include <QToolButton>
 
 #define DEFAULT_STYLE_PATH ":/locker/stylesheets/kiran-screensaver-dialog-normal.qss"
@@ -184,7 +185,7 @@ void Frame::initUI()
     // 初始化虚拟键盘
     m_keyboard = new VirtualKeyboard(this);
     m_keyboard->init();
-    if( m_keyboard->isSupported() )
+    if (m_keyboard->isSupported())
     {
         rbBtnLayout->addWidget(m_btnKeyboard, 1);
     }
@@ -241,7 +242,20 @@ void Frame::initAuth()
     AuthPam* auth = new AuthPam();
     LoginFrame::initAuth(auth);
 
-    startAuthUser(m_userName);
+    setSpecifyUser(m_userName);
+    setAuthUserInfo(m_userName);
+    switchControlPage(LoginFrame::CONTROL_PAGE_REAUTH);
+    setTips(MessageTypeInfo, QString());
+
+    /* 人脸预览。 */
+    QTimer::singleShot(0, this, [this]()
+                       {
+        auto* preview = findChild<FacePreviewWidget*>();
+        if (preview != nullptr)
+        {
+            preview->hide();
+            preview->show();
+        } });
 }
 
 // TODO: 解锁框或模式下按压其他用户的指纹,应为错误
