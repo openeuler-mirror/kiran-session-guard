@@ -35,12 +35,12 @@
 
 namespace
 {
-/** kiran-face-dbus-service 的 D-Bus 服务名 */
-const QString kFaceService = QStringLiteral("com.kiran.face.service");
-/** kiran-face-dbus-service 的 D-Bus 对象路径 */
-const QString kFacePath = QStringLiteral("/com/kiran/face/service");
+/** ks-auth-dbus-service 的 D-Bus 服务名 */
+const QString kFaceService = QStringLiteral("com.ks.auth.dbus.service");
+/** ks-auth-dbus-service 的 D-Bus 对象路径 */
+const QString kFacePath = QStringLiteral("/com/ks/auth/dbus/service");
 /** SHM 名称 */
-const char *kShmName = "/kiran_face_preview";
+const char *kShmName = "/ks_auth_preview";
 /** D-Bus 调用超时（毫秒） */
 constexpr int kDbusTimeoutMs = 1000;
 /** 预览最大宽度 */
