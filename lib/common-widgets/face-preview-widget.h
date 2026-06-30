@@ -87,7 +87,6 @@ private:
     /** 业务标识，用于 D-Bus 调用 ControlStreamNode */
     QString m_businessId = QStringLiteral("KylinsecOS");
 
-    bool m_loggedFirstPayload = false;
     /** 是否已记录 SHM 保留流状态（code=7，流已在运行） */
     bool m_loggedShmAlreadyStreaming = false;
     /** 摄像头不可用时标记，待热插拔恢复后自动重连 */
