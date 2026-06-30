@@ -11,9 +11,9 @@
 
 namespace
 {
-const QString kFaceService = QStringLiteral("com.kiran.face.service");
-const QString kFacePath = QStringLiteral("/com/kiran/face/service");
-const QString kFaceInterface = QStringLiteral("com.kiran.face.service");
+const QString kFaceService = QStringLiteral("com.ks.auth.dbus.service");
+const QString kFacePath = QStringLiteral("/com/ks/auth/dbus/service");
+const QString kFaceInterface = QStringLiteral("com.ks.auth.dbus.service");
 }  // namespace
 
 namespace Kiran
@@ -86,4 +86,3 @@ void FaceDaemonSignalListener::onLeaveDetected(const QString& json)
 
 }  // namespace SessionGuard
 }  // namespace Kiran
-

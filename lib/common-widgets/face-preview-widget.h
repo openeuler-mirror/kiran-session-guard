@@ -29,7 +29,7 @@ namespace SessionGuard
 /**
  * @brief 人脸预览控件
  *
- * 从 kiran-face-dbus-service 的 POSIX 共享内存 `/kiran_face_preview`
+ * 从 ks-auth-dbus-service 的 POSIX 共享内存 `/ks_auth_preview`
  * 读取 JPEG 帧，渲染为预览画面。
  *
  * 原实现通过 D-Bus VideoInfo 信号接收帧，现改为通过 SHM 轮询。
@@ -43,7 +43,7 @@ public:
 
     /**
      * @brief 判断 kiran 人脸 D-Bus 服务是否可用
-     * @return 若 com.kiran.face.service 已在 system bus 注册返回 true
+     * @return 若 com.ks.auth.dbus.service 已在 system bus 注册返回 true
      */
     static bool isFaceDaemonAvailable();
 
