@@ -65,6 +65,8 @@ private:
     bool connectShm();
     /** 关闭共享内存映射并停止 SHM 流 */
     void disconnectShm();
+    /** 清空预览区，移除最后一帧画面 */
+    void clearPreview();
 
     /**
      * @brief 通过 D-Bus 调用 ControlStreamNode 启动或停止 SHM 预览流
