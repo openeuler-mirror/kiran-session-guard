@@ -68,6 +68,8 @@ private:
     void authenticateComplete(bool authRes, const QString& userName) override;
     bool shouldShowFullName() override;
     void onAuthTypeChanged(KADAuthType type) override;
+    void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes) override;
+
 private slots:
     void onUserSelected(const QString& name);
     void onUserListUserCountChanged(int oldCount, int newCount);
@@ -76,6 +78,8 @@ private slots:
     void onAutoLoginTimeout();
 
 private:
+    void updateRequestAuthCodeButtonVisibility(KADAuthType type);
+
     Prefs* m_prefs;
 
     State m_state = STATE_NONE;
@@ -98,6 +102,9 @@ private:
     QLightDM::PowerInterface m_powerIface;
     QSharedPointer<QLightDM::Greeter> m_greeter;
     QMap<QString, GreeterMenuItem*> m_sessionItemMap;
+
+    KADAuthType m_currentAuthType = KAD_AUTH_TYPE_NONE;
+    QList<KADAuthType> m_supportedAuthTypes;
 };
 }  // namespace Greeter
 }  // namespace SessionGuard

@@ -32,7 +32,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="311"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="486"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -88,37 +88,37 @@
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Dialog</name>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="111"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="112"/>
         <source>authorization</source>
         <translation>认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="232"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="237"/>
         <source>fingerprint auth</source>
         <translation>指纹认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="233"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="238"/>
         <source>face auth</source>
         <translation>人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="234"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="239"/>
         <source>fingervein auth</source>
         <translation>指静脉认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="235"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="240"/>
         <source>iris auth</source>
         <translation>虹膜认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="236"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="241"/>
         <source>soft face auth</source>
         <translation>远程人脸认证</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/dialog.cpp" line="261"/>
+        <location filename="../src/polkit-agent/dialog.cpp" line="266"/>
         <source>Authentication error</source>
         <translation>认证错误</translation>
     </message>
@@ -126,13 +126,13 @@
 <context>
     <name>Kiran::SessionGuard::PolkitAgent::Listener</name>
     <message>
-        <location filename="../src/polkit-agent/listener.cpp" line="73"/>
-        <location filename="../src/polkit-agent/listener.cpp" line="94"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="74"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="95"/>
         <source>Existing authentication is in progress, please try again later</source>
         <translation>已存在正在进行的认证，请稍后再进行尝试</translation>
     </message>
     <message>
-        <location filename="../src/polkit-agent/listener.cpp" line="150"/>
+        <location filename="../src/polkit-agent/listener.cpp" line="151"/>
         <source>Authentication Error</source>
         <translation>认证错误</translation>
     </message>
