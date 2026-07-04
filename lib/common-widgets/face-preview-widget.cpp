@@ -155,9 +155,19 @@ bool FacePreviewWidget::connectShm()
     return true;
 }
 
+void FacePreviewWidget::clearPreview()
+{
+    if (!m_label)
+    {
+        return;
+    }
+    m_label->clear();
+}
+
 void FacePreviewWidget::disconnectShm()
 {
     m_refreshTimer->stop();
+    clearPreview();
 
     if (m_shmAddr && m_shmAddr != MAP_FAILED)
     {
@@ -257,6 +267,7 @@ size_t FacePreviewWidget::callControlStreamNode(bool enable)
     {
         // 摄像头不可用：标记待恢复，收到 CameraAvailabilityChanged(true) 后自动重连
         m_cameraUnavailable = true;
+        clearPreview();
         KLOG_WARNING() << "FacePreview: ControlStreamNode camera unavailable, will retry on hotplug";
         return 0;
     }
@@ -332,6 +343,7 @@ void FacePreviewWidget::onRefreshTimer()
     memcpy(&magic, data, sizeof(magic));
     if (magic != kShmMagic)
     {
+        clearPreview();
         return;
     }
 
@@ -340,6 +352,7 @@ void FacePreviewWidget::onRefreshTimer()
     memcpy(&flags, data + kShmFlagsOffset, sizeof(flags));
     if (!(flags & kShmFlagValid))
     {
+        clearPreview();
         return;
     }
 
@@ -349,6 +362,7 @@ void FacePreviewWidget::onRefreshTimer()
 
     if (frameLen == 0 || frameLen > m_shmSize - kShmHeaderSize)
     {
+        clearPreview();
         return;
     }
 
@@ -357,6 +371,7 @@ void FacePreviewWidget::onRefreshTimer()
     QPixmap pix;
     if (!pix.loadFromData(jpegData))
     {
+        clearPreview();
         return;
     }
     m_label->setPixmap(
@@ -370,6 +385,8 @@ void FacePreviewWidget::onCameraAvailabilityChanged(bool available)
     if (!available)
     {
         m_cameraUnavailable = true;
+        m_refreshTimer->stop();
+        clearPreview();
         return;
     }
 

@@ -12,7 +12,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="391"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="486"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -68,54 +68,54 @@
 <context>
     <name>Kiran::SessionGuard::Greeter::Frame</name>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="191"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="430"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="248"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="494"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="250"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="307"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="262"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="319"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="271"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="328"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="277"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="334"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="283"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="340"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="289"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="346"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="297"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="354"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="308"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="365"/>
         <source>request auth code</source>
         <translation>申请授权码</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="460"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="470"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="525"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="535"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
@@ -242,12 +242,12 @@ Select discard to discard the modification and reload the new configuration</sou
 <context>
     <name>Kiran::SessionGuard::LoginFrame</name>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="92"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="125"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="302"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="413"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>

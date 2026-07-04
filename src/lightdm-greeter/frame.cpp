@@ -622,9 +622,23 @@ void Frame::onLoginOtherClicked()
 
 void Frame::onAuthTypeChanged(KADAuthType type)
 {
+    m_currentAuthType = type;
     LoginFrame::onAuthTypeChanged(type);
-    m_btnRequestAuthCodeButton->setVisible(
-        type == KAD_AUTH_TYPE_SOFT_CODE && QFile::exists("/usr/bin/kiran-auth-code-request"));
+    updateRequestAuthCodeButtonVisibility(type);
+}
+
+void Frame::onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes)
+{
+    m_supportedAuthTypes = supportedTypes;
+    LoginFrame::onSupportedAuthTypeChanged(supportedTypes);
+    updateRequestAuthCodeButtonVisibility(m_currentAuthType);
+}
+
+void Frame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
+{
+    /* 仅临时授权码（C）且驱动实际上报了 SOFT_CODE 时显示；SMS 走 Session --auto */
+    const bool showRequestButton = (type == KAD_AUTH_TYPE_SOFT_CODE) && m_supportedAuthTypes.contains(KAD_AUTH_TYPE_SOFT_CODE) && QFile::exists(QStringLiteral("/usr/bin/kiran-auth-code-request"));
+    m_btnRequestAuthCodeButton->setVisible(showRequestButton);
 }
 
 static bool getIsLoggedIn(const QString& userName)

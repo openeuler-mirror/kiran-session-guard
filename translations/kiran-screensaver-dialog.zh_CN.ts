@@ -4,7 +4,7 @@
 <context>
     <name>Kiran::SessionGuard::AuthController</name>
     <message>
-        <location filename="../lib/auth-proxy/auth-controller.cpp" line="391"/>
+        <location filename="../lib/auth-proxy/auth-controller.cpp" line="486"/>
         <source>Failed to authenticate</source>
         <translation>认证失败</translation>
     </message>
@@ -60,32 +60,32 @@
 <context>
     <name>Kiran::SessionGuard::Locker::Frame</name>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="88"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="89"/>
         <source>reboot</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="92"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="93"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="96"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="97"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="145"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="146"/>
         <source>switch to greeter</source>
         <translation>切换用户</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="149"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="150"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/screensaver-dialog/frame.cpp" line="159"/>
+        <location filename="../src/screensaver-dialog/frame.cpp" line="160"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
@@ -93,12 +93,12 @@
 <context>
     <name>Kiran::SessionGuard::LoginFrame</name>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="92"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="125"/>
         <source>Entry your name</source>
         <translation>请输入用户名</translation>
     </message>
     <message>
-        <location filename="../lib/login-frame/login-frame.cpp" line="302"/>
+        <location filename="../lib/login-frame/login-frame.cpp" line="413"/>
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
