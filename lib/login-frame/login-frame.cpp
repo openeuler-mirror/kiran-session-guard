@@ -117,6 +117,7 @@ void LoginFrame::reset()
     m_switcher->setVisible(false);
     ui->btn_reAuth->setEnabled(true);
     m_lastAuthType = KAD_AUTH_TYPE_NONE;
+    m_facePreviewSuppressedByLeave = false;
 
     m_editMode = EDIT_MODE_USER_NAME;
     m_prompted = false;
@@ -125,6 +126,7 @@ void LoginFrame::reset()
     ui->edit->setPlaceHolderText(tr("Entry your name"));
     setEditFocus();
     m_inUiReset = false;
+    updateFacePreviewVisibility();
     KLOG_INFO() << "LoginFrame: reset done"
                 << "pageAfter=" << controlPageName(ui->stackedWidget->currentIndex())
                 << "editEnabled=" << ui->edit->isEnabled()

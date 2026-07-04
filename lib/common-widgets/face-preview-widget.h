@@ -56,8 +56,14 @@ private slots:
     void onRefreshTimer();
     /** 摄像头热插拔可用性变化 */
     void onCameraAvailabilityChanged(bool available);
+    /** ks-auth-dbus-service 在 system bus 上注册/注销时重连 SHM */
+    void onFaceServiceOwnerChanged(const QString &name,
+                                   const QString &oldOwner,
+                                   const QString &newOwner);
 
 private:
+    /** 订阅 face 服务 D-Bus 信号（服务重启后需重新 connect） */
+    void connectFaceServiceSignals();
     /**
      * @brief 打开 POSIX 共享内存，通过 D-Bus ControlStreamNode 获取 SHM 信息
      * @return 成功返回 true
@@ -65,6 +71,14 @@ private:
     bool connectShm();
     /** 关闭共享内存映射并停止 SHM 流 */
     void disconnectShm();
+    /** 仅释放本地 mmap/fd，不调用 ControlStreamNode stop */
+    void unmapShmLocal();
+    /**
+     * @brief 以只读方式打开并映射 SHM（会先释放旧映射）
+     * @param[in] shmSize SHM 总大小（字节）
+     * @return 成功返回 true
+     */
+    bool mapShmReadOnly(size_t shmSize);
     /** 清空预览区，移除最后一帧画面 */
     void clearPreview();
 
@@ -93,6 +107,8 @@ private:
     bool m_loggedShmAlreadyStreaming = false;
     /** 摄像头不可用时标记，待热插拔恢复后自动重连 */
     bool m_cameraUnavailable = false;
+    /** face 服务重启后待重连 SHM（控件当前不可见时置位） */
+    bool m_serviceReconnectPending = false;
 };
 
 }  // namespace SessionGuard

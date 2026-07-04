@@ -68,54 +68,54 @@
 <context>
     <name>Kiran::SessionGuard::Greeter::Frame</name>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="248"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="494"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="192"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="438"/>
         <source>login other user</source>
         <translation>登录其他用户</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="307"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="251"/>
         <source>session menu</source>
         <translation>会话菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="319"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="263"/>
         <source>power menu</source>
         <translation>电源菜单</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="328"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="272"/>
         <source>hibernate</source>
         <translation>休眠</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="334"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="278"/>
         <source>suspend</source>
         <translation>待机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="340"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="284"/>
         <source>restart</source>
         <translation>重启</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="346"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="290"/>
         <source>shutdown</source>
         <translation>关机</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="354"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="298"/>
         <source>virtual keyboard</source>
         <translation>虚拟键盘</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="365"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="309"/>
         <source>request auth code</source>
         <translation>申请授权码</translation>
     </message>
     <message>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="525"/>
-        <location filename="../src/lightdm-greeter/frame.cpp" line="535"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="469"/>
+        <location filename="../src/lightdm-greeter/frame.cpp" line="479"/>
         <source>return</source>
         <translation>返回</translation>
     </message>
