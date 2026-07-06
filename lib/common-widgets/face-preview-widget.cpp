@@ -103,9 +103,30 @@ FacePreviewWidget::FacePreviewWidget(QWidget *parent)
     m_refreshTimer->setTimerType(Qt::PreciseTimer);
     connect(m_refreshTimer, &QTimer::timeout, this, &FacePreviewWidget::onRefreshTimer);
 
-    /* 监听摄像头热插拔信号，摄像头恢复后自动重连 SHM 预览 */
+    connectFaceServiceSignals();
+
+    /* 服务 restart 时 NameOwnerChanged：释放旧 SHM 映射并重连 PreviewStream */
     auto bus = selectBus();
-    bus.connect(kFaceService, kFacePath, kFaceService,
+    bus.connect(QStringLiteral("org.freedesktop.DBus"),
+                QStringLiteral("/org/freedesktop/DBus"),
+                QStringLiteral("org.freedesktop.DBus"),
+                QStringLiteral("NameOwnerChanged"),
+                this,
+                SLOT(onFaceServiceOwnerChanged(QString, QString, QString)));
+}
+
+void FacePreviewWidget::connectFaceServiceSignals()
+{
+    auto bus = selectBus();
+    bus.disconnect(kFaceService,
+                   kFacePath,
+                   kFaceService,
+                   QStringLiteral("CameraAvailabilityChanged"),
+                   this,
+                   SLOT(onCameraAvailabilityChanged(bool)));
+    bus.connect(kFaceService,
+                kFacePath,
+                kFaceService,
                 QStringLiteral("CameraAvailabilityChanged"),
                 this,
                 SLOT(onCameraAvailabilityChanged(bool)));
@@ -116,23 +137,27 @@ FacePreviewWidget::~FacePreviewWidget()
     disconnectShm();
 }
 
-bool FacePreviewWidget::connectShm()
+void FacePreviewWidget::unmapShmLocal()
 {
-    /* 始终调用 ControlStreamNode 确保服务端推流存活；
-     * 仅在 SHM fd 无效时才打开/映射，避免每次 showEvent 都重复 shm_open+mmap。 */
-    size_t shmSize = callControlStreamNode(true);
-    if (shmSize == 0)
+    if (m_shmAddr && m_shmAddr != MAP_FAILED)
     {
-        KLOG_WARNING() << "FacePreview: failed to start SHM preview via D-Bus";
-        return false;
+        ::munmap(m_shmAddr, m_shmSize);
+        m_shmAddr = nullptr;
     }
 
-    if (m_shmFd >= 0 && m_shmAddr && m_shmAddr != MAP_FAILED)
+    if (m_shmFd >= 0)
     {
-        /* 已有有效映射：只确认服务端已恢复推流，不重复打开 SHM */
-        KLOG_INFO() << "FacePreview: SHM already mapped, server stream ensured";
-        return true;
+        ::close(m_shmFd);
+        m_shmFd = -1;
     }
+
+    m_shmSize = 0;
+    m_loggedShmAlreadyStreaming = false;
+}
+
+bool FacePreviewWidget::mapShmReadOnly(size_t shmSize)
+{
+    unmapShmLocal();
 
     m_shmFd = ::shm_open(kShmName, O_RDONLY, 0666);
     if (m_shmFd < 0)
@@ -151,8 +176,22 @@ bool FacePreviewWidget::connectShm()
     }
 
     m_shmSize = shmSize;
-    KLOG_INFO() << "FacePreview: SHM connected, size:" << m_shmSize;
+    KLOG_INFO() << "FacePreview: SHM mapped, size:" << m_shmSize;
     return true;
+}
+
+bool FacePreviewWidget::connectShm()
+{
+    /* 始终 ControlStreamNode 确保服务端 PreviewStream 存活；成功后强制 remmap，
+     * 避免服务 restart 后 shm_unlink 创建新 inode 而客户端仍读旧映射。 */
+    const size_t shmSize = callControlStreamNode(true);
+    if (shmSize == 0)
+    {
+        KLOG_WARNING() << "FacePreview: failed to start SHM preview via D-Bus";
+        return false;
+    }
+
+    return mapShmReadOnly(shmSize);
 }
 
 void FacePreviewWidget::clearPreview()
@@ -168,22 +207,9 @@ void FacePreviewWidget::disconnectShm()
 {
     m_refreshTimer->stop();
     clearPreview();
-
-    if (m_shmAddr && m_shmAddr != MAP_FAILED)
-    {
-        ::munmap(m_shmAddr, m_shmSize);
-        m_shmAddr = nullptr;
-    }
-
-    if (m_shmFd >= 0)
-    {
-        ::close(m_shmFd);
-        m_shmFd = -1;
-    }
-
-    m_shmSize = 0;
-    m_loggedShmAlreadyStreaming = false;
+    unmapShmLocal();
     m_cameraUnavailable = false;
+    m_serviceReconnectPending = false;
     KLOG_INFO() << "FacePreview: SHM disconnected";
 
     callControlStreamNode(false);
@@ -311,6 +337,11 @@ void FacePreviewWidget::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     KLOG_INFO() << "FacePreview: showEvent -> connect SHM";
 
+    if (m_serviceReconnectPending)
+    {
+        m_serviceReconnectPending = false;
+    }
+
     if (connectShm())
     {
         m_refreshTimer->start(kRefreshIntervalMs);
@@ -408,6 +439,48 @@ void FacePreviewWidget::onCameraAvailabilityChanged(bool available)
         m_cameraUnavailable = false;
         m_refreshTimer->start(kRefreshIntervalMs);
         KLOG_INFO() << "FacePreview: SHM reconnected after camera hotplug";
+    }
+}
+
+void FacePreviewWidget::onFaceServiceOwnerChanged(const QString &name,
+                                                 const QString &oldOwner,
+                                                 const QString &newOwner)
+{
+    Q_UNUSED(oldOwner);
+    if (name != kFaceService)
+    {
+        return;
+    }
+
+    KLOG_INFO() << "FacePreview: face service owner changed, newOwner=" << newOwner;
+
+    if (newOwner.isEmpty())
+    {
+        m_serviceReconnectPending = true;
+        m_refreshTimer->stop();
+        unmapShmLocal();
+        clearPreview();
+        return;
+    }
+
+    connectFaceServiceSignals();
+
+    if (!isVisible())
+    {
+        m_serviceReconnectPending = true;
+        KLOG_INFO() << "FacePreview: face service back but widget hidden, defer reconnect";
+        return;
+    }
+
+    m_serviceReconnectPending = false;
+    if (connectShm())
+    {
+        m_cameraUnavailable = false;
+        if (!m_refreshTimer->isActive())
+        {
+            m_refreshTimer->start(kRefreshIntervalMs);
+        }
+        KLOG_INFO() << "FacePreview: SHM reconnected after face service restart";
     }
 }
 
