@@ -10,6 +10,7 @@
         <file>images/switch_users_normal.png</file>
         <file>images/switch_users_pressed.png</file>
         <file>images/switch_users_select.png</file>
+        <file>images/request_auth_code.svg</file>
     </qresource>
 
     <qresource prefix="/locker">

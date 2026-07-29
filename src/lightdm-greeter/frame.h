@@ -78,8 +78,6 @@ private slots:
     void onAutoLoginTimeout();
 
 private:
-    void updateRequestAuthCodeButtonVisibility(KADAuthType type);
-
     Prefs* m_prefs;
 
     State m_state = STATE_NONE;
@@ -96,15 +94,11 @@ private:
     QToolButton* m_btnPower;
     QToolButton* m_btnKeyboard;
     QToolButton* m_btnLoginOther;
-    QToolButton* m_btnRequestAuthCodeButton;
     UserList* m_userList;
 
     QLightDM::PowerInterface m_powerIface;
     QSharedPointer<QLightDM::Greeter> m_greeter;
     QMap<QString, GreeterMenuItem*> m_sessionItemMap;
-
-    KADAuthType m_currentAuthType = KAD_AUTH_TYPE_NONE;
-    QList<KADAuthType> m_supportedAuthTypes;
 };
 }  // namespace Greeter
 }  // namespace SessionGuard

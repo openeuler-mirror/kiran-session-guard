@@ -140,3 +140,21 @@ Kiran--SessionGuard--AuthTypeDrawer{
 Kiran--SessionGuard--AuthTypeDrawer  QWidget{
     background: #222222;
 }
+
+/*右下申请授权码按钮*/
+QToolButton#btn_request_auth_code{
+    image:url(:/locker/images/request_auth_code.svg);
+    border-radius:7px;
+    padding:8px;
+    border:1px solid rgba(255,255,255,0.1);
+    background-color: rgba(0,0,0,0.1);
+}
+QToolButton#btn_request_auth_code:pressed{
+    background-color: rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.05);
+}
+QToolButton#btn_request_auth_code:hover:!pressed,
+QToolButton#btn_request_auth_code:focus:!pressed{
+    background-color: rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.1);
+}

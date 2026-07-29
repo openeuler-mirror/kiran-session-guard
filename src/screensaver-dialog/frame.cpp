@@ -55,6 +55,8 @@ Frame::Frame(Kiran::ScreenSaver::Interface* ksinterface, Power* power, QWidget* 
       m_userName(UserManager::getCurrentUser()),
       m_authProxy(nullptr)
 {
+    // 锁屏环境下授权码申请走 --auto CLI 模式，通过 tips 反馈结果
+    setAutoAuthCodeRequest(true);
     KLOG_DEBUG() << "locker create for" << m_userName;
     initMenus();
     initUI();

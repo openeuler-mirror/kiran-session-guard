@@ -251,6 +251,21 @@ Select discard to discard the modification and reload the new configuration</sou
         <source>ddd MMM dd HH:mm</source>
         <translation>MM月dd日 dddd HH:mm</translation>
     </message>
+    <message>
+        <location filename="../lib/login-frame/login-frame.cpp" line="362"/>
+        <source>request auth code</source>
+        <translation>申请授权码</translation>
+    </message>
+    <message>
+        <location filename="../lib/login-frame/login-frame.cpp" line="380"/>
+        <source>succeed</source>
+        <translation>授权码申请成功，请注意查收短信</translation>
+    </message>
+    <message>
+        <location filename="../lib/login-frame/login-frame.cpp" line="385"/>
+        <source>Failed</source>
+        <translation>授权码申请失败</translation>
+    </message>
 </context>
 <context>
     <name>LoginButton</name>
