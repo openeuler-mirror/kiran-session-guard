@@ -134,6 +134,11 @@ void AuthTypeSwitcher::setCurrentAuthTypeQuiet(int authType)
 
 void AuthTypeSwitcher::onAuthTypeChanged(int authType)
 {
+    // 同类型不再 emit，避免 LoginFrame 清 tips 后认证未重启导致提示丢失
+    if (m_currentAuthType == authType)
+    {
+        return;
+    }
     m_currentAuthType = authType;
     update();
     emit authTypeChanged((KADAuthType)m_currentAuthType);
