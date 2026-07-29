@@ -23,6 +23,7 @@ class LoginFrame;
 
 QT_BEGIN_NAMESPACE
 class QLayoutItem;
+class QToolButton;
 QT_END_NAMESPACE
 
 // TODO:对于AuthController的修改未改完
@@ -64,6 +65,7 @@ public:
     void setAuthUserInfo(const QString& userName);
     void setSpecifyUser(const QString& user) { m_specifyUser = user; }
     void setTips(MessageType type, const QString& text);
+    void setAutoAuthCodeRequest(bool autoMode) { m_autoAuthCodeRequest = autoMode; }
 
     void setLeftTopWidget(QWidget* w);
     void setLeftBottomWidget(QWidget* w);
@@ -128,6 +130,10 @@ private:
     KADAuthType m_lastAuthType = KAD_AUTH_TYPE_NONE;
     bool m_facePreviewSuppressedByLeave = false;
     bool m_inUiReset = false;
+    void updateRequestAuthCodeButtonVisibility(KADAuthType type);
+    QToolButton* m_btnRequestAuthCodeButton = nullptr;
+    QList<KADAuthType> m_supportedAuthTypes;
+    bool m_autoAuthCodeRequest = false;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

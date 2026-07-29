@@ -32,6 +32,7 @@
 #include <QDBusConnection>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QProcess>
 
 namespace Kiran
 {
@@ -118,6 +119,7 @@ void LoginFrame::reset()
     ui->btn_reAuth->setEnabled(true);
     m_lastAuthType = KAD_AUTH_TYPE_NONE;
     m_facePreviewSuppressedByLeave = false;
+    m_btnRequestAuthCodeButton->setVisible(false);
 
     m_editMode = EDIT_MODE_USER_NAME;
     m_prompted = false;
@@ -353,6 +355,69 @@ void LoginFrame::initUI()
         updateFacePreviewVisibility();
         this->m_authController->switchAuthType(authType); });
 
+    // 授权码申请按钮，默认隐藏，认证类型变更时控制显隐
+    QString authCodeRequestPath = "/usr/bin/kiran-auth-code-request";
+    m_btnRequestAuthCodeButton = new QToolButton(this);
+    m_btnRequestAuthCodeButton->setObjectName("btn_request_auth_code");
+    m_btnRequestAuthCodeButton->setToolTip(tr("request auth code"));
+    m_btnRequestAuthCodeButton->setFixedSize(QSize(48, 40));
+    m_btnRequestAuthCodeButton->setCursor(QCursor(Qt::PointingHandCursor));
+    m_btnRequestAuthCodeButton->setVisible(false);
+    connect(m_btnRequestAuthCodeButton, &QToolButton::pressed, this, [this, authCodeRequestPath]()
+            {
+        KLOG_INFO() << "request auth code button clicked";
+        // 锁屏全屏窗口为 override-redirect，无法在其上展示外部进程 GUI 弹窗；
+        // 使用 --auto CLI 模式后台申请，通过 prompt tips 反馈结果
+        QProcess* process = new QProcess(this);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
+        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus)
+                {
+#else
+        connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus)
+                {
+#endif
+            Q_UNUSED(exitStatus);
+            if (m_autoAuthCodeRequest)
+            {
+                if (exitCode == 0)
+                {
+                    setTips(MessageTypeInfo, tr("succeed"));
+                }
+                else
+                {
+                    const QString output = QString::fromUtf8(process->readAllStandardOutput()).trimmed();
+                    setTips(MessageTypeError, !output.isEmpty() ? output : tr("Failed"));
+                }
+            }
+            QTimer::singleShot(0, this, [this]()
+                               {
+                this->window()->activateWindow();
+                QApplication::processEvents();
+                this->setEditFocus(0); });
+            process->deleteLater();
+        });
+        if (m_autoAuthCodeRequest)
+        {
+            process->start(authCodeRequestPath, QStringList() << "--auto" << "--user-name" << m_specifyUser);
+        }
+        else
+        {
+            process->start(authCodeRequestPath, QStringList() << "--user-name" << m_specifyUser);
+        } });
+
+    // 将按钮插入 page_edit 输入行，放在输入框后面
+    // page_edit 布局: horizontalSpacer(0), label_spacer(1), edit(2), label_capslock(3), horizontalSpacer_2(4)
+    if (ui->page_edit)
+    {
+        auto* pageEditLayout = qobject_cast<QHBoxLayout*>(ui->page_edit->layout());
+        if (pageEditLayout)
+        {
+            pageEditLayout->insertWidget(4, m_btnRequestAuthCodeButton);
+        }
+    }
+
     switchControlPage(CONTROL_PAGE_PROMPT_EDIT);
     startUpdateTimeTimer();
 }
@@ -531,7 +596,9 @@ void LoginFrame::onNotifyAuthMode(KADAuthMode mode)
 
 void LoginFrame::onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes)
 {
+    m_supportedAuthTypes = supportedTypes;
     m_switcher->setAuthTypes(supportedTypes);
+    updateRequestAuthCodeButtonVisibility(m_lastAuthType);
 }
 
 //  检查当前认证的用户头像变更
@@ -564,6 +631,7 @@ void LoginFrame::onAuthTypeChanged(KADAuthType type)
 
     updateControlPageForAuthType(type);
     updateFacePreviewVisibility();
+    updateRequestAuthCodeButtonVisibility(type);
 }
 
 bool LoginFrame::isEmptyControlAuthType(KADAuthType type) const
@@ -722,6 +790,13 @@ void LoginFrame::enableReAuthButton()
                 << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
                 << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     ui->btn_reAuth->setEnabled(true);
+}
+
+void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
+{
+    const KADAuthType softCodeType = static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE);
+    const bool showRequestButton = (type == softCodeType) && m_supportedAuthTypes.contains(softCodeType) && QFile::exists(QStringLiteral("/usr/bin/kiran-auth-code-request"));
+    m_btnRequestAuthCodeButton->setVisible(showRequestButton);
 }
 
 }  // namespace SessionGuard

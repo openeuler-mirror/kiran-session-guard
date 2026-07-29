@@ -304,48 +304,6 @@ void Frame::initUI()
         this->window()->windowHandle()->setKeyboardGrabEnabled(true);
     });
 
-    // 弹窗来源：kiran-authentication-service（kiran gen-code dialog）
-    QString authCodeRequestPath = "/usr/bin/kiran-auth-code-request";
-    m_btnRequestAuthCodeButton = createActionButton("btn_request_auth_code",tr("request auth code"),[this,authCodeRequestPath]{
-        KLOG_INFO() << "request auth code button clicked";
-        QProcess* process = new QProcess(this);
-        // 使用信号槽机制，进程结束时自动恢复焦点
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
-        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus){
-#else
-        connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus){
-#endif
-            Q_UNUSED(exitCode);
-            Q_UNUSED(exitStatus);
-            // 进程结束后，先激活窗口，再设置焦点到输入框
-            // 使用 QTimer::singleShot(0) 确保在事件循环中执行，让窗口系统有时间处理窗口关闭事件
-            QTimer::singleShot(0, this, [this](){
-                this->window()->activateWindow();
-                QApplication::processEvents();
-                this->setEditFocus(0);
-            });
-            process->deleteLater();
-        });
-        process->start(authCodeRequestPath, QStringList() << "--user-name" << m_userName);
-    });
-    // 默认隐藏，显示授权码输入页面时由 authTypeChanged 信号控制显示
-    m_btnRequestAuthCodeButton->setVisible(false);
-
-    // 将授权码申请按钮插入 page_edit 布局，放在输入框后面，而非右下角按钮栏
-    // page_edit 布局: horizontalSpacer(0), label_spacer(1), edit(2), label_capslock(3), horizontalSpacer_2(4)
-    auto* pageEdit = findChild<QWidget*>("page_edit");
-    if (pageEdit)
-    {
-        auto* pageEditLayout = qobject_cast<QHBoxLayout*>(pageEdit->layout());
-        if (pageEditLayout)
-        {
-            pageEditLayout->insertWidget(4, m_btnRequestAuthCodeButton);
-        }
-    }
-    // clang-format on
-
     auto rbBtnWidget = new QWidget(this);
     rbBtnWidget->setMinimumSize(QSize(114, 40));
     rbBtnWidget->setMaximumSize(QSize(228, 40));
@@ -429,7 +387,6 @@ void Frame::reset(State state)
     {
         LoginFrame::reset();
         m_userName.clear();
-        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(true);
         m_userList->setVisible(true);
@@ -460,7 +417,6 @@ void Frame::reset(State state)
     {
         LoginFrame::reset();
         m_userName.clear();
-        m_btnRequestAuthCodeButton->setVisible(false);
 
         m_userList->setEnabled(false);
         m_userList->setVisible(false);
@@ -622,23 +578,12 @@ void Frame::onLoginOtherClicked()
 
 void Frame::onAuthTypeChanged(KADAuthType type)
 {
-    m_currentAuthType = type;
     LoginFrame::onAuthTypeChanged(type);
-    updateRequestAuthCodeButtonVisibility(type);
 }
 
 void Frame::onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes)
 {
-    m_supportedAuthTypes = supportedTypes;
     LoginFrame::onSupportedAuthTypeChanged(supportedTypes);
-    updateRequestAuthCodeButtonVisibility(m_currentAuthType);
-}
-
-void Frame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
-{
-    /* 仅临时授权码（C）且驱动实际上报了 SOFT_CODE 时显示；SMS 走 Session --auto */
-    const bool showRequestButton = (type == KAD_AUTH_TYPE_SOFT_CODE) && m_supportedAuthTypes.contains(KAD_AUTH_TYPE_SOFT_CODE) && QFile::exists(QStringLiteral("/usr/bin/kiran-auth-code-request"));
-    m_btnRequestAuthCodeButton->setVisible(showRequestButton);
 }
 
 static bool getIsLoggedIn(const QString& userName)
