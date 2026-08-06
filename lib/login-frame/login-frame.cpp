@@ -356,7 +356,7 @@ void LoginFrame::initUI()
         this->m_authController->switchAuthType(authType); });
 
     // 授权码申请按钮，默认隐藏，认证类型变更时控制显隐
-    QString authCodeRequestPath = "/usr/bin/kiran-auth-code-request";
+    QString authCodeRequestPath = "/usr/bin/ks-auth-code-request";
     m_btnRequestAuthCodeButton = new QToolButton(this);
     m_btnRequestAuthCodeButton->setObjectName("btn_request_auth_code");
     m_btnRequestAuthCodeButton->setToolTip(tr("request auth code"));
@@ -795,7 +795,7 @@ void LoginFrame::enableReAuthButton()
 void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
 {
     const KADAuthType softCodeType = static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE);
-    const bool showRequestButton = (type == softCodeType) && m_supportedAuthTypes.contains(softCodeType) && QFile::exists(QStringLiteral("/usr/bin/kiran-auth-code-request"));
+    const bool showRequestButton = (type == softCodeType) && m_supportedAuthTypes.contains(softCodeType) && QFile::exists(QStringLiteral("/usr/bin/ks-auth-code-request"));
     m_btnRequestAuthCodeButton->setVisible(showRequestButton);
 }
 
