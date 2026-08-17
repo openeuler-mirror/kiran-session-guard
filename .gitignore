@@ -3,3 +3,4 @@ build
 .cache
 CMakeLists.txt.user
 .clangd
+compile_commands.json
