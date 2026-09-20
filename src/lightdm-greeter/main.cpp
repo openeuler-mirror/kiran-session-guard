@@ -13,6 +13,7 @@
  */
 #include "greeter-define.h"
 #include <qt5-log-i.h>
+#include <locale.h>
 
 #include <QApplication>
 #include <QTranslator>
@@ -112,6 +113,33 @@ void setCursor(qreal factor)
     }
 }
 
+// 把登录界面的字符集固定为 UTF-8（保留语言部分）
+//
+// 背景：greeter 的界面文案与翻译（.qm）都是 UTF-8；业务系统可能把会话/系统字符集设成
+// GB18030（如 D5000 类老业务），直接沿用会话环境变量会导致登录界面乱码/翻译加载失败。
+// 这里只把“语言.字符集”中的字符集替换为 UTF-8（zh_CN.GB18030 -> zh_CN.UTF-8），语言不变；
+// 且 LANG 与 LC_ALL 一起设置——按优先级 LC_ALL > LC_CTYPE > LANG，只改 LANG 会被继承来的
+// LC_CTYPE/LC_ALL 压掉（本仓库 session-guard-checkpass 就有这个问题）。
+static void forceUtf8Locale()
+{
+    QByteArray source = qgetenv("LC_ALL");
+    if (source.isEmpty())
+        source = qgetenv("LC_CTYPE");
+    if (source.isEmpty())
+        source = qgetenv("LANG");
+
+    QString language = QString::fromLatin1(source).section('.', 0, 0);
+    if (language.isEmpty())
+        language = QStringLiteral("zh_CN");  // 兜底：界面默认中文
+
+    const QByteArray utf8Locale = QStringLiteral("%1.UTF-8").arg(language).toUtf8();
+    qputenv("LANG", utf8Locale);
+    qputenv("LC_ALL", utf8Locale);
+    setlocale(LC_ALL, "");
+
+    KLOG_INFO() << "greeter locale:" << source << "->" << utf8Locale.constData();
+}
+
 int main(int argc, char* argv[])
 {
     Q_INIT_RESOURCE(commonWidgets);
@@ -125,6 +153,9 @@ int main(int argc, char* argv[])
         qWarning() << "init kiran-log failed";
     }
 
+    // 登录界面固定 UTF-8 字符集（必须在 QApplication 构造之前，Qt 会缓存 locale）
+    forceUtf8Locale();
+
     Prefs::globalInit();
     auto prefs = Prefs::getInstance();
     qreal factor = adjustScaleFactor(prefs);
@@ -132,9 +163,9 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    //监听x11事件，处理屏幕从无到有，并配置屏幕
+    // 监听x11事件，处理屏幕从无到有，并配置屏幕
     AppNativeEventFilter appNativeEventFilter;
-    if( appNativeEventFilter.init() )
+    if (appNativeEventFilter.init())
     {
         app.installNativeEventFilter(&appNativeEventFilter);
     }
@@ -143,14 +174,14 @@ int main(int argc, char* argv[])
         KLOG_ERROR() << "can't install app native event filter!";
     }
 
-    if( prefs->monitorAlwaysOn() )
+    if (prefs->monitorAlwaysOn())
     {
         // 登录界面阶段不熄灭屏幕
         KLOG_INFO() << "set screen saver off!";
-        QProcess::startDetached("xset", {"s","0","0"});
-    
+        QProcess::startDetached("xset", {"s", "0", "0"});
+
         KLOG_INFO() << "set dpms off!";
-        QProcess::startDetached("xset",{"dpms","0","0","0"});
+        QProcess::startDetached("xset", {"dpms", "0", "0", "0"});
     }
 
     setCursor(factor);
