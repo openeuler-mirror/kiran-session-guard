@@ -236,7 +236,20 @@ void AuthPam::handlePipeActivated()
 void AuthPam::handleChildExit()
 {
     KLOG_DEBUG() << "handle child process exit";
-    waitpid(-1, nullptr, WNOHANG);
+
+    // 管道 EOF(exit_files/exit_task_work) 早于 EXIT_ZOMBIE(exit_notify)，WNOHANG 可能返回 0，
+    // 且本函数返回后监听即被销毁，不再有回收时机；故阻塞回收具体 pid 并清空。
+    if (m_authPid > 0)
+    {
+        pid_t waitResult = 0;
+        do
+        {
+            waitResult = waitpid(m_authPid, nullptr, 0);
+        } while (waitResult == -1 && errno == EINTR);
+
+        m_authPid = 0;
+    }
+
     KLOG_DEBUG() << "child process exit finished";
 
     m_inAuthenticating = false;
