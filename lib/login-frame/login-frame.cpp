@@ -792,6 +792,12 @@ void LoginFrame::enableReAuthButton()
     ui->btn_reAuth->setEnabled(true);
 }
 
+void LoginFrame::triggerReAuthButton()
+{
+    // QAbstractButton::click() 内置 isEnabled() 守卫——disabled 时是空操作
+    ui->btn_reAuth->click();
+}
+
 void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
 {
     const KADAuthType softCodeType = static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE);

@@ -60,11 +60,15 @@ private:
     void initUI();
     void initAnimation();
     void initAuth();
+    void initPassiveAuthLoop();
+    void stopPassiveAuthLoop(const char* reason);
     // override LoginFrame
     // 需认证用的户名输入完成,子类对认证用户名进行判断,是否调用开始认证
     virtual void authUserInputed(const QString &userName){};
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString &userName);
+    // 认证类型变化：在 SOFT_FACE 就位时补调被动认证循环初始化
+    void onAuthTypeChanged(KADAuthType type) override;
     virtual bool shouldShowFullName() override;
 public:
     // override LockerInterface
@@ -104,6 +108,11 @@ private:
     int m_fadeOutDelayMs = 0;
     int m_fadeInDurationMs = 0;
     int m_fadeOutDurationMs = 0;
+
+    // 被动认证循环
+    QTimer* m_passiveAuthTimer = nullptr;
+    bool m_passiveAuthActive = false;
+    int m_passiveLoopSec = 2;
 };
 }  // namespace Locker
 }  // namespace SessionGuard

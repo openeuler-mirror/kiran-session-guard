@@ -81,6 +81,17 @@ protected:
     virtual void onAuthTypeChanged(KADAuthType type);
     virtual void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
 
+    /**
+     * @brief 触发重新认证按钮点击（供子类被动认证循环使用）
+     * @note 利用 QAbstractButton::click() 内置 isEnabled() 守卫——disabled 时为空操作
+     */
+    void triggerReAuthButton();
+
+    /**
+     * @brief 获取当前认证类型（供子类判断是否启动被动循环）
+     */
+    KADAuthType lastAuthType() const { return m_lastAuthType; }
+
 private:
     void initUI();
     void respond(const QString& response);

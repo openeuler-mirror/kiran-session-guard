@@ -17,7 +17,6 @@
 #include "../common/prefs.h"
 #include "hover-tips.h"
 #include "user-manager.h"
-#include "greeter-define.h"
 
 #include <style-property.h>
 #include <QApplication>
