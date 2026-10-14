@@ -88,6 +88,11 @@ protected:
     void triggerReAuthButton();
 
     /**
+     * @brief 底层认证是否进行中（供子类被动循环跳过叠触发）
+     */
+    bool isAuthInProgress() const;
+
+    /**
      * @brief 获取当前认证类型（供子类判断是否启动被动循环）
      */
     KADAuthType lastAuthType() const { return m_lastAuthType; }

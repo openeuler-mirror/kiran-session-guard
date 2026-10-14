@@ -29,6 +29,7 @@
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDateTime>
 #include <QFile>
 #include <QGraphicsOpacityEffect>
 #include <QJsonDocument>
@@ -72,6 +73,18 @@ Frame::Frame(Kiran::ScreenSaver::Interface* ksinterface, Power* power, QWidget* 
 Frame::~Frame()
 {
     qApp->removeEventFilter(this);
+    m_passiveAuthStartPending = false;
+    if (m_passiveAuthActive)
+    {
+        for (int i = 0; i < 3; ++i)
+        {
+            if (notifyPassiveAuthReportFilter(false))
+            {
+                break;
+            }
+        }
+        m_passiveAuthActive = false;
+    }
     if (m_passiveAuthTimer)
     {
         m_passiveAuthTimer->stop();
@@ -288,12 +301,24 @@ void Frame::authenticateComplete(bool authRes, const QString& userName)
 
     if (authRes)
     {
+        /* 解锁成功即结束被动循环，勿等析构 */
+        stopPassiveAuthLoop("AuthSuccess");
         m_ksInterface->authenticationPassed();
         return;
     }
 
-    /* 被动认证循环：失败后 2 秒再重试 */
-    if (m_passiveAuthActive && m_passiveAuthTimer != nullptr)
+    /* 被动认证循环：仅软人脸失败后 2 秒再重试。
+     * priming 阶段可能尚无 timer，软人脸就位后在此补建，避免只试探一次就僵死。
+     * 非软人脸不建循环，保持「至多 priming 一次」的通用行为。 */
+    if (!m_passiveAuthActive || lastAuthType() != KAD_AUTH_TYPE_SOFT_FACE)
+    {
+        return;
+    }
+    if (m_passiveAuthTimer == nullptr)
+    {
+        initPassiveAuthLoop();
+    }
+    if (m_passiveAuthTimer != nullptr)
     {
         m_passiveAuthTimer->setInterval(2000);
         m_passiveAuthTimer->start();
@@ -427,34 +452,25 @@ bool Frame::enableSwitch()
 
 bool Frame::eventFilter(QObject* obj, QEvent* event)
 {
-    /* 被动认证循环：检测用户交互。
-     * MouseButtonPress 统一拦截所有鼠标点击（含 btn_reAuth），
-     * 无需对按钮点击做单独终止处理。 */
+    /* 被动认证循环：仅明确按键/点击才停止（含 btn_reAuth）。
+     * 忽略 MouseMove/Wheel，避免光标微动或虚拟机同步误停。 */
     if (m_passiveAuthActive)
     {
         switch (event->type())
         {
         case QEvent::MouseButtonPress:
-            stopPassiveAuthLoop("MouseButtonPress");
-            break;
-        case QEvent::MouseMove:
-            stopPassiveAuthLoop("MouseMove");
-            break;
-        case QEvent::Wheel:
-            stopPassiveAuthLoop("Wheel");
-            break;
-        case QEvent::KeyPress:
         {
-            auto* keyEvent = static_cast<QKeyEvent*>(event);
-            /* 排除纯修饰键 */
-            const int k = keyEvent->key();
-            if (k != Qt::Key_Shift && k != Qt::Key_Control
-                && k != Qt::Key_Alt && k != Qt::Key_Meta)
+            auto* mouseEvent = static_cast<QMouseEvent*>(event);
+            const Qt::MouseButton button = mouseEvent->button();
+            if (button == Qt::LeftButton || button == Qt::RightButton)
             {
-                stopPassiveAuthLoop("KeyPress");
+                stopPassiveAuthLoop("MouseButtonPress");
             }
             break;
         }
+        case QEvent::KeyPress:
+            stopPassiveAuthLoop("KeyPress");
+            break;
         default:
             break;
         }
@@ -556,47 +572,87 @@ void Frame::initPassiveAuthLoop()
         return;
     }
 
-    /* 认证类型未知 → 5 秒后主动发起首次试探认证。
-       PAM 跑起来 → onAuthTypeChanged(64) → 回到这里，此时 authType 就位 → 创建真正的循环计时器。 */
-    if (lastAuthType() != KAD_AUTH_TYPE_SOFT_FACE)
+    /* 已正式开启：仅在软人脸下补建 timer */
+    if (m_passiveAuthActive)
     {
-        QTimer::singleShot(5000, this, [this](){
-            KLOG_INFO() << "passiveAuth: priming trigger fired"
-                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
-            triggerReAuthButton();
-        });
-        KLOG_INFO() << "passiveAuth: priming scheduled in 5000ms"
-                    << "authType=" << static_cast<int>(lastAuthType())
-                    << "passive_loop_sec=" << s_cachedPassiveLoopSec
-                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        if (lastAuthType() == KAD_AUTH_TYPE_SOFT_FACE)
+        {
+            ensurePassiveAuthTimer();
+        }
         return;
     }
 
-    /* authType == SOFT_FACE → 创建被动循环计时器 */
+    /* 前 5 秒：不置 active、不发 enable、不监听键鼠；到点再一并开启 */
+    if (m_passiveAuthStartPending)
+    {
+        return;
+    }
+
+    m_passiveLoopSec = s_cachedPassiveLoopSec;
+    m_passiveAuthStartPending = true;
+    QTimer::singleShot(5000, this, [this]() {
+        if (!m_passiveAuthStartPending)
+        {
+            KLOG_INFO() << "passiveAuth: delayed start skipped"
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+            return;
+        }
+        m_passiveAuthStartPending = false;
+        beginPassiveAuthLoop();
+    });
+    KLOG_INFO() << "passiveAuth: delayed start scheduled in 5000ms"
+                << "authType=" << static_cast<int>(lastAuthType())
+                << "passive_loop_sec=" << m_passiveLoopSec
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+}
+
+void Frame::beginPassiveAuthLoop()
+{
+    m_passiveAuthActive = true;
+    notifyPassiveAuthReportFilter(true);
+    ensurePassiveAuthTimer();
+    KLOG_INFO() << "passiveAuth: loop started"
+                << "passive_loop_sec=" << m_passiveLoopSec
+                << "authType=" << static_cast<int>(lastAuthType())
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    triggerReAuthButton();
+}
+
+void Frame::ensurePassiveAuthTimer()
+{
     if (m_passiveAuthTimer != nullptr)
     {
-        /* 已创建（比如 onAuthTypeChanged 回调用），直接启动 */
         if (m_passiveAuthActive && !m_passiveAuthTimer->isActive())
         {
             m_passiveAuthTimer->start();
-            KLOG_INFO() << "passiveAuth: loop resumed after priming"
+            KLOG_INFO() << "passiveAuth: timer resumed"
                         << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         }
         return;
     }
 
-    m_passiveLoopSec = s_cachedPassiveLoopSec;
     m_passiveAuthTimer = new QTimer(this);
-    m_passiveAuthTimer->setInterval(5000);
-    m_passiveAuthActive = true;
+    /* 首次认证由 beginPassiveAuthLoop 立即触发；timer 按配置间隔续跑 */
+    m_passiveAuthTimer->setInterval(m_passiveLoopSec * 1000);
 
-    connect(m_passiveAuthTimer, &QTimer::timeout, this, [this]()
-            {
+    connect(m_passiveAuthTimer, &QTimer::timeout, this, [this]() {
         /* 非软人脸则跳过本次 */
         if (lastAuthType() != KAD_AUTH_TYPE_SOFT_FACE)
         {
             return;
         }
+
+        /* timer 照跑；认证中只跳过触发，不依赖回调把循环救活 */
+        if (isAuthInProgress())
+        {
+            KLOG_INFO() << "passiveAuth: timeout skipped (auth in progress)"
+                        << "authType=" << static_cast<int>(lastAuthType())
+                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+            return;
+        }
+
+        /* 被动循环仍在跑时续发开启通知，避免漏发结束通知后过滤状态残留 */
+        notifyPassiveAuthReportFilter(true);
 
         KLOG_INFO() << "passiveAuth: timeout firing"
                     << "authType=" << static_cast<int>(lastAuthType())
@@ -604,25 +660,38 @@ void Frame::initPassiveAuthLoop()
 
         triggerReAuthButton();
 
-        /* 首次 (5000ms) 或失败后重试 (2000ms) → 恢复为 normal 间隔 */
+        /* 失败后重试 (2000ms) → 恢复为 normal 间隔 */
         const int curInterval = m_passiveAuthTimer->interval();
         if (curInterval != m_passiveLoopSec * 1000)
         {
             m_passiveAuthTimer->setInterval(m_passiveLoopSec * 1000);
-        } });
+        }
+    });
 
-    m_passiveAuthTimer->start();
-    KLOG_INFO() << "passiveAuth: loop started"
-                << "passive_loop_sec=" << m_passiveLoopSec
-                << "first_delay_ms=5000"
-                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    if (m_passiveAuthActive)
+    {
+        m_passiveAuthTimer->start();
+    }
 }
 
 void Frame::stopPassiveAuthLoop(const char* reason)
 {
+    /* 解锁成功等：作废尚未到期的延迟启动 */
+    m_passiveAuthStartPending = false;
     if (m_passiveAuthTimer != nullptr)
     {
         m_passiveAuthTimer->stop();
+    }
+    if (m_passiveAuthActive)
+    {
+        /* 结束通知失败时重试，降低过滤状态残留风险 */
+        for (int i = 0; i < 3; ++i)
+        {
+            if (notifyPassiveAuthReportFilter(false))
+            {
+                break;
+            }
+        }
     }
     m_passiveAuthActive = false;
     KLOG_INFO() << "passiveAuth: loop stopped"
@@ -630,15 +699,45 @@ void Frame::stopPassiveAuthLoop(const char* reason)
                 << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 }
 
+bool Frame::notifyPassiveAuthReportFilter(bool enable)
+{
+    QDBusInterface iface(QStringLiteral("com.ks.auth.dbus.service"),
+                         QStringLiteral("/com/ks/auth/dbus/service"),
+                         QStringLiteral("com.ks.auth.dbus.service"),
+                         QDBusConnection::systemBus());
+    QJsonObject obj;
+    obj.insert(QStringLiteral("business_id"), QStringLiteral("KylinsecOS"));
+    obj.insert(QStringLiteral("enable"), enable);
+    const QString args =
+        QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+    QDBusReply<QString> reply =
+        iface.call(QStringLiteral("SetPassiveAuthReportFilter"), args);
+    if (!reply.isValid())
+    {
+        KLOG_WARNING() << "passiveAuth: SetPassiveAuthReportFilter D-Bus failed"
+                       << "enable=" << enable
+                       << "error=" << reply.error().message();
+        return false;
+    }
+    KLOG_INFO() << "passiveAuth: SetPassiveAuthReportFilter ok"
+                << "enable=" << enable
+                << "reply=" << reply.value();
+    return true;
+}
+
 void Frame::onAuthTypeChanged(KADAuthType type)
 {
     LoginFrame::onAuthTypeChanged(type);
 
-    /* 当认证类型变为软人脸时，若被动循环尚未启动，补调初始化 */
+    /*
+     * 仅被动已正式开启且软人脸就位时补建 timer。
+     * 延迟等待期（startPending）不提前开启，避免未满 5 秒就发 enable / 听键鼠。
+     */
     if (type == KAD_AUTH_TYPE_SOFT_FACE
-        && !m_passiveAuthActive)
+        && m_passiveAuthActive
+        && m_passiveAuthTimer == nullptr)
     {
-        initPassiveAuthLoop();
+        ensurePassiveAuthTimer();
     }
 }
 
