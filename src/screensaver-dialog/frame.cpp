@@ -452,9 +452,12 @@ bool Frame::enableSwitch()
 
 bool Frame::eventFilter(QObject* obj, QEvent* event)
 {
-    /* 被动认证循环：仅明确按键/点击才停止（含 btn_reAuth）。
-     * 忽略 MouseMove/Wheel，避免光标微动或虚拟机同步误停。 */
-    if (m_passiveAuthActive)
+    /*
+     * 被动认证：延迟等待期或已正式开启时，明确按键/点击均取消后续被动
+     * （含 5s 内操作，避免到点仍自动 triggerReAuth）。
+     * 忽略 MouseMove/Wheel，避免光标微动或虚拟机同步误停。
+     */
+    if (m_passiveAuthActive || m_passiveAuthStartPending)
     {
         switch (event->type())
         {
@@ -570,7 +573,7 @@ void Frame::initPassiveAuthLoop()
         return;
     }
 
-    /* 前 5 秒：不置 active、不发 enable、不监听键鼠；到点再一并开启 */
+    /* 前 5 秒：不置 active、不发 enable；键鼠在 pending 期即可取消（见 eventFilter） */
     if (m_passiveAuthStartPending)
     {
         return;
@@ -719,7 +722,7 @@ void Frame::onAuthTypeChanged(KADAuthType type)
 
     /*
      * 被动已开启但认证类型不是软人脸（如仅密码）：立刻停循环，避免 timer/gate 残留。
-     * 延迟等待期（startPending）不提前开启，避免未满 5 秒就发 enable / 听键鼠。
+     * 延迟等待期不因认证类型变化提前 begin（仍等 5s 或键鼠取消）。
      */
     if (m_passiveAuthActive && type != KAD_AUTH_TYPE_SOFT_FACE)
     {

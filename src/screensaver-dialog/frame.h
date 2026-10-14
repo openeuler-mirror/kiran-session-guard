@@ -125,8 +125,8 @@ private:
 
     // 被动认证循环
     QTimer* m_passiveAuthTimer = nullptr;
-    bool m_passiveAuthActive = false;       /**< 已正式开启（含键鼠停循环监听） */
-    bool m_passiveAuthStartPending = false; /**< 已预约延迟启动，尚未到点 */
+    bool m_passiveAuthActive = false;       /**< 已正式开启（gate + 周期 timer） */
+    bool m_passiveAuthStartPending = false; /**< 已预约延迟启动；期间键鼠亦可取消 */
     int m_passiveLoopSec = 2;
 };
 }  // namespace Locker
