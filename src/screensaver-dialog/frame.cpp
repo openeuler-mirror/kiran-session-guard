@@ -525,50 +525,38 @@ void Frame::timerEvent(QTimerEvent* event)
 
 void Frame::initPassiveAuthLoop()
 {
-    /* D-Bus 配置进程内只查一次 */
-    static int s_cachedPassiveLoopSec = -1;
-    static bool s_dbusQueried = false;
+    /*
+     * 每次锁屏重新查 GetAssistDetectConfig（含 MFA 关闭时 dbus 返回 0），
+     * 不用进程级 static 缓存，避免开关身份认证后沿用旧间隔。
+     */
+    QDBusInterface iface(QStringLiteral("com.ks.auth.dbus.service"),
+                         QStringLiteral("/com/ks/auth/dbus/service"),
+                         QStringLiteral("com.ks.auth.dbus.service"),
+                         QDBusConnection::systemBus());
+    QDBusReply<QString> reply = iface.call(QStringLiteral("GetAssistDetectConfig"));
 
-    if (!s_dbusQueried)
+    int passiveLoopSec = 2;
+    bool ok = false;
+    if (reply.isValid())
     {
-        /* 异步查询 D-Bus GetAssistDetectConfig，不阻塞锁屏 UI */
-        QDBusInterface iface(QStringLiteral("com.ks.auth.dbus.service"),
-                              QStringLiteral("/com/ks/auth/dbus/service"),
-                              QStringLiteral("com.ks.auth.dbus.service"),
-                              QDBusConnection::systemBus());
-        QDBusReply<QString> reply = iface.call(QStringLiteral("GetAssistDetectConfig"));
-
-        int passiveLoopSec = 2;
-        bool ok = false;
-        if (reply.isValid())
+        const QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
+        if (doc.isObject())
         {
-            const QJsonDocument doc = QJsonDocument::fromJson(reply.value().toUtf8());
-            if (doc.isObject())
+            const int v = doc.object().value(QStringLiteral("passive_loop_sec")).toInt(-1);
+            if (v >= 0)
             {
-                const int v = doc.object().value(QStringLiteral("passive_loop_sec")).toInt(-1);
-                if (v >= 0)
-                {
-                    passiveLoopSec = v;
-                    ok = true;
-                }
+                passiveLoopSec = v;
+                ok = true;
             }
-        }
-
-        s_cachedPassiveLoopSec = ok ? passiveLoopSec : 0;
-        s_dbusQueried = true;
-
-        if (!ok || passiveLoopSec <= 0)
-        {
-            KLOG_INFO() << "passiveAuth: loop NOT started"
-                        << "passive_loop_sec=" << passiveLoopSec
-                        << "dbus_ok=" << ok
-                        << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
-            return;
         }
     }
 
-    if (s_cachedPassiveLoopSec <= 0)
+    if (!ok || passiveLoopSec <= 0)
     {
+        KLOG_INFO() << "passiveAuth: loop NOT started"
+                    << "passive_loop_sec=" << passiveLoopSec
+                    << "dbus_ok=" << ok
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
         return;
     }
 
@@ -588,7 +576,7 @@ void Frame::initPassiveAuthLoop()
         return;
     }
 
-    m_passiveLoopSec = s_cachedPassiveLoopSec;
+    m_passiveLoopSec = passiveLoopSec;
     m_passiveAuthStartPending = true;
     QTimer::singleShot(5000, this, [this]() {
         if (!m_passiveAuthStartPending)
@@ -730,9 +718,15 @@ void Frame::onAuthTypeChanged(KADAuthType type)
     LoginFrame::onAuthTypeChanged(type);
 
     /*
-     * 仅被动已正式开启且软人脸就位时补建 timer。
+     * 被动已开启但认证类型不是软人脸（如仅密码）：立刻停循环，避免 timer/gate 残留。
      * 延迟等待期（startPending）不提前开启，避免未满 5 秒就发 enable / 听键鼠。
      */
+    if (m_passiveAuthActive && type != KAD_AUTH_TYPE_SOFT_FACE)
+    {
+        stopPassiveAuthLoop("AuthTypeNotSoftFace");
+        return;
+    }
+
     if (type == KAD_AUTH_TYPE_SOFT_FACE
         && m_passiveAuthActive
         && m_passiveAuthTimer == nullptr)

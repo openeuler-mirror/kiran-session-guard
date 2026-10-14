@@ -81,7 +81,7 @@ private:
     virtual void authUserInputed(const QString &userName){};
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString &userName);
-    // 认证类型变化：被动已激活且 SOFT_FACE 就位时补建循环 timer
+    // 认证类型变化：非软人脸则停被动；SOFT_FACE 且已激活时补建循环 timer
     void onAuthTypeChanged(KADAuthType type) override;
     virtual bool shouldShowFullName() override;
 public:
