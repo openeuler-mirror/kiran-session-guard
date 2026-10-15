@@ -307,9 +307,10 @@ void Frame::authenticateComplete(bool authRes, const QString& userName)
         return;
     }
 
-    /* 被动认证循环：仅软人脸失败后 2 秒再重试。
+    /* 被动认证循环：软人脸失败后按 passive_loop_sec（平台 GetAssistDetectConfig）再试。
      * priming 阶段可能尚无 timer，软人脸就位后在此补建，避免只试探一次就僵死。
-     * 非软人脸不建循环，保持「至多 priming 一次」的通用行为。 */
+     * 非软人脸不建循环，保持「至多 priming 一次」的通用行为。
+     * 成功解锁已在上方 stopPassiveAuthLoop，间隔无意义。 */
     if (!m_passiveAuthActive || lastAuthType() != KAD_AUTH_TYPE_SOFT_FACE)
     {
         return;
@@ -320,9 +321,12 @@ void Frame::authenticateComplete(bool authRes, const QString& userName)
     }
     if (m_passiveAuthTimer != nullptr)
     {
-        m_passiveAuthTimer->setInterval(2000);
+        const int retryMs = m_passiveLoopSec * 1000;
+        m_passiveAuthTimer->setInterval(retryMs);
         m_passiveAuthTimer->start();
-        KLOG_INFO() << "passiveAuth: retry scheduled in 2000ms"
+        KLOG_INFO() << "passiveAuth: retry scheduled"
+                    << "passive_loop_sec=" << m_passiveLoopSec
+                    << "retry_ms=" << retryMs
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     }
 }
@@ -647,16 +651,10 @@ void Frame::ensurePassiveAuthTimer()
 
         KLOG_INFO() << "passiveAuth: timeout firing"
                     << "authType=" << static_cast<int>(lastAuthType())
+                    << "passive_loop_sec=" << m_passiveLoopSec
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
 
         triggerReAuthButton();
-
-        /* 失败后重试 (2000ms) → 恢复为 normal 间隔 */
-        const int curInterval = m_passiveAuthTimer->interval();
-        if (curInterval != m_passiveLoopSec * 1000)
-        {
-            m_passiveAuthTimer->setInterval(m_passiveLoopSec * 1000);
-        }
     });
 
     if (m_passiveAuthActive)
