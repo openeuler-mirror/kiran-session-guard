@@ -798,6 +798,11 @@ void LoginFrame::triggerReAuthButton()
     ui->btn_reAuth->click();
 }
 
+bool LoginFrame::isAuthInProgress() const
+{
+    return m_authController != nullptr && m_authController->underlyingInAuthentication();
+}
+
 void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
 {
     const KADAuthType softCodeType = static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE);
