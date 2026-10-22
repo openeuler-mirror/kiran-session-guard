@@ -86,9 +86,18 @@ bool kiran_pam_message_recv(int fd, QJsonDocument& content)
 {
     uint32_t length = 0;
 
-    if (read(fd, &length, sizeof(length)) < 0)
+    /* read==0 为对端关闭(EOF/HUP)，不能只判断 <0，否则会把 length=0 当成合法空包 */
+    ssize_t nread = read(fd, &length, sizeof(length));
+    if (nread <= 0)
     {
-        KLOG_DEBUG() << "read error:" << strerror(errno);
+        if (nread < 0)
+        {
+            KLOG_DEBUG() << "read error:" << strerror(errno);
+        }
+        return false;
+    }
+    if (nread != static_cast<ssize_t>(sizeof(length)))
+    {
         return false;
     }
 

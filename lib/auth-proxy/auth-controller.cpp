@@ -37,8 +37,13 @@ AuthController::AuthController(QObject* parent)
 
 AuthController::~AuthController()
 {
-    m_authInterface->cancelAuthentication();
-    delete m_authInterface;
+    if (m_authInterface != nullptr)
+    {
+        /* 析构阶段不向 UI 发 complete，避免半销毁对象上的槽调用 */
+        cancelAuthenticationQuiet();
+        delete m_authInterface;
+        m_authInterface = nullptr;
+    }
 }
 
 bool AuthController::init(AuthBase* authInterface)
@@ -132,7 +137,8 @@ bool AuthController::doAuthenticate(const QString& username)
                     << "seq=" << m_authSeq
                     << "underlyingInAuth=true"
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
-        m_authInterface->cancelAuthentication();
+        /* 静默结束旧会话，避免补发 complete 与本轮 authenticationStarted 竞态 */
+        cancelAuthenticationQuiet();
     }
 
     KLOG_INFO() << "AuthController: doAuthenticate start immediately"
@@ -187,8 +193,25 @@ void AuthController::cancelAuthentication()
     m_hasQueuedResponse = false;
     m_queuedResponseSeq = 0;
     m_queuedResponse.clear();
+    /* AuthPam::cancelAuthentication 内补发 onAuthComplete → authenticationComplete(false) */
     m_authInterface->cancelAuthentication();
-    // 标记当前会话已取消，避免后续到来的 authenticationComplete 信号被当作有效完成处理
+}
+
+void AuthController::cancelAuthenticationQuiet()
+{
+    RETURN_IF_FALSE(m_authInterface != nullptr);
+    RETURN_IF_FALSE(m_authInterface->inAuthentication());
+    KLOG_INFO() << "AuthController: cancelAuthenticationQuiet"
+                << "seq=" << m_authSeq
+                << "ongoingSeq=" << m_ongoingAuthSeq
+                << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+    m_promptsWaiting = 0;
+    m_hasQueuedResponse = false;
+    m_queuedResponseSeq = 0;
+    m_queuedResponse.clear();
+    m_suppressAuthComplete = true;
+    m_authInterface->cancelAuthentication();
+    m_suppressAuthComplete = false;
     m_ongoingAuthSeq = 0;
 }
 
@@ -222,7 +245,8 @@ void AuthController::switchAuthType(KADAuthType authType)
     m_specifyAuthType = authType;
     if (inAuthentication())
     {
-        cancelAuthentication();
+        /* 切换类型只清底层会话，不向 UI 推 complete */
+        cancelAuthenticationQuiet();
     }
 
     m_haveErrorMsg = false;
@@ -446,6 +470,15 @@ void AuthController::onRequestAuthType()
 
 void AuthController::onAuthComplete()
 {
+    if (m_suppressAuthComplete)
+    {
+        KLOG_INFO() << "AuthController: onAuthComplete suppressed (quiet cancel)"
+                    << "seq=" << m_authSeq
+                    << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        m_ongoingAuthSeq = 0;
+        return;
+    }
+
     const quint64 completedSeq = m_ongoingAuthSeq;
     if (completedSeq != 0 && completedSeq != m_authSeq)
     {

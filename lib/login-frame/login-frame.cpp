@@ -99,10 +99,10 @@ void LoginFrame::reset()
                 << "lastAuthType=" << (int)m_lastAuthType
                 << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     m_inUiReset = true;
-    // 用 cancel 结束会话，避免 abort 强制 complete 与 reset 切页竞态
+    // 静默 cancel：只清底层会话，不发 complete/showMessage，避免与 reset 切页竞态
     if (underlyingInAuth)
     {
-        m_authController->cancelAuthentication();
+        m_authController->cancelAuthenticationQuiet();
     }
 
     // 清空内容

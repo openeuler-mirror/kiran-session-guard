@@ -132,7 +132,8 @@ void Prefs::initFromSettings()
     auto monitorAlwaysOn = settings.value("monitor-always-on",true);
     m_monitorAlwaysOn = monitorAlwaysOn.toBool();
 
-    m_facePreviewEnabled = settings.value("face-preview-enabled", true).toBool();
+    // 默认关闭；可通过 greeter.ini 的 face-preview-enabled 开启
+    m_facePreviewEnabled = settings.value("face-preview-enabled", false).toBool();
 
     settings.endGroup();
 

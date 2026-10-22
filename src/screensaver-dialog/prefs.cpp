@@ -46,10 +46,13 @@ void Prefs::init()
 
     //common
     settings.beginGroup("Common");
-    auto showFullName = settings.value("show-fullname",false);
+    auto showFullName = settings.value("show-fullname", false);
     m_showFullName = showFullName.toBool();
 
-    m_facePreviewEnabled = settings.value("face-preview-enabled", true).toBool();
+    // face-preview-enabled：默认关闭，可通过 screensaver-dialog.ini 开启
+    m_facePreviewEnabled = settings.value("face-preview-enabled", false).toBool();
+    // auto-start-auth：默认 true（自动起认证）；false 时仅显示「重新认证」按钮
+    m_autoStartAuth = settings.value("auto-start-auth", true).toBool();
     settings.endGroup();
 }
 
@@ -87,6 +90,11 @@ bool Prefs::showFullName()
 bool Prefs::facePreviewEnabled() const
 {
     return m_facePreviewEnabled;
+}
+
+bool Prefs::autoStartAuth() const
+{
+    return m_autoStartAuth;
 }
 
 }  // namespace Locker

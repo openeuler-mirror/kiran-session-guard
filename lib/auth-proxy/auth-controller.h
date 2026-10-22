@@ -49,8 +49,13 @@ public:
     bool authenticate(const QString& username);
     // 回复prompt类型消息
     void respond(const QString& response);
-    // 取消认证
+    // 取消认证，并补发 authenticationComplete(false)（经 AuthPam onAuthComplete）
     void cancelAuthentication();
+    /**
+     * @brief 静默取消底层会话，不向 UI 发 authenticationComplete / showMessage
+     * @note reset、析构、switchAuthType、发起新 authenticate 前清理旧会话时使用
+     */
+    void cancelAuthenticationQuiet();
 
     // 是否能切换认证类型
     bool canSwitchAuthType();
@@ -116,6 +121,8 @@ private:
     // 当前进行中的认证轮次；用于丢弃过期 authenticationComplete。
     quint64 m_ongoingAuthSeq = 0;
     quint64 m_completedAuthSeq = 0;
+    // cancelAuthenticationQuiet 期间吞掉 AuthPam 补发的 onAuthComplete
+    bool m_suppressAuthComplete = false;
 };
 }  // namespace SessionGuard
 }  // namespace Kiran

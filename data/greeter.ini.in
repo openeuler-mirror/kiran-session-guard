@@ -18,8 +18,8 @@ show-fullname=@SHOW_FULLNAME@
 #登录阶段，显示器常亮
 monitor-always-on=true
 
-#是否显示人脸的摄像头预览,人脸识别登录时配置生效
-face-preview-enabled=true
+#是否显示人脸的摄像头预览（默认关闭）
+face-preview-enabled=false
 
 [Power]
 ##以下选项由logind配置文件共同决定
