@@ -29,7 +29,13 @@ class AuthControllerInterface;
 }  // namespace Kiran
 
 /**
- * 封装使用fork出子进程进行PAM认证的相关接口
+ * 封装使用 fork 出 checkpass 子进程进行 PAM 认证的相关接口。
+ *
+ * 生命周期要点（锁屏预览卡顿相关）：
+ * - 管道对端关闭会出现 POLLHUP；QSocketNotifier 若仍启用，Qt 会以 poll(timeout=0) 忙等。
+ * - Complete / cancel / EOF 路径须先 setEnabled(false) 再关管、delete notifier。
+ * - Complete 后 m_inAuthenticating=false，二次 authenticate 入口须兜底清理残留资源。
+ * - 回收子进程一律优先 WNOHANG；仅新开认证前允许 kill 后短时 waitpid(0)。
  */
 namespace Kiran
 {
@@ -58,6 +64,12 @@ private slots:
 
 private:
     void handleChildExit();
+    /**
+     * @brief 关闭管道并销毁 QSocketNotifier（可重复调用）
+     * @note 须先 setEnabled(false) 再 delete/close，否则管道 POLLHUP 时 Qt 事件循环
+     *       会以 poll(timeout=0) 忙等。
+     */
+    void cleanupAuthResources();
 
 private:
     AuthControllerInterface* m_interface = nullptr;
