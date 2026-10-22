@@ -271,24 +271,39 @@ void Frame::initAuth()
 
     setSpecifyUser(m_userName);
     setAuthUserInfo(m_userName);
-    switchControlPage(LoginFrame::CONTROL_PAGE_REAUTH);
-    setTips(MessageTypeInfo, QString());
+
+    /*
+     * auto-start-auth=true（默认）：自动 startAuthUser，显示密码输入框。
+     * auto-start-auth=false：显示「重新认证」按钮，不自动起认证。
+     */
+    if (Prefs::getInstance()->autoStartAuth())
+    {
+        startAuthUser(m_userName);
+    }
+    else
+    {
+        switchControlPage(LoginFrame::CONTROL_PAGE_REAUTH);
+        setTips(MessageTypeInfo, QString());
+    }
 
     /* 注册全局事件过滤器，用于被动认证循环检测用户交互 */
     qApp->installEventFilter(this);
 
-    /* 被动认证循环（异步 D-Bus 查询不阻塞UI）。 */
-    QTimer::singleShot(0, this, [this](){ initPassiveAuthLoop(); });
+    /* 被动认证循环（异步 D-Bus 查询不阻塞UI；无 face 服务时不会启动）。 */
+    QTimer::singleShot(0, this, [this]() { initPassiveAuthLoop(); });
 
-    /* 人脸预览。 */
-    QTimer::singleShot(0, this, [this]()
-                       {
-        auto* preview = findChild<FacePreviewWidget*>();
-        if (preview != nullptr)
-        {
-            preview->hide();
-            preview->show();
-        } });
+    /* 人脸预览：仅在已挂载 FacePreviewWidget 时补一次 show 触发 SHM 流。 */
+    if (Prefs::getInstance()->facePreviewEnabled())
+    {
+        QTimer::singleShot(0, this, [this]() {
+            auto* preview = findChild<FacePreviewWidget*>();
+            if (preview != nullptr)
+            {
+                preview->hide();
+                preview->show();
+            }
+        });
+    }
 }
 
 // TODO: 解锁框或模式下按压其他用户的指纹,应为错误

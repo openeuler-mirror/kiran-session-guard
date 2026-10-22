@@ -38,6 +38,11 @@ public:
     bool canSuspend();
     bool showFullName();
     bool facePreviewEnabled() const;
+    /**
+     * @brief 锁屏是否自动启动认证
+     * @return true 锁屏后自动 startAuthUser；false 仅显示「重新认证」按钮
+     */
+    bool autoStartAuth() const;
 
 private:
     static Prefs* m_instance;
@@ -46,6 +51,7 @@ private:
     bool m_canSuspend = true;
     bool m_showFullName = false;
     bool m_facePreviewEnabled = false;
+    bool m_autoStartAuth = true;
 };
 }  // namespace Locker
 }  // namespace SessionGuard
