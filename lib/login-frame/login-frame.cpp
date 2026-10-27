@@ -366,20 +366,25 @@ void LoginFrame::initUI()
     connect(m_btnRequestAuthCodeButton, &QToolButton::pressed, this, [this, authCodeRequestPath]()
             {
         KLOG_INFO() << "request auth code button clicked";
-        // 锁屏全屏窗口为 override-redirect，无法在其上展示外部进程 GUI 弹窗；
-        // 使用 --auto CLI 模式后台申请，通过 prompt tips 反馈结果
+        // 锁屏：override-redirect 无法稳定叠外部 GUI，必须 --auto。
+        // SMS：不可改申请时长，登录/锁屏一律 --auto
+        // 临时授权码 + 登录 greeter：仍弹 GenCodeDialog，用户所选时长原样提交。
+        const bool smsAuthCode =
+            (m_lastAuthType == static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE_NO_CAMERA));
+        const bool useAuto = m_autoAuthCodeRequest || smsAuthCode;
+
         QProcess* process = new QProcess(this);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
         connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus)
+                this, [this, process, useAuto](int exitCode, QProcess::ExitStatus exitStatus)
                 {
 #else
         connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                this, [this, process](int exitCode, QProcess::ExitStatus exitStatus)
+                this, [this, process, useAuto](int exitCode, QProcess::ExitStatus exitStatus)
                 {
 #endif
             Q_UNUSED(exitStatus);
-            if (m_autoAuthCodeRequest)
+            if (useAuto)
             {
                 if (exitCode == 0)
                 {
@@ -398,13 +403,18 @@ void LoginFrame::initUI()
                 this->setEditFocus(0); });
             process->deleteLater();
         });
-        if (m_autoAuthCodeRequest)
+        if (useAuto)
         {
-            process->start(authCodeRequestPath, QStringList() << "--auto" << "--user-name" << m_specifyUser);
+            // SMS/锁屏：--auto 默认 expires；
+            // 临时授权码登录弹窗（非 --auto）仍由 GenCodeDialog 用户所选时长决定，不受影响。
+            process->start(authCodeRequestPath,
+                           QStringList() << QStringLiteral("--auto")
+                                         << QStringLiteral("--user-name") << m_specifyUser);
         }
         else
         {
-            process->start(authCodeRequestPath, QStringList() << "--user-name" << m_specifyUser);
+            process->start(authCodeRequestPath,
+                           QStringList() << QStringLiteral("--user-name") << m_specifyUser);
         } });
 
     // 将按钮插入 page_edit 输入行，放在输入框后面
@@ -805,8 +815,10 @@ bool LoginFrame::isAuthInProgress() const
 
 void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
 {
-    const KADAuthType softCodeType = static_cast<KADAuthType>(KAD_AUTH_TYPE_SOFT_CODE);
-    const bool showRequestButton = (type == softCodeType) && m_supportedAuthTypes.contains(softCodeType) && QFile::exists(QStringLiteral("/usr/bin/ks-auth-code-request"));
+    // 临时授权码与 SMS（无人脸授权码）共用同一申请按钮；因子差异在 CodeGen/CodeCheck
+    const bool showRequestButton = isSoftCodeAuthType(type) &&
+                                   m_supportedAuthTypes.contains(type) &&
+                                   QFile::exists(QStringLiteral("/usr/bin/ks-auth-code-request"));
     m_btnRequestAuthCodeButton->setVisible(showRequestButton);
 }
 
