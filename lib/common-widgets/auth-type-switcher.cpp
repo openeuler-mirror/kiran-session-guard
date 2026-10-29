@@ -191,6 +191,7 @@ void AuthTypeSwitcher::paintEvent(QPaintEvent* event)
 
 void AuthTypeSwitcher::mousePressEvent(QMouseEvent* event)
 {
+    emit userActivated();
     if (m_drawer->isExpanded())
     {
         m_drawer->shrink();
