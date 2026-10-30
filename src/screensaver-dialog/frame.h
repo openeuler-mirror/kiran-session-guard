@@ -62,7 +62,7 @@ private:
     void initAuth();
     void initPassiveAuthLoop();
     /**
-     * @brief 延迟到期后正式开启被动循环（gate + 键鼠监听 + 首次认证）
+     * @brief 延迟到期后正式开启被动循环（gate + 首次认证）
      */
     void beginPassiveAuthLoop();
     /**
@@ -83,6 +83,8 @@ private:
     virtual void authenticateComplete(bool authRes, const QString &userName);
     // 认证类型变化：非软人脸则停被动；SOFT_FACE 且已激活时补建循环 timer
     void onAuthTypeChanged(KADAuthType type) override;
+    // 用户点击认证类型圆按钮：结束被动循环（含 5s 延迟期）
+    void onAuthTypeSwitcherActivated() override;
     virtual bool shouldShowFullName() override;
 public:
     // override LockerInterface
@@ -126,7 +128,7 @@ private:
     // 被动认证循环
     QTimer* m_passiveAuthTimer = nullptr;
     bool m_passiveAuthActive = false;       /**< 已正式开启（gate + 周期 timer） */
-    bool m_passiveAuthStartPending = false; /**< 已预约延迟启动；期间键鼠亦可取消 */
+    bool m_passiveAuthStartPending = false; /**< 已预约延迟启动；期间点认证类型圆按钮可取消 */
     int m_passiveLoopSec = 2;
 };
 }  // namespace Locker

@@ -113,15 +113,24 @@ void Frame::initMenus()
     // clang-format off
     if (m_power->canReboot())
     {
-        m_powerMenu->addAction(tr("reboot"), [this]{ m_power->reboot(); });
+        m_powerMenu->addAction(tr("reboot"), [this]{
+            stopPassiveAuthLoop("PowerReboot");
+            m_power->reboot();
+        });
     }
     if (m_power->canPoweroff())
     {
-        m_powerMenu->addAction(tr("shutdown"), this, [this]{ m_power->poweroff(); });
+        m_powerMenu->addAction(tr("shutdown"), this, [this]{
+            stopPassiveAuthLoop("PowerShutdown");
+            m_power->poweroff();
+        });
     }
     if (m_power->canSuspend())
     {
-        m_powerMenu->addAction(tr("suspend"), this, [this]{ m_power->suspend(); });
+        m_powerMenu->addAction(tr("suspend"), this, [this]{
+            stopPassiveAuthLoop("PowerSuspend");
+            m_power->suspend();
+        });
     }
     connect(m_powerMenu, &QMenu::triggered, this, [this]{ m_powerMenu->hide(); });
     // clang-format on
@@ -170,8 +179,10 @@ void Frame::initUI()
     };
 
     // clang-format off
-    m_btnSwitchToGreeter = createActionButton("btn_switchuser", tr("switch to greeter"), [](){
+    m_btnSwitchToGreeter = createActionButton("btn_switchuser", tr("switch to greeter"), [this]() {
         KLOG_DEBUG() << "switch to greeter clicked";
+        /* 离开本锁屏解锁语境：先停被动，避免与 greeter 并行人脸 */
+        stopPassiveAuthLoop("SwitchToGreeter");
         UserManager::switchToGreeter();
     });
     m_btnKeyboard = createActionButton("btn_keyboard",tr("virtual keyboard"),[this](){
@@ -286,7 +297,7 @@ void Frame::initAuth()
         setTips(MessageTypeInfo, QString());
     }
 
-    /* 注册全局事件过滤器，用于被动认证循环检测用户交互 */
+    /* 注册全局事件过滤器（菜单外部点击隐藏等） */
     qApp->installEventFilter(this);
 
     /* 被动认证循环（异步 D-Bus 查询不阻塞UI；无 face 服务时不会启动）。 */
@@ -471,34 +482,7 @@ bool Frame::enableSwitch()
 
 bool Frame::eventFilter(QObject* obj, QEvent* event)
 {
-    /*
-     * 被动认证：延迟等待期或已正式开启时，明确按键/点击均取消后续被动
-     * （含 5s 内操作，避免到点仍自动 triggerReAuth）。
-     * 忽略 MouseMove/Wheel，避免光标微动或虚拟机同步误停。
-     */
-    if (m_passiveAuthActive || m_passiveAuthStartPending)
-    {
-        switch (event->type())
-        {
-        case QEvent::MouseButtonPress:
-        {
-            auto* mouseEvent = static_cast<QMouseEvent*>(event);
-            const Qt::MouseButton button = mouseEvent->button();
-            if (button == Qt::LeftButton || button == Qt::RightButton)
-            {
-                stopPassiveAuthLoop("MouseButtonPress");
-            }
-            break;
-        }
-        case QEvent::KeyPress:
-            stopPassiveAuthLoop("KeyPress");
-            break;
-        default:
-            break;
-        }
-    }
-
-    /* 保留：菜单外部点击隐藏 */
+    /* 菜单外部点击隐藏；被动循环改由认证类型圆按钮结束，见 onAuthTypeSwitcherActivated */
     if (event->type() != QEvent::MouseButtonPress)
     {
         return false;
@@ -592,7 +576,7 @@ void Frame::initPassiveAuthLoop()
         return;
     }
 
-    /* 前 5 秒：不置 active、不发 enable；键鼠在 pending 期即可取消（见 eventFilter） */
+    /* 前 5 秒：不置 active、不发 enable；点认证类型圆按钮可取消（见 onAuthTypeSwitcherActivated） */
     if (m_passiveAuthStartPending)
     {
         return;
@@ -735,7 +719,7 @@ void Frame::onAuthTypeChanged(KADAuthType type)
 
     /*
      * 被动已开启但认证类型不是软人脸（如仅密码）：立刻停循环，避免 timer/gate 残留。
-     * 延迟等待期不因认证类型变化提前 begin（仍等 5s 或键鼠取消）。
+     * 延迟等待期不因认证类型变化提前 begin（仍等 5s 或点圆按钮取消）。
      */
     if (m_passiveAuthActive && type != KAD_AUTH_TYPE_SOFT_FACE)
     {
@@ -748,6 +732,14 @@ void Frame::onAuthTypeChanged(KADAuthType type)
         && m_passiveAuthTimer == nullptr)
     {
         ensurePassiveAuthTimer();
+    }
+}
+
+void Frame::onAuthTypeSwitcherActivated()
+{
+    if (m_passiveAuthActive || m_passiveAuthStartPending)
+    {
+        stopPassiveAuthLoop("AuthTypeSwitcherClick");
     }
 }
 

@@ -80,6 +80,10 @@ protected:
     void setEditFocus(int delayMs = 0);
     virtual void onAuthTypeChanged(KADAuthType type);
     virtual void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
+    /**
+     * @brief 用户点击认证类型圆按钮（展开/收起）；锁屏被动循环可在此结束
+     */
+    virtual void onAuthTypeSwitcherActivated() {}
 
     /**
      * @brief 触发重新认证按钮点击（供子类被动认证循环使用）

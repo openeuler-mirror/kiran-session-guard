@@ -54,6 +54,10 @@ public:
 
 signals:
     void authTypeChanged(KADAuthType authType);
+    /**
+     * @brief 用户点击认证类型圆按钮（展开/收起抽屉均触发）
+     */
+    void userActivated();
 
 private slots:
     void onAuthTypeChanged(int authType);

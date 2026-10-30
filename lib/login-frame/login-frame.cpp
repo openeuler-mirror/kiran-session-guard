@@ -342,6 +342,7 @@ void LoginFrame::initUI()
     centerBottomLayout->insertSpacerItem(3, spacer);
 
     m_switcher->setVisible(false);
+    connect(m_switcher, &AuthTypeSwitcher::userActivated, this, &LoginFrame::onAuthTypeSwitcherActivated);
     connect(m_switcher, &AuthTypeSwitcher::authTypeChanged, [this](KADAuthType authType)
             {
         KLOG_INFO() << "LoginFrame: switcher authTypeChanged"
