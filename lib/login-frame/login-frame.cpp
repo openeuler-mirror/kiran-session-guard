@@ -40,6 +40,9 @@ namespace SessionGuard
 {
 namespace
 {
+// 申请授权码任务完成后的防连点冷却时长(ms)
+const int kAuthCodeRequestCooldownMs = 3000;
+
 const char* controlPageName(int pageIdx)
 {
     switch (pageIdx)
@@ -120,6 +123,7 @@ void LoginFrame::reset()
     m_lastAuthType = KAD_AUTH_TYPE_NONE;
     m_facePreviewSuppressedByLeave = false;
     m_btnRequestAuthCodeButton->setVisible(false);
+    resetAuthCodeRequestButtonState();
 
     m_editMode = EDIT_MODE_USER_NAME;
     m_prompted = false;
@@ -364,9 +368,27 @@ void LoginFrame::initUI()
     m_btnRequestAuthCodeButton->setFixedSize(QSize(48, 40));
     m_btnRequestAuthCodeButton->setCursor(QCursor(Qt::PointingHandCursor));
     m_btnRequestAuthCodeButton->setVisible(false);
-    connect(m_btnRequestAuthCodeButton, &QToolButton::pressed, this, [this, authCodeRequestPath]()
+    // 冷却定时器：申请任务结束后再启动，到点恢复使能
+    m_authCodeRequestCooldownTimer = new QTimer(this);
+    m_authCodeRequestCooldownTimer->setSingleShot(true);
+    m_authCodeRequestCooldownTimer->setInterval(kAuthCodeRequestCooldownMs);
+    connect(m_authCodeRequestCooldownTimer, &QTimer::timeout,
+            this, &LoginFrame::onAuthCodeRequestCooldownTimeout);
+    connect(m_btnRequestAuthCodeButton, &QToolButton::clicked, this, [this, authCodeRequestPath]()
             {
-        KLOG_INFO() << "request auth code button clicked";
+        // 申请进程未退出或冷却中忽略点击，避免并发拉起多个申请进程
+        if (m_authCodeRequestProcess || m_authCodeRequestCooldownTimer->isActive())
+        {
+            KLOG_INFO() << "LoginFrame: request auth code ignored"
+                        << "user=" << m_specifyUser
+                        << "processRunning=" << (m_authCodeRequestProcess != nullptr)
+                        << "cooldownActive=" << m_authCodeRequestCooldownTimer->isActive();
+            return;
+        }
+        KLOG_INFO() << "LoginFrame: request auth code button clicked"
+                    << "user=" << m_specifyUser;
+        // 任务进行中先禁用；3 秒冷却在任务结束后再开始
+        m_btnRequestAuthCodeButton->setEnabled(false);
         // 锁屏：override-redirect 无法稳定叠外部 GUI，必须 --auto。
         // SMS：不可改申请时长，登录/锁屏一律 --auto
         // 临时授权码 + 登录 greeter：仍弹 GenCodeDialog，用户所选时长原样提交。
@@ -375,6 +397,24 @@ void LoginFrame::initUI()
         const bool useAuto = m_autoAuthCodeRequest || smsAuthCode;
 
         QProcess* process = new QProcess(this);
+        m_authCodeRequestProcess = process;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+        connect(process, &QProcess::errorOccurred, this, [this, process](QProcess::ProcessError error)
+#else
+        connect(process, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
+                this, [this, process](QProcess::ProcessError error)
+#endif
+                {
+            // 启动失败不会发出 finished 信号，需在此释放状态并进入冷却
+            if (error != QProcess::FailedToStart)
+            {
+                return;
+            }
+            KLOG_WARNING() << "LoginFrame: request auth code process failed to start"
+                           << "user=" << m_specifyUser;
+            completeAuthCodeRequest(process);
+            process->deleteLater();
+        });
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 7, 0))
         connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                 this, [this, process, useAuto](int exitCode, QProcess::ExitStatus exitStatus)
@@ -402,6 +442,8 @@ void LoginFrame::initUI()
                 this->window()->activateWindow();
                 QApplication::processEvents();
                 this->setEditFocus(0); });
+            // 任务完成后才开始 3 秒冷却
+            completeAuthCodeRequest(process);
             process->deleteLater();
         });
         if (useAuto)
@@ -820,7 +862,62 @@ void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)
     const bool showRequestButton = isSoftCodeAuthType(type) &&
                                    m_supportedAuthTypes.contains(type) &&
                                    QFile::exists(QStringLiteral("/usr/bin/ks-auth-code-request"));
+    const bool visible = m_btnRequestAuthCodeButton->isVisible();
     m_btnRequestAuthCodeButton->setVisible(showRequestButton);
+    // 由可见切为隐藏时复位冷却状态，避免冷却残留导致下次显示即为禁用态
+    if (visible && !showRequestButton)
+    {
+        resetAuthCodeRequestButtonState();
+    }
+}
+
+void LoginFrame::completeAuthCodeRequest(QProcess* process)
+{
+    if (!process)
+    {
+        return;
+    }
+    // 幂等：同一进程只收尾一次
+    if (m_authCodeRequestProcess != process)
+    {
+        return;
+    }
+    m_authCodeRequestProcess = nullptr;
+    startAuthCodeRequestCooldown();
+}
+
+void LoginFrame::startAuthCodeRequestCooldown()
+{
+    KLOG_INFO() << "LoginFrame: request auth code cooldown start"
+                << "user=" << m_specifyUser
+                << "cooldownMs=" << kAuthCodeRequestCooldownMs;
+    // 与重新认证按钮一致：仅 setEnabled，不额外叠加视觉效果
+    m_btnRequestAuthCodeButton->setEnabled(false);
+    m_authCodeRequestCooldownTimer->start();
+}
+
+void LoginFrame::onAuthCodeRequestCooldownTimeout()
+{
+    KLOG_INFO() << "LoginFrame: request auth code button enabled"
+                << "user=" << m_specifyUser;
+    m_btnRequestAuthCodeButton->setEnabled(true);
+}
+
+void LoginFrame::resetAuthCodeRequestButtonState()
+{
+    if (!m_authCodeRequestCooldownTimer)
+    {
+        return;
+    }
+    m_authCodeRequestCooldownTimer->stop();
+    // 申请进程仍在运行时保持禁用，交给 finished 收尾
+    if (m_authCodeRequestProcess)
+    {
+        KLOG_INFO() << "LoginFrame: request auth code process still running on reset"
+                    << "user=" << m_specifyUser;
+        return;
+    }
+    m_btnRequestAuthCodeButton->setEnabled(true);
 }
 
 }  // namespace SessionGuard
