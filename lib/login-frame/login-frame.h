@@ -23,6 +23,8 @@ class LoginFrame;
 
 QT_BEGIN_NAMESPACE
 class QLayoutItem;
+class QProcess;
+class QTimer;
 class QToolButton;
 QT_END_NAMESPACE
 
@@ -135,6 +137,32 @@ private:
     bool isSoftCodeAuthType(KADAuthType type) const;
     bool canStartNewAuth() const;
     void enableReAuthButton();
+    /**
+     * @brief 申请任务结束后的统一收尾
+     * @param process 本次申请进程，不可为空
+     * @note 幂等：同一 process 只收尾一次；仅清空进程指针，不再开冷却（冷却在点击时已启动）
+     */
+    void completeAuthCodeRequest(QProcess* process);
+    /**
+     * @brief 点击申请后立即启动 3 秒冷却
+     * @note 冷却只负责按钮禁用/恢复；与申请进程是否结束无关
+     */
+    void startAuthCodeRequestCooldown();
+    /**
+     * @brief 冷却定时器到点后恢复申请授权码按钮使能
+     */
+    void onAuthCodeRequestCooldownTimeout();
+    /**
+     * @brief 终止当前申请进程并递增 epoch（不作 waitForFinished）
+     * @note 用于切类型/reset，或冷却结束后再次点击时替换旧进程
+     */
+    void terminateAuthCodeRequestProcess();
+    /**
+     * @brief 复位申请授权码按钮的冷却与进程状态
+     * @return 是否终止了仍在运行的申请进程
+     * @note 停止冷却；终止残留进程并作废旧回调；恢复按钮使能
+     */
+    bool resetAuthCodeRequestButtonState();
 
     Ui::LoginFrame* ui;
     QWidget* m_leftTopWidget = nullptr;
@@ -152,6 +180,10 @@ private:
     bool m_inUiReset = false;
     void updateRequestAuthCodeButtonVisibility(KADAuthType type);
     QToolButton* m_btnRequestAuthCodeButton = nullptr;
+    QTimer* m_authCodeRequestCooldownTimer = nullptr;  // 申请授权码防连点冷却定时器
+    QProcess* m_authCodeRequestProcess = nullptr;      // 正在运行的申请授权码进程
+    quint64 m_authCodeRequestEpoch = 0;                // 申请轮次，作废后丢弃旧回调
+    bool m_authCodeRequestButtonWanted = false;        // 上次是否应显示申请按钮（不用 isVisible）
     QList<KADAuthType> m_supportedAuthTypes;
     bool m_autoAuthCodeRequest = false;
 };
