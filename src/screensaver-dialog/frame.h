@@ -60,31 +60,19 @@ private:
     void initUI();
     void initAnimation();
     void initAuth();
-    void initPassiveAuthLoop();
     /**
-     * @brief 延迟到期后正式开启被动循环（gate + 首次认证）
+     * @brief 经 session 总线异步通知 com.ks.auth.passiveFaceUnlock 停循环（失败仅日志、不重试）
+     * @param[in] reason StopPassiveLoop reason（ReAuth/AuthTypeSwitch 本锁屏内不自启；
+     *                   电源类统一 PowerOrSuspend）
      */
-    void beginPassiveAuthLoop();
-    /**
-     * @brief 确保正式循环 QTimer 已创建并运行（仅被动已激活时）
-     */
-    void ensurePassiveAuthTimer();
-    void stopPassiveAuthLoop(const char* reason);
-    /**
-     * @brief 通知后端开关锁屏被动认证上报过滤
-     * @param[in] enable true=被动循环启动；false=循环结束
-     * @return true=通知成功；失败仅记日志，不影响锁屏主流程
-     */
-    bool notifyPassiveAuthReportFilter(bool enable);
+    void notifyPassiveFaceUnlockStop(const QString &reason);
     // override LoginFrame
     // 需认证用的户名输入完成,子类对认证用户名进行判断,是否调用开始认证
     virtual void authUserInputed(const QString &userName){};
     // 认证完成,子类根据认证结果以及用户名执行各自操作
     virtual void authenticateComplete(bool authRes, const QString &userName);
-    // 认证类型变化：非软人脸则停被动；SOFT_FACE 且已激活时补建循环 timer
-    void onAuthTypeChanged(KADAuthType type) override;
-    // 用户点击认证类型圆按钮：结束被动循环（含 5s 延迟期）
     void onAuthTypeSwitcherActivated() override;
+    void onManualReAuthRequested() override;
     virtual bool shouldShowFullName() override;
 public:
     // override LockerInterface
@@ -113,7 +101,7 @@ private:
     QToolButton *m_btnPower;
     QToolButton *m_btnKeyboard;
 
-    // Forward为淡入，Backward为淡出
+    // Forward为淡入， Backward为淡出
     QPropertyAnimation *m_animation;
     QGraphicsOpacityEffect *m_opacityEffect;
 
@@ -124,12 +112,6 @@ private:
     int m_fadeOutDelayMs = 0;
     int m_fadeInDurationMs = 0;
     int m_fadeOutDurationMs = 0;
-
-    // 被动认证循环
-    QTimer* m_passiveAuthTimer = nullptr;
-    bool m_passiveAuthActive = false;       /**< 已正式开启（gate + 周期 timer） */
-    bool m_passiveAuthStartPending = false; /**< 已预约延迟启动；期间点认证类型圆按钮可取消 */
-    int m_passiveLoopSec = 2;
 };
 }  // namespace Locker
 }  // namespace SessionGuard

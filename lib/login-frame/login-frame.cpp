@@ -334,6 +334,7 @@ void LoginFrame::initUI()
                     << "page=" << controlPageName(ui->stackedWidget->currentIndex())
                     << "inAuth=" << (m_authController ? m_authController->inAuthentication() : false)
                     << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
+        onManualReAuthRequested();
         startAuthUser(m_specifyUser);
     });
 
@@ -892,17 +893,6 @@ void LoginFrame::enableReAuthButton()
                 << "underlyingInAuth=" << (m_authController ? m_authController->underlyingInAuthentication() : false)
                 << "epochMs=" << QDateTime::currentMSecsSinceEpoch();
     ui->btn_reAuth->setEnabled(true);
-}
-
-void LoginFrame::triggerReAuthButton()
-{
-    // QAbstractButton::click() 内置 isEnabled() 守卫——disabled 时是空操作
-    ui->btn_reAuth->click();
-}
-
-bool LoginFrame::isAuthInProgress() const
-{
-    return m_authController != nullptr && m_authController->underlyingInAuthentication();
 }
 
 void LoginFrame::updateRequestAuthCodeButtonVisibility(KADAuthType type)

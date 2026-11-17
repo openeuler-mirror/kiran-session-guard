@@ -576,16 +576,6 @@ void Frame::onLoginOtherClicked()
     }
 }
 
-void Frame::onAuthTypeChanged(KADAuthType type)
-{
-    LoginFrame::onAuthTypeChanged(type);
-}
-
-void Frame::onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes)
-{
-    LoginFrame::onSupportedAuthTypeChanged(supportedTypes);
-}
-
 static bool getIsLoggedIn(const QString& userName)
 {
     bool res = false;
