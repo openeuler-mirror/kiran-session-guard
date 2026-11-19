@@ -83,25 +83,14 @@ protected:
     virtual void onAuthTypeChanged(KADAuthType type);
     virtual void onSupportedAuthTypeChanged(QList<KADAuthType> supportedTypes);
     /**
-     * @brief 用户点击认证类型圆按钮（展开/收起）；锁屏被动循环可在此结束
+     * @brief 用户点击认证类型圆按钮（展开/收起）；锁屏可通知被动组件停循环
      */
     virtual void onAuthTypeSwitcherActivated() {}
 
     /**
-     * @brief 触发重新认证按钮点击（供子类被动认证循环使用）
-     * @note 利用 QAbstractButton::click() 内置 isEnabled() 守卫——disabled 时为空操作
+     * @brief 用户点击「重新认证」且即将 startAuthUser 前调用（锁屏可通知被动组件停循环）
      */
-    void triggerReAuthButton();
-
-    /**
-     * @brief 底层认证是否进行中（供子类被动循环跳过叠触发）
-     */
-    bool isAuthInProgress() const;
-
-    /**
-     * @brief 获取当前认证类型（供子类判断是否启动被动循环）
-     */
-    KADAuthType lastAuthType() const { return m_lastAuthType; }
+    virtual void onManualReAuthRequested() {}
 
 private:
     void initUI();
